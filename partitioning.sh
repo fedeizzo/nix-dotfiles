@@ -39,11 +39,12 @@ mntopt="autodefrag,space_cache=v2,noatime,compress=zstd:2"
 mntopt_nocow="autodefrag,space_cache=v2,noatime,nocow"
 
 ### check ssh/hdd
-if [ "$(cat "/sys/block/$(echo "$device" | sed 's/\/dev\///')/queue/rotational")" -eq "0" ]; then
-    ssd=true
-else
-    ssd=false
-fi
+# if [ "$(cat "/sys/block/$(echo "$device" | sed 's/\/dev\///')/queue/rotational")" -eq "0" ]; then
+#     ssd=true
+# else
+#     ssd=false
+# fi
+ssd=true
 if $ssd; then
     mntopt="$mntopt,discard=async"
     mntopt_nocow="$mntopt,discard=async"
@@ -98,9 +99,17 @@ swapon /mnt/swap/.swapfile
 # configure nixos
 nixos-generate-config --root /mnt
 
+# fix options not automatically written
+for sv in $subvolumes; do
+    sed "s/options = \[ \"subvol=@${sv}\" \]/options = [ \"subvol=@${sv}\" \"${mntopt//,/\" \"}\"\]/" -i /mnt/etc/nixos/hardware-configuration.nix
+done
+for sv in $subvolumes_nocow; do
+    sed "s/options = \[ \"subvol=${sv}\" \]/options = [ \"subvol=${sv}\" \"${mntopt_nocow//,/\" \"}\"\]/" -i /mnt/etc/nixos/hardware-configuration.nix
+done
+
 # my personal config
 nixos-install
 
 swapoff /mnt/swap/.swapfile
 umount -R /mnt
-cryptsetup close cryptroot
+cryptsetup close nixenc
