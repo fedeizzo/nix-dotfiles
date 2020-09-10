@@ -101,7 +101,7 @@ nixos-generate-config --root /mnt
 
 # fix options not automatically written
 for sv in $subvolumes; do
-    sed "s/options = \[ \"subvol=@${sv}\" \]/options = [ \"subvol=@${sv}\" \"${mntopt//,/\" \"}\"\]/" -i /mnt/etc/nixos/hardware-configuration.nix
+    sed "s/options = \[ \"subvol=${sv}\" \]/options = [ \"subvol=${sv}\" \"${mntopt//,/\" \"}\"\]/" -i /mnt/etc/nixos/hardware-configuration.nix
 done
 for sv in $subvolumes_nocow; do
     sed "s/options = \[ \"subvol=${sv}\" \]/options = [ \"subvol=${sv}\" \"${mntopt_nocow//,/\" \"}\"\]/" -i /mnt/etc/nixos/hardware-configuration.nix
