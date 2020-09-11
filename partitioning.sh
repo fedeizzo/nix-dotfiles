@@ -53,7 +53,7 @@ fi
 # mount root on mnt
 mount -o "$mntopt" "$root" /mnt
 # subvolume array
-subvolumes="@ @snapshot @home @opt @root @usr_local @var_log"
+subvolumes="@ @nix @snapshot @home @opt @root @usr_local @var_log"
 subvolumes_nocow="@swap @tmp @var_cache @var_tmp"
 
 # create root, swap and snapshot subvolumes

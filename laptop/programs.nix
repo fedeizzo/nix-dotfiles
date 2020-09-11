@@ -25,4 +25,6 @@
     # TODO set zsh aliases
     syntaxHighlighting.enable = true;
   };
+
+  programs.ccache.enable = true;
 }
