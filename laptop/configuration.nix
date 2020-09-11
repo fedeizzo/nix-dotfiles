@@ -105,11 +105,14 @@
   #  less.enable = true;
   #  light.enable = true;
   #};
-
+  
+  nixpkgs.config = { 
+    allowUnfree = true; 
+  };
 
   virtualisation.docker = {
     enable = true;
     # enableNvidia = true;
     enableOnBoot = true;
-  }
+  };
 }

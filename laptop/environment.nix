@@ -53,10 +53,9 @@
     "ll" = "exa --classify --group --long --header --git --icons";
     "lll" = "exa --classify --group --long --header --git --icons | less";
     "lla" = "exa --classify --group --long --all --header --git --icons";
-    "llt" = "exa --classify --group --long --all --header --git --icons";
     "llt" = "exa --tree --level=3 --icons";
 
-    "SS" = "systemctl"
+    "SS" = "systemctl";
 
     # devour aliases
     "vlc" = "devour vlc";

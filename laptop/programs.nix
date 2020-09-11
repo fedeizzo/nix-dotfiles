@@ -7,7 +7,7 @@
     enableCompletion = true;
     enableLsColors = true;
     # TODO set bash aliases
-  }
+  };
 
   # TODO see dconf (for obinskit)
   # TODO see less command
@@ -20,9 +20,9 @@
     autosuggestions.enable = true;
     ohMyZsh = {
       enable = true;
-      plugins = [ "git" "zsh-autosuggestions" "zsh-history-substring-search" "zsh-syntax-highlighting" ]
-    }
+      plugins = [ "git" "zsh-autosuggestions" "zsh-history-substring-search" "zsh-syntax-highlighting" ];
+    };
     # TODO set zsh aliases
     syntaxHighlighting.enable = true;
-  }
+  };
 }
