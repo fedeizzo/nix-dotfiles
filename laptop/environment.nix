@@ -2,14 +2,42 @@
 
 {
   environment.systemPackages = with pkgs; [
-    neovim
-    docker
-    firefox
-    zathura
+    # NIX STUFF
+    home-manager # manage dotfiles nixos
+
+    # XORG
+    bspwm
+    dunst
+    libnotify
+    sxhkd
+    xorg.xbacklight
+
+    # CLI TUI
     alacritty
     exa
-    vlc
+    fzf
     htop
+    neofetch
+    wget
+
+    # EDITOR
+    neovim
+
+    # BROWSERS
+    firefox
+    qutebrowser
+
+    # FILE VIEWER
+    feh
+    mpv
+    vlc
+    zathura
+
+    # OTHER
+    docker
+    git
+    hightlight
+    lf
   ];
   environment.shells = [ pkgs.bash pkgs.zsh ];
 

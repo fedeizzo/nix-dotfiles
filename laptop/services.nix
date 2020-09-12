@@ -4,7 +4,7 @@
   services.xserver = {
     enable = true;
     autorun = true;
-    desktopManager.default = "none";
+    desktopManager.default = null;
     # displayManager.defaultSession = "lightdm";
     # displayManager.job.execCmd = "${pkgs.lighdm}/bin/lightdm";
     displayManager.lightdm = {

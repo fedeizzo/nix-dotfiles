@@ -14,9 +14,22 @@ copy_laptop_conf() {
     nix-shell '<home-manager>' -A install
 }
 
+fresh_install() {
+    dir=$(pwd)
+    cp "${dir}/laptop/configuration.nix" /mnt/etc/nixos/configuration.nix
+    cp "${dir}/laptop/environment.nix" /mnt/etc/nixos/environment.nix
+    cp "${dir}/laptop/networking.nix" /mnt/etc/nixos/networking.nix
+    cp "${dir}/laptop/programs.nix" /mnt/etc/nixos/programs.nix
+    cp "${dir}/laptop/security.nix" /mnt/etc/nixos/security.nix
+    cp "${dir}/laptop/services.nix" /mnt/etc/nixos/services.nix
+}
+
 case $1 in
     "laptop")
         copy_laptop_conf
+        ;;
+    "fresh")
+        fresh_install
         ;;
     *)
         echo $helpMessage
