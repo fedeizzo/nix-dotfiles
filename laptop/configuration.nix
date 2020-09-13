@@ -8,6 +8,7 @@
   imports =
     [
       ./environment.nix
+      ./hardware.nix
       ./hardware-configuration.nix
       ./networking.nix
       ./programs.nix

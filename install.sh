@@ -12,6 +12,7 @@ copy_laptop_conf() {
 
     cp "${dir}/laptop/configuration.nix" /etc/nixos/configuration.nix
     cp "${dir}/laptop/environment.nix" /etc/nixos/environment.nix
+    cp "${dir}/laptop/hardware.nix" /etc/nixos/hardware.nix
     cp "${dir}/laptop/networking.nix" /etc/nixos/networking.nix
     cp "${dir}/laptop/programs.nix" /etc/nixos/programs.nix
     cp "${dir}/laptop/security.nix" /etc/nixos/security.nix
@@ -25,6 +26,7 @@ fresh_install() {
     dir=$(pwd)
     cp "${dir}/laptop/configuration.nix" /mnt/etc/nixos/configuration.nix
     cp "${dir}/laptop/environment.nix" /mnt/etc/nixos/environment.nix
+    cp "${dir}/laptop/hardware.nix" /mnt/etc/nixos/hardware.nix
     cp "${dir}/laptop/networking.nix" /mnt/etc/nixos/networking.nix
     cp "${dir}/laptop/programs.nix" /mnt/etc/nixos/programs.nix
     cp "${dir}/laptop/security.nix" /mnt/etc/nixos/security.nix
