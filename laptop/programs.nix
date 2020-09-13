@@ -26,5 +26,6 @@
     syntaxHighlighting.enable = true;
   };
 
+  programs.ssh.askPassword = "";
   programs.ccache.enable = true;
 }
