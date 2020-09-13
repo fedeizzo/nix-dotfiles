@@ -36,7 +36,7 @@
     # OTHER
     docker
     git
-    hightlight
+    highlight
     lf
   ];
   environment.shells = [ pkgs.bash pkgs.zsh ];

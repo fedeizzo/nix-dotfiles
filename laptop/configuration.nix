@@ -21,13 +21,16 @@
 
   boot.cleanTmpDir = true;
 
-  # TODO see postBootCommand to do snapshots
+  # TODO see postBootCommand to do snapshots or instead create a systemd service
+  # TODO see container in order to run copy of nixOs for steam and other pkg
+  # TODO see console in order to change ctrl with caps on laptop keyboard
+
+  # TODO choose if I want to change the version of the kernel
   # boot.kernelPackages = pkgs.linuxPackages_latest;  # use latest kernel stable release
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
-  # TODO see console for more infos
-  # TODO see container in order to run copy of nixOs for steam and other pkg
+
   console = {
   #  font = "Lat2-Terminus16";
     keyMap = "us";
@@ -40,23 +43,6 @@
   sound.enable = true;
 
   # Enable the X11 windowing system.
-  # services.xserver.xkbOptions = "eurosign:e";
-  hardware.opengl.enable = true;
-  hardware.opengl.driSupport32Bit = true;
-  # TODO see all options for bluetooth (LDAC headset ecc.)
-  hardware.bluetooth.enable = true;
-
-  hardware.bumblebee.enable = true;
-  hardware.bumblebee.driver = "nvidia";
-  # TODO see this
-  # hardware.nvidia.modesetting.enable
-  # TODO for hardware acceleration
-  # hardware.opengl.extraPackages
-
-  # TODO see if enable cpu microcode update
-
-  # TODO add path to config (default.pa)
-  hardware.pulseaudio.enable = true;
 
   # replace same content with hardlink
   # nix.autoOptimiseStore = true;
@@ -84,28 +70,6 @@
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "20.03"; # Did you read the comment?
 
-  #programs = {
-  #  qt5ct.enable = true;
-  #  zsh = {
-  #    enable = true;
-  #    enableCompletion = true;
-  #    #enableBashCompletion = true;
-  #    autosuggestions.enable = true;
-  #    histFile = "$HOME/.local/share/history";
-  #    syntaxHighlighting.enable = true;
-  #  };
-  #  bash = {
-  #    enableCompletion = true;
-  #    enableLsColors = true;
-  #  };
-  #  thefuck.enable = true;
-  #  ccache.enable = true;
-  #  file-roller.enable = true;
-  #  firejail.enable = true;
-  #  less.enable = true;
-  #  light.enable = true;
-  #};
-  
   nixpkgs.config = { 
     allowUnfree = true; 
   };

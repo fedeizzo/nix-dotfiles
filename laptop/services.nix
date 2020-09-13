@@ -26,15 +26,21 @@
   };
 
   # TODO see crontab service
-  services.docker.enable = true;
   services.tlp = {
     enable = true;
-    # TODO set extraConfig tlp
+    # Settings https://linrunner.de/tlp
+    settings = {
+      "TLP_ENABLE": 1,
+      "TLP_DEFAULT_MODE": "AC",
+      "WIFI_PWR_ON_AC": "off",
+      "WIFI_PWR_ON_BAT": "on",
+      "CPU_HWP_ON_AC": "performance",
+      "CPU_HWP_ON_BAT": "balance-performance"
+    };
   };
 
   services.thermald = {
     enable = true;
-    # TODO set extraConfig thermald
   };
 
   services.fstrim = {
