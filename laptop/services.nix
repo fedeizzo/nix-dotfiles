@@ -12,7 +12,8 @@
     };
     layout = "us";
     libinput.enable = true;
-    videoDrivers = [ "intel" "nvidia" ];
+    #videoDrivers = [ "intel" "nvidia" ];
+    videoDrivers = [ "intel" ];
     windowManager.bspwm.enable = true;
   };
 

@@ -23,7 +23,7 @@
   };
 
   hardware.bumblebee = {
-    enable = true;
+    enable = false;
     driver = "nvidia";
   };
 

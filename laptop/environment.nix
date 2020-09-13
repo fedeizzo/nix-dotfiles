@@ -11,6 +11,10 @@
     libnotify
     sxhkd
     xorg.xbacklight
+    picom
+    unclutter
+    xclip
+    xsel
 
     # CLI TUI
     alacritty
@@ -19,6 +23,10 @@
     htop
     neofetch
     wget
+    bc
+    gotop
+    powertop
+    starship
 
     # EDITOR
     neovim
@@ -28,16 +36,39 @@
     qutebrowser
 
     # FILE VIEWER
+    sxiv
     feh
     mpv
     vlc
     zathura
+    ffmpeg
+    rofi
+    haskellPackages.greenclip
+
+    # PASSWORD MANAGER
+    bitwarden
+    bitwarden-cli
 
     # OTHER
+    acpi
+    arandr
     docker
+    docker-compose
     git
     highlight
     lf
+    flac
+    flameshot
+    lm_sensors
+    pandoc
+    tdesktop
+    spotify
+
+    # FONT
+    fira-code
+    font-awesome
+    joypixels
+    symbola
   ];
   environment.shells = [ pkgs.bash pkgs.zsh ];
 
