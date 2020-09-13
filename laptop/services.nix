@@ -37,14 +37,12 @@
     #   "CPU_HWP_ON_AC" = "performance";
     #   "CPU_HWP_ON_BAT" = "balance-performance";
     # };
-    settings = "
-      TLP_ENABLE = 1\n
-      TLP_DEFAULT_MODE = AC\n
-      WIFI_PWR_ON_AC = off\n
-      WIFI_PWR_ON_BAT = on\n
-      CPU_HWP_ON_AC = performance\n
-      CPU_HWP_ON_BAT = balance-performance\n
-    ";
+    extraConfig = "TLP_ENABLE = 1\n
+TLP_DEFAULT_MODE = AC\n
+WIFI_PWR_ON_AC = off\n
+WIFI_PWR_ON_BAT = on\n
+CPU_HWP_ON_AC = performance\n
+CPU_HWP_ON_BAT = balance-performance\n";
   };
 
   services.thermald = {
