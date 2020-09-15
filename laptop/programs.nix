@@ -20,10 +20,10 @@
     autosuggestions.enable = true;
     ohMyZsh = {
       enable = true;
-      plugins = [ "git" "zsh-autosuggestions" "zsh-history-substring-search" "zsh-syntax-highlighting" ];
+      plugins = [ "git" ];
     };
-    # TODO set zsh aliases
     syntaxHighlighting.enable = true;
+    histSize = 10000;
   };
 
   programs.ssh.askPassword = "";

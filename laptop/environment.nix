@@ -4,7 +4,7 @@
   environment.systemPackages = with pkgs; [
     # NIX STUFF
     home-manager # manage dotfiles nixos
-
+  
     # XORG
     bspwm
     dunst
@@ -15,7 +15,7 @@
     unclutter
     xclip
     xsel
-
+  
     # CLI TUI
     alacritty
     exa
@@ -27,14 +27,15 @@
     gotop
     powertop
     starship
-
+    fd
+  
     # EDITOR
     neovim
-
+  
     # BROWSERS
     firefox
     qutebrowser
-
+  
     # FILE VIEWER
     sxiv
     feh
@@ -44,11 +45,11 @@
     ffmpeg
     rofi
     haskellPackages.greenclip
-
+  
     # PASSWORD MANAGER
     bitwarden
     bitwarden-cli
-
+  
     # OTHER
     acpi
     arandr
@@ -63,13 +64,9 @@
     pandoc
     tdesktop
     spotify
-
-    # FONT
-    fira-code
-    font-awesome
-    joypixels
-    symbola
+  
   ];
+
   environment.shells = [ pkgs.bash pkgs.zsh ];
 
   environment.variables = {
@@ -121,5 +118,19 @@
     "zaturha" = "devour zathura";
     "sxiv" = "devour sxiv";
     "cz" = "chezmoi";
+  };
+
+  fonts = {
+    fonts = [
+      pkgs.fira-code
+      pkgs.font-awesome
+      pkgs.joypixels
+      pkgs.symbola
+    ];
+    fontconfig = {
+      defaultFonts = {
+        monospace = [ "fira-code" ];
+      };
+    };
   };
 }
