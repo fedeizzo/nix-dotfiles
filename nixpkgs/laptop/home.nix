@@ -8,15 +8,12 @@ in
     ../../modules/chat.nix
     ../../modules/cli.nix
     ../../modules/cuda.nix
-    ../../modules/git.nix
+    ../../modules/languages.nix
     ../../modules/media.nix
+    ../../modules/neovim.nix
     ../../modules/nix-utilities.nix
     ../../modules/nixos-desktop.nix
-    ../../modules/python.nix
     ../../modules/ssh.nix
-    ../../modules/languages.nix
-    ../../modules/neovim.nix
-    ../../modules/emacs.nix
   ];
 
   home.username = builtins.getEnv "USER";
@@ -31,10 +28,11 @@ in
     histSize = 10000;
     plugins = [{
       name = "zsh-history-substring-search";
-      src = pkgs.fetchFromGitHub {
-        inherit (sources.zsh-history-substring-search) owner repo rev sha256;
-      };
     }]
+    oh-my-zsh = {
+      enable = true;
+      plugins = [ "git" ];
+    }
   };
 
   # TODO see how lorri works

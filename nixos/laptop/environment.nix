@@ -15,36 +15,10 @@
     unclutter
     xclip
     xsel
-  
-    # CLI TUI
-    alacritty
-    exa
-    fzf
-    htop
     neofetch
     wget
+    curl
     bc
-    gotop
-    powertop
-    starship
-    fd
-  
-    # EDITOR
-    neovim
-  
-    # BROWSERS
-    firefox
-    qutebrowser
-  
-    # FILE VIEWER
-    sxiv
-    feh
-    mpv
-    vlc
-    zathura
-    ffmpeg
-    rofi
-    haskellPackages.greenclip
   
     # PASSWORD MANAGER
     bitwarden
@@ -57,12 +31,10 @@
     docker-compose
     git
     highlight
-    lf
     flac
     flameshot
     lm_sensors
     pandoc
-    tdesktop
     spotify
   
   ];
