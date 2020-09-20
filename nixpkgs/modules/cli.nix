@@ -29,7 +29,9 @@
       enableNixDirenvIntegration = true;
   };
 
-  home.file.".gitconfig".source = ../../dotfiles/dot_gitconfig;
+  # home.file.".gitconfig".source = ../../dotfiles/dot_gitconfig;
   # xdg.configFile."direnv/lib/poetry.sh".source = ../configs/direnv/poetry.sh;
+  xdg.configFile."lf/lfrc".source = ../../dotfiles/dot_config/lf/lfrc;
+  xdg.configFile."starship.toml".source = ../../dotfiles/dot_config/starship.toml;
 }
 

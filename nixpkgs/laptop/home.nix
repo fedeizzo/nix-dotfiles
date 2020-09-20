@@ -36,5 +36,5 @@ in
   };
 
   # TODO see how lorri works
-  services.lorri.enable = true;
+  # services.lorri.enable = true;
 }
