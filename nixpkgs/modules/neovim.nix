@@ -33,7 +33,7 @@
       vimwiki
       # TODO maybe vim-javascript, vim-jsx and typescirpt-vim don't work
       vim-javascript
-      vim-jsx
+      #vim-jsx
       typescript-vim
       vim-toml
       vim-nix

@@ -4,3 +4,4 @@ unlink $HOME/.config/nixpkgs/config.nix
 unlink $HOME/.config/dotfiles
 unlink ./home.nix
 unlink ./config.nix
+unlink ./nixpkgs
