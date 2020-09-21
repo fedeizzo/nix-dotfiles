@@ -4,16 +4,16 @@ let
 in
 {
   imports = [
-    ../../modules/alacritty.nix
-    ../../modules/chat.nix
-    ../../modules/cli.nix
-    ../../modules/cuda.nix
-    ../../modules/languages.nix
-    ../../modules/media.nix
-    ../../modules/neovim.nix
-    ../../modules/nix-utilities.nix
-    ../../modules/nixos-desktop.nix
-    ../../modules/ssh.nix
+    ../modules/alacritty.nix
+    ../modules/chat.nix
+    ../modules/cli.nix
+    ../modules/cuda.nix
+    ../modules/languages.nix
+    ../modules/media.nix
+    ../modules/neovim.nix
+    ../modules/nix-utilities.nix
+    ../modules/nixos-desktop.nix
+    ../modules/ssh.nix
   ];
 
   home.username = builtins.getEnv "USER";
@@ -23,16 +23,16 @@ in
   programs.zsh = {
     enable = true;
     enableCompletion = true;
-    autosuggestions.enable = true;
-    syntaxHighlighting.enable = true;
-    histSize = 10000;
+    enableAutosuggestions = true;
+    #syntaxHighlighting.enable = true;
+    history.save = 10000;
     plugins = [{
       name = "zsh-history-substring-search";
-    }]
+    }];
     oh-my-zsh = {
       enable = true;
       plugins = [ "git" ];
-    }
+    };
   };
 
   # TODO see how lorri works
