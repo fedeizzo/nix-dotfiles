@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 unlink $HOME/.config/nixpkgs 
 unlink $HOME/.config/nixpkgs/home.nix
 unlink $HOME/.config/nixpkgs/config.nix

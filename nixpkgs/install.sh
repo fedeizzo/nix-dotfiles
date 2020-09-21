@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 mkdir -p $HOME/.config
 ln -s $(pwd) $HOME/.config/nixpkgs 
 ln -s $(pwd)/$1/home.nix $HOME/.config/nixpkgs/home.nix
