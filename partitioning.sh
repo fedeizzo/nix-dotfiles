@@ -44,7 +44,7 @@ mntopt_nocow="autodefrag,space_cache=v2,noatime,nocow"
 # else
 #     ssd=false
 # fi
-ssd=true
+ssd=false
 if $ssd; then
     mntopt="$mntopt,discard=async"
     mntopt_nocow="$mntopt,discard=async"
@@ -108,6 +108,7 @@ for sv in $subvolumes_nocow; do
 done
 
 # my personal config
+./install.sh fresh
 nixos-install
 
 swapoff /mnt/swap/.swapfile
