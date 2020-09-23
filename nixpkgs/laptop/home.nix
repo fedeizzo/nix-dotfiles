@@ -28,6 +28,7 @@ in
     enableAutosuggestions = true;
     #syntaxHighlighting.enable = true;
     history.save = 10000;
+    initExtraBeforeCompInit = "export ZSH=${pkgs.oh-my-zsh}/share/oh-my-zsh/";
     #plugins = [{
     #  name = "zsh-history-substring-search";
     #}];
