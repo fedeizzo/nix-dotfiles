@@ -1,6 +1,6 @@
 { pkgs, ... }:
 let
-  sources = import ../../nix/sources.nix;
+  sources = import ../nix/sources.nix;
 in
 {
   imports = [
@@ -22,27 +22,34 @@ in
 
   programs.zsh = {
     enable = true;
-    # TODO in order to enable completion
-    # environment.pathsToLink = [ "/share/zsh" ];
+    #TODO in order to enable completion
+    #environment.pathsToLink = [ "/share/zsh" ];
     enableCompletion = true;
     enableAutosuggestions = true;
-    #syntaxHighlighting.enable = true;
     history.save = 10000;
-    initExtraBeforeCompInit = "export ZSH=${pkgs.oh-my-zsh}/share/oh-my-zsh/";
-    initExtra = "export ZSH=${pkgs.oh-my-zsh}/share/oh-my-zsh/";
-    #plugins = [{
-    #  name = "zsh-history-substring-search";
-    #}];
+    plugins = [{
+      name = "zsh-history-substring-search";
+      src = pkgs.fetchFromGitHub {
+        inherit (sources.historysubstring) owner repo rev sha256;
+      };
+    }
+    {
+      name = "zsh-syntax-highlighting";
+      src = pkgs.fetchFromGitHub {
+        inherit (sources.syntaxhighlighting) owner repo rev sha256;
+      };
+    }
+    ];
     oh-my-zsh = {
       enable = true;
-      plugins = [ "git" ];
     };
+    initExtra = builtins.readFile ../../dotfiles/dot_zshrc;
+    envExtra = builtins.readFile ../../dotfiles/dot_zshenv;
   };
 
   # TODO see how lorri works
   # services.lorri.enable = true;
-  home.file.".zshrc".source = ../../dotfiles/dot_zshrc;
-  home.file.".zshenv".source = ../../dotfiles/dot_zshenv;
+
   home.file.".sources" = {
     source = ../../dotfiles/dot_sources;
     executable = true;
