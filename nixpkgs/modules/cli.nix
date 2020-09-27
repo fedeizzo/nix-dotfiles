@@ -16,11 +16,11 @@
     nmap
     lf
     universal-ctags
+    dragon-drop
     unzip
     xsv
     gotop
     zsh
-    zsh-history-substring-search
   ];
 
 

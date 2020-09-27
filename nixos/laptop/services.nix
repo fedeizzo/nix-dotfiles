@@ -54,4 +54,15 @@ CPU_HWP_ON_BAT = balance-performance\n";
     enable = true;
     interval = "weekly";
   };
+
+  systemd.user.services."betterlockscreen" = {
+    description = "Lock screen when going to sleep/suspend";
+    before = [ "sleep.target" "suspend.target" ];
+    environment = {
+      "DISPLAY": ":0"
+    };
+    script = "/usr/bin/betterlockscreen --lock" ;
+    postStart = "/sbin/sleep 1";
+    wantedBy = [ "sleep.target" "suspend.target" ];
+  };
 }

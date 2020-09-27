@@ -1,6 +1,12 @@
 { config, pkgs, libs, ... }:
 
 {
+  home.packages = with pkgs; [
+    betterlockscreen
+    imgur-screenshot
+    mpd-mpris
+  ];
+
   # BSPWM
   xdg.configFile."bspwm/bspwmrc".source = ../../dotfiles/dot_config/bspwm/executable_bspwmrc;
   xdg.configFile."bspwm/pacwall.png".source = ../../dotfiles/dot_config/bspwm/pacwall.png;

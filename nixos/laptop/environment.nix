@@ -2,9 +2,6 @@
 
 {
   environment.systemPackages = with pkgs; [
-    # NIX STUFF
-    home-manager # manage dotfiles nixos
-  
     # XORG
     bspwm
     dunst
@@ -20,10 +17,6 @@
     curl
     bc
   
-    # PASSWORD MANAGER
-    bitwarden
-    bitwarden-cli
-  
     # OTHER
     acpi
     arandr
@@ -31,12 +24,7 @@
     docker-compose
     git
     highlight
-    flac
-    flameshot
     lm_sensors
-    pandoc
-    spotify
-  
   ];
 
   environment.shells = [ pkgs.bash pkgs.zsh ];
@@ -49,17 +37,17 @@
     "TERMINAL" = "alacritty";
     "BROWSER" = "firefox";
     "COLORTERM" = "truecolor";
-    "PAGER" = "less";
-    "LESS" = "-R";
-    "LESSHISTFILE" = "-";
-    "LESS_TERMCAP_mb" = "$'\E[01;31m'";
-    "LESS_TERMCAP_md" = "$'\E[01;31m'";
-    "LESS_TERMCAP_me" = "$'\E[0m'";
-    "LESS_TERMCAP_se" = "$'\E[0m'";
-    "LESS_TERMCAP_so" = "$'\E[01;44;33m'";
-    "LESS_TERMCAP_ue" = "$'\E[0m'";
-    "LESS_TERMCAP_us" = "$'\E[01;32m'";
-    "LESSOPEN" = "|${pkgs.highlight} /bin/highlight -O ansi %s 2>/dev/null";
+    # "PAGER" = "less";
+    # "LESS" = "-R";
+    # "LESSHISTFILE" = "-";
+    # "LESS_TERMCAP_mb" = "$'\E[01;31m'";
+    # "LESS_TERMCAP_md" = "$'\E[01;31m'";
+    # "LESS_TERMCAP_me" = "$'\E[0m'";
+    # "LESS_TERMCAP_se" = "$'\E[0m'";
+    # "LESS_TERMCAP_so" = "$'\E[01;44;33m'";
+    # "LESS_TERMCAP_ue" = "$'\E[0m'";
+    # "LESS_TERMCAP_us" = "$'\E[01;32m'";
+    # "LESSOPEN" = "|${pkgs.highlight} /bin/highlight -O ansi %s 2>/dev/null";
   };
 
   environment.shellAliases = {
@@ -84,12 +72,6 @@
     "llt" = "exa --tree --level=3 --icons";
 
     "SS" = "systemctl";
-
-    # devour aliases
-    "vlc" = "devour vlc";
-    "zaturha" = "devour zathura";
-    "sxiv" = "devour sxiv";
-    "cz" = "chezmoi";
   };
 
   fonts = {

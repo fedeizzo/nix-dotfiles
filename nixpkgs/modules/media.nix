@@ -2,12 +2,14 @@
 
 {
   home.packages = with pkgs; [
-    sxiv
     feh
+    ffmpeg
+    flac
+    flameshot
     mpv
+    sxiv
     vlc
     zathura
-    ffmpeg
-    flameshot
+    streamlink
   ];
 }

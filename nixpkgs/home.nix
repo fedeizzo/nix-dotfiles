@@ -1,1 +1,0 @@
-/home/fedeizzo/nixOs-config/nixpkgs/laptop/home.nix

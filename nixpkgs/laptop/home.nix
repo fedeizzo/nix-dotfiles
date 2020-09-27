@@ -19,11 +19,10 @@ in
   home.username = builtins.getEnv "USER";
   home.homeDirectory = builtins.getEnv "HOME";
   home.stateVersion = "20.09";
+  environment.pathsToLink = [ "/share/zsh" ];
 
   programs.zsh = {
     enable = true;
-    #TODO in order to enable completion
-    #environment.pathsToLink = [ "/share/zsh" ];
     enableCompletion = true;
     enableAutosuggestions = true;
     history.save = 10000;
@@ -47,9 +46,6 @@ in
     envExtra = builtins.readFile ../../dotfiles/dot_zshenv;
   };
 
-  # TODO see how lorri works
-  # services.lorri.enable = true;
-
   home.file.".sources" = {
     source = ../../dotfiles/dot_sources;
     executable = true;
@@ -60,4 +56,6 @@ in
     executable = true;
   };
   xdg.configFile."sxhkd/sxhkdrc".source = ../../dotfiles/dot_config/sxhkd/sxhkdrc;
+
+  services.lorri.enable = true;
 }
