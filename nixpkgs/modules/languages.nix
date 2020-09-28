@@ -4,7 +4,7 @@
   home.packages = with pkgs; [
     python39
     clang
-    ctags
+    #ctags
     lua
   ];
   # TODO work

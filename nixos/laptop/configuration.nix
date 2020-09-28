@@ -27,7 +27,7 @@
   # TODO see console in order to change ctrl with caps on laptop keyboard
 
   # TODO choose if I want to change the version of the kernel
-  # boot.kernelPackages = pkgs.linuxPackages_latest;
+  #boot.kernelPackages = pkgs.linuxPackages_latest;
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
@@ -69,7 +69,7 @@
   # this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "20.03"; # Did you read the comment?
+  system.stateVersion = "20.09"; # Did you read the comment?
 
   nixpkgs.config = { 
     allowUnfree = true; 

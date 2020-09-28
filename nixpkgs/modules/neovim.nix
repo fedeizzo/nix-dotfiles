@@ -5,7 +5,6 @@
   programs.neovim = {
     enable = true;
     package = pkgs.neovim-nightly;
-    extraConfig = builtins.readFile ../../dotfiles/dot_config/nvim/init.vim;
     plugins = with pkgs.vimPlugins; [
       vim-devicons
       lightline-vim
@@ -46,6 +45,7 @@
       # TODO vim-vsnip using niv
       # TODO vim-vsnip-integ using niv
     ];
+    extraConfig = builtins.readFile ../../dotfiles/dot_config/nvim/init.vim;
     withNodeJs = false;
     withPython = false;
     withPython3 = false;

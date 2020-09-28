@@ -28,6 +28,7 @@
   ];
 
   environment.shells = [ pkgs.bash pkgs.zsh ];
+  environment.pathsToLink = [ "/share/zsh" ];
 
   environment.variables = {
     "EDITOR" = "nvim";

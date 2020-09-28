@@ -19,7 +19,6 @@ in
   home.username = builtins.getEnv "USER";
   home.homeDirectory = builtins.getEnv "HOME";
   home.stateVersion = "20.09";
-  environment.pathsToLink = [ "/share/zsh" ];
 
   programs.zsh = {
     enable = true;
