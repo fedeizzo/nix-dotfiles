@@ -59,7 +59,11 @@ in
     executable = true;
     recursive = true;
   };
+  home.file.".gitconfig" = {
+    source = ../../dotfiles/dot_gitconfig;
+  };
   xdg.configFile."sxhkd/sxhkdrc".source = ../../dotfiles/dot_config/sxhkd/sxhkdrc;
+  xdg.configFile."rofi/config.rasi".source = ../../dotfiles/dot_config/rofi/config.rasi;
 
   services.lorri.enable = true;
 }
