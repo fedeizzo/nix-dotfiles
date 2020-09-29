@@ -28,7 +28,7 @@
   xdg.configFile."lf/lfrc".source = ../../dotfiles/dot_config/lf/lfrc;
 
   # NEOFETCH
-  xdg.configFile."noefetch/config.conf".source = ../../dotfiles/dot_config/noefetch/config.conf;
+  xdg.configFile."noefetch/config.conf".source = ../../dotfiles/dot_config/neofetch/config.conf;
 
   # PICOM 
   xdg.configFile."picom/picom.conf".source = ../../dotfiles/dot_config/picom/picom.conf;
@@ -38,14 +38,14 @@
 
   # Xresources
   home.file.".Xresources" = {
-    source = ../../dofiles/dot_Xresources;
-  }
+    source = ../../dotfiles/dot_Xresources;
+  };
 
   # xinitrc
   home.file.".xinitrc" = {
-    source = ../../dofiles/executable_dot_xinitrc;
+    source = ../../dotfiles/executable_dot_xinitrc;
     executable = true;
-  }
+  };
 
   # PERSONAL SCRIPTS
   home.file.".sources" = {

@@ -13,7 +13,9 @@ in
     ../modules/neovim.nix
     ../modules/nix-utilities.nix
     ../modules/nixos-desktop.nix
+    ../modules/services.nix
     ../modules/ssh.nix
+    ../modules/xorg-related.nix
   ];
 
   home.username = builtins.getEnv "USER";

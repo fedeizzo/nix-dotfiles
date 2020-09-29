@@ -11,9 +11,9 @@
         ExecStart = "/usr/bin/mpris-proxy";
       };
       Install = {
-        WantedBy = "default.target";
+        WantedBy = [ "default.target" ];
       };
-    }
+    };
     greenclip = {
       Unit = {
         Description = "Greenclip agent";
@@ -25,8 +25,8 @@
         Restart = "always";
       };
       Install = {
-        WantedBy = "default.target";
+        WantedBy = [ "default.target" ];
       };
-    }
+    };
   };
 }

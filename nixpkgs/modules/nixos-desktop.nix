@@ -2,7 +2,7 @@
 
 {
   home.packages = with pkgs; [
-    (nerdfonts.override { fonts = [ "Meslo" "Papirus" "SauceCodePro" ]; })
+    (nerdfonts.override { fonts = [ "Meslo" "FiraCode" ]; })
     arandr
     bitwarden
     bitwarden-cli
@@ -29,7 +29,7 @@
   home.file.".local/share/qutebrowser/userscripts/rofiQutebrowser" = {
     source = ../../dotfiles/dot_local/share/private_qutebrowser/userscripts/executable_rofiQutebrowser;
     executable = true;
-  }
+  };
 
   # GREENCLIP
   xdg.configFile."greenclip.cfg".source = ../../dotfiles/dot_config/greenclip.cfg;
