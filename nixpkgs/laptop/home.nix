@@ -45,25 +45,5 @@ in
     envExtra = builtins.readFile ../../dotfiles/dot_zshenv;
   };
 
-  home.file.".sources" = {
-    source = ../../sources;
-    executable = true;
-    recursive = true;
-  };
-  home.file."./.config/bspwm/bspwmrc" = {
-    source = ../../dotfiles/dot_config/bspwm/executable_bspwmrc;
-    executable = true;
-  };
-  home.file.".config/nvim" = {
-    source = ../../dotfiles/dot_config/nvim;
-    executable = true;
-    recursive = true;
-  };
-  home.file.".gitconfig" = {
-    source = ../../dotfiles/dot_gitconfig;
-  };
-  xdg.configFile."sxhkd/sxhkdrc".source = ../../dotfiles/dot_config/sxhkd/sxhkdrc;
-  xdg.configFile."rofi/config.rasi".source = ../../dotfiles/dot_config/rofi/config.rasi;
-
   services.lorri.enable = true;
 }

@@ -2,7 +2,7 @@
 
 {
   home.packages = with pkgs; [
-    (nerdfonts.override { fonts = [ "Meslo" ]; })
+    (nerdfonts.override { fonts = [ "Meslo" "Papirus" "SauceCodePro" ]; })
     arandr
     bitwarden
     bitwarden-cli
@@ -17,5 +17,21 @@
     # simplescreenrecorder
     # steam
   ];
+
+  # ROFI
+  xdg.configFile."rofi/config.rasi".source = ../../dotfiles/dot_config/rofi/config.rasi;
+
+  # QUTEBROWSER
+  home.file.".config/qutebrowser" = {
+    source = ../../dotfiles/dot_config/private_qutebrowser;
+    recursive = true;
+  };
+  home.file.".local/share/qutebrowser/userscripts/rofiQutebrowser" = {
+    source = ../../dotfiles/dot_local/share/private_qutebrowser/userscripts/executable_rofiQutebrowser;
+    executable = true;
+  }
+
+  # GREENCLIP
+  xdg.configFile."greenclip.cfg".source = ../../dotfiles/dot_config/greenclip.cfg;
 }
 
