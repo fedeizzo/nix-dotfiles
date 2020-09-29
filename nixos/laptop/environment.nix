@@ -76,6 +76,7 @@
     "SS" = "systemctl";
   };
 
+  # TODO find a way to run fc-cache -rv to reload font cache (root and user)
   fonts = {
     fonts = [
       pkgs.fira-code
