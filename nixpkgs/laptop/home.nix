@@ -46,13 +46,18 @@ in
   };
 
   home.file.".sources" = {
-    source = ../../dotfiles/dot_sources;
+    source = ../../sources;
     executable = true;
     recursive = true;
   };
   home.file."./.config/bspwm/bspwmrc" = {
     source = ../../dotfiles/dot_config/bspwm/executable_bspwmrc;
     executable = true;
+  };
+  home.file.".config/nvim" = {
+    source = ../../dotfiles/dot_config/nvim;
+    executable = true;
+    recursive = true;
   };
   xdg.configFile."sxhkd/sxhkdrc".source = ../../dotfiles/dot_config/sxhkd/sxhkdrc;
 

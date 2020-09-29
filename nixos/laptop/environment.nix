@@ -16,6 +16,7 @@
     wget
     curl
     bc
+    killall
   
     # OTHER
     acpi
