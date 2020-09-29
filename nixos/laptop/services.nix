@@ -12,6 +12,14 @@
     };
     layout = "us";
     libinput.enable = true;
+    extraConfig = ''
+      Section "InputClass"
+        Identifier "touchpad"
+        Driver "libinput"
+        MatchIsTouchpad "on"
+        Option "NaturalScrolling" "true"
+      EndSection
+    '';
     #videoDrivers = [ "intel" "nvidia" ];
     videoDrivers = [ "intel" ];
     windowManager.bspwm.enable = true;
@@ -24,6 +32,7 @@
       AllowHostnameUpdates=false
     ";
     networkInterfaceBlacklist = [ "vmnet" "vboxnet" "virbr" "ifb" "docker" "veth" ];
+    wifi.backend = "iwd";
   };
 
   # TODO see crontab service

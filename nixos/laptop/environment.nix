@@ -85,10 +85,10 @@
       pkgs.joypixels
       pkgs.symbola
     ];
-    fontconfig = {
-      defaultFonts = {
-        monospace = [ "fira-code" ];
-      };
-    };
+    # fontconfig = {
+    #   defaultFonts = {
+    #     monospace = [ "fira-code" ];
+    #   };
+    # };
   };
 }

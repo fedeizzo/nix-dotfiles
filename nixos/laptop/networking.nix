@@ -2,7 +2,6 @@
 
 {
   networking.hostName = "fedeizzo-nixos"; # Define your hostname.
-  networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+  networking.wireless.iwd.enable = true;
   networking.useDHCP = false;
-  networking.interfaces.enp0s3.useDHCP = true;
 }

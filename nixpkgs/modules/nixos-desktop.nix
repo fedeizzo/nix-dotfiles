@@ -1,8 +1,50 @@
-{ config, pkgs, libs, ... }:
+{ config, pkgs, libs, ... }: 
 
-{
-  home.packages = with pkgs; [
-    (nerdfonts.override { fonts = [ "Meslo" "FiraCode" ]; })
+{ 
+  home.packages = with pkgs; [ 
+    (nerdfonts.override { fonts = [
+      "3270"
+      "Agave"
+      "AnonymousPro"
+      "Arimo"
+      "BitstreamVeraSansMono"
+      "CascadiaCode"
+      "Cousine"
+      "DaddyTimeMono"
+      "DejaVuSansMono"
+      "FantasqueSansMono"
+      "FiraCode"
+      "Go-Mono"
+      "Gohu"
+      "Hack"
+      "HeavyData"
+      "IBMPlexMono"
+      "Inconsolata"
+      "InconsolataGo"
+      "InconsolataLGC"
+      "Iosevka"
+      "JetBrainsMono"
+      "Lekton"
+      "LiberationMono"
+      "MPlus"
+      "Meslo"
+      "Monofur"
+      "Monoid"
+      "Mononoki"
+      "Noto"
+      "ProFont"
+      "ProggyClean"
+      "RobotoMono"
+      "ShareTechMono"
+      "SourceCodePro"
+      "SpaceMono"
+      "Terminus"
+      "Tinos"
+      "Ubuntu"
+      "UbuntuMono"
+      "VictorMono"
+      "iA-Writer"
+    ]; })
     arandr
     bitwarden
     bitwarden-cli
