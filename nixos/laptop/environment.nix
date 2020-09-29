@@ -7,6 +7,7 @@
     dunst
     libnotify
     sxhkd
+    xdo
     xorg.xbacklight
     picom
     unclutter

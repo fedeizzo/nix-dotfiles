@@ -30,6 +30,10 @@
     source = ../../dotfiles/dot_local/share/private_qutebrowser/userscripts/executable_rofiQutebrowser;
     executable = true;
   };
+  home.file.".config/qutebrowser/browser-home" = {
+    source = ../../browser-home;
+    recursive = true;
+  };
 
   # GREENCLIP
   xdg.configFile."greenclip.cfg".source = ../../dotfiles/dot_config/greenclip.cfg;
