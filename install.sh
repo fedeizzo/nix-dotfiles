@@ -17,6 +17,7 @@ copy_laptop_conf() {
     cp "${dir}/nixos/laptop/programs.nix" /etc/nixos/programs.nix
     cp "${dir}/nixos/laptop/security.nix" /etc/nixos/security.nix
     cp "${dir}/nixos/laptop/services.nix" /etc/nixos/services.nix
+    cp -r "${dir}/nixos/laptop/pkgs" /etc/nixos/pkgs
     # nix-channel --add https://github.com/rycee/home-manager/archive/release-20.03.tar.gz home-manager
     # nix-channel --update
     # nix-shell '<home-manager>' -A install
@@ -31,6 +32,7 @@ fresh_install() {
     cp "${dir}/nixos/laptop/programs.nix" /mnt/etc/nixos/programs.nix
     cp "${dir}/nixos/laptop/security.nix" /mnt/etc/nixos/security.nix
     cp "${dir}/nixos/laptop/services.nix" /mnt/etc/nixos/services.nix
+    cp -r "${dir}/nixos/laptop/pkgs" /mnt/etc/nixos/pkgs
 }
 
 case $1 in

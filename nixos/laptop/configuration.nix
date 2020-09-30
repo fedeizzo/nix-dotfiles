@@ -73,6 +73,9 @@
 
   nixpkgs.config = { 
     allowUnfree = true; 
+    # packageOverrides = pkgs: with pkgs; rec {
+    #   gfonts = callPackage pkgs/gfonts.nix {};
+    # };
   };
 
   virtualisation.docker = {

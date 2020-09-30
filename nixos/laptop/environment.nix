@@ -1,5 +1,8 @@
 { config, pkgs, ... }:
 
+let 
+  gfonts = import ./pkgs/gfonts.nix;
+in
 {
   environment.systemPackages = with pkgs; [
     # XORG
@@ -80,15 +83,18 @@
   # TODO find a way to run fc-cache -rv to reload font cache (root and user)
   fonts = {
     fonts = [
+      gfonts
       pkgs.fira-code
       pkgs.font-awesome
       pkgs.joypixels
       pkgs.symbola
     ];
-    # fontconfig = {
-    #   defaultFonts = {
-    #     monospace = [ "fira-code" ];
-    #   };
-    # };
+    fontconfig = {
+      defaultFonts = {
+        monospace = [ "Nimbus Mono PS" ];
+        sansSerif = [ "Nimbus Sans" ];
+        serif = [ "Nimbus Roman" ];
+      };
+    };
   };
 }
