@@ -12,6 +12,7 @@
     sxiv
     vlc
     zathura
+    file
   ];
   
   # ZATHURA

@@ -1,5 +1,4 @@
 { stdenv, fetchFromGitHub, git, pkg-config }:
-# with import <nixpkgs> {};
 
 let
   name = "urw-base35-fonts";
@@ -23,17 +22,4 @@ stdenv.mkDerivation {
     git
     pkg-config
   ];
-
-  # meta = {
-  #   description = "i3lock wrapper with multi-monitor support";
-  #   longDescription = ''
-  #     i3lock wrapper with multi-monitor support.
-  #   '';
-  #   homepage = "https://github.com/jeffmhubbard/${name}";
-  #   license = "MIT";
-  #   platforms = with stdenv.lib.platforms; linux;
-  #   maintainers = [
-  #     stdenv.lib.maintainers.jeffmhubbard
-  #   ];
-  # };
 }

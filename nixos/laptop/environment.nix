@@ -1,8 +1,5 @@
 { config, pkgs, ... }:
 
-let 
-  gfonts = import ./pkgs/gfonts.nix;
-in
 {
   environment.systemPackages = with pkgs; [
     # XORG
@@ -30,6 +27,7 @@ in
     git
     highlight
     lm_sensors
+    vim
   ];
 
   environment.shells = [ pkgs.bash pkgs.zsh ];
@@ -71,11 +69,11 @@ in
     "v" = "nvim";
 
     # exa aliases
-    "ls" = "exa --classify --icons";
-    "ll" = "exa --classify --group --long --header --git --icons";
-    "lll" = "exa --classify --group --long --header --git --icons | less";
-    "lla" = "exa --classify --group --long --all --header --git --icons";
-    "llt" = "exa --tree --level=3 --icons";
+    # "ls" = "exa --classify --icons";
+    # "ll" = "exa --classify --group --long --header --git --icons";
+    # "lll" = "exa --classify --group --long --header --git --icons | less";
+    # "lla" = "exa --classify --group --long --all --header --git --icons";
+    # "llt" = "exa --tree --level=3 --icons";
 
     "SS" = "systemctl";
   };
@@ -83,11 +81,11 @@ in
   # TODO find a way to run fc-cache -rv to reload font cache (root and user)
   fonts = {
     fonts = [
-      gfonts
       pkgs.fira-code
       pkgs.font-awesome
       pkgs.joypixels
       pkgs.symbola
+      (pkgs.callPackage ./pkgs/gfonts.nix {})
     ];
     fontconfig = {
       defaultFonts = {

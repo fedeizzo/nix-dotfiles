@@ -2,10 +2,18 @@
 
 {
   home.packages = with pkgs; [
-    python39
+    python3
     clang
-    #ctags
     lua
+    
+    # lua support neovim
+    bat
+    ripgrep
+    nodePackages.bash-language-server
+    nodePackages.dockerfile-language-server-nodejs
+    python38Packages.pyls-black
+    python38Packages.python-language-server
+    ccls
   ];
   # TODO work
   # qgis

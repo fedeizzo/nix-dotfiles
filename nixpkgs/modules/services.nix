@@ -8,7 +8,7 @@
       };
       Service = {
         Type = "simple";
-        ExecStart = "/usr/bin/mpris-proxy";
+        ExecStart = "${pkgs.mpd-mpris}/bin/mpris-proxy";
       };
       Install = {
         WantedBy = [ "default.target" ];
@@ -21,7 +21,7 @@
       };
       Service = {
         Type = "simple";
-        ExecStart = "/usr/bin/greenclip daemon";
+        ExecStart = "${pkgs.haskellPackages.greenclip}/bin/greenclip daemon";
         Restart = "always";
       };
       Install = {

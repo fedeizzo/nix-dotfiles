@@ -5,6 +5,9 @@
     bspwmbar
     betterlockscreen
     mpd-mpris
+    pavucontrol
+    keyutils
+    jq
   ];
 
   # BSPWM

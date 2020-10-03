@@ -1,5 +1,4 @@
 { stdenv, fetchFromGitHub, cairo, fontconfig, harfbuzz, git, pkg-config, libxcb, alsaLib, xcbutil, xcbproto, xcbutilwm, xcbutilimage, xcbutilrenderutil }:
-# with import <nixpkgs> {};
 
 let
   name = "bspwmbar";
@@ -18,8 +17,10 @@ stdenv.mkDerivation {
     mkdir -p $out/bin
     ./configure
     sed -i 's/sans-serif/monospace/' config.h
-    # sed -i 's/\/\///' config.h
+    sed -i 's/\/\///' config.h
     sed -i 's///' config.h
+    sed -i 's/BAT0/BAT1/' config.h
+    sed -i 's/"%H:%M"/"%H:%M %Y-%m-%d"/' config.h
     make 
     cp bspwmbar $out/bin
   '';

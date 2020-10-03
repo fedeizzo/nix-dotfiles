@@ -27,7 +27,7 @@
   # TODO see console in order to change ctrl with caps on laptop keyboard
 
   # TODO choose if I want to change the version of the kernel
-  #boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelPackages = pkgs.linuxPackages_latest;
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";

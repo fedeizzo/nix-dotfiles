@@ -5,8 +5,6 @@
     enable = true;
     autorun = true;
     desktopManager.default = null;
-    # displayManager.defaultSession = "lightdm";
-    # displayManager.job.execCmd = "${pkgs.lighdm}/bin/lightdm";
     displayManager.lightdm = {
       enable = true;
     };
@@ -20,7 +18,6 @@
         Option "NaturalScrolling" "true"
       EndSection
     '';
-    #videoDrivers = [ "intel" "nvidia" ];
     videoDrivers = [ "intel" ];
     windowManager.bspwm.enable = true;
   };
@@ -38,21 +35,13 @@
   # TODO see crontab service
   services.tlp = {
     enable = true;
-    # Settings https://linrunner.de/tlp
-    # settings = {
-    #   "TLP_ENABLE" = 1;
-    #   "TLP_DEFAULT_MODE" = "AC";
-    #   "WIFI_PWR_ON_AC" = "off";
-    #   "WIFI_PWR_ON_BAT" = "on";
-    #   "CPU_HWP_ON_AC" = "performance";
-    #   "CPU_HWP_ON_BAT" = "balance-performance";
-    # };
-    extraConfig = "TLP_ENABLE = 1\n
-TLP_DEFAULT_MODE = AC\n
-WIFI_PWR_ON_AC = off\n
-WIFI_PWR_ON_BAT = on\n
-CPU_HWP_ON_AC = performance\n
-CPU_HWP_ON_BAT = balance-performance\n";
+    extraConfig = "TLP_ENABLE=1\n
+TLP_DEFAULT_MODE=AC\n
+WIFI_PWR_ON_AC=off\n
+WIFI_PWR_ON_BAT=on\n
+CPU_HWP_ON_AC=performance\n
+CPU_HWP_ON_BAT=balance-performance\n
+DEVICES_TO_ENABLE_ON_STARTUP=\"bluetooth wifi\"\n";
   };
 
   services.thermald = {
@@ -64,15 +53,31 @@ CPU_HWP_ON_BAT = balance-performance\n";
     interval = "weekly";
   };
 
-  systemd.user.services."betterlockscreen" = {
-    description = "Lock screen when going to sleep/suspend";
-    before = [ "sleep.target" "suspend.target" ];
-    environment = {
-      "DISPLAY"= ":0";
-    };
-    script = "/usr/bin/betterlockscreen --lock" ;
-    postStart = "/sbin/sleep 1";
-    wantedBy = [ "sleep.target" "suspend.target" ];
+  services.postgresql.enable = true;
+
+  # systemd.user.services."betterlockscreen" = {
+  #   description = "Lock screen when going to sleep/suspend";
+  #   before = [ "sleep.target" "suspend.target" ];
+  #   environment = {
+  #     "DISPLAY"= ":0";
+  #   };
+  #   script = "${pkgs.betterlockscreen}/bin/betterlockscreen --lock" ;
+  #   postStart = "/sbin/sleep 1";
+  #   wantedBy = [ "sleep.target" "suspend.target" ];
+  #   enable = true;
+  # };
+    systemd.user.services.betterlockscreen = {
     enable = true;
+    description = "Locks screen when going to sleep/suspend";
+    environment = { DISPLAY = "0"; };
+    serviceConfig = {
+      User = "fedeizzo";
+      Type = "simple";
+      ExecStart = ''${pkgs.betterlockscreen}/bin/betterlockscreen --lock'';
+      TimeoutSec = "infinity";
+    };
+    wantedBy = [ "sleep.target" "suspend.target" ];
+    before = [ "sleep.target" "suspend.target" ];
+    aliases = [ "betterlockscreen@fedeizzo.service" ];
   };
 }

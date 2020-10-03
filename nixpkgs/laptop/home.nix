@@ -7,7 +7,7 @@ in
     ../modules/alacritty.nix
     ../modules/chat.nix
     ../modules/cli.nix
-    #../modules/cuda.nix
+    ../modules/cuda.nix
     ../modules/languages.nix
     ../modules/media.nix
     ../modules/neovim.nix

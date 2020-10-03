@@ -23,7 +23,7 @@
   };
 
   hardware.bumblebee = {
-    enable = false;
+    enable = true;
     driver = "nvidia";
   };
 
@@ -33,5 +33,6 @@
     enable = true;
     extraModules = [ pkgs.pulseaudio-modules-bt ];
     extraConfig = "load-module module-bluetooth-discover a2dp_config=\"ldac_eqmid=sq\"\n";
+    package = pkgs.pulseaudioFull;
   };
 }
