@@ -11,11 +11,9 @@ in
     ../modules/languages.nix
     ../modules/media.nix
     ../modules/neovim.nix
-    ../modules/nix-utilities.nix
     ../modules/nixos-desktop.nix
     ../modules/services.nix
     ../modules/ssh.nix
-    ../modules/xorg-related.nix
   ];
 
   home.username = builtins.getEnv "USER";
@@ -33,13 +31,12 @@ in
         inherit (sources.historysubstring) owner repo rev sha256;
       };
     }
-    {
-      name = "zsh-syntax-highlighting";
-      src = pkgs.fetchFromGitHub {
-        inherit (sources.syntaxhighlighting) owner repo rev sha256;
-      };
-    }
-    ];
+      {
+        name = "zsh-syntax-highlighting";
+        src = pkgs.fetchFromGitHub {
+          inherit (sources.syntaxhighlighting) owner repo rev sha256;
+        };
+      }];
     oh-my-zsh = {
       enable = true;
     };
@@ -47,5 +44,12 @@ in
     envExtra = builtins.readFile ../../dotfiles/dot_zshenv;
   };
 
-  services.lorri.enable = true;
+  xdg.mimeApps = {
+    enable = true;
+    defaultApplications = {
+      "application/pdf" = "org.pwmt.zathura.desktop";
+      "inode/directory" = "lf.desktop";
+      "text/plain" = "nvim.desktop";
+    };
+  };
 }

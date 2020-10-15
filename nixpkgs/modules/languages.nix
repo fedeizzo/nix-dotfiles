@@ -3,9 +3,10 @@
 {
   home.packages = with pkgs; [
     python3
-    clang
+    llvm
     lua
-    
+    python38Packages.pandocfilters
+
     # lua support neovim
     bat
     ripgrep
@@ -13,6 +14,7 @@
     nodePackages.dockerfile-language-server-nodejs
     python38Packages.pyls-black
     python38Packages.python-language-server
+    haskellPackages.haskell-language-server
     ccls
   ];
   # TODO work

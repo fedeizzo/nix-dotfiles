@@ -18,7 +18,8 @@
     curl
     bc
     killall
-  
+    haskellPackages.xmobar
+
     # OTHER
     acpi
     arandr
@@ -85,7 +86,7 @@
       pkgs.font-awesome
       pkgs.joypixels
       pkgs.symbola
-      (pkgs.callPackage ./pkgs/gfonts.nix {})
+      (pkgs.callPackage ./pkgs/gfonts.nix { })
     ];
     fontconfig = {
       defaultFonts = {

@@ -3,30 +3,33 @@
 {
   home.packages = with pkgs; [
     coreutils
+    dragon-drop
     exa
     fd
     fzf
     gawk
     gnused
     gnutls
+    gotop
     htop
-    powertop
-    starship
+    lf
     nix-zsh-completions
     nmap
-    lf
+    powertop
+    starship
     universal-ctags
-    dragon-drop
     unzip
     xsv
-    gotop
     zsh
+    nixpkgs-fmt
+    nixpkgs-lint
+    cachix
   ];
 
 
   programs.direnv = {
-      enable = true;
-      enableNixDirenvIntegration = true;
+    enable = true;
+    enableNixDirenvIntegration = true;
   };
 
   home.file.".gitconfig" = {
@@ -35,4 +38,3 @@
   xdg.configFile."lf/lfrc".source = ../../dotfiles/dot_config/lf/lfrc;
   xdg.configFile."starship.toml".source = ../../dotfiles/dot_config/starship.toml;
 }
-

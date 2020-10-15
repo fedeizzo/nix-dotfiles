@@ -1,10 +1,8 @@
 { stdenv, fetchFromGitHub, git, pkg-config }:
-
 let
   name = "urw-base35-fonts";
   version = "20200910";
 in
-
 stdenv.mkDerivation {
   name = "${name}";
   src = fetchFromGitHub {

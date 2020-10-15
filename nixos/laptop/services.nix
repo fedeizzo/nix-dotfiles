@@ -19,17 +19,22 @@
       EndSection
     '';
     videoDrivers = [ "intel" ];
+
     windowManager.bspwm.enable = true;
+    windowManager.xmonad = {
+      enable = true;
+      enableContribAndExtras = true;
+    };
   };
 
   services.connman = {
-    enable = true;
+    enable = false;
     extraConfig = "
       [General]
       AllowHostnameUpdates=false
     ";
     networkInterfaceBlacklist = [ "vmnet" "vboxnet" "virbr" "ifb" "docker" "veth" ];
-    wifi.backend = "iwd";
+    wifi.backend = "wpa_supplicant";
   };
 
   # TODO see crontab service
@@ -54,30 +59,4 @@ DEVICES_TO_ENABLE_ON_STARTUP=\"bluetooth wifi\"\n";
   };
 
   services.postgresql.enable = true;
-
-  # systemd.user.services."betterlockscreen" = {
-  #   description = "Lock screen when going to sleep/suspend";
-  #   before = [ "sleep.target" "suspend.target" ];
-  #   environment = {
-  #     "DISPLAY"= ":0";
-  #   };
-  #   script = "${pkgs.betterlockscreen}/bin/betterlockscreen --lock" ;
-  #   postStart = "/sbin/sleep 1";
-  #   wantedBy = [ "sleep.target" "suspend.target" ];
-  #   enable = true;
-  # };
-    systemd.user.services.betterlockscreen = {
-    enable = true;
-    description = "Locks screen when going to sleep/suspend";
-    environment = { DISPLAY = "0"; };
-    serviceConfig = {
-      User = "fedeizzo";
-      Type = "simple";
-      ExecStart = ''${pkgs.betterlockscreen}/bin/betterlockscreen --lock'';
-      TimeoutSec = "infinity";
-    };
-    wantedBy = [ "sleep.target" "suspend.target" ];
-    before = [ "sleep.target" "suspend.target" ];
-    aliases = [ "betterlockscreen@fedeizzo.service" ];
-  };
 }

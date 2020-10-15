@@ -35,4 +35,10 @@
     extraConfig = "load-module module-bluetooth-discover a2dp_config=\"ldac_eqmid=sq\"\n";
     package = pkgs.pulseaudioFull;
   };
+
+  # Enable sound.
+  sound = {
+    enable = true;
+    mediaKeys.enable = true;
+  };
 }

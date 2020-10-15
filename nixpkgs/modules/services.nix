@@ -1,6 +1,7 @@
 { config, pkgs, libs, ... }:
 
 {
+  services.lorri.enable = true;
   systemd.user.services = {
     mpris-proxy = {
       Unit = {
@@ -28,5 +29,20 @@
         WantedBy = [ "default.target" ];
       };
     };
+    # spotifyd = {
+    #   Unit = {
+    #     Description = "A spotify playing daemon";
+    #     After = [ "sound.target" "network.target" ];
+    #     Wants = [ "sound.target" "network.target" ];
+    #   };
+    #   Service = {
+    #     ExecStart = "${pkgs.spotifyd}/bin/spotifyd --no-daemon";
+    #     Restart = "always";
+    #     RestartSec = "12";
+    #   };
+    #   Install = {
+    #     WantedBy = [ "default.target" ];
+    #   };
+    # };
   };
 }

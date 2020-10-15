@@ -1,10 +1,8 @@
 { stdenv, fetchFromGitHub, cairo, fontconfig, harfbuzz, git, pkg-config, libxcb, alsaLib, xcbutil, xcbproto, xcbutilwm, xcbutilimage, xcbutilrenderutil }:
-
 let
   name = "bspwmbar";
   version = "v0.6.1";
 in
-
 stdenv.mkDerivation {
   name = "${name}";
   src = fetchFromGitHub {

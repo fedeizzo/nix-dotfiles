@@ -33,15 +33,12 @@
   i18n.defaultLocale = "en_US.UTF-8";
 
   console = {
-  #  font = "Lat2-Terminus16";
+    #  font = "Lat2-Terminus16";
     keyMap = "us";
   };
 
   # Set your time zone.
   time.timeZone = "Europe/Rome";
-
-  # Enable sound.
-  sound.enable = true;
 
   # Enable the X11 windowing system.
 
@@ -59,7 +56,7 @@
     name = "fedeizzo";
     isNormalUser = true;
     createHome = true;
-    extraGroups = [ "wheel" "input" "video" "bumblebee" "docker" "autologin" "informant" "users"];
+    extraGroups = [ "wheel" "input" "video" "bumblebee" "docker" "autologin" "informant" "users" "networkmanager" ];
     shell = pkgs.zsh;
   };
 
@@ -71,8 +68,8 @@
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "20.09"; # Did you read the comment?
 
-  nixpkgs.config = { 
-    allowUnfree = true; 
+  nixpkgs.config = {
+    allowUnfree = true;
     # packageOverrides = pkgs: with pkgs; rec {
     #   gfonts = callPackage pkgs/gfonts.nix {};
     # };

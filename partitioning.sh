@@ -1,5 +1,5 @@
 #!/bin/sh
-set -e
+set - e
 BOOT_DEV="/dev/sda"
 ROOT_DEV="/dev/sda"
 
@@ -9,11 +9,11 @@ sgdisk -n 0:0:+260MiB -t 0:ef00 -c 0:boot "$BOOT_DEV"
 sgdisk -n 0:0:0 -t 0:8300 -c 0:nixenc "$ROOT_DEV"
 
 if [[ $BOOT_DEV == $ROOT_DEV ]]; then
-    boot="$BOOT_DEV"1
-    root="$BOOT_DEV"2
+boot="$BOOT_DEV"1
+root="$BOOT_DEV"2
 else
-    boot="$BOOT_DEV"1
-    root="$ROOT_DEV"2
+boot="$BOOT_DEV"1
+root="$ROOT_DEV"2
 fi
 
 # force re-reading the partition table
@@ -46,8 +46,8 @@ mntopt_nocow="autodefrag,space_cache=v2,noatime,nocow"
 # fi
 ssd=false
 if $ssd; then
-    mntopt="$mntopt,discard=async"
-    mntopt_nocow="$mntopt,discard=async"
+mntopt="$mntopt,discard=async"
+mntopt_nocow="$mntopt,discard=async"
 fi
 
 # mount root on mnt
@@ -58,31 +58,31 @@ subvolumes_nocow="@swap @tmp @var_cache @var_tmp"
 
 # create root, swap and snapshot subvolumes
 for sv in $subvolumes; do
-    btrfs subvolume create "/mnt/$sv"
+btrfs subvolume create "/mnt/$sv"
 done
 for sv in $subvolumes_nocow; do
-    btrfs subvolume create "/mnt/$sv"
+btrfs subvolume create "/mnt/$sv"
 done
 sync
 umount /mnt
 
 # mount subvolumes
 for sv in $subvolumes; do
-    dir="/mnt/$(echo "${sv#@}" | sed 's/_/\//g')"
-    if [ "$sv" != "@" ]; then
-        mkdir -p "$dir"
-    fi
-    mount -o "$mntopt,subvol=$sv" "$root" "$dir"
+dir="/mnt/$(echo "${sv#@}" | sed 's/_/\//g')"
+if [ "$sv" != "@" ]; then
+mkdir -p "$dir"
+fi
+mount -o "$mntopt,subvol=$sv" "$root" "$dir"
 done
 
 # mount subvolumes with nocow
 for sv in $subvolumes_nocow; do
-    dir="/mnt/$(echo "${sv#@}" | sed 's/_/\//g')"
-    if [ "$sv" != "@" ]; then
-        mkdir -p "$dir"
-    fi
-    mount -o "$mntopt_nocow,subvol=$sv" "$root" "$dir"
-    chattr +C -R "$dir"
+dir="/mnt/$(echo "${sv#@}" | sed 's/_/\//g')"
+if [ "$sv" != "@" ]; then
+mkdir -p "$dir"
+fi
+mount -o "$mntopt_nocow,subvol=$sv" "$root" "$dir"
+chattr +C -R "$dir"
 done
 
 # mount boot partition
@@ -101,10 +101,10 @@ nixos-generate-config --root /mnt
 
 # fix options not automatically written
 for sv in $subvolumes; do
-    sed "s/options = \[ \"subvol=${sv}\" \]/options = [ \"subvol=${sv}\" \"${mntopt//,/\" \"}\"\]/" -i /mnt/etc/nixos/hardware-configuration.nix
+sed "s/options = \[ \"subvol=${sv}\" \]/options = [ \"subvol=${sv}\" \"${mntopt//,/\" \"}\"\]/" -i /mnt/etc/nixos/hardware-configuration.nix
 done
 for sv in $subvolumes_nocow; do
-    sed "s/options = \[ \"subvol=${sv}\" \]/options = [ \"subvol=${sv}\" \"${mntopt_nocow//,/\" \"}\"\]/" -i /mnt/etc/nixos/hardware-configuration.nix
+sed "s/options = \[ \"subvol=${sv}\" \]/options = [ \"subvol=${sv}\" \"${mntopt_nocow//,/\" \"}\"\]/" -i /mnt/etc/nixos/hardware-configuration.nix
 done
 
 # my personal config
