@@ -14,6 +14,7 @@
     nodePackages.dockerfile-language-server-nodejs
     python38Packages.pyls-black
     python38Packages.python-language-server
+    python38Packages.black
     haskellPackages.haskell-language-server
     ccls
   ];

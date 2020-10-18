@@ -15,6 +15,7 @@
     zathura
     file
     spotify
+    weechat
     # spotifyd
     # spotify-tui
   ];

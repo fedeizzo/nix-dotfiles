@@ -54,7 +54,8 @@
     brightnessctl
     bspwmbar
     firefox
-    haskellPackages.greenclip
+    # haskellPackages.greenclip
+    xcmenu
     jq
     keyutils
     libreoffice
@@ -66,7 +67,7 @@
     pavucontrol
     playerctl
     qutebrowser
-    rofi
+    # rofi
     xorg.xmodmap
     xss-lock
     # simplescreenrecorder
@@ -74,7 +75,7 @@
   ];
 
   # ROFI
-  xdg.configFile."rofi/config.rasi".source = ../../dotfiles/dot_config/rofi/config.rasi;
+  # xdg.configFile."rofi/config.rasi".source = ../../dotfiles/dot_config/rofi/config.rasi;
 
   # QUTEBROWSER
   home.file = {
@@ -87,17 +88,17 @@
     ".config/qutebrowser/qsettings/QtProject.conf" = {
       source = ../../dotfiles/dot_config/private_qutebrowser/qsettings/QtProject.conf;
     };
-    ".local/share/qutebrowser/userscripts/rofiQutebrowser" = {
-      source = ../../dotfiles/dot_local/share/private_qutebrowser/userscripts/executable_rofiQutebrowser;
-      executable = true;
-    };
+    # ".local/share/qutebrowser/userscripts/rofiQutebrowser" = {
+    #   source = ../../dotfiles/dot_local/share/private_qutebrowser/userscripts/executable_rofiQutebrowser;
+    #   executable = true;
+    # };
     ".config/qutebrowser/browser-home" = {
       source = ../../browser-home;
       recursive = true;
     };
   };
   # GREENCLIP
-  xdg.configFile."greenclip.cfg".source = ../../dotfiles/dot_config/greenclip.cfg;
+  # xdg.configFile."greenclip.cfg".source = ../../dotfiles/dot_config/greenclip.cfg;
 
   # XMONAD
   home.file.".xprofile" = {

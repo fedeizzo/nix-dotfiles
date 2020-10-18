@@ -1,5 +1,5 @@
 #!/bin/sh
-set - e
+set -e
 BOOT_DEV="/dev/sda"
 ROOT_DEV="/dev/sda"
 

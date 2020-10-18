@@ -1,10 +1,16 @@
 { config, pkgs, ... }:
 
+let
+  impermanence = builtins.fetchTarball {
+    url =
+      "https://github.com/nix-community/impermanence/archive/master.tar.gz";
+  };
+in
 {
   # TODO see postBootCommand to do snapshots or instead create a systemd service
   # TODO see container in order to run copy of nixOs for steam and other pkg
   # TODO see console in order to change ctrl with caps on laptop keyboard
-  imports = [ ./hardware-configuration.nix ];
+  imports = [ ./hardware-configuration.nix "${impermanence}/nixos.nix" ];
 
   #################################
   # BOOT
@@ -52,8 +58,11 @@
   #################################
   # USER CREATION
   #################################
+  users.mutableUsers = false;
+  users.users.root.initialPassword = "pass";
   users.users.fedeizzo = {
     name = "fedeizzo";
+    initialPassword = "pass";
     isNormalUser = true;
     createHome = true;
     extraGroups = [ "wheel" "input" "video" "bumblebee" "docker" "autologin" "informant" "users" "networkmanager" ];
@@ -227,4 +236,28 @@ DEVICES_TO_ENABLE_ON_STARTUP=\"bluetooth wifi\"\n";
     interval = "weekly";
   };
   services.postgresql.enable = true;
+
+  #################################
+  # PERSISTENT FILES
+  #################################
+  environment.persistence."/nix/persistence" = {
+    directories = [
+      "/etc/NetworkManager/system-connections"
+      "/etc/nixos"
+      "/var/log"
+      "/var/cache"
+      "/var/tmp"
+      "/var/lib/machines"
+      "/var/lib/portables"
+      "/var/lib/misc"
+      "/var/lib/postgresql"
+      "/var/lib/systemd"
+      "/var/lib/docker"
+      "/var/lib/bluetooth"
+      "/swap"
+    ];
+    files = [
+      "/etc/machine-id"
+    ];
+  };
 }

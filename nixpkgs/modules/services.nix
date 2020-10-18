@@ -15,20 +15,20 @@
         WantedBy = [ "default.target" ];
       };
     };
-    greenclip = {
-      Unit = {
-        Description = "Greenclip agent";
-        After = "display-manager.service";
-      };
-      Service = {
-        Type = "simple";
-        ExecStart = "${pkgs.haskellPackages.greenclip}/bin/greenclip daemon";
-        Restart = "always";
-      };
-      Install = {
-        WantedBy = [ "default.target" ];
-      };
-    };
+    # greenclip = {
+    #   Unit = {
+    #     Description = "Greenclip agent";
+    #     After = "display-manager.service";
+    #   };
+    #   Service = {
+    #     Type = "simple";
+    #     ExecStart = "${pkgs.haskellPackages.greenclip}/bin/greenclip daemon";
+    #     Restart = "always";
+    #   };
+    #   Install = {
+    #     WantedBy = [ "default.target" ];
+    #   };
+    # };
     # spotifyd = {
     #   Unit = {
     #     Description = "A spotify playing daemon";
