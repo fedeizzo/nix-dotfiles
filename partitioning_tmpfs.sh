@@ -45,15 +45,16 @@ mount "$boot" /mnt/boot
 mount "$nix" /mnt/nix
 
 # create and mount persistente directories
-persistent_dirs="etc/nixos var/log var/cache var/tmp var/lib/machines var/lib/portables var/lib/misc var/lib/postgresql var/lib/systemd var/lib/docker var/lib/bluetooth swap home/fedeizzo/.cache home/fedeizzo/.local/share home/fedeizzo/.mozilla home/fedeizzo/.ssh  home/persistent" 
+# persistent_dirs="etc/nixos var/log var/cache var/tmp var/lib/machines var/lib/portables var/lib/misc var/lib/postgresql var/lib/systemd var/lib/docker var/lib/bluetooth swap home/fedeizzo/.cache home/fedeizzo/.local/share home/fedeizzo/.mozilla home/fedeizzo/.ssh  home/persistent" 
+persistent_dirs="etc/nixos var/log var/cache var/tmp var/lib/machines var/lib/portables var/lib/misc var/lib/postgresql var/lib/systemd var/lib/docker var/lib/bluetooth swap" 
 persistend_files="home/fedeizzo/.zsh_history"
 for d in $persistent_dirs; do
     mkdir -p /mnt/nix/persistent/$dir
 done
 
-for d in $persistent_dirs; do
+# for d in $persistent_dirs; do
     # mount -o bind /mnt/nix/persistent/$dir /mnt/$dir
-done
+# done
 
 # create swapfile system
 truncate -s 0 /mnt/nix/persistent/swap/.swapfile
@@ -66,7 +67,7 @@ swapon /mnt/nix/persistent/swap/.swapfile
 nixos-generate-config --root /mnt
 
 # my personal config
-./install.sh -f laptop
+./install.sh -f laptop_tmpfs
 nixos-install
 
 swapoff /mnt/swap/.swapfile

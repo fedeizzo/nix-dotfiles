@@ -4,19 +4,23 @@ options:\n
 \t-f: fresh install that copy in /mnt/etc instead /etc\n\n
 configuration:\n
 \tlaptop: laptop configuration\n
+\tlaptop_tmpfs: laptop configuration with tmpfs\n
 "
 
-copy_laptop_conf() {
+copy_conf() {
     dir=$(pwd)
 
-    cp "${dir}/nixos/laptop/configuration.nix" /etc/nixos/configuration.nix
-    cp -r "${dir}/nixos/laptop/pkgs" /etc/nixos
+    cp "${dir}/nixos/common.nix" /etc/nixos/common.nix
+    cp "${dir}/nixos/$1/configuration.nix" /etc/nixos/configuration.nix
+    cp -r "${dir}/nixos/pkgs" /etc/nixos
 }
 
 fresh_install() {
     dir=$(pwd)
-    cp "${dir}/nixos/laptop/configuration.nix" /mnt/etc/nixos/configuration.nix
-    cp -r "${dir}/nixos/laptop/pkgs" /mnt/etc/nixos
+
+    cp "${dir}/nixos/common.nix" /etc/nixos/common.nix
+    cp "${dir}/nixos/$1/configuration.nix" /etc/nixos/configuration.nix
+    cp -r "${dir}/nixos/pkgs" /etc/nixos
 }
 
 fresh=false
@@ -29,10 +33,15 @@ fi
 
 case $1 in
     "laptop")
-        copy_laptop_conf
+        echo "Copying laptop configuration"
+        copy_conf "laptop"
+        ;;
+    "laptop_tmpfs")
+        echo "Copying laptop configuration with tmpfs"
+        copy_conf "laptop_tmpfs"
         ;;
     "fresh")
-        fresh_install
+        fresh_install $1
         ;;
     *)
         echo -e $helpMessage
