@@ -44,17 +44,19 @@ mkdir -p /mnt/{boot,nix,etc/nixos,var/log,swap}
 mount "$boot" /mnt/boot
 mount "$nix" /mnt/nix
 
+mkdir -p /mnt/nix/persistent
+
 # create and mount persistente directories
 mntopt="autodefrag,space_cache=v2,noatime,compress=zstd:2"
 mntopt_nocow="autodefrag,space_cache=v2,noatime,nocow"
 
-persistent_dirs="etc/nixos var/log  var/lib/machines var/lib/portables var/lib/misc var/lib/postgresql var/lib/systemd var/lib/docker var/lib/bluetooth home/fedeizzo/.cache home/fedeizzo/.local/share home/fedeizzo/.mozilla home/fedeizzo/.ssh  home/persistent" 
-persistent_dirs_nocow="var/cache var/tmp swap" 
-# persistend_files="home/fedeizzo/.zsh_history"
+persistent_dirs="@etc_nixos @var_log @var_lib_machines @var_lib_portables @var_lib_misc @var_lib_postgresql @var_lib_systemd @var_lib_docker @var_lib_bluetooth @home_fedeizzo_.cache @home_fedeizzo_.local_share @home_fedeizzo_.mozilla @home_fedeizzo_.ssh @home_persistent" 
+persistent_dirs_nocow="@var_cache @var_tmp @swap" 
+# persistent_files="home/fedeizzo/.zsh_history"
 
 # mount subvolumes
-for sv in $subvolumes; do
-    dir="/mnt/nix/persistent$(echo "${sv#@}" | sed 's/_/\//g')"
+for sv in $persistent_dirs; do
+    dir="/mnt/nix/persistent/$(echo "${sv#@}" | sed 's/_/\//g')"
     if [ "$sv" != "@" ]; then
         mkdir -p "$dir"
     fi
@@ -62,8 +64,8 @@ for sv in $subvolumes; do
 done
 
 # mount subvolumes with nocow
-for sv in $subvolumes_nocow; do
-    dir="/mnt/nix/persistent$(echo "${sv#@}" | sed 's/_/\//g')"
+for sv in $persistent_dirs_nocow; do
+    dir="/mnt/nix/persistent/$(echo "${sv#@}" | sed 's/_/\//g')"
     if [ "$sv" != "@" ]; then
         mkdir -p "$dir"
     fi
@@ -83,10 +85,10 @@ nixos-generate-config --root /mnt
 
 
 # fix options not automatically written
-for sv in $subvolumes; do
+for sv in $persistent_dirs; do
 sed "s/options = \[ \"subvol=${sv}\" \]/options = [ \"subvol=${sv}\" \"${mntopt//,/\" \"}\"\]/" -i /mnt/etc/nixos/hardware-configuration.nix
 done
-for sv in $subvolumes_nocow; do
+for sv in $persistent_dirs_nocow; do
 sed "s/options = \[ \"subvol=${sv}\" \]/options = [ \"subvol=${sv}\" \"${mntopt_nocow//,/\" \"}\"\]/" -i /mnt/etc/nixos/hardware-configuration.nix
 done
 
@@ -94,6 +96,6 @@ done
 ./install.sh -f laptop_tmpfs
 nixos-install
 
-swapoff /mnt/swap/.swapfile
+swapoff /mnt/nix/persistent/swap/.swapfile
 umount -R /mnt
 cryptsetup close nixenc

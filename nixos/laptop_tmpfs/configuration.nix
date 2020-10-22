@@ -25,7 +25,7 @@ in
   #################################
   # PERSISTENT FILES
   #################################
-  environment.persistence."/nix/persistence" = {
+  environment.persistence."/nix/persistent" = {
     directories = [
       "/etc/NetworkManager/system-connections"
       "/etc/nixos"
