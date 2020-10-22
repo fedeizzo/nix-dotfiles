@@ -54,6 +54,14 @@ persistent_dirs="@etc_nixos @var_log @var_lib_machines @var_lib_portables @var_l
 persistent_dirs_nocow="@var_cache @var_tmp @swap" 
 # persistent_files="home/fedeizzo/.zsh_history"
 
+for sv in $subvolumes; do
+    btrfs subvolume create "/mnt/nix/persistent/$sv"
+done
+for sv in $subvolumes_nocow; do
+    btrfs subvolume create "/mnt/nix/persistent/$sv"
+done
+sync
+
 # mount subvolumes
 for sv in $persistent_dirs; do
     dir="/mnt/nix/persistent/$(echo "${sv#@}" | sed 's/_/\//g')"
