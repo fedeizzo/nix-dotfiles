@@ -15,12 +15,13 @@ copy_conf() {
     cp -r "${dir}/nixos/pkgs" /etc/nixos
 }
 
+# TODO fix destination path to /mnt/etc
 fresh_install() {
     dir=$(pwd)
 
-    cp "${dir}/nixos/common.nix" /etc/nixos/common.nix
-    cp "${dir}/nixos/$1/configuration.nix" /etc/nixos/configuration.nix
-    cp -r "${dir}/nixos/pkgs" /etc/nixos
+    cp "${dir}/nixos/common.nix" /mnt/etc/nixos/common.nix
+    cp "${dir}/nixos/$1/configuration.nix" /mnt/etc/nixos/configuration.nix
+    cp -r "${dir}/nixos/pkgs" /mnt/etc/nixos
 }
 
 fresh=false
