@@ -184,6 +184,7 @@
       enable = true;
     };
     layout = "us";
+    xkbVariant = "altgr-intl";
     libinput.enable = true;
     extraConfig = ''
       Section "InputClass"

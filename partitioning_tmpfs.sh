@@ -1,7 +1,37 @@
 #!/bin/sh
 set -e
+
+# PARAMETERS 
 BOOT_DEV="/dev/sda"
 ROOT_DEV="/dev/sda"
+USER="fedeizzo"
+
+create_subvolume() {
+    for sv in $1; do
+        btrfs subvolume create "/mnt/nix/persistent/$sv"
+    done
+}
+
+mount_subvolume() {
+    for sv in $2; do
+        if [[ $sv == "@nix" ]]; then
+            dir="/mnt/$(echo "${sv#@}" | sed 's/_/\//g')"
+        else
+            dir="/mnt/nix/persistent/$(echo "${sv#@}" | sed 's/_/\//g')"
+            mkdir -p "$dir"
+        fi
+        mount -o "$3,subvol=$sv" "$1" "$dir"
+        if [[ $4 = true ]]; then
+            chattr +C -R "$dir"
+        fi
+    done
+}
+
+create_persistent_dir() {
+    for dir in $dirs_list; do
+        mkdir -p "/mnt/nix/persistent"$dir
+    done
+}
 
 # boot partition UEFI
 sgdisk -n 0:0:+260MiB -t 0:ef00 -c 0:boot "$BOOT_DEV"
@@ -50,36 +80,50 @@ mkdir -p /mnt/nix/persistent
 mntopt="autodefrag,space_cache=v2,noatime,compress=zstd:2"
 mntopt_nocow="autodefrag,space_cache=v2,noatime,nocow"
 
-persistent_dirs="@etc_nixos @var_log @var_lib_machines @var_lib_portables @var_lib_misc @var_lib_postgresql @var_lib_systemd @var_lib_docker @var_lib_bluetooth @home_fedeizzo_.cache @home_fedeizzo_.local_share @home_fedeizzo_.mozilla @home_fedeizzo_.ssh @home_persistent" 
-persistent_dirs_nocow="@var_cache @var_tmp @swap" 
+# PERSISTENT DIRECTORY
+#  --------------------------------------------------------------
+# |Folder                             | Volume                   |
+# |--------------------------------------------------------------|
+# |/nix                               | @nix                     |
+# |/nix/persistent/etc/nixos          |                          |
+# |/nix/persistent/home/.cache        |                          |
+# |/nix/persistent/home/.local_share  |                          |
+# |/nix/persistent/home/.mozilla      |                          |
+# |/nix/persistent/home/.ssh          | @home_${USER}_ssh        |
+# |/nix/persistent/home/persistent    | @home_${USER}_persistent |
+# |/nix/persistent/swap               | @swap                    |
+# |/nix/persistent/var/cache          |                          |
+# |/nix/persistent/var/lib            |                          |
+# |/nix/persistent/var/lib/bluetooth  |                          |
+# |/nix/persistent/var/lib/docker     |                          |
+# |/nix/persistent/var/lib/machines   |                          |
+# |/nix/persistent/var/lib/misc       |                          |
+# |/nix/persistent/var/lib/portables  |                          |
+# |/nix/persistent/var/lib/postgresql | @var_lib_postgresql      |
+# |/nix/persistent/var/lib/systemd    |                          |
+# |/nix/persistent/var/log            |                          |
+# |/nix/persistent/var/tmp            |                          |
+# |/nix/persistent/snapshots          | @snapshots               |
+#  --------------------------------------------------------------
+persistent_dirs="/etc/nixos /var/log /var/lib/machines /var/lib/portables /var/lib/misc /var/lib/postgresql /var/lib/systemd /var/lib/docker /var/lib/bluetooth /home/fedeizzo/.cache /home/fedeizzo/.local/share /home/fedeizzo/.mozilla /home/fedeizzo/.ssh /home/persistent /var/cache /var/tmp /swap" 
 # persistent_files="home/fedeizzo/.zsh_history"
 
-for sv in $subvolumes; do
-    btrfs subvolume create "/mnt/nix/persistent/$sv"
-done
-for sv in $subvolumes_nocow; do
-    btrfs subvolume create "/mnt/nix/persistent/$sv"
-done
+subvolumes="@nix @home_${USER}_ssh @home_${USER}_persistent @var_lib_postgresql @snapshots"
+subvolumes_nocow="@swap"
+
+# create subvolumes
+create_subvolume subvolumes
+create_subvolume subvolumes_nocow
 sync
+umount -R /mnt
 
 # mount subvolumes
-for sv in $persistent_dirs; do
-    dir="/mnt/nix/persistent/$(echo "${sv#@}" | sed 's/_/\//g')"
-    if [ "$sv" != "@" ]; then
-        mkdir -p "$dir"
-    fi
-    mount -o "$mntopt,subvol=$sv" "$root" "$dir"
-done
+mount_subvolume $root $subvolumes $mntopt false
+mount_subvolume $root $subvolumes_nocow $mntopt_nocow true
+mount "$boot" /mnt/boot
 
-# mount subvolumes with nocow
-for sv in $persistent_dirs_nocow; do
-    dir="/mnt/nix/persistent/$(echo "${sv#@}" | sed 's/_/\//g')"
-    if [ "$sv" != "@" ]; then
-        mkdir -p "$dir"
-    fi
-    mount -o "$mntopt_nocow,subvol=$sv" "$root" "$dir"
-    chattr +C -R "$dir"
-done
+# create persistent dirs
+create_persistent_dir $persistent_dirs
 
 # create swapfile system
 truncate -s 0 /mnt/nix/persistent/swap/.swapfile
@@ -91,19 +135,18 @@ swapon /mnt/nix/persistent/swap/.swapfile
 # configure nixos
 nixos-generate-config --root /mnt
 
-
 # fix options not automatically written
-for sv in $persistent_dirs; do
+for sv in $subvolumes; do
 sed "s/options = \[ \"subvol=${sv}\" \]/options = [ \"subvol=${sv}\" \"${mntopt//,/\" \"}\"\]/" -i /mnt/etc/nixos/hardware-configuration.nix
 done
-for sv in $persistent_dirs_nocow; do
+for sv in $subvolumes_nocow; do
 sed "s/options = \[ \"subvol=${sv}\" \]/options = [ \"subvol=${sv}\" \"${mntopt_nocow//,/\" \"}\"\]/" -i /mnt/etc/nixos/hardware-configuration.nix
 done
 
 # my personal config
-./install.sh -f laptop_tmpfs
-nixos-install
+# ./install.sh -f laptop_tmpfs
+# nixos-install
 
-swapoff /mnt/nix/persistent/swap/.swapfile
-umount -R /mnt
-cryptsetup close nixenc
+# swapoff /mnt/nix/persistent/swap/.swapfile
+# umount -R /mnt
+# cryptsetup close nixenc
