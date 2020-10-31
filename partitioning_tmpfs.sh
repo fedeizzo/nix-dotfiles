@@ -112,18 +112,18 @@ subvolumes="@nix @home_${USER}_ssh @home_${USER}_persistent @var_lib_postgresql 
 subvolumes_nocow="@swap"
 
 # create subvolumes
-create_subvolume subvolumes
-create_subvolume subvolumes_nocow
+create_subvolume "$subvolumes"
+create_subvolume "$subvolumes_nocow"
 sync
 umount -R /mnt
 
 # mount subvolumes
-mount_subvolume $root $subvolumes $mntopt false
-mount_subvolume $root $subvolumes_nocow $mntopt_nocow true
+mount_subvolume "$root" "$subvolumes" "$mntopt" false
+mount_subvolume "$root" "$subvolumes_nocow" "$mntopt_nocow" true
 mount "$boot" /mnt/boot
 
 # create persistent dirs
-create_persistent_dir $persistent_dirs
+create_persistent_dir "$persistent_dirs"
 
 # create swapfile system
 truncate -s 0 /mnt/nix/persistent/swap/.swapfile
