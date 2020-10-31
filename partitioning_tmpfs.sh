@@ -118,9 +118,8 @@ sync
 umount -R /mnt/nix
 
 # mount subvolumes
-mount_subvolume "$root" "$subvolumes" "$mntopt" false
-mount_subvolume "$root" "$subvolumes_nocow" "$mntopt_nocow" true
-mount "$boot" /mnt/boot
+mount_subvolume "$nix" "$subvolumes" "$mntopt" false
+mount_subvolume "$nix" "$subvolumes_nocow" "$mntopt_nocow" true
 
 # create persistent dirs
 create_persistent_dir "$persistent_dirs"
