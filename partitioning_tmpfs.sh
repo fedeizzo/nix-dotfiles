@@ -29,7 +29,12 @@ mount_subvolume() {
 
 create_persistent_dir() {
     for dir in $dirs_list; do
-        mkdir -p "/mnt/nix/persistent"$dir
+        if [[ $sv == "@nix" ]]; then
+            dir="/mnt/$(echo "${sv#@}" | sed 's/_/\//g')"
+        else
+            dir="/mnt/nix/persistent/$(echo "${sv#@}" | sed 's/_/\//g')"
+        fi
+        mkdir -p "$dir"
     done
 }
 
