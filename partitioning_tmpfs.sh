@@ -115,7 +115,7 @@ subvolumes_nocow="@swap"
 create_subvolume "$subvolumes"
 create_subvolume "$subvolumes_nocow"
 sync
-umount -R /mnt
+umount -R /mnt/nix
 
 # mount subvolumes
 mount_subvolume "$root" "$subvolumes" "$mntopt" false
