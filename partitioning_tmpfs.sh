@@ -8,7 +8,12 @@ USER="fedeizzo"
 
 create_subvolume() {
     for sv in $1; do
-        btrfs subvolume create "/mnt/nix/persistent/$sv"
+        if [[ $sv == "@nix" ]]; then
+            name="/mnt/$(echo "${sv#@}" | sed 's/_/\//g')"
+        else
+            name="/mnt/nix/persistent/$(echo "${sv#@}" | sed 's/_/\//g')"
+        fi
+        btrfs subvolume create "$name"
     done
 }
 
@@ -29,11 +34,7 @@ mount_subvolume() {
 
 create_persistent_dir() {
     for dir in $dirs_list; do
-        if [[ $sv == "@nix" ]]; then
-            dir="/mnt/$(echo "${sv#@}" | sed 's/_/\//g')"
-        else
-            dir="/mnt/nix/persistent/$(echo "${sv#@}" | sed 's/_/\//g')"
-        fi
+        dir="/mnt/nix/persistent/$(echo "${sv#@}" | sed 's/_/\//g')"
         mkdir -p "$dir"
     done
 }
