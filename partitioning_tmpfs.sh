@@ -8,10 +8,10 @@ USER="fedeizzo"
 
 create_subvolume() {
     for sv in $1; do
-        if [[ $sv == "@nix" ]]; then
-            name="/mnt/$(echo "${sv#@}" | sed 's/_/\//g')"
+        if [[ $sv == "@" ]]; then
+            name="/mnt/nix/$sv"
         else
-            name="/mnt/nix/persistent/$(echo "${sv#@}" | sed 's/_/\//g')"
+            name="/mnt/nix/persistent/$sv"
         fi
         btrfs subvolume create "$name"
     done
@@ -19,10 +19,11 @@ create_subvolume() {
 
 mount_subvolume() {
     for sv in $2; do
-        if [[ $sv == "@nix" ]]; then
-            dir="/mnt/$(echo "${sv#@}" | sed 's/_/\//g')"
+        if [[ $sv == "@" ]]; then
+            dir="/mnt/nix/$(echo "${sv#@}" | sed 's/_/\//g')"
         else
             dir="/mnt/nix/persistent/$(echo "${sv#@}" | sed 's/_/\//g')"
+            sv="persistent/$sv"
             mkdir -p "$dir"
         fi
         mount -o "$3,subvol=$sv" "$1" "$dir"
@@ -67,7 +68,7 @@ cryptsetup open "$root" nixenc
 
 # formatting filesystems
 mkfs.vfat -n boot "$boot"
-mkfs.btrfs -L root /dev/mapper/nixenc
+mkfs.btrfs --csum xxhash -L root /dev/mapper/nixenc
 nix="/dev/mapper/nixenc"
 
 # mount tmpfs
@@ -90,7 +91,7 @@ mntopt_nocow="autodefrag,space_cache=v2,noatime,nocow"
 #  --------------------------------------------------------------
 # |Folder                             | Volume                   |
 # |--------------------------------------------------------------|
-# |/nix                               | @nix                     |
+# |/nix                               | @                        |
 # |/nix/persistent/etc/nixos          |                          |
 # |/nix/persistent/home/.cache        |                          |
 # |/nix/persistent/home/.local_share  |                          |
@@ -114,7 +115,7 @@ mntopt_nocow="autodefrag,space_cache=v2,noatime,nocow"
 persistent_dirs="/etc/nixos /var/log /var/lib/machines /var/lib/portables /var/lib/misc /var/lib/postgresql /var/lib/systemd /var/lib/docker /var/lib/bluetooth /home/fedeizzo/.cache /home/fedeizzo/.local/share /home/fedeizzo/.mozilla /home/fedeizzo/.ssh /home/persistent /var/cache /var/tmp /swap" 
 # persistent_files="home/fedeizzo/.zsh_history"
 
-subvolumes="@nix @home_${USER}_ssh @home_${USER}_persistent @var_lib_postgresql @snapshots"
+subvolumes="@ @home_${USER}_persistent @var_lib_postgresql @snapshots"
 subvolumes_nocow="@swap"
 
 # create subvolumes
@@ -142,15 +143,24 @@ nixos-generate-config --root /mnt
 
 # fix options not automatically written
 for sv in $subvolumes; do
-sed "s/options = \[ \"subvol=${sv}\" \]/options = [ \"subvol=${sv}\" \"${mntopt//,/\" \"}\"\]/" -i /mnt/etc/nixos/hardware-configuration.nix
-done
-for sv in $subvolumes_nocow; do
-sed "s/options = \[ \"subvol=${sv}\" \]/options = [ \"subvol=${sv}\" \"${mntopt_nocow//,/\" \"}\"\]/" -i /mnt/etc/nixos/hardware-configuration.nix
+    if [[ $sv != "@" ]]; then
+        sv="persistent\/$sv"
+    fi
+    sed "s/options = \[ \"subvol=${sv}\" \]/options = [ \"subvol=${sv}\" \"${mntopt//,/\" \"}\"\]/" -i /mnt/etc/nixos/hardware-configuration.nix
 done
 
+for sv in $subvolumes_nocow; do
+    if [[ $sv != "@" ]]; then
+        sv="persistent\/$sv"
+    fi
+    sed "s/options = \[ \"subvol=${sv}\" \]/options = [ \"subvol=${sv}\" \"${mntopt_nocow//,/\" \"}\"\]/" -i /mnt/etc/nixos/hardware-configuration.nix
+done
+
+sed 's/fsType = "tmpfs";/fsType = "tmpfs";\n    options = [ "defaults" "size=2G" "mode=755" ];/' -i /mnt/etc/nixos/hardware-configuration.nix
+
 # my personal config
-# ./install.sh -f laptop_tmpfs
-# nixos-install
+./install.sh -f laptop_tmpfs
+# nixos-install --no-root-passwd
 
 # swapoff /mnt/nix/persistent/swap/.swapfile
 # umount -R /mnt

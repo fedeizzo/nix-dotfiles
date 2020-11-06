@@ -117,6 +117,7 @@
   programs.light.enable = true;
   programs.ssh.askPassword = "";
   programs.ccache.enable = true;
+  programs.gnupg.agent.enable = true;
   virtualisation.virtualbox.host.enable = true;
   users.extraGroups.vboxusers.members = [ "fedeizzo" ];
 

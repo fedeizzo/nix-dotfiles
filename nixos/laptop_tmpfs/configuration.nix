@@ -1,13 +1,16 @@
 { config, pkgs, ... }:
 
 let
+  home-manager = builtins.fetchTarball {
+    url = "https://github.com/rycee/home-manager/archive/master.tar.gz";
+  };
   impermanence = builtins.fetchTarball {
     url =
       "https://github.com/nix-community/impermanence/archive/master.tar.gz";
   };
 in
 {
-  imports = [ ./common.nix "${impermanence}/nixos.nix" ];
+  imports = [ ./common.nix "${impermanence}/nixos.nix" "${home-manager}/nixos" ];
   #################################
   # USER CREATION
   #################################
@@ -44,5 +47,16 @@ in
     files = [
       "/etc/machine-id"
     ];
+  };
+
+  home-manager.users.fedeizzo = { pkgs, ... }: {
+    imports = [ "${impermanence}/home-manager.nix" ];
+
+    programs.home-manager.enable = true;
+
+    home.persistence."/nix/persistent/home/fedeizzo" = {
+    directories = [ ".cache" ".local/share" ".mozilla" ".ssh" "persitent" ];
+    # files = [ ".zsh_history" ];
+    };
   };
 }

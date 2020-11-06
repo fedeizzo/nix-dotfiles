@@ -69,6 +69,7 @@
     qutebrowser
     # rofi
     xorg.xmodmap
+    devour
     xss-lock
     # simplescreenrecorder
     # steam

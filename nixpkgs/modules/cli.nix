@@ -24,6 +24,7 @@
     nixpkgs-fmt
     nixpkgs-lint
     cachix
+    # pinentry-curses
   ];
 
 
@@ -31,6 +32,11 @@
     enable = true;
     enableNixDirenvIntegration = true;
   };
+
+  # programs.gpg.enable = true;
+  # programs.gpg.settings = {
+  #   pinentry-program = "/home/fedeizzo/.nix-profile/bin/pinentry-curses";
+  # };
 
   home.file.".gitconfig" = {
     source = ../../dotfiles/dot_gitconfig;

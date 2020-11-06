@@ -15,7 +15,6 @@ copy_conf() {
     cp -r "${dir}/nixos/pkgs" /etc/nixos
 }
 
-# TODO fix destination path to /mnt/etc
 fresh_install() {
     dir=$(pwd)
 
@@ -24,27 +23,14 @@ fresh_install() {
     cp -r "${dir}/nixos/pkgs" /mnt/etc/nixos
 }
 
-fresh=false
 if [[ $1 == "-f" ]]; then
-    fresh="true"
     shift
+    fresh_install $1
 else
-    fresh="false"
-fi
-
-case $1 in
-    "laptop")
-        echo "Copying laptop configuration"
-        copy_conf "laptop"
-        ;;
-    "laptop_tmpfs")
-        echo "Copying laptop configuration with tmpfs"
-        copy_conf "laptop_tmpfs"
-        ;;
-    "fresh")
-        fresh_install $1
-        ;;
-    *)
+    if [[ "$1" =~ ^[laptop|laptop_tmps]+$ ]]; then
+        echo "Copying $1 configuration"
+        copy_conf $1
+    else
         echo -e $helpMessage
-        ;;
-esac
+    fi
+fi
