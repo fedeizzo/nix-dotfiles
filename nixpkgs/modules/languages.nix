@@ -11,6 +11,7 @@
     bat
     ripgrep
     nodePackages.bash-language-server
+    nodePackages.typescript-language-server
     nodePackages.dockerfile-language-server-nodejs
     python38Packages.pyls-black
     python38Packages.python-language-server
@@ -18,9 +19,4 @@
     haskellPackages.haskell-language-server
     ccls
   ];
-  # TODO work
-  # qgis
-  # gdal
-  # postgres
-  # postgis
 }

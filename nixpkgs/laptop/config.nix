@@ -6,6 +6,7 @@
     multilockscreen = callPackage ../pkgs/multilockscreen.nix { };
     xcmenu = callPackage ../pkgs/xcmenu.nix {};
     devour = callPackage ../pkgs/devour.nix {};
+    # tree-sitter-python = callPackage ../pkgs/tree-sitter-python.nix {};
     # bottom = callPackage ../pkgs/bottom.nix {};
   };
 }

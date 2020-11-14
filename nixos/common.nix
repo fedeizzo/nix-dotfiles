@@ -76,14 +76,21 @@
     arandr
     docker
     docker-compose
+    podman
+    podman-compose
     git
     highlight
     lm_sensors
     vim
   ];
-  virtualisation.docker = {
-    enable = true;
-    enableOnBoot = true;
+  virtualisation = {
+    docker = {
+      enable = true;
+      enableOnBoot = true;
+    };
+    podman = {
+      enable = true;
+    };
   };
   environment.shells = [ pkgs.bash pkgs.zsh ];
   environment.pathsToLink = [ "/share/zsh" ];

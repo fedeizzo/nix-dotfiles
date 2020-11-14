@@ -50,6 +50,7 @@ in
       "application/pdf" = "org.pwmt.zathura.desktop";
       "inode/directory" = "lf.desktop";
       "text/plain" = "nvim.desktop";
+      "text/html" = "org.qutebrowser.qutebrowser.desktop";
     };
   };
 }
