@@ -24,7 +24,8 @@
     nixpkgs-fmt
     nixpkgs-lint
     cachix
-    # pinentry-curses
+    bat
+    ripgrep
   ];
 
 
@@ -32,6 +33,10 @@
     enable = true;
     enableNixDirenvIntegration = true;
   };
+  # programs.autojump = {
+  #   enable = true;
+  #   enableZshIntegration = true;
+  # };
 
   # programs.gpg.enable = true;
   # programs.gpg.settings = {

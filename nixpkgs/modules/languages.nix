@@ -2,21 +2,29 @@
 
 {
   home.packages = with pkgs; [
-    python3
     llvm
-    lua
-    python38Packages.pandocfilters
 
-    # lua support neovim
-    bat
-    ripgrep
-    nodePackages.bash-language-server
-    nodePackages.typescript-language-server
-    nodePackages.dockerfile-language-server-nodejs
+    # lua
+    lua
+
+    # python
+    python38
+    python38Packages.pandocfilters
     python38Packages.pyls-black
     python38Packages.python-language-server
     python38Packages.black
-    haskellPackages.haskell-language-server
+    python38Packages.debugpy
+
+    # bash
+    nodePackages.bash-language-server
+
+    # typescript
+    nodePackages.typescript-language-server
+
+    # dockerfile
+    nodePackages.dockerfile-language-server-nodejs
+
+    # c/c++
     ccls
   ];
 }

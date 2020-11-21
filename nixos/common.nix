@@ -100,7 +100,7 @@
     "VISUAL" = "nvim";
     "CODEEDITOR" = "nvim";
     "TERMINAL" = "alacritty";
-    "BROWSER" = "firefox";
+    "BROWSER" = "qutebrowser";
     "COLORTERM" = "truecolor";
   };
   environment.shellAliases = {
