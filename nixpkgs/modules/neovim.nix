@@ -11,8 +11,8 @@
       ];
     };
     withNodeJs = false;
-    withPython = false;
-    withPython3 = false;
+    withPython = true;
+    withPython3 = true;
     withRuby = false;
   };
 

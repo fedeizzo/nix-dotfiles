@@ -26,5 +26,9 @@
 
     # c/c++
     ccls
+
+    # rust
+    rust-analyzer
+    rustfmt
   ];
 }

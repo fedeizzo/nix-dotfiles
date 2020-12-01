@@ -1,8 +1,8 @@
 # { stdenv, fetchFromGitHub, zlib, git, pkg-config, libxcb, alsaLib, xcbutil}:
 with import <nixpkgs> {};
 let
-  name = "lua-language-server2";
-  version = "35962bc062fb778dd4038c9d8d50ea7d601453e1";
+  name = "lua-language-server";
+  version = "79bf3e605d282cdbe425eea1b5793fc97d8404da";
 in
 stdenv.mkDerivation {
   name = "${name}";
@@ -10,14 +10,16 @@ stdenv.mkDerivation {
     owner = "sumneko";
     repo = "${name}";
     rev = "${version}";
-    sha256 = "1698c9vawb89mc6fr49vy4sigx6yqxx7c5wnaqgj57mqbvih9zi4";
+    sha256 = "074jzsg1pznkfv0fxnkda4jls1irpwn6nykvhpz8wzabwhkcmqcg";
     fetchSubmodules = true;
   };
 
   buildInputs = [ lua5_3 ninja clang ];
 
-  buildPhase = ''
-    mkdir -p $out/bin
+  installPhase = ''
+    mkdir -p $out/src
+    cp -r . $out/src
+    install ninja
     ninja -C 3rd/luamake -f ninja/linux.ninja
     # ./3rd/luamake/luamake rebuild
     # cd 3rd/luamake
