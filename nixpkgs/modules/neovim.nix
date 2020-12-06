@@ -1,7 +1,6 @@
 { config, pkgs, libs, ... }:
 
 {
-  # TODO install all lsp
   programs.neovim = {
     enable = true;
     package = pkgs.neovim-nightly;

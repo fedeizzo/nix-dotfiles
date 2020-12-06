@@ -9,7 +9,6 @@
 
     # python
     python38
-    python38Packages.pandocfilters
     python38Packages.pyls-black
     python38Packages.python-language-server
     python38Packages.black
@@ -30,5 +29,11 @@
     # rust
     rust-analyzer
     rustfmt
+
+    # latex
+    texlive.combined.scheme-full
+
+    # note taking
+    neuron-notes
   ];
 }

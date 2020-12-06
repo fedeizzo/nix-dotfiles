@@ -26,6 +26,12 @@
     cachix
     bat
     ripgrep
+    openssl
+    rbw
+    pinentry-qt
+    dmenu
+    xdotool
+    nix-index
   ];
 
 

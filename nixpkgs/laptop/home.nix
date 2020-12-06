@@ -4,20 +4,20 @@ let
 in
 {
   imports = [
-    ../modules/alacritty.nix
-    ../modules/chat.nix
-    ../modules/cli.nix
-    ../modules/cuda.nix
-    ../modules/languages.nix
-    ../modules/media.nix
-    ../modules/neovim.nix
-    ../modules/nixos-desktop.nix
-    ../modules/services.nix
-    ../modules/ssh.nix
+    # ../modules/alacritty.nix
+    # ../modules/chat.nix
+    # ../modules/cli.nix
+    # ../modules/cuda.nix
+    # ../modules/languages.nix
+    # ../modules/media.nix
+    # ../modules/neovim.nix
+    # ../modules/nixos-desktop.nix
+    # ../modules/services.nix
+    # ../modules/ssh.nix
   ];
 
-  home.username = builtins.getEnv "USER";
-  home.homeDirectory = builtins.getEnv "HOME";
+  # home.username = builtins.getEnv "USER";
+  # home.homeDirectory = builtins.getEnv "HOME";
   home.stateVersion = "20.09";
 
   programs.zsh = {
@@ -40,8 +40,8 @@ in
     oh-my-zsh = {
       enable = true;
     };
-    initExtra = builtins.readFile ../../dotfiles/dot_zshrc;
-    envExtra = builtins.readFile ../../dotfiles/dot_zshenv;
+    initExtra = builtins.readFile ../dotfiles/dot_zshrc;
+    envExtra = builtins.readFile ../dotfiles/dot_zshenv;
   };
 
   xdg.mimeApps = {

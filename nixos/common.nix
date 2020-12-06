@@ -47,7 +47,13 @@
     allowUnfree = true;
   };
   system.stateVersion = "20.09";
-  nix.autoOptimiseStore = true;
+  nix = {
+    autoOptimiseStore = true;
+    package = pkgs.nixFlakes;
+    extraOptions = ''
+      experimental-features = nix-command flakes
+    '';
+  };
 
   #################################
   # PROGRAMS and ENV
@@ -125,8 +131,9 @@
   programs.ssh.askPassword = "";
   programs.ccache.enable = true;
   programs.gnupg.agent.enable = true;
-  virtualisation.virtualbox.host.enable = true;
-  users.extraGroups.vboxusers.members = [ "fedeizzo" ];
+  # TODO add this two line when problem will be fixed 
+  # virtualisation.virtualbox.host.enable = true;
+  # users.extraGroups.vboxusers.members = [ "fedeizzo" ];
 
   #################################
   # HARDWARE
