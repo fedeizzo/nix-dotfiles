@@ -1,0 +1,54 @@
+#!/bin/python
+
+import os
+import re
+from datetime import datetime
+import sys
+
+history_path = os.environ["HOME"] + "/.zsh_history"
+diary_folder = os.environ["HOME"] + "/vimwiki/diary/"
+
+data_test = "17-04-2020"
+
+
+def extract_word_time(s):
+    parts = s.split(";")
+    word = parts[1].replace("enit", "").replace("\n", "")
+    timestamp = int(parts[0].split(":")[1])
+    time = datetime.fromtimestamp(timestamp)
+    return (word, time)
+
+
+def write(file, words):
+    file = diary_folder + file
+    with open(file, "w") as f:
+        for w in words:
+            f.write(w + "\n")
+
+
+if __name__ == "__main__":
+    if len(sys.argv) == 2:
+        d = datetime.strptime(sys.argv[1], "%d-%m-%Y")
+        dates = {}
+        with open(history_path, errors="ignore") as f:
+            for row in f:
+                if re.search("enit '{0,1}[a-zA-Z]", row):
+                    word, data = extract_word_time(row)
+                    if (
+                        data.day == d.day
+                        and data.month == d.month
+                        and data.year == d.year
+                    ):
+                        if data.strftime("%Y-%m-%d.wiki") in dates:
+                            dates[data.strftime("%Y-%m-%d.wiki")].append(word)
+                        else:
+                            dates[data.strftime("%Y-%m-%d.wiki")] = []
+                            dates[data.strftime("%Y-%m-%d.wiki")].append(word)
+
+        for k, v in dates.items():
+            # print(k)
+            # print("\t", v)
+            write(k, v)
+    else:
+        print("usage: insert date")
+

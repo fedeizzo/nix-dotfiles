@@ -1,0 +1,52 @@
+#!/bin/sh
+
+# Federico Izzo's bspwm cofig
+
+# Clear clipboard history
+greenclip clear
+# Run program for keybinds
+/home/fedeizzo/.sources/launchSxhkd
+# sxhkd &
+# Change cursor
+xsetroot -cursor_name left_ptr &
+# Set background
+# /usr/bin/feh --bg-fill /home/fedeizzo/.config/bspwm/sfondo.jpg
+feh --bg-center --no-fehbg /home/fedeizzo/.config/bspwm/pacwall.png
+# Run unclutter
+/home/fedeizzo/.sources/launchUnclutter
+
+# If bspwm is refreshed, remove all previous rules to prevent doubling up
+bspc rule -r "*"
+
+# Create monitor and focus number 1
+/home/fedeizzo/.sources/monitorHandler &
+# bspc desktop -f 1
+
+# Node border
+bspc config border_width 0
+
+# Window gap
+bspc config window_gap 7
+bspc config gapless_monocle false
+bspc config top_padding 0
+bspc config bottom_padding 0
+
+# Scheme used for automatic window creation
+# bspc config automatic_scheme spiral
+
+### BSPWM config ###
+# Mouse/trackpad pointer decides focus
+bspc config focus_follows_pointer true
+# When monitor goes stand-by for example
+bspc config remove_disabled_monitors true
+bspc config remove_unplugged_monitors true
+# Consider monocle window when only 1 windod
+bspc config single_monocle true
+
+# Rules
+bspc rule -a Zathura state=tiled
+# bspc rule -a TelegramDesktop desktop=^1 follow=on split_ratio=0.75
+bspc rule -a Blueberry.py desktop=^9
+bspc rule -a Alacritty:todo desktop=^1 follow=on
+bspc rule -a Alacritty:spt desktop=^9 follow=on state=fullscreen
+bspc rule -a Anki state=floating

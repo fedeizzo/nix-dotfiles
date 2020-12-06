@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+###################################################################
+#Script Name	: monitorHandler
+#Description	: handles desktop name for monitors
+#Args         	: none
+#Author       	: Federico Izzo
+#Email         	: federico.izzo99@gmail.com
+#Last Update    : 24/01/2020
+###################################################################
+
+monitorHdmi=$(xrandr -q | grep HDMI1 | awk '{print $2}')
+isHdmiPrimary=$(xrandr -q | grep HDMI1 | awk '{print $3}')
+monitorDp1=$(xrandr -q | grep '^DP1' | awk '{print $2}')
+
+if [[ $monitorHdmi == 'connected' && $isHdmiPrimary == 'primary' ]]
+then
+    bspc monitor HDMI1 -d 1 2 3 4 5 6 7 8 9 0
+    # bspc config top_padding 27 # equal to polybar height
+elif [[ $monitorHdmi == 'connected' ]]
+then
+    bspc monitor HDMI1 -d 1 2 3 4 5 6 7 8 9 0
+    bspc monitor eDP1 -d 1 2 3 4 5 6 7 8 9 0
+    # bspc config -m eDP1 top_padding 27 # equal to polybar height
+    bspc config -m HDMI1 top_padding 0
+elif [[ $monitorDp1 == 'connected' ]]
+then
+    bspc monitor eDP1 -d 1 2 3 4 5 6 7 8 9 0
+    bspc monitor DP1 -d 1 2 3 4 5 6 7 8 9 0
+    bspc config -m DP1 top_padding 0
+    # bspc config -m eDP1 top_padding 27 # equal to polybar height
+else
+    bspc monitor -d 1 2 3 4 5 6 7 8 9 0
+    # bspc config top_padding 27 # equal to polybar height
+    # bspc config top_padding 17 # equal to polybar height
+fi
+# Run picom
+launchPicom
+# Run polybar
+# /home/fedeizzo/.sources/launchPolybar
+# Run lemonbar
+# /home/fedeizzo/.sources/launchLemonbar

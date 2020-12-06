@@ -1,0 +1,16 @@
+#!/bin/python
+
+from pandocfilters import toJSONFilter, Str
+import re
+
+
+def prova(key, value, format, meta):
+    if key == "CodeBlock":
+        if re.search("#(.*?)#\n", value[1]):
+            lang = re.search("#(.*?)#\n", value[1]).group(1).strip()
+            value[1] = re.sub("#(.*?)#\n", "", value[1])
+            value[0][1].append(lang)
+
+
+if __name__ == "__main__":
+    toJSONFilter(prova)

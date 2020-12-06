@@ -4,16 +4,16 @@ let
 in
 {
   imports = [
-#   ../modules/alacritty.nix
-#   ../modules/chat.nix
-#   ../modules/cli.nix
-#   ../modules/cuda.nix
-#   ../modules/languages.nix
-#   ../modules/media.nix
-#   ../modules/neovim.nix
-#   ../modules/nixos-desktop.nix
-#   ../modules/services.nix
-#   ../modules/ssh.nix
+    ../modules/alacritty.nix
+    ../modules/chat.nix
+    ../modules/cli.nix
+    ../modules/cuda.nix
+    ../modules/languages.nix
+    ../modules/media.nix
+    ../modules/neovim.nix
+    ../modules/nixos-desktop.nix
+    ../modules/services.nix
+    ../modules/ssh.nix
   ];
 
   # home.username = builtins.getEnv "USER";

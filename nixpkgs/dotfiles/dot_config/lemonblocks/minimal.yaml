@@ -1,0 +1,30 @@
+%YAML 1.2
+---
+-
+    name: time
+    path: clock
+    interval: 30
+    signal: -1
+    alignment: l
+    order: 1
+-
+    name: bspwm
+    path: bspwmDesktops
+    interval: -1 
+    signal: 3
+    alignment: c
+    order: 2
+-
+    name: memory
+    path: memInfo
+    interval: 1
+    signal: -1
+    alignment: r
+    order: 3
+-
+    name: temp
+    path: tempInfo
+    interval: 1
+    signal: -1
+    alignment: r
+    order: 4

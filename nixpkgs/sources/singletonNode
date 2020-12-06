@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+###################################################################
+#Script Name	: singletonNode
+#Description	: opne a node in a specific desktop and focus it
+#Args         	: commmand and desktop
+#Author       	: Federico Izzo
+#Email         	: federico.izzo99@gmail.com
+#Last Update    : 22-03-2020
+###################################################################
+
+helpMessage="usage: singletonNode <command> <desktop number>"
+
+[ -z $2 ] && echo -e $helpMessage && exit
+
+cmd=$1
+desktop=$2
+
+bspc desktop --focus ^$desktop && $cmd &
+disown $!

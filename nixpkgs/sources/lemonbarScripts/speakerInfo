@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+white="#FFFFFF"
+whiteUnfocus="#55FFFFFF"
+red='#FF0000'
+green='#1db954'
+yellow='#FFFF00'
+
+Speaker() {
+    local isConnected=$(bt print speaker)
+    local color=$whiteUnfocus
+    if [[ $isConnected == "connected" ]]
+    then
+        color=$white
+    else
+        color=$whiteUnfocus
+    fi
+    echo -e "%{A1:headset:}%{F$color}  %{F$white}%{A}"
+}
+
+Speaker

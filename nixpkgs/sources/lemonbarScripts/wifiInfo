@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+white="#FFFFFF"
+whiteUnfocus="#55FFFFFF"
+red='#FF0000'
+green='#1db954'
+yellow='#FFFF00'
+
+Wifi(){
+	local WIFISTR=$( iwconfig wlan0 | grep "Link" | sed 's/ //g' | sed 's/LinkQuality=//g' | sed 's/\/.*//g')
+	WIFISTR=$(( ${WIFISTR} * 100 / 70))
+	local ESSID=$(iwconfig wlan0 | grep ESSID | sed 's/ //g' | sed 's/.*://' | cut -d "\"" -f 2)
+    local config=$(readConfig "wifi")
+    local color
+    if [[ $WIFISTR -le 25 ]]
+    then
+        color=$red
+    elif [[ $WIFISTR -ge 25 && $WIFISTR -le 50 ]]
+    then
+        color=$yellow
+    else
+        color=$green
+    fi
+
+    if [[ $config == 'reduced' ]]
+    then
+        echo -e "%{A6:wifi expanded:}%{A7:wifi reduced:} %{F$color}%{F$white} %{A}%{A}"
+    else
+        echo -e "%{A6:wifi expanded:}%{A7:wifi reduced:} %{F$color}%{F$white} $WIFISTR%/$ESSID %{A}%{A}"
+    fi
+}
+
+Wifi

@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+###################################################################
+#Script Name	: gapless
+#Description	: toggle polybar and change bottom padding of bspwm
+#Args         	: none
+#Author       	: Federico Izzo
+#Email         	: federico.izzo99@gmail.com
+#Last Update    : 24/01/2020
+###################################################################
+
+# TODO: change gaplessFlag file with a var defined in ~/.envrc
+
+flag=$(cat $HOME/.sources/gaplessFlag)
+
+polybar-msg cmd toggle > /dev/null
+if [[ $flag == 1 ]]
+then
+    # bspc config bottom_padding 0
+    echo 0 > $HOME/.sources/gaplessFlag
+else
+    # bspc config bottom_padding 27
+    echo 1 > $HOME/.sources/gaplessFlag
+fi

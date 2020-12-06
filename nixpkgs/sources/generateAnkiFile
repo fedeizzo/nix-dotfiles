@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+###################################################################
+#Script Name	: generateAnkiFile
+#Description	: generate anki file from list of words
+#Args         	: none
+#Author       	: Federico Izzo
+#Email         	: federico.izzo99@gmail.com
+#Last Update    : 19-04-2020
+###################################################################
+
+# helpMessage=
+
+# [ -z $1 ] && echo -e $helpMessage && exit
+
+filesFolder="$HOME/vimwiki/diary/"
+files=$(ls -1 $filesFolder[1-9]* | cut -d" " -f 2)
+
+printf "" > $filesFolder"allwords.wiki"
+for f in $files
+do
+    sed -e '1,2d' $f | awk -F"|" '{print $2 ";" $3}' >> $filesFolder"allwords.wiki"
+done

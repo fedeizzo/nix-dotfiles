@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+
+###################################################################
+#Script Name	: resize
+#Description	: handle resize for bspwm node
+#Args         	: orientation
+#Author       	: Federico Izzo
+#Email         	: federico.izzo99@gmail.com
+#Last Update    : 24/01/2020
+###################################################################
+
+helpMessage="usage: <orientation>"
+
+[ -z $1 ] && echo -e $helpMessage && exit
+
+orientation=$1
+
+coords=$(xwininfo -id $(xdotool getactivewindow) | sed '4,9!d' | sed '3,4d' | gawk -F: '{print $2}')
+
+set $coords
+x=$1
+y=$2
+width=$3
+height=$4
+
+if [[ $orientation == "west" ]]
+then
+    if [[ $x == 7 ]]
+    then
+        bspc node $(bspc query -T -n focused | jshon -e id) -z right -20 0
+    else
+        bspc node $(bspc query -T -n focused | jshon -e id) -z left -20 0
+    fi
+elif [[ $orientation == "south" ]]
+then
+    if [[ $y == 7 ]]
+    then
+        bspc node $(bspc query -T -n focused | jshon -e id) -z bottom 0 20
+    else
+        bspc node $(bspc query -T -n focused | jshon -e id) -z top 0 20
+    fi
+elif [[ $orientation == "north" ]]
+then
+    if [[ $y == 7 ]]
+    then
+        bspc node $(bspc query -T -n focused | jshon -e id) -z bottom 0 -20
+    else
+        bspc node $(bspc query -T -n focused | jshon -e id) -z top 0 -20
+    fi
+else [[ $orientation == "east" ]]
+    if [[ $x == 7 ]]
+    then
+        bspc node $(bspc query -T -n focused | jshon -e id) -z right 20 0
+    else
+        bspc node $(bspc query -T -n focused | jshon -e id) -z left 20 0
+    fi
+fi

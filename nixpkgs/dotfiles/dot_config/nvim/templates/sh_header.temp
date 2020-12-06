@@ -1,0 +1,14 @@
+#!/bin/bash
+
+###################################################################
+#Script Name	:
+#Description	:
+#Args         	:
+#Author       	: Federico Izzo
+#Email         	: federico.izzo99@gmail.com
+#Last Update    :
+###################################################################
+
+helpMessage=
+
+[ -z $1 ] && echo -e $helpMessage && exit

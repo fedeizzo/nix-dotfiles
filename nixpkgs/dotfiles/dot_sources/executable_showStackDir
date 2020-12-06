@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+###################################################################
+#Script Name	: showStackDir
+#Description	: using notify-send display stack dir
+#Args         	: none
+#Author       	: Federico Izzo
+#Email         	: federico.izzo99@gmail.com
+#Last Update    : 22-02-2020
+###################################################################
+
+# helpMessage=
+
+# [ -z $1 ] && echo -e $helpMessage && exit
+notify-send "$(dirs -v)"
+

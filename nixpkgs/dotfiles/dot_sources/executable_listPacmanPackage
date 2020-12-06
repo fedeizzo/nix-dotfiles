@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+packages=$(pacman -Qeq | tr '\n' ' ')
+for p in ${packages}
+do
+    pactree -g $p
+done

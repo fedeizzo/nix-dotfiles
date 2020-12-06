@@ -1,0 +1,161 @@
+# change [edit/common]
+c
+
+# delete [edit/common]
+d
+
+# copy [edit/commmon]
+y
+
+# paste [edit/common]
+p
+
+# swap case [edit/common]
+g~
+
+# make lowercase [edit/common]
+gu
+
+# make uppercase [edit/common]
+gU
+
+# shift left [common]
+<
+
+# shift right [common]
+>
+
+# autoindent [common]
+=
+
+# filter external programm [common]
+!
+
+# undo [edit/common]
+u
+
+# delete char [edit/common]
+x
+
+# repeat [edit/common]
+.
+
+# enter in IM before cursor [mode/common]
+i
+
+# enter in IM after cursor [mode/common]
+a
+
+# enter in IM at start of line [mode/common]
+I
+
+# enter in IM at end of line [mode/common]
+A
+
+# move up [motion/common]
+k
+
+# move down [motion/common]
+j
+
+# move right [motion/common]
+h
+
+# move left [motion/common]
+l
+
+# move cursor at start of the line [motion/common]
+0
+
+# move cursto at end of the line [motion/common]
+$
+
+# find char in the line after cursor [motion/search/common]
+f
+
+# find char in the line before cursor [motion/search/common]
+F
+
+# move until the char after cursor [motion/search/common]
+t
+
+# move until the char before cursor [motion/search/common]
+T
+
+# iterate forward during search [motion/search/common]
+;
+
+# iterate backword during search [motion/search/common]
+,
+
+# find pattern in file after cursor [motion/search/common]
+/
+
+# repeat last find [motion/search/common]
+//
+
+#find pattern in file before cursor [motion/search/common]
+?
+
+# iterate forward during search [motion/search/common]
+n
+
+# iterate backword during search [motion/search/common]
+N
+
+# iterate forward and highlight all match [motion/search/common]
+*
+
+# carriege return and IM [edit/mode/common]
+o
+
+# up carriege return and IM [edit/mode/common]
+O
+
+# increment a number [edit/intermediate]
+<C-x>
+
+# decrement a number [edit/intermediate]
+<C-a>
+
+# delete char before cursor in IM [edit/mode/intermediate]
+<C-h>
+
+# delete word before cursor in IM [edit/mode/intermediate]
+<C-w>
+
+# delete line before cursor in IM [edit/mode/intermediate]
+<C-u>
+
+# change from IM to NM [mode/intermediate]
+<C-[>
+
+# change from IM to NM for one command [mode/intermediate]
+<C-o>
+
+# center line in the middle of screen [motion/common]
+zz
+
+# join line with the next one [edit/common]
+J
+
+# copy from register in IM [edit/mode/intermediate]
+<C-r>
+
+# insert char code (es. unicode) in IM [edit/mode/intermediate]
+<C-V>
+
+# insert digraph symbol in IM [edit/mode/intermediate]
+<C-K>
+
+# return char code under the cursor [intermediate]
+ga
+
+# enter in RM [mode/common]
+R
+
+# delete rows with pattern [edit/intermediate]
+:%g/pattern/d
+
+# apply command on row with pattern [edit/intermediate]
+:%g/pattern/command

@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+
+###################################################################
+#Script Name	: workStartup
+#Description	: startup routine for open all necessary things for working
+#Args         	: none
+#Author       	: Federico Izzo
+#Email         	: federico.izzo99@gmail.com
+#Last Update    : 29/01/2020
+###################################################################
+
+helpMessage="usage: workStartup"
+
+# [ -z $1 ] && echo -e $helpMessage && exit
+monitorName="DP1"
+bspc query -M -m $monitorName > /dev/null
+if [[ $? != 0 ]]
+then
+    echo -e $helpMessage
+    exit
+fi
+secondMonitor1=$(bspc query -M -m $monitorName -d $monitorName:\^1)
+secondMonitor2=$(bspc query -M -m $monitorName -d $monitorName:\^2)
+firstMonitor1=$(bspc query -M -m eDP1 -d eDP1:\^1)
+firstMonitor2=$(bspc query -M -m eDP1 -d eDP1:\^2)
+
+$TERMINAL --working-directory /data/fbk/pei/pei -e pipenv shell
+sleep 0.2
+bspc node -d $monitorName:\^1
+
+$TERMINAL --working-directory /data/fbk/pei/pei -e pipenv shell
+sleep 0.2
+bspc node -d eDP1:\^1
+
+$TERMINAL --working-directory /data/fbk/pei
+sleep 0.2
+bspc node -d eDP1:\^3
+
+$TERMINAL --working-directory /data/fbk/pei
+sleep 0.2
+bspc node -d eDP1:\^3

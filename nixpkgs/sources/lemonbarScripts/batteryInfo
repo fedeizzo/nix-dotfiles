@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+
+white="#FFFFFF"
+whiteUnfocus="#55FFFFFF"
+red='#FF0000'
+green='#1db954'
+yellow='#FFFF00'
+
+Battery() {
+	local BATTACPI=$(acpi --battery)
+	local BATPERC=$(echo $BATTACPI | cut -d, -f2 | tr -d '[:space:]')
+    local config=$(readConfig "battery")
+    local color
+    local icon
+
+	if [[ $BATTACPI == *"100%"* ]]
+	then
+        icon=""
+        color=$green
+	elif [[ $BATTACPI == *"Discharging"* ]]
+	then
+		BATPERC=${BATPERC::-1}
+		if [ $BATPERC -le "25" ]
+		then
+            icon=""
+            color=$red
+            notify-send -u normal -t 500 "Low battery!"
+		elif [ $BATPERC -le "75" ]
+		then
+            icon=""
+            color=$yellow
+		elif [ $BATPERC -le "100" ]
+		then
+            icon=""
+            color=$green
+		else
+            icon=""
+            color=$green
+        fi
+	elif [[ $BATTACPI == *"Unknown"* ]]
+	then
+        icon=''
+        color=$red
+    else
+        icon=""
+        color=$yellow
+	fi
+    if [[ $config == 'reduced' ]]
+    then
+        echo -e "%{A6:battery expanded:}%{A7:battery reduced:} %{F$color}$icon%{F$white} %{A}%{A}"
+    else
+        echo -e "%{A6:battery expanded:}%{A7:battery reduced:} %{F$color}$icon%{F$white} $BATPERC% %{A}%{A}"
+    fi
+}
+
+Battery

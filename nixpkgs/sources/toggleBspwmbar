@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+###################################################################
+#Script Name	: toggleLemonbar
+#Description	: toggle lemonbar
+#Args         	: none
+#Author       	: Federico Izzo
+#Email         	: federico.izzo99@gmail.com
+#Last Update    : 26-02-2020
+###################################################################
+
+# helpMessage=
+
+# [ -z $1 ] && echo -e $helpMessage && exit
+
+(killall -9 bspwmbar && bspc config top_padding 0) || (launchBspwmbar || bspc config top_paddinng 25)

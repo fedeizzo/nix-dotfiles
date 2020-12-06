@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+###################################################################
+#Script Name	: launcheUnclutter
+#Description	: kill all instances of unclutter and run it
+#Args         	: none
+#Author       	: Federico Izzo
+#Email         	: federico.izzo99@gmail.com
+#Last Update    : 8/04/2020
+###################################################################
+
+# Terminate already unclutter instances
+killall -q unclutter
+
+# Wait until the processes have been shut down
+while pgrep -u $UID -x unclutter >/dev/null; do sleep 1; done
+
+# Launch unclutter
+unclutter &

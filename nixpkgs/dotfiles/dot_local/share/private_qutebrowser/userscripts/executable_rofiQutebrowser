@@ -1,0 +1,29 @@
+#!/bin/sh
+declare -A quickmarks
+qmList=""
+
+IFS=$'\n'
+first="true"
+for u in $(awk -v ORS="" -F' ' 'BEGIN{FS=OtS=" "}{print $NF; print ">"; NF--; print; print "\n"}' "$QUTE_CONFIG_DIR"/quickmarks)
+do
+    site=${u%>*}
+    qm=${u#*>}
+    if [[ $first == "true" ]]
+    then
+        qmList="$qmList$qm"
+        first="false"
+    else
+        qmList="$qmList\n$qm"
+    fi
+    quickmarks[$qm]=$site
+done
+
+rofiOutput=$(echo -e $qmList| rofi -dmenu -p " $*")
+url=${quickmarks[$rofiOutput]}
+if [[ -z $url ]]
+then
+    url=$rofiOutput
+fi
+if [ $? = 0 ] && [ -n "$url" ]; then
+    printf 'open %s %s\n' "$*" "$url" >>"$QUTE_FIFO"
+fi

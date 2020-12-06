@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+###################################################################
+#Script Name	: launchSxhkd
+#Description	: kill all sxhkd instances and run it
+#Args         	: none
+#Author       	: Federico Izzo
+#Email         	: federico.izzo99@gmail.com
+#Last Update    : 24/01/2020
+###################################################################
+
+# Terminate already running sxhkd instances
+killall -q sxhkd
+
+# Wait until the processes have been shut down
+# while pgrep -u $UID -x sxhkd >/dev/null; do sleep 1; done
+
+# Launch sxhkd
+sxhkd &

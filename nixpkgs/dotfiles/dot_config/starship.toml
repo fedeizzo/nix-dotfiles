@@ -1,0 +1,15 @@
+add_newline = false
+
+[character]
+success_symbol = "[➜](bold green)"
+error_symbol = "[✖](bold red)"
+
+[package]
+disabled = true
+
+[directory]
+truncation_length = 8
+
+[cmd_duration]
+min_time = 20000
+format = "  [$duration](bold yellow)"

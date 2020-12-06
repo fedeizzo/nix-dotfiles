@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+[ -z $1 ] && echo "put a name" && exit 1
+echo '#!/usr/bin/env bash' > $1
+chmod 744 $1

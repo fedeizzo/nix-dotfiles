@@ -34,6 +34,7 @@
                 nixos-unstable-overlay
                 inputs.neovim-nightly-overlay.overlay
               ];
+              nixpkgs.config = import ./laptop/config.nix;
               imports = [
                 ./laptop/home.nix
               ];

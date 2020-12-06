@@ -1,0 +1,52 @@
+source /etc/os-release
+
+if [[ $NAME == "Arch Linux" ]]; then
+    plugins=(git zsh-autosuggestions zsh-history-substring-search zsh-syntax-highlighting)
+    export ZSH="/home/fedeizzo/.oh-my-zsh"
+    source $ZSH/oh-my-zsh.sh
+fi
+
+#my aliases
+alias ls='exa --icons'
+alias ll='exa -l --icons'
+alias lll='exa -l --icons | less'
+alias lla='exa -la --icons'
+alias llt='exa -T --icons'
+alias code=codium
+alias vi='nvim'
+alias lol='sysctl -w abi.vsyscall32=0'
+alias es='wiki s'
+alias ec='wiki c'
+alias SS='systemctl'
+alias com='eval "$(pipenv --completion)"'
+alias it='setxkbmap it && xmodmap $HOME/.Xmodmap.back'
+alias us='setxkbmap -layout us -variant altgr-intl && xmodmap $HOME/.Xmodmap.back'
+alias enit='trans :it'
+alias iten='trans :en'
+alias dh='notify-send "$(dirs -v)"'
+alias cl='f2() {cd $1;ll};f2'
+# source /usr/share/nvm/init-nvm.sh
+alias tw='streamlink -p "devour vlc"'
+alias streamlink='streamlink -p "devour vlc"'
+[ -f /etc/profile.d/autojump.zsh ] && . /etc/profile.d/autojump.zsh
+if command -v fzf-share >/dev/null; then
+    source "$(fzf-share)/key-bindings.zsh"
+    source "$(fzf-share)/completion.zsh"
+else
+    source /usr/share/fzf/key-bindings.zsh
+    source /usr/share/fzf/completion.zsh
+    [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+fi
+alias vlc="devour vlc"
+alias zathura="devour zathura"
+alias llpp="devour llpp"
+alias sxiv="devour sxiv"
+eval $(starship init zsh)
+alias cz="chezmoi"
+alias v="nvim"
+alias open="xdg-open"
+alias cat="bat"
+alias dot='v $(fd --full-path '/home/fedeizzo/nixOs-config/dotfiles' -t f | fzf)'
+alias sou='v $(fd --full-path '/home/fedeizzo/nixOs-config/sources' -t f | fzf)'
+alias ssh='TERM=xterm-256color ssh'
+alias pass='rbw get $(rbw list | fzf) | xclip -selectio c; exit 0'

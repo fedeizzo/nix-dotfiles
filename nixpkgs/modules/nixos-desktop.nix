@@ -52,13 +52,13 @@
     bitwarden
     bitwarden-cli
     brightnessctl
-    bspwmbar
+    #bspwmbar
     firefox
     # haskellPackages.greenclip
     xcmenu
     jq
     keyutils
-    libreoffice
+    #libreoffice
     mpd-mpris
     multilockscreen
     openssh

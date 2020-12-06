@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+###################################################################
+#Script Name	: toggleLemonbar
+#Description	: toggle lemonbar
+#Args         	: none
+#Author       	: Federico Izzo
+#Email         	: federico.izzo99@gmail.com
+#Last Update    : 26-02-2020
+###################################################################
+
+# helpMessage=
+
+# [ -z $1 ] && echo -e $helpMessage && exit
+
+hdmiPlugged=$(monitorQuery hdmi)
+dp1Plugged=$(monitorQuery dp1)
+
+if [[ $hdmiPlugged == "disconnected" && $dp1Plugged == "disconnected" ]]
+then
+    (killall -9 lemonblocks; killall -9 lemonbar && bspc config top_padding 0) || (launchLemonbar $1 && bspc config top_padding 17)
+else
+    if [[ $hdmiPlugged == "disconnected" ]]
+    then
+        (killall -9 lemonblocks; killall -9 lemonbar && bspc config -m eDP1 top_padding 0) || (launchLemonbar $1 && bspc config -m eDP1 top_padding 17)
+    else
+        (killall -9 lemonblocks; killall -9 lemonbar && bspc config -m HDMI1 top_padding 0) || (launchLemonbar $1 && bspc config -m HDMI1 top_padding 17)
+    fi
+fi

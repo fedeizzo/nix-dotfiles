@@ -1,0 +1,4 @@
+Host adalitix
+        Hostname adalitix.westus2.cloudapp.azure.com
+        User adalitix
+        LocalForward 28080 localhost:28080

@@ -1,0 +1,294 @@
+#!/bin/bash
+
+# COLORS
+white="#FFFFFF"
+whiteUnfocus="#55FFFFFF"
+red='#FF0000'
+green='#1db954'
+yellow='#FFFF00'
+
+DispalyDzen2() {
+    x=$1
+    y=$2
+    text=$3
+    return "echo $text | dzen2 -x $x  -y $y -w 200 -h 100"
+}
+
+ReadConfig(){
+    result=$(awk -v pattern="$1" -F. '$0~pattern{print $2}' $XDG_CONFIG_HOME/lemonbar/config)
+    echo $result
+}
+
+Clock(){
+	TIME=$(date "+%H:%M")
+	echo -e -n " ${TIME}"
+}
+
+Cal() {
+    DATE=$(date "+%d-%m-%Y")
+    echo -e -n "%{A1:cal:} ${DATE}%{A}"
+}
+
+DrawWorkspace() {
+    local occ=$(bspc query -m $1 -D -d .occupied --names | cut -d' ' -f1 | sed ':a;n;$!ba;s/\n/ /g')
+    local num_foc=$(bspc query -m $1 -D -d .active --names | cut -d' ' -f1)
+
+    local circle_full=""
+    local output
+    local desktop
+    desktop=(%{F$whiteUnfocus} %{F$whiteUnfocus} %{F$whiteUnfocus} %{F$whiteUnfocus} %{F$whiteUnfocus} %{F$whiteUnfocus} %{F$whiteUnfocus} %{F$whiteUnfocus} %{F$whiteUnfocus}%{F$white})
+    occ=($occ)
+    for i in "${occ[@]}"
+    do
+        desktop[$i - 1]="%{F$white}%{F$white}"
+    done
+    desktop[$num_foc - 1 ]="%{F$green}%{F$white}"
+    echo -e ${desktop[@]}
+}
+
+Bspwm(){
+    local monitorHdmi=$(xrandr -q | grep HDMI1 | awk '{print $2}')
+    local isHdmiPrimary=$(xrandr -q | grep HDMI1 | awk '{print $3}')
+    local monitorDp1=$(xrandr -q | grep '^DP1' | awk '{print $2}')
+
+    if [[ $isHdmiPrimary == "primary" ]]
+    then
+        DrawWorkspace "HDMI1"
+    elif [[ $monitorHdmi == "connected" ]]
+    then
+        local edp1=$(DrawWorkspace "eDP1")
+        local hdmi=$(DrawWorkspace "HDMI1")
+        echo -e $edp1" | "$hdmi
+    elif [[ $monitorDp1 == "connected" ]]
+    then
+        local dp1=$(DrawWorkspace "DP1")
+        local hdmi=$(DrawWorkspace "HDMI1")
+        echo -e $edp1" | "$hdmi
+    else
+        DrawWorkspace "eDP1"
+    fi
+}
+
+ActiveWindow(){
+	len=$(echo -n "$(xdotool getwindowfocus getwindowname)" | wc -m)
+	max_len=70
+	if [ "$len" -gt "$max_len" ];then
+		echo -n "$(xdotool getwindowfocus getwindowname | cut -c 1-$max_len)..."
+	else
+		echo -n "$(xdotool getwindowfocus getwindowname)"
+	fi
+}
+
+Battery() {
+	local BATTACPI=$(acpi --battery)
+	local BATPERC=$(echo $BATTACPI | cut -d, -f2 | tr -d '[:space:]')
+    local config=$(ReadConfig "battery")
+    local color
+    local icon
+
+	if [[ $BATTACPI == *"100%"* ]]
+	then
+        icon=""
+        color=$green
+	elif [[ $BATTACPI == *"Discharging"* ]]
+	then
+		BATPERC=${BATPERC::-1}
+		if [ $BATPERC -le "25" ]
+		then
+            icon=""
+            color=$red
+            notify-send -u normal -t 500 "Low battery!"
+		elif [ $BATPERC -le "75" ]
+		then
+            icon=""
+            color=$yellow
+		elif [ $BATPERC -le "100" ]
+		then
+            icon=""
+            color=$green
+		else
+            icon=""
+            color=$green
+        fi
+	elif [[ $BATTACPI == *"Unknown"* ]]
+	then
+        icon=''
+        color=$red
+    else
+        icon=""
+        color=$yellow
+	fi
+    if [[ $config == 'reduced' ]]
+    then
+        echo -e "%{A6:battery expanded:}%{A7:battery reduced:} %{F$color}$icon%{F$white} %{A}%{A}"
+    else
+        echo -e "%{A6:battery expanded:}%{A7:battery reduced:} %{F$color}$icon%{F$white} $BATPERC% %{A}%{A}"
+    fi
+}
+
+Wifi(){
+	local WIFISTR=$( iwconfig wlan0 | grep "Link" | sed 's/ //g' | sed 's/LinkQuality=//g' | sed 's/\/.*//g')
+	WIFISTR=$(( ${WIFISTR} * 100 / 70))
+	local ESSID=$(iwconfig wlan0 | grep ESSID | sed 's/ //g' | sed 's/.*://' | cut -d "\"" -f 2)
+    local config=$(ReadConfig "wifi")
+    local color
+    if [[ $WIFISTR -le 25 ]]
+    then
+        color=$red
+    elif [[ $WIFISTR -ge 25 && $WIFISTR -le 50 ]]
+    then
+        color=$yellow
+    else
+        color=$green
+    fi
+
+    if [[ $config == 'reduced' ]]
+    then
+        echo -e "%{A6:wifi expanded:}%{A7:wifi reduced:} %{F$color}%{F$white} %{A}%{A}"
+    else
+        echo -e "%{A6:wifi expanded:}%{A7:wifi reduced:} %{F$color}%{F$white} $WIFISTR%/$ESSID %{A}%{A}"
+    fi
+}
+
+Temp() {
+    local temp=$(sensors | awk -F: '/temp1/{print $2}' | sed '1d' | sed -E 's/ //g')
+    local number=$(echo $temp | awk -F. '{print $1}' | sed 's/+//g')
+    local config=$(ReadConfig "temp")
+    local color
+    local icon
+    if [[ $number -le 45 ]]
+    then
+        color=$green
+        icon=''
+    elif [[ $number -ge 75 ]]
+    then
+        color=$red
+        icon=''
+    else
+        color=$yellow
+        icon=''
+    fi
+
+    if [[ $config == 'reduced' ]]
+    then
+        echo -e "%{A6:temp expanded:}%{A7:temp reduced:} %{F$color}$icon%{F$white} %{A}%{A}"
+    else
+        echo -e "%{A6:temp expanded:}%{A7:temp reduced:} %{F$color}$icon%{F$white} $temp %{A}%{A}"
+    fi
+}
+
+Memory() {
+    local mem=$(free -h --si | awk -F' ' '/Mem/{print $3}')
+    local number=$(echo $mem | sed 's/M\|G//g')
+    local config=$(ReadConfig "mem")
+    local color
+    local icon=""
+    # TODO fix
+    # case with mega
+    if (( $(echo "$number > 100" | bc -l)))
+    then
+        color=$green
+    elif (( $(echo "$number < 4" | bc -l) ))
+    then
+        color=$green
+    elif (( $(echo "$number > 8" |bc -l) ))
+    then
+        color=$red
+    else
+        color=$yellow
+    fi
+
+    if [[ $config == 'reduced' ]]
+    then
+        echo -e "%{A6:mem expanded:}%{A7:mem reduced:} %{F$color}$icon%{F$white} %{A}%{A}"
+    else
+        echo -e "%{A6:mem expanded:}%{A7:mem reduced:} %{F$color}$icon%{F$white} $mem %{A}%{A}"
+    fi
+}
+
+Backlight() {
+    local config=$(ReadConfig "light")
+    local color=$white
+    local icon=""
+
+    if [[ $config == 'reduced' ]]
+    then
+        echo -e "%{A6:light expanded:}%{A7:light reduced:} %{F$color}$icon%{F$white} %{A}%{A}"
+    else
+        local light=$(light)
+        echo -e "%{A6:light expanded:}%{A7:light reduced:} %{F$color}$icon%{F$white} $light %{A}%{A}"
+    fi
+}
+
+
+Cpu() {
+    local config=$(ReadConfig "cpu")
+    local color=$white
+    local icon=""
+
+    if [[ $config == 'reduced' ]]
+    then
+        echo -e "%{A6:cpu expanded:}%{A7:cpu reduced:} %{F$color}$icon%{F$white} %{A}%{A}"
+    else
+        local core0=$(cpuUsage 0)
+        local core1=$(cpuUsage 1)
+        local core2=$(cpuUsage 2)
+        local core3=$(cpuUsage 3)
+        echo -e "%{A6:cpu expanded:}%{A7:cpu reduced:} %{F$color}$icon%{F$white} $core0% $core1% $core2% $core3%  %{A}%{A}"
+    fi
+}
+
+Sound(){
+    # local sink=$(pactl list short sinks | grep RUNNING | cut -f1)
+	local muted=$(pactl list sinks | grep Mute | awk -F: '{print $2}')
+    local volume=$(pactl list sinks | grep '^[[:space:]]Volume:' | head -n $(( $SINK + 1 )) | tail -n 1 | sed -e 's,.* \([0-9][0-9]*\)%.*,\1,')
+    local config=$(ReadConfig "sound")
+    local color=$white
+    local icon
+
+	if [[ $muted == "no" ]] ; then
+		if [ $VOL -ge 50 ] ; then
+            icon=""
+		else
+            icon=""
+		fi
+	else
+        icon=""
+	fi
+    if [[ $config == 'reduced' ]]
+    then
+        echo -e "%{A6:sound expanded:}%{A7:sound reduced:} %{F$color}$icon%{F$white} %{A}%{A}"
+    else
+        echo -e "%{A6:sound expanded:}%{A7:sound reduced:} %{F$color}$icon%{F$white} $volume%{A}%{A}"
+    fi
+}
+
+Keyboard() {
+    local isConnected=$(bt print keyboard)
+    local color=$whiteUnfocus
+    if [[ $isConnected == "connected" ]]
+    then
+        color=$white
+    else
+        color=$whiteUnfocus
+    fi
+    echo -e "%{F$color}  %{F$white}"
+}
+
+Headset() {
+    local isConnected=$(bt print headset)
+    local color=$whiteUnfocus
+    if [[ $isConnected == "connected" ]]
+    then
+        color=$white
+    else
+        color=$whiteUnfocus
+    fi
+    echo -e "%{A1:headset:}%{F$color}  %{F$white}%{A}"
+}
+
+while true; do
+    # echo -e "%{l}$(Bspwm)" "%{c}$(Clock) $(Cal)" "%{r} $(Sound) $(Battery) $(Backlight) $(Cpu) $(Memory) $(Temp) $(Wifi)"
+    echo -e "%{l}" "$(Clock) $(Cal)" "%{c}$(Bspwm)" "%{r} $(Headset) $(Sound) $(Battery) $(Backlight) $(Cpu) $(Memory) $(Temp) $(Wifi)"
+	sleep 0.5
+done

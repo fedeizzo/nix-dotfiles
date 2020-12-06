@@ -1,0 +1,79 @@
+%YAML 1.2
+---
+-
+    name: time
+    path: clock
+    interval: 30
+    signal: -1
+    alignment: l
+    order: 1
+-
+    name: date
+    path: today
+    interval: 30
+    signal: -1
+    alignment: l
+    order: 2
+-
+    name: bspwm
+    path: bspwmDesktops
+    interval: -1 
+    signal: 3
+    alignment: c
+    order: 3
+-
+    name: headset
+    path: headsetInfo
+    interval: 1
+    signal: -1
+    alignment: r
+    order: 4
+-
+    name: volume
+    path: soundInfo
+    interval: 1
+    signal: -1
+    alignment: r
+    order: 5
+-
+    name: battery
+    path: batteryInfo
+    interval: 1
+    signal: -1
+    alignment: r
+    order: 6
+-
+    name: backlight
+    path: backlightInfo
+    interval: 1
+    signal: -1
+    alignment: r
+    order: 7
+-
+    name: cpu
+    path: cpuInfo
+    interval: 1
+    signal: -1
+    alignment: r
+    order: 8
+-
+    name: memory
+    path: memInfo
+    interval: 1
+    signal: -1
+    alignment: r
+    order: 9
+-
+    name: temp
+    path: tempInfo
+    interval: 1
+    signal: -1
+    alignment: r
+    order: 10
+-
+    name: wifi
+    path: wifiInfo
+    interval: 1
+    signal: -1
+    alignment: r
+    order: 11

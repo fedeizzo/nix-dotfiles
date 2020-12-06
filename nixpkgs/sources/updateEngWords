@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+###################################################################
+#Script Name	: updateEngWords
+#Description	: update english words list searched in terminal
+#Args         	: none
+#Author       	: Federico Izzo
+#Email         	: federico.izzo99@gmail.com
+#Last Update    : 16-04-2020
+###################################################################
+
+# helpMessage=
+
+# [ -z $1 ] && echo -e $helpMessage && exit
+
+alreadyWritten=$(cat $HOME'/vimwiki/english words.wiki' | sort)
+searched=$(cat $HOME'/.zsh_history' | grep 'enit [[:alpha:]]' | awk '{print $3}' | sort)
+
+for w in $searched
+do
+    echo $w >> $HOME'/vimwiki/english words.wiki' 
+done
+
+gawk -i inplace '!seen[$0]++' $HOME'/vimwiki/english words.wiki'

@@ -1,0 +1,8 @@
+[core]
+	excludesfile = /home/fedeizzo/.gitignore_global
+[user]
+	email = federico.izzo99@gmail.com
+	name = Federico Izzo
+    signingkey = A55EDF57982AC776
+[commit]
+    gpgsign = true

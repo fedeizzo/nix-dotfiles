@@ -1,0 +1,19 @@
+{
+  "Code block": {
+    "prefix": ["code"],
+    "body": ["{{{",
+        "# ${1:language} #",
+        "${2:code}",
+        "}}}"
+    ],
+    "description": "Adds a code block"
+  },
+  "Math block": {
+    "prefix": ["math"],
+    "body": ["{{",
+        "${2:formula}",
+        "}}"
+    ],
+    "description": "Adds a math block"
+  }
+}

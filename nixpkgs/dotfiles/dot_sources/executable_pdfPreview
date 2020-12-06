@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+TMPP="/tmp/zathura-preview-$PPID.pdf"
+
+pandoc "$1" -f vimwiki -t json \
+    | $HOME/.sources/vimwikiFilter \
+    | pandoc -f json -t pdf -o $TMPP
+
+if ! pgrep -f "zathura $TMPP"; then
+    (zathura $TMPP && rm $TMPP) &
+fi
