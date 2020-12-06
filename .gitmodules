@@ -1,9 +1,0 @@
-[submodule "dotfiles"]
-	path = nixpkgs/dotfiles
-	url = https://github.com/fedeizzo/dotfiles.git
-[submodule "sources"]
-	path = nixpkgs/sources
-	url = https://github.com/fedeizzo/sources.git
-[submodule "browser-home"]
-	path = nixpkgs/browser-home
-	url = https://github.com/fedeizzo/browser-home.git
