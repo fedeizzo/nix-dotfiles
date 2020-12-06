@@ -5,7 +5,7 @@
     enable = true;
     package = pkgs.neovim-nightly;
     configure = {
-      customRC = builtins.readFile ../../dotfiles/dot_config/nvim/init.vim;
+      customRC = builtins.readFile ../dotfiles/dot_config/nvim/init.vim;
       plug.plugins = with pkgs.vimPlugins; [
       ];
     };
@@ -16,7 +16,7 @@
   };
 
   home.file.".config/nvim" = {
-    source = ../../dotfiles/dot_config/nvim;
+    source = ../dotfiles/dot_config/nvim;
     executable = true;
     recursive = true;
   };
