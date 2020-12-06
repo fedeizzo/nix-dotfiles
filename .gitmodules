@@ -1,0 +1,9 @@
+[submodule "nixpkgs/sources"]
+	path = nixpkgs/sources
+	url = git@github.com:fedeizzo/sources.git
+[submodule "nixpkgs/dotfiles"]
+	path = nixpkgs/dotfiles
+	url = git@github.com:fedeizzo/dotfiles.git
+[submodule "nixpkgs/browser-home"]
+	path = nixpkgs/browser-home
+	url = git@github.com:fedeizzo/browser-home.git
