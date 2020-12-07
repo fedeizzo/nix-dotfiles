@@ -6,6 +6,13 @@
 
 config_version: 2
 settings:
+  aliases:
+    global:
+      q: close
+      qa: quit
+      w: session-save
+      wq: quit --save
+      wqa: quit --save
   content.notifications:
     https://www.reddit.com: false
   content.register_protocol_handler:

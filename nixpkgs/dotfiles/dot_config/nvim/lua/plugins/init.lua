@@ -37,7 +37,7 @@ return require('packer').startup(function()
     use {
         'fiatjaf/neuron.vim', requires = {
             {'junegunn/fzf.vim'},
-            {'junegunn/fzf'}
+            {'junegunn/fzf'},
         }
     }
 
