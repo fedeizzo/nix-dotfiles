@@ -43,7 +43,8 @@ return require('packer').startup(function()
 
     -- LANGUAGE SUPPORT
     use {'elzr/vim-json',                      ft='json'}
-    use {'plasticboy/vim-markdown',        ft='markdown'}
+    -- use {'plasticboy/vim-markdown',        ft='markdown'}
+    use {'SidOfc/mkdx',                    ft='markdown'}
     use {'kovetskiy/sxhkd-vim',               ft='sxhkd'}
     use {'alaviss/nim.nvim',                    ft='nim'}
     use {'vimwiki/vimwiki',           cmd='VimwikiIndex'}

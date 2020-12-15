@@ -5,24 +5,26 @@
   inputs.nixos-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
   inputs.flake-utils.url = "github:numtide/flake-utils";
-  inputs.neovim-nightly-overlay.url = "github:mjlbach/neovim-nightly-overlay/flakes";
+  inputs.neovim-nightly-overlay.url = "github:mjlbach/neovim-nightly-overlay";
 
   inputs.home-manager = {
     url = "github:rycee/home-manager";
     inputs.nixpkgs.follows = "nixpkgs";
   };
 
+  inputs.neuron-nightly = {
+    url = "github:srid/neuron/nightly";
+    flake = false;
+  };
+
   outputs = { self, ... }@inputs:
     let
-      nixos-unstable-overlay = final: prev: {
-        nixos-unstable = import inputs.nixos-unstable {
-          system = prev.system;
-          # config.allowUnfree = true;
-          overlays = [ inputs.noevim-nightly-overlay.overlay ];
-        };
-      };
+      overlays = [
+        inputs.neovim-nightly-overlay.overlay 
+        additional-package-overlay
+      ];
       additional-package-overlay = final: prev: {
-        # LS_COLORS = inputs.LS_COLORS;
+        neuron-nightly-overlay = inputs.neuron-nightly;
       };
     in
     {
@@ -30,10 +32,7 @@
         linux = inputs.home-manager.lib.homeManagerConfiguration {
           configuration = { pkgs, ... }:
             {
-              nixpkgs.overlays = [
-                nixos-unstable-overlay
-                inputs.neovim-nightly-overlay.overlay
-              ];
+              nixpkgs.overlays = overlays;
               nixpkgs.config = import ./laptop/config.nix;
               imports = [
                 ./laptop/home.nix

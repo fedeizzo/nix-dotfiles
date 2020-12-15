@@ -63,6 +63,8 @@ local function load_autocommands()
             {'BufWritePost', '*.hs' , 'silent lua vim.lsp.buf.formatting_sync()'};
             {'BufNewFile'  , '*.py' , 'set autoindent'                          };
             {'BufRead'     , '*.py' , 'set autoindent'                          };
+            {'BufEnter'    , '*.nix', 'set filetype=nix'                        };
+            {'BufEnter'    , '*.md' , 'set conceallevel=0'                      };
         };
         filetypes = {
             {'FileType', 'typescript', 'setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2'  };

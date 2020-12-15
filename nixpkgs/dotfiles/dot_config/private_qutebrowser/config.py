@@ -136,4 +136,4 @@ config.bind(
 config.source("nord-qutebrowser.py")
 config.set("editor.command", ["alacritty", "--class", "floatTerm,floatTerm", "-e",
                               "nvim", "{}", "+call cursor({line}, {column})"])
-config.set("colors.webpage.darkmode.enabled", True)
+# config.set("colors.webpage.darkmode.enabled", True)
