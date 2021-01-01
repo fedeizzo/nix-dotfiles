@@ -82,6 +82,20 @@ myChangeMonitor = let
             Just i -> cmd i
             _ -> return ()
 
+mySpotlight = let
+    cmd :: String -> X ()
+    cmd r = spawn $ "xdg-open '" ++ r ++ "'"
+
+    complFun :: ComplFunction
+    complFun s = do
+        history <- runProcessWithInput "/home/fedeizzo/.nix-profile/bin/fd" ["--base-directory /home/fedeizzo", ".pdf|.png|.jpg|.mp4"] []
+        mkComplFunFromList' (lines history) s
+    in do
+        input <- inputPromptWithCompl myXPConfig "file" complFun
+        case input of
+            Just i -> cmd i
+            _ -> return ()
+
 myPasswordManager = "/home/fedeizzo/.sources/rbwAutofill"
 
 myScratchpads = [
@@ -143,7 +157,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   [ ((modMask, xK_Return), spawn $ XMonad.terminal conf)
   -- , ((modMask, xK_d), spawn myAppLauncher)
   , ((modMask, xK_d), runOrRaisePrompt myXPConfig)
-  , ((modMask, xK_f), promptSearch myXPConfig google)
+  , ((modMask, xK_f), mySpotlight)
   , ((modMask, xK_u), namedScratchpadAction myScratchpads "telegram")
   , ((modMask, xK_i), namedScratchpadAction myScratchpads "terminal")
   , ((modMask, xK_o), namedScratchpadAction myScratchpads "lf")

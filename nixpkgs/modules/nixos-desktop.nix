@@ -71,6 +71,7 @@
     xorg.xmodmap
     devour
     xss-lock
+    zoom-us
     # simplescreenrecorder
     # steam
   ];
