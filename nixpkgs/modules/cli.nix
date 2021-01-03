@@ -32,6 +32,7 @@
     dmenu
     xdotool
     nix-index
+    gitAndTools.gitui
   ];
 
 
@@ -54,4 +55,6 @@
   };
   xdg.configFile."lf/lfrc".source = ../dotfiles/dot_config/lf/lfrc;
   xdg.configFile."starship.toml".source = ../dotfiles/dot_config/starship.toml;
+  xdg.configFile."gitui/key_config.ron".source = ../dotfiles/dot_config/gitui/key_config.ron;
+  xdg.configFile."gitui/theme.ron".source = ../dotfiles/dot_config/gitui/theme.ron;
 }

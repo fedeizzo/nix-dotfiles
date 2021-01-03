@@ -26,6 +26,7 @@ import XMonad.Util.NamedWindows
 import XMonad.Util.NamedScratchpad
 import XMonad.Util.Run(spawnPipe, runProcessWithInput)
 import qualified Data.Map as M
+import qualified Data.Text as T
 import qualified XMonad.StackSet as W
 
 ------------------------------------------------------------------------
@@ -52,6 +53,18 @@ myFileManager = "alacritty --command lf"
 -- The command to use as a launcher, to launch applications that don't have
 -- preset keybindings.
 myAppLauncher = "rofi -show drun"
+
+myXPConfig = def {
+    bgColor = "#2E3440",
+    bgHLight = "#2E3440",
+    fgColor = "#D8DEE9",
+    fgHLight = "#A3BE8C",
+    position = Top,
+    promptBorderWidth = 0,
+    searchPredicate = fuzzyMatch,
+    sorter = fuzzySort
+}
+
 
 -- Clipboard manager command
 myClipboardManager = let
@@ -84,15 +97,24 @@ myChangeMonitor = let
 
 mySpotlight = let
     cmd :: String -> X ()
-    cmd r = spawn $ "xdg-open '" ++ r ++ "'"
+    cmd r = spawn $ "xdg-open $(fd --base-directory '/home/fedeizzo' '" ++ r ++ "')"
+    tuplify :: [a] -> (a, a)
+    tuplify [x, y] = (x, y)
 
-    complFun :: ComplFunction
+    splitEntry entry = tuplify (T.splitOn (T.pack ";") (T.pack entry))
+
+    -- complFun :: ComplFunction
     complFun s = do
-        history <- runProcessWithInput "/home/fedeizzo/.nix-profile/bin/fd" ["--base-directory /home/fedeizzo", ".pdf|.png|.jpg|.mp4"] []
+        content <- readFile "/tmp/prova.txt"
+        let entries = lines content
+        let split = map splitEntry entries
+        let fileToPath = M.fromList split
+        let history = T.unpack (T.intercalate (T.pack "\n") (M.keys fileToPath))
         mkComplFunFromList' (lines history) s
     in do
-        input <- inputPromptWithCompl myXPConfig "file" complFun
-        case input of
+        raw_input <- inputPromptWithCompl myXPConfig "file" complFun
+        -- let input = T.unpack (M.findWithDefault (T.pack "") (T.pack raw_input) fileToPath)
+        case raw_input of
             Just i -> cmd i
             _ -> return ()
 
@@ -140,16 +162,6 @@ myColorizedConfig = colorRangeFromClassName
     where
         black = minBound
         white = maxBound
-
-myXPConfig = def {
-    bgColor = "#2E3440",
-    bgHLight = "#2E3440",
-    fgColor = "#D8DEE9",
-    fgHLight = "#A3BE8C",
-    position = Top,
-    promptBorderWidth = 0,
-    searchPredicate = fuzzyMatch
-}
 
 myModMask = mod4Mask
 

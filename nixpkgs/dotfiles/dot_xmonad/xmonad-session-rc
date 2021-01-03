@@ -27,3 +27,6 @@ multilockscreen -u ~/nixOs-config/dotfiles/dot_config/bspwm/sfondo.jpg &
 
 # Launch lockscreen manager
 xss-lock -l -- multilockscreen -l blur --off 600 &
+
+# Update spotlight cache
+/home/fedeizzo/.sources/updateSpotlightCache.sh &
