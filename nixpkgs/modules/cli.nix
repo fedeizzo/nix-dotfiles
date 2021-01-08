@@ -33,6 +33,7 @@
     xdotool
     nix-index
     gitAndTools.gitui
+    graphviz
   ];
 
 

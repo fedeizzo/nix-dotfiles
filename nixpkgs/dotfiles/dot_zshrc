@@ -46,8 +46,9 @@ alias cz="chezmoi"
 alias v="nvim"
 alias open="xdg-open"
 alias cat="bat"
-alias dot='v $(fd --full-path '/home/fedeizzo/nixOs-config/nixpkgs/dotfiles' -t f | fzf)'
-alias sou='v $(fd --full-path '/home/fedeizzo/nixOs-config/nixpkgs/sources' -t f | fzf)'
+#alias dot='v $(fd --full-path '/home/fedeizzo/nixOs-config/nixpkgs/dotfiles' -t f | fzf)'
+#alias sou='v $(fd --full-path '/home/fedeizzo/nixOs-config/nixpkgs/sources' -t f | fzf)'
 alias upd='old=$(pwd) && cd /home/fedeizzo/nixOs-config/nixpkgs && ./install.sh && cd $old'
 alias ssh='TERM=xterm-256color ssh'
 alias pass='rbw get $(rbw list | fzf) | xclip -selectio c; exit 0'
+alias gt='gitui'

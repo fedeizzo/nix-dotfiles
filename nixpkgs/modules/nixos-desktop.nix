@@ -72,6 +72,7 @@
     devour
     xss-lock
     zoom-us
+    borgbackup
     # simplescreenrecorder
     # steam
   ];
