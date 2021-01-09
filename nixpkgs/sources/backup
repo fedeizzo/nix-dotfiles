@@ -2,58 +2,101 @@
 
 ###################################################################
 #Script Name	: backup
-#Description	: routine for bakup with borg
+#Description	: routine for backup with borg
 #Args         	: none
 #Author       	: Federico Izzo
 #Email         	: federico.izzo99@gmail.com
-#Last Update    : 21/09/2020
+#Last Update    : 09/01/2021
 ###################################################################
+
+export BORG_REPO='/mnt/home_backup'
+
+backup() {
+    info "Starting backup"
+    borg create \
+        --progress \
+        --stats \
+        --show-rc \
+        --exclude-caches \
+        --exclude "**/venv" \
+        --exclude "**/node_modules" \
+        --exclude "/home/fedeizzo/fbk/pei/postgres_data" \
+        --compression zstd,22 \
+        ::'{hostname}-{now}' \
+        $HOME/.gnupg \
+        $HOME/.ssh \
+        $HOME/.gnupg \
+        $HOME/docs \
+        $HOME/nixOs-config \
+        $HOME/fbk \
+        $HOME/uni \
+        $HOME/personalProject \
+        $HOME/zettelkasten
+    backup_exit=$?
+
+    borg prune \
+        --progress \
+        --stats \
+        --save-space \
+        --prefix '{hostname}-' \
+        --show-rc \
+        --keep-daily 1 \
+        --keep-weekly 2 \
+        --keep-monthly 4
+    prune_exit=$?
+
+    global_exit=$(( backup_exit > prune_exit ? backup_exit : prune_exit ))
+
+
+    if [ ${global_exit} -eq 0 ]; then
+        info "Backup and Prune finished successfully"
+    elif [ ${global_exit} -eq 1 ]; then
+        info "Backup and/or Prune finished with warnings"
+    else
+        info "Backup and/or Prune finished with errors"
+    fi
+}
+
+list_repo() {
+    borg list 
+}
+
+peek_backup() {
+    backups=$(borg list --short $_borg_repo)
+    index=1
+    declare -A mapper
+    echo "Backups:"
+    for b in $backups; do
+        echo -e "\t$index) $b"
+        mapper[$index]=$b
+        index=$(( index + 1 ))
+    done
+    read -p "Choose backup: " selected
+    if [[ $selected < $index ]]; then
+        borg info "::${mapper[$selected]}"
+    else
+        echo "No backup numbered as: $selected"
+    fi
+}
 
 info() { printf "\n%s %s\n\n" "$( date )" "$*" >&2; }
 trap 'echo $( date ) Backup interrupted >&2; exit 2' INT TERM
 
-info "Starting backup"
-sudo borg create \
-    --progress \
-    --stats \
-    --show-rc \
-    --exclude-caches \
-    --exclude '/home/*/.cache/*' \
-    --exclude '/home/*/cache/*' \
-    --exclude '/home/*/Cache/*' \
-    --exclude '/home/fedeizzo/.local/share/Steam/*' \
-    --exclude '/home/fedeizzo/.local/share/lutris/*' \
-    --exclude '/home/fedeizzo/.wine/*' \
-    --exclude '/home/*/.npm/_cacache/*' \
-    --exclude '/var/cache/*' \
-    --exclude '/var/*/.cache/*' \
-    --exclude '/var/tmp/*' \
-    --exclude '/data/borgBackups/*' \
-    --exclude '/data/*/node_modules/*' \
-    --exclude '/data/SteamLibrary/*'   \
-    --exclude '/data/Games/*'   \
-    /data/borgBackups::'{hostname}-{now}' /home /var /etc /data
-backup_exit=$?
+helpMessage="usage: backup [command]\n\nPossible commands:\n\tcreate: start backup and prune operation.\n\tlist: list all backup in the repository.\n\tinfo: show info relative to one backup.\n\thelp: print this message.\n"
 
-sudo borg prune \
-    --progress \
-    --prefix '{hostname}-' \
-    --show-rc \
-    --keep-daily 1 \
-    --keep-weekly 3 \
-    --keep-monthly 4 \
-    /data/borgBackups
-prune_exit=$?
+[ ! -d $_borg_repo ] && echo "Mount backup SSD!"
 
-global_exit=$(( backup_exit > prune_exit ? backup_exit : prune_exit ))
-
-
-if [ ${global_exit} -eq 0 ]; then
-    info "Backup and Prune finished successfully"
-elif [ ${global_exit} -eq 1 ]; then
-    info "Backup and/or Prune finished with warnings"
-else
-    info "Backup and/or Prune finished with errors"
-fi
-
-exit ${global_exit}
+case $1 in
+    "create")
+        backup
+        ;;
+    "list")
+        list_repo
+        ;;
+    "info")
+        peek_backup
+        ;;
+    "help"|*)
+        echo -e $helpMessage
+        ;;
+esac
