@@ -70,7 +70,6 @@ local function load_autocommands()
             {'FileType', 'typescript', 'setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2'  };
             {'FileType', 'vimwiki'   , 'silent nnoremap <silent> <Leader>d :call ToggleTask()<CR>'};
             {'FileType', 'vimwiki'   , 'silent nnoremap <silent> <Leader>b :!pdfPreview "%:p"<CR>'};
-            {'FileType', 'fzf'       , 'set nonu nrnu'                                            };
             {'FileType', 'git'       , 'setlocal nospell'                                         };
             {'FileType', 'qf'       , 'setlocal nospell'                                         };
         };

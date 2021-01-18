@@ -58,7 +58,7 @@
     xcmenu
     jq
     keyutils
-    #libreoffice
+    # libreoffice
     mpd-mpris
     multilockscreen
     openssh
@@ -75,6 +75,7 @@
     borgbackup
     # simplescreenrecorder
     # steam
+    teams
   ];
 
   # ROFI

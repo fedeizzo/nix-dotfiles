@@ -34,6 +34,7 @@
     nix-index
     gitAndTools.gitui
     graphviz
+    rsync
   ];
 
 
