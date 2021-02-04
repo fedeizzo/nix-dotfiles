@@ -88,6 +88,8 @@
     highlight
     lm_sensors
     vim
+    virt-manager
+    aqemu
   ];
   virtualisation = {
     docker = {
@@ -95,6 +97,9 @@
       enableOnBoot = true;
     };
     podman = {
+      enable = true;
+    };
+    libvirtd = {
       enable = true;
     };
   };
@@ -131,9 +136,6 @@
   programs.ssh.askPassword = "";
   programs.ccache.enable = true;
   programs.gnupg.agent.enable = true;
-  # TODO add this two line when problem will be fixed 
-  # virtualisation.virtualbox.host.enable = true;
-  # users.extraGroups.vboxusers.members = [ "fedeizzo" ];
 
   #################################
   # HARDWARE
