@@ -88,8 +88,6 @@
     highlight
     lm_sensors
     vim
-    virt-manager
-    aqemu
   ];
   virtualisation = {
     docker = {
@@ -143,8 +141,8 @@
   # TODO maybe useful for Italian accent
   # services.xserver.xkbOptions = "eurosign:e";
   # TODO this 32bit support is useful only with steam
-  # hardware.opengl.driSupport32Bit = true;
-  # hardware.pulseaudio.support32Bit = true;
+  hardware.opengl.driSupport32Bit = true;
+  hardware.pulseaudio.support32Bit = true;
   powerManagement.enable = true;
   hardware.opengl = {
     enable = true;

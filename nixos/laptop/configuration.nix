@@ -10,7 +10,7 @@
     name = "fedeizzo";
     isNormalUser = true;
     createHome = true;
-    extraGroups = [ "wheel" "input" "video" "bumblebee" "docker" "autologin" "informant" "users" "networkmanager" ];
+    extraGroups = [ "wheel" "input" "video" "bumblebee" "docker" "autologin" "informant" "users" "networkmanager" "libvirtd" ];
     shell = pkgs.zsh;
   };
 

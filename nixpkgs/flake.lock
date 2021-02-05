@@ -121,39 +121,6 @@
         "type": "github"
       }
     },
-    "neuron-nightly": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1603210201,
-        "narHash": "sha256-0qiy3vXKTA16UOzul1+qHr6G3QwBvknnajh+5dZmQQM=",
-        "owner": "srid",
-        "repo": "neuron",
-        "rev": "c7d2a3f030eb640f1bd1031679e6cffe06ca974a",
-        "type": "github"
-      },
-      "original": {
-        "owner": "srid",
-        "ref": "nightly",
-        "repo": "neuron",
-        "type": "github"
-      }
-    },
-    "nixos-unstable": {
-      "locked": {
-        "lastModified": 1607522989,
-        "narHash": "sha256-o/jWhOSAlaK7y2M57OIriRt6whuVVocS/T0mG7fd1TI=",
-        "owner": "nixos",
-        "repo": "nixpkgs",
-        "rev": "e9158eca70ae59e73fae23be5d13d3fa0cfc78b4",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nixos",
-        "ref": "nixos-unstable",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1612377154,
@@ -207,8 +174,6 @@
         "flake-utils": "flake-utils",
         "home-manager": "home-manager",
         "neovim-nightly-overlay": "neovim-nightly-overlay",
-        "neuron-nightly": "neuron-nightly",
-        "nixos-unstable": "nixos-unstable",
         "nixpkgs": "nixpkgs_2"
       }
     }

@@ -76,6 +76,7 @@
     # simplescreenrecorder
     # steam
     teams
+    steam
   ];
 
   # ROFI
