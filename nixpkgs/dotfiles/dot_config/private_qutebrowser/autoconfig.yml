@@ -19,4 +19,4 @@ settings:
     https://calendar.google.com?cid=%25s: true
     https://mail.google.com?extsrc=mailto&url=%25s: false
   tabs.show:
-    global: multiple
+    global: always

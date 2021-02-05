@@ -4,5 +4,7 @@
   home.packages = with pkgs; [
     slack
     tdesktop
+    teams
+    zoom-us
   ];
 }

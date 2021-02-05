@@ -6,18 +6,16 @@ in
   imports = [
     ../modules/alacritty.nix
     ../modules/chat.nix
-    ../modules/cli.nix
+    ../modules/config.nix
     ../modules/cuda.nix
     ../modules/languages.nix
     ../modules/media.nix
     ../modules/neovim.nix
-    ../modules/nixos-desktop.nix
+    ../modules/packages.nix
     ../modules/services.nix
-    ../modules/ssh.nix
+    ../modules/xmonad.nix
   ];
 
-  # home.username = builtins.getEnv "USER";
-  # home.homeDirectory = builtins.getEnv "HOME";
   home.stateVersion = "20.09";
 
   programs.zsh = {

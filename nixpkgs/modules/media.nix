@@ -15,9 +15,7 @@
     zathura
     file
     spotify
-    weechat
-    # spotifyd
-    # spotify-tui
+    mpd-mpris
   ];
 
   # ZATHURA
@@ -25,8 +23,4 @@
     source = ../dotfiles/dot_config/private_zathura/executable_zathurarc;
     executable = true;
   };
-
-  # IMGUR-SCREENSHOT
-  # xdg.configFile."imgur-screenshot/credentials.conf".source = ../dotfiles/dot_config/imgur-screenshot/private_credentials.conf.tmpl;
-  # xdg.configFile."imgur-screenshot/settings.conf".source = ../dotfiles/dot_config/imgur-screenshot/private_settings.conf.tmpl;
 }

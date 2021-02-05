@@ -1,9 +1,6 @@
 { config, pkgs, ... }:
 
 {
-  # TODO see postBootCommand to do snapshots or instead create a systemd service
-  # TODO see container in order to run copy of nixOs for steam and other pkg
-  # TODO see console in order to change ctrl with caps on laptop keyboard
   imports = [ ./hardware-configuration.nix ];
 
   #################################
@@ -22,7 +19,7 @@
     keyMap = "us";
   };
   time.timeZone = "Europe/Rome";
-  # TODO find a way to run fc-cache -rv to reload font cache (root and user)
+
   fonts = {
     fonts = [
       pkgs.fira-code
@@ -59,11 +56,6 @@
   # PROGRAMS and ENV
   #################################
   environment.systemPackages = with pkgs; [
-    # BSPWM SETUP
-    # bspwm
-    # xdo
-    # sxhkd
-    # XORG
     bc
     curl
     dunst
@@ -77,7 +69,6 @@
     xclip
     xorg.xbacklight
     xsel
-    # OTHER
     acpi
     arandr
     docker
@@ -138,9 +129,6 @@
   #################################
   # HARDWARE
   #################################
-  # TODO maybe useful for Italian accent
-  # services.xserver.xkbOptions = "eurosign:e";
-  # TODO this 32bit support is useful only with steam
   hardware.opengl.driSupport32Bit = true;
   hardware.pulseaudio.support32Bit = true;
   powerManagement.enable = true;
@@ -235,5 +223,4 @@
     enable = true;
     interval = "weekly";
   };
-  services.postgresql.enable = true;
 }
