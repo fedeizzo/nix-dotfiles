@@ -6,5 +6,6 @@
     tdesktop
     teams
     zoom-us
+    discord
   ];
 }

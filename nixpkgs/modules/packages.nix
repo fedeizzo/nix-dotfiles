@@ -102,6 +102,7 @@
     xss-lock
     borgbackup
     steam
+    minecraft
   ];
 
   programs.direnv = {

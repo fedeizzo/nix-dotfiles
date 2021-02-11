@@ -17,7 +17,7 @@ xcmenu -C
 autorandr --change
 
 # Set wallpaper
-feh --bg-center --no-fehbg /home/fedeizzo/.config/bspwm/pacwall.png
+feh --bg-center --no-fehbg /home/fedeizzo/.xmonad/pacwall.png
 
 # Start unclutter
 # unclutter -grab &

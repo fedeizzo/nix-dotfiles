@@ -58,6 +58,8 @@
     recursive = true;
   };
 
+  home.file.".xmonad/pacwall.png".source = ../dotfiles/dot_config/bspwm/pacwall.png;
+
   # GIT CONFIG
   home.file.".gitconfig" = {
     source = ../dotfiles/dot_gitconfig;
