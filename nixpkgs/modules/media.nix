@@ -16,6 +16,7 @@
     file
     spotify
     mpd-mpris
+    qrcp
   ];
 
   # ZATHURA

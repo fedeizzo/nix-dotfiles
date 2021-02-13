@@ -19,6 +19,7 @@ in
   boot.loader.efi.canTouchEfiVariables = true;
   boot.cleanTmpDir = true;
   boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.initrd.kernelModules = [ "btrfs" "xxhash" ];
 
   #################################
   # KEYMAP and TIME and FONT

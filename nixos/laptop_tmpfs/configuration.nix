@@ -2,7 +2,7 @@
 
 let
   home-manager = builtins.fetchTarball {
-    url = "https://github.com/rycee/home-manager/archive/master.tar.gz";
+    url = "https://github.com/rycee/home-manager/archive/release-20.09.tar.gz";
   };
   impermanence = builtins.fetchTarball {
     url =

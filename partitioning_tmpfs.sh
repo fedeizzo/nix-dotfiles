@@ -5,6 +5,7 @@ set -e
 BOOT_DEV="/dev/sda"
 ROOT_DEV="/dev/sda"
 USER="fedeizzo"
+BTRFS_CHECKSUM_ALG="crc32c"
 
 create_subvolume() {
     for sv in $1; do
@@ -68,7 +69,7 @@ cryptsetup open "$root" nixenc
 
 # formatting filesystems
 mkfs.vfat -n boot "$boot"
-mkfs.btrfs --csum xxhash -L root /dev/mapper/nixenc
+mkfs.btrfs --csum "$BTRFS_CHECKSUM_ALG" -L root /dev/mapper/nixenc
 nix="/dev/mapper/nixenc"
 
 # mount tmpfs
@@ -160,8 +161,8 @@ sed 's/fsType = "tmpfs";/fsType = "tmpfs";\n    options = [ "defaults" "size=2G"
 
 # my personal config
 ./install.sh -f laptop_tmpfs
-# nixos-install --no-root-passwd
+nixos-install --no-root-passwd
 
-# swapoff /mnt/nix/persistent/swap/.swapfile
-# umount -R /mnt
-# cryptsetup close nixenc
+swapoff /mnt/nix/persistent/swap/.swapfile
+umount -R /mnt
+cryptsetup close nixenc
