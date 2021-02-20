@@ -54,6 +54,7 @@ return require('packer').startup(function()
     use {'cespare/vim-toml',                   ft='toml'}
     use {'LnL7/vim-nix',                        ft='nix'}
     use {'tbastos/vim-lua',                     ft='lua'} -- 'tjdevries/nlua.nvim' TODO try this one
+    use {'neovimhaskell/haskell-vim', ft={'haskell', 'cabal'}}
     
     -- COLORSCHEME
     use 'arcticicestudio/nord-vim'

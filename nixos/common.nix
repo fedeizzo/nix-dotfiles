@@ -99,6 +99,7 @@ in
       enable = true;
       enableOnBoot = true;
       enableNvidia = true;
+      # extraOptions = "-H tcp://0.0.0.0:2376"; 
     };
     podman.enable = true;
     libvirtd.enable = true;
