@@ -7,11 +7,11 @@ if [[ $NAME == "Arch Linux" ]]; then
 fi
 
 #my aliases
-alias ls='exa --icons'
-alias ll='exa -l --icons'
-alias lll='exa -l --icons | less'
-alias lla='exa -la --icons'
-alias llt='exa -T --icons'
+alias ls='exa --icons --sort=type'
+alias ll='exa -l --icons --sort=type'
+alias lll='exa -l --icons --sort=type | less'
+alias lla='exa -la --icons --sort=type'
+alias llt='exa -T --icons --sort=type'
 alias code=codium
 alias vi='nvim'
 alias lol='sysctl -w abi.vsyscall32=0'
