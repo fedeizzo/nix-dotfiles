@@ -103,6 +103,7 @@
     borgbackup
     steam
     minecraft
+    ncdu
   ];
 
   programs.direnv = {
