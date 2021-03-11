@@ -18,8 +18,8 @@ in
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.cleanTmpDir = true;
-  boot.kernelPackages = pkgs.linuxPackages_latest;
-  boot.initrd.kernelModules = [ "btrfs" "xxhash" ];
+  boot.kernelPackages = pkgs.linuxPackages;
+  # boot.initrd.kernelModules = [ "btrfs" "xxhash" ];
 
   #################################
   # KEYMAP and TIME and FONT
@@ -104,8 +104,8 @@ in
     podman.enable = true;
     libvirtd.enable = true;
   };
-  environment.shells = [ pkgs.bash pkgs.zsh ];
-  environment.pathsToLink = [ "/share/zsh" ];
+  environment.shells = [ pkgs.bash pkgs.fish ];
+  environment.pathsToLink = [ "/share/fish" ];
   environment.variables = {
     "EDITOR" = "nvim";
     "READER" = "zathura";
@@ -142,6 +142,7 @@ in
     enableCompletion = true;
     enableLsColors = true;
   };
+  programs.fish.enable = true;
   programs.autojump.enable = true;
   programs.light.enable = true;
   programs.ssh.askPassword = "";

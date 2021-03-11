@@ -22,7 +22,7 @@ in
     isNormalUser = true;
     createHome = true;
     extraGroups = [ "wheel" "input" "video" "bumblebee" "docker" "autologin" "informant" "users" "networkmanager" ];
-    shell = pkgs.zsh;
+    shell = pkgs.fish;
   };
 
   #################################
