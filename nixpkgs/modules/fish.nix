@@ -43,9 +43,9 @@
             --color=always \
             --line-range :500 {}' | \
           read file
-          cd (dirname $file)
-          $EDITOR $file
-          cd $oldDir
+          and cd (dirname $file)
+          and $EDITOR $file
+          and cd $oldDir
         '';
         description = "Search and edit dotfiles";
       };
