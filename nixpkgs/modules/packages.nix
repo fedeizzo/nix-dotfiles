@@ -104,6 +104,7 @@
     steam
     minecraft
     ncdu
+    thunderbird
   ];
 
   programs.direnv = {

@@ -4,6 +4,9 @@
   home.packages = with pkgs; [
     clang
 
+    # haskell
+    cabal-install
+
     # lua
     lua
 
