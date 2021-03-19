@@ -68,10 +68,11 @@ local function load_autocommands()
         };
         filetypes = {
             {'FileType', 'typescript', 'setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2'  };
+            {'FileType', 'haskell'   , 'setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2'  };
             {'FileType', 'vimwiki'   , 'silent nnoremap <silent> <Leader>d :call ToggleTask()<CR>'};
             {'FileType', 'vimwiki'   , 'silent nnoremap <silent> <Leader>b :!pdfPreview "%:p"<CR>'};
             {'FileType', 'git'       , 'setlocal nospell'                                         };
-            {'FileType', 'qf'       , 'setlocal nospell'                                         };
+            {'FileType', 'qf'        , 'setlocal nospell'                                         };
         };
     }
     createAutogroups(autogroups)   

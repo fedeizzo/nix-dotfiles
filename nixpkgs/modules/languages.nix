@@ -5,7 +5,7 @@
     clang
 
     # haskell
-    cabal-install
+    # cabal-install
 
     # lua
     lua

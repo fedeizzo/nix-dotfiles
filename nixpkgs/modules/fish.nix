@@ -58,6 +58,13 @@
         '';
         description = "Update home-manager config";
       };
+      take = {
+        argumentNames="dir";
+        body = ''
+          mkdir -p $dir
+          cd $dir
+        '';
+      };
     };
     shellAbbrs = {
       "..." = "cd ../..";
@@ -68,7 +75,6 @@
     promptInit = ''
       eval (starship init fish)
       fish_vi_key_bindings
-      set -gx PROJECT_PATHS ~/fbk ~/personalProject
       set -U __done_min_cmd_duration 120000
       set fish_color_command A3BE8C
       set fish_greeting
@@ -107,6 +113,7 @@
       set PYLINTHOME "$XDG_CACHE_HOME"/pylint
       set TASKDATA "$XDG_DATA_HOME"/task
       set TASKRC "$XDG_CONFIG_HOME"/task/taskrc
+      set CABAL_DIR "XDG_DATA_HOME"/.cabal
     '';
     plugins = [
       {
@@ -116,15 +123,6 @@
           repo = "done";
           rev = "1.15.0";
           sha256 = "1i7k59kjik41b7mww6d1qbi66vswplmvjdscinyf60irbrsbc5bv";
-        };
-      }
-      {
-        name = "pj";
-        src = pkgs.fetchFromGitHub {
-          owner = "oh-my-fish";
-          repo = "plugin-pj";
-          rev = "b99b1df1b1dc10ef94ce8376661a7307113a311a";
-          sha256 = "1awwp26xwl5sfqhzrklyf2552xg4y89450g15fk5zvq2j2q2mcz8";
         };
       }
       {
