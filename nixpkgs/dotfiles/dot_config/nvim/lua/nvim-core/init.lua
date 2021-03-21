@@ -88,7 +88,7 @@ local function keymaps()
         };
         nnoremap = {
             {'<silent> <Leader>h' , ':noh<CR>'                   };
-            {'<silent> <Leader>d' , ':bd<CR>'                   };
+            {'<silent> <Leader>dd', ':bd<CR>'                    };
             {'<Leader>y'          , '"+'                         };
             {'<silent> <Leader>c' , ':lua automaticOutput()<CR>' };
             {'<silent> <Leader>a' , ':w<CR>'                     };

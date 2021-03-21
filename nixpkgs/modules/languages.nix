@@ -4,6 +4,9 @@
   home.packages = with pkgs; [
     clang
 
+    # tree-sitter
+    tree-sitter
+
     # haskell
     # cabal-install
 

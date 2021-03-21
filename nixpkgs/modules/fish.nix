@@ -135,6 +135,15 @@
         };
       }
       {
+        name = "z";
+        src = pkgs.fetchFromGitHub {
+          owner = "jethrokuan";
+          repo = "z";
+          rev = "97ca1fd1b281f5f240e7adb90d0a28f9eb4567db";
+          sha256 = "sha256-VIeRzaA/Dg0mpCjMB9rNXmIhNGzzYCxgkFUXNUOyJ50=";
+        };
+      }
+      {
         name = "plugin-extract";
         src = pkgs.fetchFromGitHub {
           owner = "oh-my-fish";

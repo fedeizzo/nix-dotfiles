@@ -9,6 +9,7 @@ require('lsp')
 
 -- CUSTOM FUNCTION
 require('scripts/automatic-output')
+require('scripts/telescope-file')
 
 -- PLUGINS SETTINGS
 require('plugins/accelerated')

@@ -18,7 +18,7 @@ in
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.cleanTmpDir = true;
-  boot.kernelPackages = pkgs.linuxPackages;
+  boot.kernelPackages = pkgs.linuxPackages_latest;
   # boot.initrd.kernelModules = [ "btrfs" "xxhash" ];
 
   #################################
@@ -149,7 +149,6 @@ in
     enableLsColors = true;
   };
   programs.fish.enable = true;
-  programs.autojump.enable = true;
   programs.light.enable = true;
   programs.ssh.askPassword = "";
   programs.ccache.enable = true;

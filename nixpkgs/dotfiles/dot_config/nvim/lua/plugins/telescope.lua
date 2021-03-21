@@ -1,6 +1,8 @@
 local maps = {
     nnoremap = {
         {'<silent> <Leader>o', ":lua require'telescope.builtin'.git_files{}<CR>"};
+        {'<silent> <Leader>s', ":lua require'telescope.builtin'.builtin{}<CR>"};
+        -- {'<Leader>o', ":lua telescope-file()"};
         {'<silent> <Leader>t', ":lua require'telescope.builtin'.treesitter{}<CR>"};
         {'<silent> <Leader>g', ":lua require'telescope.builtin'.git_bcommits{}<CR>"};
         {'<silent> <Leader>f', ":lua require'telescope.builtin'.live_grep{}<CR>"};
@@ -8,3 +10,8 @@ local maps = {
     };
 }
 createKeymaps(maps)
+require('telescope').setup{
+    defaults = {
+        layout_strategy = "flex"
+    }
+}

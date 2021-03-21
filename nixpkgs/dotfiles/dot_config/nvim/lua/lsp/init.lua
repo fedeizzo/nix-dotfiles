@@ -25,7 +25,7 @@ require'lspconfig'.rust_analyzer.setup{on_attach=on_attach_ls}
 
 --treesitter
 require'nvim-treesitter.configs'.setup {
-    highlight = { enable = false },
+    highlight = { enable = true },
     incremental_selection = {
         enable = true,
         keymaps = {
@@ -55,6 +55,9 @@ require'nvim-treesitter.configs'.setup {
                 goto_previous_usage = "<a-#>",
             },
         },
+    },
+    rainbow = {
+        enable = true
     },
 }
 
