@@ -37,7 +37,7 @@ local function core_options()
     -- SEARCH HIGHLIGHT
         hlsearch       = true;
     -- SPELL CHECK
-        spell          = true;
+        nospell        = true;
         spelllang      = { 'it' };
     -- COLORSCHEME
         termguicolors  = true;
@@ -64,7 +64,8 @@ local function load_autocommands()
             {'BufNewFile'  , '*.py' , 'set autoindent'                          };
             {'BufRead'     , '*.py' , 'set autoindent'                          };
             {'BufEnter'    , '*.nix', 'set filetype=nix'                        };
-            {'BufEnter'    , '*.md' , 'set conceallevel=0'                      };
+            {'BufEnter'    , '*.md' , 'set spell'                               };
+            {'BufLeave'    , '*.md' , 'set nospell'                             };
         };
         filetypes = {
             {'FileType', 'typescript', 'setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2'  };

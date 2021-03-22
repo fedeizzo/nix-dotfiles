@@ -15,7 +15,7 @@ require'lspconfig'.ccls.setup{on_attach=on_attach_ls}
 require'lspconfig'.dockerls.setup{on_attach=on_attach_ls}
 
 --haskell
-require'lspconfig'.hls.setup{on_attach=on_attach_ls}
+-- require'lspconfig'.hls.setup{on_attach=on_attach_ls}
 
 --typescript/javascript
 require'lspconfig'.tsserver.setup{on_attach=on_attach_ls}
