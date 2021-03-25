@@ -71,6 +71,7 @@
       "...." = "cd ../../..";
       "....." = "cd ../../../..";
       "ssh" = "TERM=xterm-256color ssh";
+      "gh-md-toc" = "gh-md-toc --no-backup";
     };
     promptInit = ''
       eval (starship init fish)

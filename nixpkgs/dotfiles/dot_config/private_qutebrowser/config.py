@@ -111,7 +111,7 @@ config.set("url.searchengines", {
            "DEFAULT": "https://www.google.com/search?q={}"})
 config.set("downloads.location.directory", "/tmp")
 config.set("statusbar.show", "in-mode")
-config.set("tabs.show", "switching")
+config.set("tabs.show", "multiple")
 
 config.bind(",m", "spawn devour vlc {url}", mode="normal")
 config.bind(",M", "spawn vlc {url}", mode="normal")

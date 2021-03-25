@@ -138,8 +138,7 @@ myBorderWidth = 1
 myLayouts = avoidStruts(
     spacingRaw False (Border 10 0 10 0) 
     True (Border 0 10 0 10) True 
-    $ Tall 1 (3/100) (1/2) 
-    ||| ThreeColMid 1 (3/100) (1/2))
+    $ Tall 1 (3/100) (1/2))
     ||| noBorders (fullscreenFull Full)
 
 black = "#2E3440"
@@ -167,7 +166,6 @@ myModMask = mod4Mask
 
 myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   [ ((modMask, xK_Return), spawn $ XMonad.terminal conf)
-  -- , ((modMask, xK_d), spawn myAppLauncher)
   , ((modMask, xK_d), runOrRaisePrompt myXPConfig)
   , ((modMask, xK_f), mySpotlight)
   , ((modMask, xK_u), namedScratchpadAction myScratchpads "telegram")
@@ -180,9 +178,6 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   , ((modMask, xK_x), spawn myLockscreen)
   , ((modMask .|. shiftMask, xK_x), spawn mySuspend)
   , ((modMask, xK_e), spawn myFileManager)
-  -- TODO confirm to shutdown pc (see also prompt input)
-  -- , ((modMask , xK_Escape), confirmPrompt def "shutdown" $ io (exitWith ExitSuccess))
-  -- , ((modMask .|. shiftMask, xK_d), windowMenu)
   , ((modMask, xK_c), myClipboardManager)
   , ((modMask, xK_m), myChangeMonitor)
   , ((modMask, xK_b), spawn myPasswordManager)

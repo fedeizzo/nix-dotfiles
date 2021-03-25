@@ -18,7 +18,7 @@ in
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.cleanTmpDir = true;
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelPackages = pkgs.linuxPackages;
   # boot.initrd.kernelModules = [ "btrfs" "xxhash" ];
 
   #################################
@@ -95,8 +95,8 @@ in
     highlight
     lm_sensors
     vim
-    nvidia-offload
-    (pkgs.callPackage ./pkgs/nvidia-xrun.nix { })
+    # nvidia-offload
+    # (pkgs.callPackage ./pkgs/nvidia-xrun.nix { })
     xorg.xinit
     virt-manager
   ];
