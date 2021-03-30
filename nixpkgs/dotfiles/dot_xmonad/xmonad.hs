@@ -123,7 +123,8 @@ myPasswordManager = "/home/fedeizzo/.sources/rbwAutofill"
 myScratchpads = [
         NS "telegram" "telegram-desktop" (className =? "TelegramDesktop") defaultFloating,
         NS "terminal" "alacritty --class scratchpad,scratchpad" (className =? "scratchpad") defaultFloating,
-        NS "lf" "alacritty --class lfScratchpad,lfScratchpad --command lf" (className =? "lfScratchpad") defaultFloating
+        NS "lf" "alacritty --class lfScratchpad,lfScratchpad --command lf" (className =? "lfScratchpad") defaultFloating,
+        NS "spotify" "spotify" (className =? "Spotify") defaultFloating
     ]
 
 -- Location of your xmobar.hs / xmobarrc
@@ -168,6 +169,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   [ ((modMask, xK_Return), spawn $ XMonad.terminal conf)
   , ((modMask, xK_d), runOrRaisePrompt myXPConfig)
   , ((modMask, xK_f), mySpotlight)
+  , ((modMask, xK_y), namedScratchpadAction myScratchpads "spotify")
   , ((modMask, xK_u), namedScratchpadAction myScratchpads "telegram")
   , ((modMask, xK_i), namedScratchpadAction myScratchpads "terminal")
   , ((modMask, xK_o), namedScratchpadAction myScratchpads "lf")

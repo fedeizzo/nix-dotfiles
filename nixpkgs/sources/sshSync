@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+set -e
+helpMessage="usage: ./sshSync <basedir_host> <ssh-credentials> <basedir_server>"
+[[ $1 == "--help" ]] && echo -e $helpMessage && exit 0
+
+[ -z $1 ] && echo -e "Please write a base_dir" && echo -e $helpMessage && exit 1
+current_dir="$1"
+[ -z $2 ] && echo -e "Please write ssh credentials" && echo -e $helpMessage && exit 1
+ssh_credentials="$2"
+[ -z $3 ] && echo -e "Please write a base_dir server" && echo -e $helpMessage && exit 1
+basedir_server="$3"
+echo -e "Status:
+\twatching: $current_dir
+\tssh machine: $ssh_credentials
+\tdestination: $basedir_server"
+inotifywait -m $current_dir -r -e modify |
+    while read path action file; do
+        path_file="$path$file"
+        echo $path_file
+        file_changed=${path_file#$current_dir"/"}
+        echo "copy $file_changed to $ssh_credentials:$basedir_server/$file_changed"
+        scp "$file_changed" "$ssh_credentials:$basedir_server/$file_changed"
+    done
+exit 0
