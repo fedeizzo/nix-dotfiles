@@ -122,7 +122,7 @@ config.bind(" h", "open -t qute://help/img/cheatsheet-big.png", mode="normal")
 # config.bind("O", "spawn --userscript rofiQutebrowser --tab", mode="normal")
 
 for i in range(10):
-    config.bind(" " + str(i), "tab-focus " + str(1))
+    config.bind(" " + str(i), "tab-focus " + str(i))
 config.bind(
     " s",
     "config-cycle statusbar.show",

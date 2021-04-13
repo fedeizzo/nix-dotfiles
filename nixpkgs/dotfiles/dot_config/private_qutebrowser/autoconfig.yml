@@ -13,6 +13,8 @@ settings:
       w: session-save
       wq: quit --save
       wqa: quit --save
+  content.geolocation:
+    http://localhost:23000: true
   content.notifications:
     https://www.reddit.com: false
   content.register_protocol_handler:
