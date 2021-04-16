@@ -105,7 +105,7 @@
     minecraft
     ncdu
     thunderbird
-    # wezterm
+    wezterm
   ];
 
   programs.direnv = {
