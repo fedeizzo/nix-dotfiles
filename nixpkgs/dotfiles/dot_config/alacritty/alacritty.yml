@@ -30,7 +30,7 @@ font:
     family: monospace
     style: Regular
 
-  size: 12
+  size: 11
 
   offset:
     x: 0

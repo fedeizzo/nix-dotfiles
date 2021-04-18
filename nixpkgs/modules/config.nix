@@ -40,6 +40,12 @@
   # STARSHIP
   xdg.configFile."starship.toml".source = ../dotfiles/dot_config/starship.toml;
 
+  # Wezterm
+  xdg.configFile."wezterm" = {
+    source = ../dotfiles/dot_config/wezterm;
+    recursive = true;
+  };
+
   # Xresources
   home.file.".Xresources" = {
     source = ../dotfiles/dot_Xresources;

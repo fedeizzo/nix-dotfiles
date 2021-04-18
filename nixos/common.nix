@@ -36,13 +36,15 @@ in
       pkgs.font-awesome
       pkgs.joypixels
       pkgs.symbola
+      pkgs.jetbrains-mono
       (pkgs.callPackage ./pkgs/gfonts.nix { })
     ];
     fontconfig = {
       defaultFonts = {
-        monospace = [ "Nimbus Mono PS" ];
-        sansSerif = [ "Nimbus Sans" ];
-        serif = [ "Nimbus Roman" ];
+        monospace = [ "JetBrains Mono" ];
+        # monospace = [ "Nimbus Mono PS" ];
+        # sansSerif = [ "Nimbus Sans" ];
+        # serif = [ "Nimbus Roman" ];
       };
     };
   };
