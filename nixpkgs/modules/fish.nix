@@ -84,7 +84,7 @@
       set PATH $PATH ( find $HOME/.sources/ -type d -printf ":%p" )
       set PATH $PATH /home/fedeizzo/.nimble/bin
       set EDITOR "nvim"
-      set TERMINAL "alacritty"
+      set TERMINAL "st"
       set PIPENV_CACHE_DIR "$XDG_CACHE_HOME"/pipenv
       set WPM_COUNTER 0
       set NNN_PLUG 't:treeview'

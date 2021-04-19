@@ -14,6 +14,7 @@ in
     ../modules/neovim.nix
     ../modules/packages.nix
     ../modules/services.nix
+    ../modules/st.nix
     ../modules/xmonad.nix
   ];
 

@@ -34,7 +34,7 @@ import qualified XMonad.StackSet as W
 -- The preferred terminal program, which is used in a binding below and by
 -- certain contrib modules.
 --
-myTerminal = "alacritty"
+myTerminal = "st"
 
 -- The command to lock the screen or show the screensaver.
 myLockscreen = "multilockscreen -l blur --off 600"
@@ -48,7 +48,7 @@ myScreenshotOnline = "imgur-screenshot"
 -- myEmoji = "splatmoji type"
 
 -- The command to open file manager
-myFileManager = "alacritty --command lf"
+myFileManager = "st lf"
 
 -- The command to use as a launcher, to launch applications that don't have
 -- preset keybindings.
@@ -122,8 +122,8 @@ myPasswordManager = "/home/fedeizzo/.sources/rbwAutofill"
 
 myScratchpads = [
         NS "telegram" "telegram-desktop" (className =? "TelegramDesktop") defaultFloating,
-        NS "terminal" "alacritty --class scratchpad,scratchpad" (className =? "scratchpad") defaultFloating,
-        NS "lf" "alacritty --class lfScratchpad,lfScratchpad --command lf" (className =? "lfScratchpad") defaultFloating,
+        NS "terminal" "st -c scratchpad" (className =? "scratchpad") defaultFloating,
+        NS "lf" "st -c lfScratchpad lf" (className =? "lfScratchpad") defaultFloating,
         NS "spotify" "spotify" (className =? "Spotify") defaultFloating
     ]
 
