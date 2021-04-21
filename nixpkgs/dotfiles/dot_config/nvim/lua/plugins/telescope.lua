@@ -1,6 +1,7 @@
 local maps = {
     nnoremap = {
         {'<silent> <Leader>o', ":lua require'telescope.builtin'.git_files{}<CR>"};
+        {'<silent> <Leader>l', ":lua require'telescope.builtin'.buffers{show_all_buffers = true}<CR>"};
         {'<silent> <Leader>s', ":lua require'telescope.builtin'.builtin{}<CR>"};
         -- {'<Leader>o', ":lua telescope-file()"};
         {'<silent> <Leader>t', ":lua require'telescope.builtin'.treesitter{}<CR>"};

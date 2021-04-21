@@ -17,7 +17,10 @@ return require('packer').startup(function()
     use 'ryanoasis/vim-devicons'
     use 'kyazdani42/nvim-web-devicons'
     -- status line
-    use 'itchyny/lightline.vim'
+    use {
+      'hoob3rt/lualine.nvim',
+      requires = {'kyazdani42/nvim-web-devicons', opt = true}
+    }
     -- underline same work over cursor
     use 'itchyny/vim-cursorword'
     use 'rhysd/accelerated-jk'
@@ -25,14 +28,16 @@ return require('packer').startup(function()
     use 'kshenoy/vim-signature'
     use 'tpope/vim-commentary'
     -- buffer line above
-    use 'mengelbrecht/lightline-bufferline'
+    use {'akinsho/nvim-bufferline.lua', requires = 'kyazdani42/nvim-web-devicons'}
+
     use 'yggdroot/indentline'
     use 'jiangmiao/auto-pairs'
     use 'unblevable/quick-scope'
     -- git improvement
     use 'tpope/vim-fugitive'
     -- start page
-    use 'mhinz/vim-startify'
+    -- use 'mhinz/vim-startify'
+    use 'glepnir/dashboard-nvim'
     -- note taking
     use {
         'fiatjaf/neuron.vim', requires = {
