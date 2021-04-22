@@ -29,7 +29,6 @@
     openssl
     rbw
     pinentry-qt
-    dmenu
     xdotool
     nix-index
     gitAndTools.gitui
