@@ -8,7 +8,7 @@
         owner = "fedeizzo";
         repo = "st";
         rev = "master";
-        sha256 = "sha256-GzM5RAjw9tLXHfaapdRuA+ASyKnCvibzzw76CaDG7lM=";
+        sha256 = "sha256-D6zcyXPAn7ESXYbGcPu/ApwpjlD69xCSClyTaLKy6L4=";
       };
     }))
   ];
