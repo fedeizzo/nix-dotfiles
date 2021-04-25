@@ -62,9 +62,9 @@ require'nvim-treesitter.configs'.setup {
 }
 
 --debug adapter protocol
-local dap = require('dap')
-dap.adapters.python = {
-  type = 'executable';
-  command = 'python';
-  args = { '-m', 'debugpy.adapter' };
-}
+-- local dap = require('dap')
+-- dap.adapters.python = {
+--   type = 'executable';
+--   command = 'python';
+--   args = { '-m', 'debugpy.adapter' };
+-- }
