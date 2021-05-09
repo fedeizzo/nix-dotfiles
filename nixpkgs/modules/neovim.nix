@@ -6,7 +6,6 @@
     package = pkgs.neovim-nightly;
     extraConfig = builtins.readFile ../dotfiles/dot_config/nvim/init.vim;
     withNodeJs = false;
-    withPython = true;
     withPython3 = true;
     withRuby = false;
   };

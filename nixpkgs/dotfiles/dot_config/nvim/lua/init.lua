@@ -10,6 +10,7 @@ require('lsp')
 -- CUSTOM FUNCTION
 require('scripts/automatic-output')
 require('scripts/telescope-file')
+require('scripts/enumerate-python-for')
 
 -- PLUGINS SETTINGS
 require('plugins/accelerated')

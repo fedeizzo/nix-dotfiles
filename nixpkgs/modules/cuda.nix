@@ -2,7 +2,7 @@
 
 {
   home.packages = with pkgs; [
-    cudatoolkit_10_1
-    cudnn_cudatoolkit_10_1
+    cudatoolkit_11_2
+    cudnn_cudatoolkit_11_2
   ];
 }

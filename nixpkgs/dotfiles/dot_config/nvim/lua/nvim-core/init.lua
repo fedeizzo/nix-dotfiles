@@ -82,25 +82,26 @@ end
 local function keymaps()
     local maps = {
         imap = {
-            {'jk'                 , '<Esc>zz'                    };
+            {'jk'                 , '<Esc>zz'                       };
         }; 
         inoremap = {
-            {'<Tab>'              , '<C-X><C-F>'                 };
+            {'<Tab>'              , '<C-X><C-F>'                    };
         };
         nnoremap = {
-            {'<silent> <Leader>h' , ':noh<CR>'                   };
-            {'<silent> <Leader>dd', ':bd<CR>'                    };
-            {'<Leader>y'          , '"+'                         };
-            {'<silent> <Leader>c' , ':lua automaticOutput()<CR>' };
-            {'<silent> <Leader>a' , ':w<CR>'                     };
-            {'<silent> <Leader>q' , ':q<CR>'                     };
-            {'<C-h>'              , '<C-w><C-h>'                 };
-            {'<C-j>'              , '<C-w><C-j>'                 };
-            {'<C-k>'              , '<C-w><C-k>'                 };
-            {'<C-l>'              , '<C-w><C-l>'                 };
+            {'<silent> <Leader>h' , ':noh<CR>'                      };
+            {'<silent> <Leader>dd', ':bd<CR>'                       };
+            {'<Leader>y'          , '"+'                            };
+            {'<silent> <Leader>c' , ':lua automaticOutput()<CR>'    };
+            {'<silent> <Leader>e' , ':lua enumeratePythonFor()<CR>' };
+            {'<silent> <Leader>a' , ':w<CR>'                        };
+            {'<silent> <Leader>q' , ':q<CR>'                        };
+            {'<C-h>'              , '<C-w><C-h>'                    };
+            {'<C-j>'              , '<C-w><C-j>'                    };
+            {'<C-k>'              , '<C-w><C-k>'                    };
+            {'<C-l>'              , '<C-w><C-l>'                    };
         };
         vnoremap = {
-            {'<Leader>y'          , '"+y<CR>'                    };
+            {'<Leader>y'          , '"+y<CR>'                       };
         };
     }
     createKeymaps(maps)

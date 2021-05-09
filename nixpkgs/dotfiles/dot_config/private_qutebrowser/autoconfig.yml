@@ -15,7 +15,7 @@ settings:
       wqa: quit --save
   content.geolocation:
     http://localhost:23000: true
-  content.notifications:
+  content.notifications.enabled:
     https://www.reddit.com: false
   content.register_protocol_handler:
     https://calendar.google.com?cid=%25s: true

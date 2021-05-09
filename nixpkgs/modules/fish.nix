@@ -115,6 +115,9 @@
       set TASKDATA "$XDG_DATA_HOME"/task
       set TASKRC "$XDG_CONFIG_HOME"/task/taskrc
       set CABAL_DIR "XDG_DATA_HOME"/.cabal
+      set fbk_login_name "fizzo@fbk.eu"
+      set diclub_user_name "fizzo"
+      set DI_UNIT "DSIP"
     '';
     plugins = [
       {
