@@ -30,3 +30,6 @@ xss-lock -l -- multilockscreen -l blur --off 600 &
 
 # Update spotlight cache
 /home/fedeizzo/.sources/updateSpotlightCache.sh &
+
+# run bitwarden agent
+/home/fedeizzo/.nix-profile/bin/rbw-agent

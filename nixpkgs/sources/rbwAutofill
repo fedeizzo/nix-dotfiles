@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -e
-alacritty --class rbwAutofill,rbwAutofill --command /home/fedeizzo/.sources/rbwGetPassword
-sleep 0.5
-pass=$(xclip -selection p -o)
+st -c rbwAutofill /home/fedeizzo/.sources/rbwGetPassword
+request=$(cat /tmp/rbwAutofillRequest)
+rm /tmp/rbwAutofillRequest
+pass=$(rbw get $request)
+sleep 0.1
 xdotool type --window $(xdotool getactivewindow) --clearmodifiers "$pass"

@@ -3,15 +3,15 @@
 
 rustPlatform.buildRustPackage rec {
   pname = "rbw";
-  version = "1.1.2";
+  version = "1.2.0";
 
   src = fetchFromGitHub {
     owner = "doy";
     repo = "${pname}";
     rev = "${version}";
-    sha256 = "0fwx9s5znjg9c5xbbiy9x3q944b6yvjb8pzp9z87q1h8x3k5n8g9";
+    sha256 = "sha256-DvFNGdDcpvRbknCHVmWmFoDbrjOjf9zhZj2t4H9bqGM=";
   };
-  cargoHash = "sha256-WCVI+b/bo95As822tkAh0bx4WKJMYhjj7BS92Nnj18s=";
+  cargoHash = "sha256-BtH3DFAq0sZvuwssrL0E8/BdbSLMeS51Mj2Hudkq9kc=";
 
   nativeBuildInputs = [ pkgconfig openssl ];
   buildInputs = [ pkgconfig openssl ];
