@@ -14,11 +14,8 @@
     lua
 
     # python
-    python38
-    python38Packages.pyls-black
-    python38Packages.python-language-server
-    python38Packages.black
-    python38Packages.debugpy
+    python39
+    # python-lsp-server
 
     # bash
     nodePackages.bash-language-server
