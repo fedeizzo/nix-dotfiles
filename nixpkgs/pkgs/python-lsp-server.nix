@@ -1,31 +1,34 @@
-{ stdenv, python39Packages }:
+{ lib
+, python38Packages
+}:
 
 let
-  python-lsp-jsonrpc = python39Packages.buildPythonPackage rec {
+  python-lsp-jsonrpc = python38Packages.buildPythonPackage rec {
     pname = "python-lsp-jsonrpc";
     version = "1.0.0";
 
     # disabled = pythonOlder "3.6";
 
-    src = python39Packages.fetchPypi {
+    src = python38Packages.fetchPypi {
       inherit pname version;
       sha256 = "sha256-e+wXBzPbYo01Buo6Uoj/dqozxwIV7SI6vbDZXpV2YL0=";
     };
 
-    nativeBuildInputs = with python39Packages; [ ujson ];
-    checkInputs = with python39Packages; [ pytest ];
+    nativeBuildInputs = with python38Packages; [ ujson ];
+    checkInputs = with python38Packages; [ pytest ];
   };
 in
-python39Packages.buildPythonPackage rec {
+python38Packages.buildPythonApplication rec {
   pname = "python-lsp-server";
   version = "1.0.1";
 
-  src = python39Packages.fetchPypi {
+  src = python38Packages.fetchPypi {
     inherit pname version;
     sha256 = "sha256-Dz1nQFc07Yf2XjCn1+cGlTQeP/3KTj0HxNCbMROj5dY=";
   };
+  doCheck = false;
 
-  nativeBuildInputs = with python39Packages; [
+  buildInputs = with python38Packages; [
     jedi
     pluggy
     ujson
@@ -37,20 +40,9 @@ python39Packages.buildPythonPackage rec {
     pydocstyle
   ] ++ [ python-lsp-jsonrpc ];
 
-  propagateBuildInputs = with python39Packages; [
-    jedi
-    pluggy
-    ujson
-    setuptools
-    rope
-    pyflakes
-    mccabe
-    pycodestyle
-    pydocstyle
-  ] ++ [ python-lsp-jsonrpc ];
-  # propagateBuildInputs = nativeBuildInputs;
+  propagatedBuildInputs = buildInputs;
 
-  checkInputs = with python39Packages; [
+  checkInputs = with python38Packages; [
     autopep8
     flake8
     mccabe

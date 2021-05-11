@@ -14,8 +14,11 @@
     lua
 
     # python
-    python39
-    # python-lsp-server
+    python38
+    python38Packages.pyls-black
+    python38Packages.pyls-isort
+    python38Packages.pyls-mypy
+    python-lsp-server
 
     # bash
     nodePackages.bash-language-server

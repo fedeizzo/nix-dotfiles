@@ -3,7 +3,10 @@ local on_attach_ls = function(client)
 end
 
 -- python
--- require'lspconfig'.pyls.setup{on_attach=on_attach_ls}
+require'lspconfig'.pyls.setup{
+    on_attach=on_attach_ls;
+    cmd = { "pylsp" }
+}
 
 -- bash
 require'lspconfig'.bashls.setup{on_attach=on_attach_ls}
