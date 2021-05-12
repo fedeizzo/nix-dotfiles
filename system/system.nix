@@ -1,14 +1,5 @@
 { config, pkgs, ... }:
 
-let
-  nvidia-offload = pkgs.writeShellScriptBin "nvidia-offload" ''
-    export __NV_PRIME_RENDER_OFFLOAD=1
-    export __NV_PRIME_RENDER_OFFLOAD_PROVIDER=NVIDIA-G0
-    export __GLX_VENDOR_LIBRARY_NAME=nvidia
-    export __VK_LAYER_NV_optimus=NVIDIA_only
-    exec -a "$0" "$@"
-  '';
-in
 {
   imports = [ ./hardware-configuration.nix ];
 
@@ -42,9 +33,6 @@ in
     fontconfig = {
       defaultFonts = {
         monospace = [ "JetBrains Mono" ];
-        # monospace = [ "Nimbus Mono PS" ];
-        # sansSerif = [ "Nimbus Sans" ];
-        # serif = [ "Nimbus Roman" ];
       };
     };
   };
@@ -101,8 +89,6 @@ in
     highlight
     lm_sensors
     vim
-    # nvidia-offload
-    # (pkgs.callPackage ./pkgs/nvidia-xrun.nix { })
     xorg.xinit
     virt-manager
   ];
@@ -111,7 +97,6 @@ in
       enable = true;
       enableOnBoot = true;
       enableNvidia = true;
-      # extraOptions = "-H tcp://0.0.0.0:2376"; 
     };
     podman.enable = true;
     libvirtd.enable = true;
@@ -140,16 +125,6 @@ in
     "v" = "nvim";
     "SS" = "systemctl";
   };
-  # environment.etc = {
-  #   "/etc/systemd/system/nvidia-xrun-pm.service".source = mkOptionDefault "${nvidia-xrun}/etc/systemd/system/nvidia-xrun-pm.service";
-	# "/etc/default/nvidia-xrun".source = mkOptionDefault "${nvidia-xrun}/etc/default/nvidia-xrun";
-	# "/etc/X11/nvidia-xorg.conf".source = mkOptionDefault "${nvidia-xrun}/etc/X11/nvidia-xorg.conf";
-	# "/etc/X11/xinit/nvidia-xinitrc".source = mkOptionDefault "${nvidia-xrun}/etc/X11/xinit/nvidia-xinitrc";
-	# "/usr/bin/nvidia-xrun".source = mkOptionDefault "${nvidia-xrun}/usr/bin/nvidia-xrun";
-	# "/etc/X11/xinit/nvidia-xinitrc.d".source = mkOptionDefault "${nvidia-xrun}/etc/X11/xinit/nvidia-xinitrc.d";
-	# "/etc/X11/nvidia-xorg.conf.d".source = mkOptionDefault "${nvidia-xrun}/etc/X11/nvidia-xorg.conf.d";
-
-  # };
   programs.bash = {
     enableCompletion = true;
     enableLsColors = true;
@@ -194,14 +169,6 @@ in
     enable = true;
     mediaKeys.enable = true;
   };
-
-  # hardware.nvidia.prime = {
-  #   offload.enable = true;
-
-  #   intelBusId = "PCI:0:2:0";
-  #   nvidiaBusId = "PCI:1:0:0";
-  # };
-
 
   #################################
   # NETWORKING
