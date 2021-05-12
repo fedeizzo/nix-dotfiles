@@ -18,6 +18,6 @@ local maps = {
         {'<silent> gW'   , '<cmd>lua vim.lsp.buf.workspace_symbol()<CR>'};
     };
 }
-setOptions(set_options)
+-- setOptions(set_options)
 -- createAutogroups(autogroups)   
-createKeymaps(maps)
+-- createKeymaps(maps)

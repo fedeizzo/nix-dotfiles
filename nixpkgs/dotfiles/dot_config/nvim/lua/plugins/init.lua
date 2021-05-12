@@ -33,10 +33,7 @@ return require('packer').startup(function()
     use 'yggdroot/indentline'
     use 'jiangmiao/auto-pairs'
     use 'unblevable/quick-scope'
-    -- git improvement
-    use 'tpope/vim-fugitive'
     -- start page
-    -- use 'mhinz/vim-startify'
     use 'glepnir/dashboard-nvim'
     -- note taking
     use {
@@ -50,7 +47,6 @@ return require('packer').startup(function()
     use {'elzr/vim-json',                      ft='json'}
     -- use {'plasticboy/vim-markdown',        ft='markdown'}
     use {'SidOfc/mkdx',                    ft='markdown'}
-    use {'kovetskiy/sxhkd-vim',               ft='sxhkd'}
     use {'alaviss/nim.nvim',                    ft='nim'}
     use {'vimwiki/vimwiki',           cmd='VimwikiIndex'}
     use {'pangloss/vim-javascript',      ft='javascript'}
@@ -77,7 +73,7 @@ return require('packer').startup(function()
         }
     }
     use 'nvim-lua/lsp-status.nvim'
-    use 'mfussenegger/nvim-dap'
+    use 'mhartington/formatter.nvim'
 
     -- TREESITTER
     use {

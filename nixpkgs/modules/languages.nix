@@ -14,11 +14,9 @@
     lua
 
     # python
+    black
     python38
-    python38Packages.pyls-black
-    python38Packages.pyls-isort
-    python38Packages.pyls-mypy
-    python-lsp-server
+    nodePackages.pyright
 
     # bash
     nodePackages.bash-language-server

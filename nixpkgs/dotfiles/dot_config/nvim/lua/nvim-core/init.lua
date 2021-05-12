@@ -56,11 +56,6 @@ local function load_autocommands()
     local autogroups = {
         buffers = {
             {'BufWritePost', '*.vim', 'source %'                                };
-            {'BufWritePost', '*.cpp', 'silent lua vim.lsp.buf.formatting_sync()'};
-            {'BufWritePost', '*.c'  , 'silent lua vim.lsp.buf.formatting_sync()'};
-            {'BufWritePost', '*.ts' , 'silent lua vim.lsp.buf.formatting_sync()'};
-            {'BufWritePost', '*.py' , 'silent lua vim.lsp.buf.formatting_sync()'};
-            {'BufWritePost', '*.hs' , 'silent lua vim.lsp.buf.formatting_sync()'};
             {'BufNewFile'  , '*.py' , 'set autoindent'                          };
             {'BufRead'     , '*.py' , 'set autoindent'                          };
             {'BufEnter'    , '*.nix', 'set filetype=nix'                        };
