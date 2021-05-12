@@ -20,8 +20,6 @@
     unzip
     xsv
     zsh
-    nixpkgs-fmt
-    nixpkgs-lint
     cachix
     bat
     ripgrep

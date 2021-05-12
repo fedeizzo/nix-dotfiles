@@ -39,5 +39,10 @@
 
     # note taking
     neuron-notes
+
+    # nix
+    nixpkgs-fmt
+    nixpkgs-lint
+    rnix-lsp
   ];
 }

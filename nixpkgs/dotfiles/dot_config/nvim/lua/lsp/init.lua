@@ -91,6 +91,9 @@ require'lspconfig'.tsserver.setup{on_attach=on_attach}
 --rust
 require'lspconfig'.rust_analyzer.setup{on_attach=on_attach}
 
+--nix
+require'lspconfig'.rnix.setup{}
+
 --treesitter
 require'nvim-treesitter.configs'.setup {
     highlight = { enable = true },
