@@ -37,15 +37,6 @@
   # PICOM 
   xdg.configFile."picom/picom.conf".source = ../dotfiles/dot_config/picom/picom.conf;
 
-  # STARSHIP
-  xdg.configFile."starship.toml".source = ../dotfiles/dot_config/starship.toml;
-
-  # Wezterm
-  xdg.configFile."wezterm" = {
-    source = ../dotfiles/dot_config/wezterm;
-    recursive = true;
-  };
-
   # Xresources
   home.file.".Xresources" = {
     source = ../dotfiles/dot_Xresources;
@@ -64,14 +55,10 @@
     recursive = true;
   };
 
-  home.file.".xmonad/pacwall.png".source = ../dotfiles/dot_config/bspwm/Wallpaper_4.png;
+  home.file.".xmonad/pacwall.png".source = ../dotfiles/dot_xmonad/wallpaper.png;
 
-  # GIT CONFIG
-  # home.file.".gitconfig" = {
-  #   source = ../dotfiles/dot_gitconfig;
-  # };
-
-  # GITUI
-  xdg.configFile."gitui/key_config.ron".source = ../dotfiles/dot_config/gitui/key_config.ron;
-  xdg.configFile."gitui/theme.ron".source = ../dotfiles/dot_config/gitui/theme.ron;
+  # SSH CONFIG
+  home.file.".ssh/config" = {
+    source = ../dotfiles/private_dot_ssh/config;
+  };
 }

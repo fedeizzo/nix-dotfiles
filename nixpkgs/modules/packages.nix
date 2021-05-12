@@ -15,7 +15,6 @@
     lf
     nmap
     powertop
-    starship
     universal-ctags
     unzip
     xsv
@@ -28,7 +27,6 @@
     pinentry-qt
     xdotool
     nix-index
-    gitAndTools.gitui
     rsync
     (nerdfonts.override {
       fonts = [

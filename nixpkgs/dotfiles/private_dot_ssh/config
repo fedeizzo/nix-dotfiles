@@ -2,3 +2,31 @@ Host adalitix
         Hostname adalitix.westus2.cloudapp.azure.com
         User adalitix
         LocalForward 28080 localhost:28080
+Host sdf
+        Hostname 52.157.210.133
+        User sdf
+Host mappiamo
+        Hostname 51.137.61.178
+        User gobbi
+        LocalForward 65432 localhost:65432
+        LocalForward 65433 localhost:65433
+Host dsip
+        Hostname 137.117.39.162
+        User dsip
+        LocalForward 38081 localhost:38081
+        LocalForward 48093 localhost:48093
+        LocalForward 48100 localhost:48100
+        LocalForward 48101 localhost:48101
+Host dsip-train
+        Hostname 13.66.217.7
+        User izzo
+        LocalForward 65432 localhost:65432
+Host sshFbk
+        Hostname jump.fbk.eu
+        User fizzo
+        IdentityFile ~/.ssh/fizzo@fbk.eu
+Host diclub
+        Hostname diclubclsin.fbk.eu
+        User fizzo
+        ProxyJump sshFbk
+        IdentityFile ~/.ssh/fizzo@fbk.eu

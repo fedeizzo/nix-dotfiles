@@ -1,6 +1,0 @@
-[data]
-    access_token = "{{ (index (bitwarden 'item' 'ce769cef-b51d-49d3-9fca-ac230113f621').fields 0).value }}"
-    refresh_token = "{{ (index (bitwarden 'item' 'ce769cef-b51d-49d3-9fca-ac230113f621').fields 0).value"
-    token_expire_time = "{{ (index (bitwarden 'item' 'ce769cef-b51d-49d3-9fca-ac230113f621').fields 0).value"
-    imgur_acct_key = "{{ (index (bitwarden 'item' 'ce769cef-b51d-49d3-9fca-ac230113f621').fields 0).value }}"
-    imgur_secret = "{{ (index (bitwarden 'item' 'ce769cef-b51d-49d3-9fca-ac230113f621').fields 0).value }}"
