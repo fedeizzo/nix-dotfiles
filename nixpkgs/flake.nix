@@ -13,22 +13,8 @@
 
   outputs = { self, ... }@inputs:
     let
-      airflow-overlay = (self: super: {
-        apache-airflow = super.apache-airflow.overrideAttrs (old: rec {
-          name = "apache-airflow";
-          version = "2.0.0";
-
-          src = super.fetchFromGitHub rec {
-            owner = "apache";
-            repo = "airflow";
-            rev = version;
-            sha256 = "0000000000000000000000000000000000000000000000000000";
-          };
-        });
-      });
       overlays = [
         inputs.neovim-nightly-overlay.overlay 
-        airflow-overlay
       ];
     in
     {
