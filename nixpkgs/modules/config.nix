@@ -67,9 +67,9 @@
   home.file.".xmonad/pacwall.png".source = ../dotfiles/dot_config/bspwm/Wallpaper_4.png;
 
   # GIT CONFIG
-  home.file.".gitconfig" = {
-    source = ../dotfiles/dot_gitconfig;
-  };
+  # home.file.".gitconfig" = {
+  #   source = ../dotfiles/dot_gitconfig;
+  # };
 
   # GITUI
   xdg.configFile."gitui/key_config.ron".source = ../dotfiles/dot_config/gitui/key_config.ron;

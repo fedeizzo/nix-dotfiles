@@ -9,6 +9,7 @@ in
     ../modules/config.nix
     ../modules/cuda.nix
     ../modules/fish.nix
+    ../modules/git.nix
     ../modules/languages.nix
     ../modules/media.nix
     ../modules/neovim.nix 
