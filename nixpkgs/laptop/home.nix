@@ -1,6 +1,7 @@
-{ pkgs, ... }:
+{ pkgs, inputs, system, ... }:
+
 let
-  sources = import ../nix/sources.nix;
+  neovim-nightly = inputs.neovim-nightly-overlay.packages.${system}.neovim;
 in
 {
   imports = [
@@ -10,7 +11,7 @@ in
     ../modules/fish.nix
     ../modules/languages.nix
     ../modules/media.nix
-    ../modules/neovim.nix
+    ../modules/neovim.nix 
     ../modules/packages.nix
     ../modules/services.nix
     ../modules/st.nix
@@ -18,6 +19,12 @@ in
   ];
 
   home.stateVersion = "20.09";
+  home.homeDirectory = "/home/fedeizzo";
+  home.username = "fedeizzo";
+  nixpkgs.config = import ./config.nix;
+  xdg.configFile."nixpkgs/config.nix".source = ./config.nix;
+
+
 
   xdg.mimeApps = {
     enable = true;
