@@ -48,7 +48,7 @@ myScreenshotOnline = "imgur-screenshot"
 -- myEmoji = "splatmoji type"
 
 -- The command to open file manager
-myFileManager = "st lf"
+myFileManager = "st /home/fedeizzo/.sources/lfrun"
 
 -- The command to use as a launcher, to launch applications that don't have
 -- preset keybindings.

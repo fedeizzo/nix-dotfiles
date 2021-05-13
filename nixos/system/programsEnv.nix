@@ -12,7 +12,7 @@
     killall
     libnotify
     neofetch
-    picom
+    # picom
     unclutter
     wget
     xclip

@@ -3,6 +3,6 @@ set -e
 st -c rbwAutofill /home/fedeizzo/.sources/rbwGetPassword
 request=$(cat /tmp/rbwAutofillRequest)
 rm /tmp/rbwAutofillRequest
-pass=$(rbw get $request)
+pass=$(rbw get "$request")
 sleep 0.1
 xdotool type --window $(xdotool getactivewindow) --clearmodifiers "$pass"

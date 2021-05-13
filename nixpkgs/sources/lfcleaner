@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+if [ -n "$FIFO_UEBERZUG" ]; then
+	declare -p -A cmd=([action]=remove [identifier]="PREVIEW") > "$FIFO_UEBERZUG"
+fi

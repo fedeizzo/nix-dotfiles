@@ -4,13 +4,13 @@
   # QUTEBROWSER
   home.file = {
     ".config/qutebrowser/config.py" = {
-      source = ../dotfiles/dot_config/private_qutebrowser/config.py;
+      source = ../dotfiles/qutebrowser/config.py;
     };
     ".config/qutebrowser/nord-qutebrowser.py" = {
-      source = ../dotfiles/dot_config/private_qutebrowser/nord-qutebrowser.py;
+      source = ../dotfiles/qutebrowser/nord-qutebrowser.py;
     };
     ".config/qutebrowser/qsettings/QtProject.conf" = {
-      source = ../dotfiles/dot_config/private_qutebrowser/qsettings/QtProject.conf;
+      source = ../dotfiles/qutebrowser/qsettings/QtProject.conf;
     };
     # ".local/share/qutebrowser/userscripts/rofiQutebrowser" = {
     #   source = ../dotfiles/dot_local/share/private_qutebrowser/userscripts/executable_rofiQutebrowser;
@@ -23,28 +23,14 @@
   };
 
   # DUNST
-  xdg.configFile."dunst/dunstrc".source = ../dotfiles/dot_config/dunst/dunstrc;
-  xdg.configFile."dunst/critical.png".source = ../dotfiles/dot_config/dunst/critical.png;
-  xdg.configFile."dunst/normal.png".source = ../dotfiles/dot_config/dunst/normal.png;
-  xdg.configFile."dunst/low.png".source = ../dotfiles/dot_config/dunst/low.png;
-
-  # LF
-  xdg.configFile."lf/lfrc".source = ../dotfiles/dot_config/lf/lfrc;
-
-  # NEOFETCH
-  xdg.configFile."noefetch/config.conf".source = ../dotfiles/dot_config/neofetch/config.conf;
-
-  # PICOM 
-  xdg.configFile."picom/picom.conf".source = ../dotfiles/dot_config/picom/picom.conf;
-
-  # Xresources
-  home.file.".Xresources" = {
-    source = ../dotfiles/dot_Xresources;
-  };
+  xdg.configFile."dunst/dunstrc".source = ../dotfiles/dunst/dunstrc;
+  xdg.configFile."dunst/critical.png".source = ../dotfiles/dunst/critical.png;
+  xdg.configFile."dunst/normal.png".source = ../dotfiles/dunst/normal.png;
+  xdg.configFile."dunst/low.png".source = ../dotfiles/dunst/low.png;
 
   # xinitrc
   home.file.".xinitrc" = {
-    source = ../dotfiles/executable_dot_xinitrc;
+    source = ../dotfiles/.xinitrc;
     executable = true;
   };
 
@@ -55,10 +41,10 @@
     recursive = true;
   };
 
-  home.file.".xmonad/pacwall.png".source = ../dotfiles/dot_xmonad/wallpaper.png;
+  home.file.".xmonad/pacwall.png".source = ../dotfiles/xmonad/wallpaper.png;
 
   # SSH CONFIG
   home.file.".ssh/config" = {
-    source = ../dotfiles/private_dot_ssh/config;
+    source = ../dotfiles/ssh/config;
   };
 }

@@ -11,12 +11,16 @@ in
     ../modules/fish.nix
     ../modules/git.nix
     ../modules/languages.nix
+    ../modules/lf.nix
     ../modules/media.nix
     ../modules/neovim.nix 
     ../modules/packages.nix
+    ../modules/picom.nix
     ../modules/services.nix
     ../modules/st.nix
     ../modules/xmonad.nix
+    ../modules/xresources.nix
+    ../modules/zathura.nix
   ];
 
   home.stateVersion = "20.09";

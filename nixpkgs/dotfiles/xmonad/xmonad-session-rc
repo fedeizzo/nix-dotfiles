@@ -7,7 +7,7 @@ timedatectl set-ntp true
 dunst &
 
 # Start picom
-picom -b
+# picom -b
 
 # Start clipboardManager
 xcmenu -d

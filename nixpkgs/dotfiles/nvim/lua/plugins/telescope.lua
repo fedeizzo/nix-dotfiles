@@ -13,6 +13,18 @@ local maps = {
 createKeymaps(maps)
 require('telescope').setup{
     defaults = {
-        layout_strategy = "flex"
+        layout_strategy = "flex",
+        file_ignore_patterns = {
+            '%.png$',
+            '%.tif$',
+            '%.tiff$',
+            '%.shp$',
+            '%.dbf$',
+            '%.qix$',
+            '%.shx$',
+            '%.qpj$',
+            '%.prj$',
+            '%.cpg$'
+        },
     }
 }

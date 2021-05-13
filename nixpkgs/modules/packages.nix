@@ -12,7 +12,6 @@
     gnutls
     gotop
     htop
-    lf
     nmap
     powertop
     universal-ctags

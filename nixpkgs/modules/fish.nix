@@ -45,6 +45,7 @@
       gp = "git push";
       noblackscreen = "xset s off -dpms";
       find = "fd";
+      lf = "lfrun";
     };
     functions = {
       dt = {
