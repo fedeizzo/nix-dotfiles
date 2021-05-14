@@ -31,7 +31,7 @@ return require('packer').startup(function()
     use {'akinsho/nvim-bufferline.lua', requires = 'kyazdani42/nvim-web-devicons'}
 
     use 'yggdroot/indentline'
-    use 'jiangmiao/auto-pairs'
+    use 'windwp/nvim-autopairs'
     use 'unblevable/quick-scope'
     -- start page
     use 'glepnir/dashboard-nvim'
@@ -42,6 +42,9 @@ return require('packer').startup(function()
             {'junegunn/fzf'},
         }
     }
+    -- git
+    use { 'lewis6991/gitsigns.nvim' }
+    use { 'TimUntersberger/neogit' }
 
     -- LANGUAGE SUPPORT
     use {'elzr/vim-json',                      ft='json'}
@@ -74,6 +77,13 @@ return require('packer').startup(function()
     }
     use 'nvim-lua/lsp-status.nvim'
     use 'mhartington/formatter.nvim'
+    use {
+        'mfussenegger/nvim-dap',
+        requires = {
+            {'theHamsta/nvim-dap-virtual-text'},
+            {'rcarriga/nvim-dap-ui'}
+        }
+    }
 
     -- TREESITTER
     use {

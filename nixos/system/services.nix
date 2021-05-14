@@ -79,4 +79,8 @@
   users.groups = {
     steamps4 = { };
   };
+  services.upower = {
+    enable = true;
+    usePercentageForPolicy = false;
+  };
 }

@@ -12,10 +12,12 @@
 
     # lua
     lua
+    sumneko-lua-language-server
 
     # python
     black
     python38
+    python38Packages.debugpy
     nodePackages.pyright
 
     # bash
