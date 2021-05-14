@@ -36,12 +36,7 @@ return require('packer').startup(function()
     -- start page
     use 'glepnir/dashboard-nvim'
     -- note taking
-    use {
-        'fiatjaf/neuron.vim', requires = {
-            {'junegunn/fzf.vim'},
-            {'junegunn/fzf'},
-        }
-    }
+    use "oberblastmeister/neuron.nvim"
     -- git
     use { 'lewis6991/gitsigns.nvim' }
     use { 'TimUntersberger/neogit' }
