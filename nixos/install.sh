@@ -4,6 +4,8 @@ command:\n
 \tupdate: update and install configuration\n
 \tinstall: install configuration\n
 \thelp: print this message\n
+
+No argument launch install procedure.
 "
 
 update() {
@@ -29,7 +31,6 @@ case $1 in
         echo -e $helpMessage
         ;;
     *)
-        echo -e $helpMessage
-        exit 1
+        install
         ;;
 esac
