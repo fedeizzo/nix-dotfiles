@@ -22,10 +22,11 @@ Config {
         Run Battery ["-t", "<acstatus>: <left> %", "--", "-O", "", "-i", "", "-o", "", "-h", "#A3BE8C", "-l", "red"] 10,
         Run DiskU [("/", " <usedp>%")] ["-L", "20", "-H", "50", "-m", "1", "-p", "3"] 20,
         Run MultiCoreTemp ["-t", "<avg>°C","-L", "60", "-H", "80","-l", "#A3BE8C", "-n", "yellow", "-h", "red","--", "--mintemp", "20", "--maxtemp", "100"] 10,
+        Run Com "/bin/sh" [ "-c", "/home/fedeizzo/.xmonad/bin/trayer-padding-icon" ] "trayerpad" 10,
         Run StdinReader
     ],
     sepChar = "%",
     alignSep = "}{",
-    template = "  %StdinReader% }{ %multicpu% %multicoretemp% | %memory% | %disku% | %wlp3s0wi% | %dynnetwork% | Vol: | %battery% | %date%  "
+    template = "  %StdinReader% }{ %multicpu% %multicoretemp% | %memory% | %disku% | %wlp3s0wi% | %dynnetwork% | Vol: | %battery% | %date%  %trayerpad%"
 }
 

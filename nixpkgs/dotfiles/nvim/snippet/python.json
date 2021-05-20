@@ -34,6 +34,11 @@
         "body": ["for ${1:target_list} in ${2:expression_list}:", "\t${3:pass}"],
         "description": "Code snippet for a for loop"
     },
+    "for_enumerate": {
+        "prefix": "forenum",
+        "body": ["for ${1:enumerator}, ${2:target_list} in enumerate(${3:expression_list}):", "\t${4:pass}"],
+        "description": "Code snippet for a for loop"
+    },
     "for/else": {
         "prefix": "for/else",
         "body": ["for ${1:target_list} in ${2:expression_list}:", "\t${3:pass}", "else:", "\t${4:pass}"],

@@ -58,6 +58,7 @@
     ncdu
     thunderbird
     joypixels
+    trayer
   ];
 
   programs.direnv = {

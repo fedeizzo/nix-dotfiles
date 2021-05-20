@@ -18,7 +18,7 @@
         modules = ([
           ./system/boot.nix
           ./system/hardware.nix
-          ./system/hardware-configuration.nix
+          ./system/hardware-configurations/btrfs.nix
           ./system/keymapTimeFont.nix
           ./system/networking.nix
           ./system/nixNixOS.nix

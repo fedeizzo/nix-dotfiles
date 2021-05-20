@@ -3,103 +3,100 @@ require('utils/nvim-core')
 vim.g.mapleader = ' '
 
 local function core_options()
-    local set_options = {
+  local set_options = {
     -- ENCODING
-        enc            = 'utf-8';
-        fenc           = 'utf-8';
-        termencoding   = 'utf-8';
+    enc = 'utf-8',
+    fenc = 'utf-8',
+    termencoding = 'utf-8',
     -- VI COMPATIBILITY
-        nocompatible   = false;
+    nocompatible = false,
     -- PATH
-        path           = { '**' };
+    path = {'**'},
     -- WILD MENU
-        wildignore     = { '*.a', '*.o', '*.bmp', '*.gif', '*.ico', '*.jpg', '*.png', '.DS_Store', '.git', '.hg', '.svn', '*~', '*.swp', '*.tmp' };
-        wildmenu       = true;
+    wildignore = {
+      '*.a',
+      '*.o',
+      '*.bmp',
+      '*.gif',
+      '*.ico',
+      '*.jpg',
+      '*.png',
+      '.DS_Store',
+      '.git',
+      '.hg',
+      '.svn',
+      '*~',
+      '*.swp',
+      '*.tmp',
+    },
+    wildmenu = true,
     -- INDENT
-        autoindent     = true;
-        smartindent    = true;
+    autoindent = true,
+    smartindent = true,
     -- TAB
-        tabstop        = 4;
-        shiftwidth     = 4;
-        expandtab      = true;
-        showtabline    = 2;
-        foldmethod     = 'expr';
-        foldexpr       = 'nvim_treesitter#foldexpr()';
+    tabstop = 4,
+    shiftwidth = 4,
+    expandtab = true,
+    showtabline = 2,
+    foldmethod = 'expr',
+    foldexpr = 'nvim_treesitter#foldexpr()',
     -- FOLD
-        nofoldenable   = true;
+    nofoldenable = true,
     -- LINE NUMBER
-        number         = true;
-        relativenumber = true;
+    number = true,
+    relativenumber = true,
     -- MOUSE
-        mouse          = 'a';
+    mouse = 'a',
     -- SPLIT
-        splitbelow     = true;
+    splitbelow = true,
     -- SEARCH HIGHLIGHT
-        hlsearch       = true;
+    hlsearch = true,
     -- SPELL CHECK
-        nospell        = true;
-        spelllang      = { 'it' };
+    nospell = true,
+    spelllang = {'it'},
     -- COLORSCHEME
-        termguicolors  = true;
-    }
-    local options = {
-        {'syntax', 'on'};
-        {'filetype', 'plugin indent', 'on'};
-        {'colorscheme', 'nord'};
-        {'setlocal', 'omnifunc=v:lua.vim.lsp.omnifunc'};
-    };
-    setOptions(set_options)
-    runCommand(options)
+    termguicolors = true,
+  }
+  local options = {
+    {'syntax', 'on'},
+    {'filetype', 'plugin indent', 'on'},
+    {'colorscheme', 'nord'},
+    {'setlocal', 'omnifunc=v:lua.vim.lsp.omnifunc'},
+  };
+  setOptions(set_options)
+  runCommand(options)
 end
 
 local function load_autocommands()
-    local autogroups = {
-        buffers = {
-            {'BufWritePost', '*.vim', 'source %'                                };
-            {'BufNewFile'  , '*.py' , 'set autoindent'                          };
-            {'BufRead'     , '*.py' , 'set autoindent'                          };
-            {'BufEnter'    , '*.nix', 'set filetype=nix'                        };
-            {'BufEnter'    , '*.md' , 'set spell'                               };
-            {'BufLeave'    , '*.md' , 'set nospell'                             };
-        };
-        filetypes = {
-            {'FileType', 'typescript', 'setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2'  };
-            {'FileType', 'haskell'   , 'setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2'  };
-            {'FileType', 'vimwiki'   , 'silent nnoremap <silent> <Leader>d :call ToggleTask()<CR>'};
-            {'FileType', 'vimwiki'   , 'silent nnoremap <silent> <Leader>b :!pdfPreview "%:p"<CR>'};
-            {'FileType', 'git'       , 'setlocal nospell'                                         };
-            {'FileType', 'qf'        , 'setlocal nospell'                                         };
-        };
-    }
-    createAutogroups(autogroups)   
+  local autogroups = {
+    filetypes = {
+      {'FileType', 'git', 'setlocal nospell'},
+      {'FileType', 'qf', 'setlocal nospell'},
+    },
+  }
+  createAutogroups(autogroups)
 end
 
 local function keymaps()
-    local maps = {
-        imap = {
-            {'jk'                 , '<Esc>zz'                       };
-        }; 
-        inoremap = {
-            {'<Tab>'              , '<C-X><C-F>'                    };
-        };
-        nnoremap = {
-            {'<silent> <Leader>h' , ':noh<CR>'                      };
-            {'<silent> <Leader>dd', ':bd<CR>'                       };
-            {'<Leader>y'          , '"+'                            };
-            {'<silent> <Leader>c' , ':lua automaticOutput()<CR>'    };
-            {'<silent> <Leader>e' , ':lua enumeratePythonFor()<CR>' };
-            {'<silent> <Leader>a' , ':w<CR>'                        };
-            {'<silent> <Leader>q' , ':q<CR>'                        };
-            {'<C-h>'              , '<C-w><C-h>'                    };
-            {'<C-j>'              , '<C-w><C-j>'                    };
-            {'<C-k>'              , '<C-w><C-k>'                    };
-            {'<C-l>'              , '<C-w><C-l>'                    };
-        };
-        vnoremap = {
-            {'<Leader>y'          , '"+y<CR>'                       };
-        };
-    }
-    createKeymaps(maps)
+  local maps = {
+    imap = {{'jk', '<Esc>zz'}},
+    inoremap = {{'<Tab>', '<C-X><C-F>'}},
+    nnoremap = {
+      {'<silent> <Leader>h', ':noh<CR>'},
+      {'<silent> <Leader>dd', ':bd<CR>'},
+      {'<Leader>y', '"+'},
+      {'<silent> <Leader>c', ':lua automaticOutput()<CR>'},
+      {'<silent> <Leader>e', ':lua enumeratePythonFor()<CR>'},
+      {'<silent> <Leader>a', ':w<CR>'},
+      {'<silent> <Leader>q', ':q<CR>'},
+      {'<C-h>', '<C-w><C-h>'},
+      {'<C-j>', '<C-w><C-j>'},
+      {'<C-k>', '<C-w><C-k>'},
+      {'<C-l>', '<C-w><C-l>'},
+    },
+    vnoremap = {{'<Leader>y', '"+y<CR>'}},
+  }
+  createKeymaps(maps)
 end
 
 core_options()

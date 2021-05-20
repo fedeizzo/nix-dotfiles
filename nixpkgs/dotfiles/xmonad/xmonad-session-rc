@@ -33,3 +33,15 @@ xss-lock -l -- multilockscreen -l blur --off 600 &
 
 # run bitwarden agent
 /home/fedeizzo/.nix-profile/bin/rbw-agent
+
+# run trayer system
+/home/fedeizzo/.nix-profile/bin/trayer \
+    --monitor "primary" \
+    --edge "top" \
+    --align "right" \
+    --widthtype "request" \
+    --transparent true \
+    --alpha 255 \
+    --height 14 \
+    --distance 2 \
+    --distancefrom "top" &

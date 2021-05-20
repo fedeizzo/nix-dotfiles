@@ -8,5 +8,7 @@
   boot.loader.efi.canTouchEfiVariables = true;
   boot.cleanTmpDir = true;
   boot.kernelPackages = pkgs.linuxPackages;
-  # boot.initrd.kernelModules = [ "btrfs" "xxhash" ];
+  boot.kernel.sysctl = {
+    "vm.swappiness" = 10;
+  };
 }

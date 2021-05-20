@@ -4,9 +4,6 @@ require('plugins')
 -- NEOVIM CORE OPTIONS
 require('nvim-core')
 
--- LSP CONFIG
-require('lsp')
-
 -- CUSTOM FUNCTION
 require('scripts/automatic-output')
 require('scripts/telescope-file')
@@ -31,6 +28,20 @@ require('plugins/nvim-autopairs')
 require('plugins/nvim-dap')
 require('plugins/quick-scope')
 require('plugins/telescope')
+require('plugins/treesitter')
 require('plugins/vim-json')
 require('plugins/vimmarkdown')
 require('plugins/vsnip')
+
+-- LANGUAGES SETTINGS
+require('languages/bash')
+require('languages/c')
+require('languages/docker')
+require('languages/haskell')
+require('languages/lua')
+require('languages/md')
+require('languages/nix')
+require('languages/python')
+require('languages/rust')
+require('languages/typescript')
+require('languages/vim')

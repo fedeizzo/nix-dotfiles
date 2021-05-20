@@ -17,6 +17,7 @@ Host dsip
         LocalForward 48093 localhost:48093
         LocalForward 48100 localhost:48100
         LocalForward 48101 localhost:48101
+        LocalForward 65432 localhost:65432
 Host dsip-train
         Hostname 13.66.217.7
         User izzo

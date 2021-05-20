@@ -1,8 +1,9 @@
 #!/bin/sh
 helpMessage="usage: ./install.sh <command>\n\n
-command:\n
+commands:\n
 \tupdate: update and install configuration\n
 \tinstall: install configuration\n
+\tnew: install configuration in /mnt (fresh install)\n
 \thelp: print this message\n
 
 No argument launch install procedure.
@@ -13,9 +14,13 @@ update() {
 }
 
 install() {
-    sudo cp ./flake.nix /etc/nixos
-    sudo cp ./flake.lock /etc/nixos
-    sudo cp -r system /etc/nixos
+    local dst="/etc/nixos"
+    if [[ $1 == "new" ]]; then
+        dst=/mnt/etc/nixos
+    fi
+    sudo cp ./flake.nix $dst
+    sudo cp ./flake.lock $dst
+    sudo cp -r system $dst
     sudo nixos-rebuild switch
 }
 
@@ -29,6 +34,9 @@ case $1 in
         ;;
     "help")
         echo -e $helpMessage
+        ;;
+    "new")
+        install "new"
         ;;
     *)
         install
