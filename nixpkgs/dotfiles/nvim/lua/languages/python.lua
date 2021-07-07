@@ -1,6 +1,6 @@
 -- LSP
-require'lsp'
-require'lspconfig'.pyright.setup {on_attach = on_attach}
+local lsp = require'lsp'
+require'lspconfig'.pyright.setup {on_attach = lsp.on_attach}
 
 -- AUTOCOMMANDS 
 local function load_autocommands()

@@ -6,8 +6,9 @@ require('nvim-core')
 
 -- CUSTOM FUNCTION
 require('scripts/automatic-output')
-require('scripts/telescope-file')
 require('scripts/enumerate-python-for')
+require('scripts/telescope-file')
+require('scripts/notes-manager')
 
 -- PLUGINS SETTINGS
 require('plugins/accelerated')

@@ -2,6 +2,7 @@
 
 {
   services.lorri.enable = true;
+  services.network-manager-applet.enable = true;
   systemd.user.services = {
     mpris-proxy = {
       Unit = {

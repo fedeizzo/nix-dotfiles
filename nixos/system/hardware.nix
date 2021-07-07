@@ -4,10 +4,9 @@
   #################################
   # HARDWARE
   #################################
-  hardware.opengl.driSupport32Bit = true;
-  hardware.pulseaudio.support32Bit = true;
   powerManagement.enable = true;
   hardware.opengl = {
+    driSupport32Bit = true;
     enable = true;
     extraPackages = [
       pkgs.intel-media-driver
@@ -26,6 +25,7 @@
   };
   hardware.cpu.intel.updateMicrocode = true;
   hardware.pulseaudio = {
+    support32Bit = true;
     enable = true;
     extraModules = [ pkgs.pulseaudio-modules-bt ];
     extraConfig = "load-module module-bluetooth-discover a2dp_config=\"ldac_eqmid=sq\"\n";

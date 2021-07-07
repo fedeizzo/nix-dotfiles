@@ -8,6 +8,7 @@ in
     ../modules/chat.nix
     ../modules/config.nix
     ../modules/cuda.nix
+    ../modules/email
     ../modules/fish.nix
     ../modules/git.nix
     ../modules/languages.nix

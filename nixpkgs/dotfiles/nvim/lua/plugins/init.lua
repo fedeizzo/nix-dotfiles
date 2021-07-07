@@ -35,6 +35,8 @@ return require('packer').startup(
       'akinsho/nvim-bufferline.lua',
       requires = 'kyazdani42/nvim-web-devicons',
     }
+    -- motion
+    use 'ggandor/lightspeed.nvim'
 
     use 'yggdroot/indentline'
     use 'windwp/nvim-autopairs'

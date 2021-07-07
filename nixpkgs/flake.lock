@@ -1,28 +1,12 @@
 {
   "nodes": {
-    "flake-compat": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1606424373,
-        "narHash": "sha256-oq8d4//CJOrVj+EcOaSXvMebvuTkmBJuT5tzlfewUnQ=",
-        "owner": "edolstra",
-        "repo": "flake-compat",
-        "rev": "99f1c2157fba4bfe6211a321fd0ee43199025dbf",
-        "type": "github"
-      },
-      "original": {
-        "owner": "edolstra",
-        "repo": "flake-compat",
-        "type": "github"
-      }
-    },
     "flake-utils": {
       "locked": {
-        "lastModified": 1618217525,
-        "narHash": "sha256-WGrhVczjXTiswQaoxQ+0PTfbLNeOQM6M36zvLn78AYg=",
+        "lastModified": 1623875721,
+        "narHash": "sha256-A8BU7bjS5GirpAUv4QA+QnJ4CceLHkcXdRp4xITDB0s=",
         "owner": "numtide",
         "repo": "flake-utils",
-        "rev": "c6169a2772643c4a93a0b5ac1c61e296cba68544",
+        "rev": "f7e004a55b120c02ecb6219596820fcd32ca8772",
         "type": "github"
       },
       "original": {
@@ -53,69 +37,49 @@
         ]
       },
       "locked": {
-        "lastModified": 1618469593,
-        "narHash": "sha256-fNdt+Q3irnT3pId7PKSSVeR8/9inBrAEg4gpItoRowU=",
+        "lastModified": 1624228557,
+        "narHash": "sha256-wwOqe73BsrXfRv1PhyXQFNC8iTET50KvE/HitdkRgxs=",
         "owner": "rycee",
         "repo": "home-manager",
-        "rev": "ebbbd4f2b50703409543941e7445138dc1e7392e",
+        "rev": "35a24648d155843a4d162de98c17b1afd5db51e4",
         "type": "github"
       },
       "original": {
         "owner": "rycee",
+        "ref": "release-21.05",
         "repo": "home-manager",
-        "type": "github"
-      }
-    },
-    "neovim-flake": {
-      "inputs": {
-        "flake-utils": "flake-utils_2",
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "dir": "contrib",
-        "lastModified": 1618990156,
-        "narHash": "sha256-Y3K2P8bIbHf6ytBtudcycJcvmgA0qpnJ3hG6L1Q6i+g=",
-        "owner": "neovim",
-        "repo": "neovim",
-        "rev": "d7f9e58e40bd9f2449adf81788a4fab97859d5cc",
-        "type": "github"
-      },
-      "original": {
-        "dir": "contrib",
-        "owner": "neovim",
-        "repo": "neovim",
         "type": "github"
       }
     },
     "neovim-nightly-overlay": {
       "inputs": {
-        "flake-compat": "flake-compat",
-        "neovim-flake": "neovim-flake",
+        "flake-utils": "flake-utils_2",
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1618993023,
-        "narHash": "sha256-VxPtMBUlin4Yjf1WB98Xv/+jWpB9CHZOnFdJmBlJXF4=",
-        "owner": "mjlbach",
-        "repo": "neovim-nightly-overlay",
-        "rev": "54e09b5277d6fecbf5b0417582ef4105277011de",
+        "dir": "contrib",
+        "lastModified": 1625241269,
+        "narHash": "sha256-0aXo8f1YGEI8PkLDOSgxqQy7qK031R+eapCppUFy61E=",
+        "owner": "neovim",
+        "repo": "neovim",
+        "rev": "a5ac2f45ff84a688a09479f357a9909d5b914294",
         "type": "github"
       },
       "original": {
-        "owner": "mjlbach",
-        "repo": "neovim-nightly-overlay",
+        "dir": "contrib",
+        "owner": "neovim",
+        "ref": "release-0.5",
+        "repo": "neovim",
         "type": "github"
       }
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1618801528,
-        "narHash": "sha256-1ru9LzP33ElEAZcDzYLgJQG3/uHhAg0LFJEfVZSOPZg=",
+        "lastModified": 1613226215,
+        "narHash": "sha256-3rA5cGIrBHD6yeKhNhsF7/t461ww25oJY8KyBb0IhjU=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "0a5f5bab0e08e968ef25cff393312aa51a3512cf",
+        "rev": "ff96a0fa5635770390b184ae74debea75c3fd534",
         "type": "github"
       },
       "original": {
@@ -127,16 +91,16 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1618587490,
-        "narHash": "sha256-NnTlWVB7S8j1YXvzLMs6EUPWnYgw6Lz2IP24VGH0fTQ=",
+        "lastModified": 1625176478,
+        "narHash": "sha256-s1RTYNKw7ySyqrZjns9Cq+Nnjpp75ePgL06pgcbIpoA=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "f0efbe21f9ae1e17d1aca922708f1bdef605039d",
+        "rev": "21b696caf392ad6fa513caf3327d0aa0430ffb72",
         "type": "github"
       },
       "original": {
         "owner": "nixos",
-        "ref": "nixpkgs-unstable",
+        "ref": "nixos-21.05",
         "repo": "nixpkgs",
         "type": "github"
       }

@@ -59,10 +59,14 @@
     thunderbird
     joypixels
     trayer
+    gnome3.gnome-keyring
+    libsecret
+    w3m
+    qgis
   ];
 
   programs.direnv = {
     enable = true;
-    enableNixDirenvIntegration = true;
+    nix-direnv.enable = true;
   };
 }

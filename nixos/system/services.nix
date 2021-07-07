@@ -83,4 +83,6 @@
     enable = true;
     usePercentageForPolicy = false;
   };
+  services.gnome.gnome-keyring.enable = true;
+  security.pam.services.fedeizzo.enableGnomeKeyring = true;
 }

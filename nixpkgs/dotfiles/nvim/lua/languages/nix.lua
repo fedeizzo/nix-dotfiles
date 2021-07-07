@@ -1,5 +1,5 @@
 -- LSP
-require'lsp'
+local lsp = require'lsp'
 require'lspconfig'.rnix.setup {}
 
 -- AUTOCOMMANDS 

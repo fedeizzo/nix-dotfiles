@@ -1,5 +1,5 @@
 -- LSP
-require'lsp'
+local lsp = require'lsp'
 
 -- AUTOCOMMANDS 
 local function load_autocommands()
@@ -7,7 +7,7 @@ local function load_autocommands()
     filetypes = {
       {
         'FileType',
-        'typescript',
+        'lua',
         'setlocal expandtab tabstop=2 shiftwidth=2 softtabstop=2',
       },
     },

@@ -10,6 +10,11 @@
       signByDefault = true;
     };
     lfs.enable = true;
+    extraConfig = {
+      init = {
+        defaultBranch = "master";
+      };
+    };
     aliases = {
       co = "checkout";
       br = "branch";

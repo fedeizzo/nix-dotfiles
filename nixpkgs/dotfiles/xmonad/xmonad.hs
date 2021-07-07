@@ -124,7 +124,8 @@ myScratchpads = [
         NS "telegram" "telegram-desktop" (className =? "TelegramDesktop") defaultFloating,
         NS "terminal" "st -c scratchpad" (className =? "scratchpad") defaultFloating,
         NS "lf" "st -c lfScratchpad lf" (className =? "lfScratchpad") defaultFloating,
-        NS "spotify" "spotify" (className =? "Spotify") defaultFloating
+        NS "spotify" "spotify" (className =? "Spotify") defaultFloating,
+        NS "feh" "feh /home/fedeizzo/personalProject/layout-corne.png" (className =? "feh") defaultFloating
     ]
 
 -- Location of your xmobar.hs / xmobarrc
@@ -172,7 +173,8 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   , ((modMask, xK_y), namedScratchpadAction myScratchpads "spotify")
   , ((modMask, xK_u), namedScratchpadAction myScratchpads "telegram")
   , ((modMask, xK_i), namedScratchpadAction myScratchpads "terminal")
-  , ((modMask, xK_o), namedScratchpadAction myScratchpads "lf")
+  -- , ((modMask, xK_o), namedScratchpadAction myScratchpads "lf")
+  , ((modMask, xK_o), namedScratchpadAction myScratchpads "feh")
   , ((modMask, xK_g), goToSelected $ myGsconfig myColorizedConfig)
   , ((modMask .|. shiftMask, xK_g), bringSelected $ myGsconfig myColorizedConfig)
   , ((modMask, xK_p), spawn myScreenshot)

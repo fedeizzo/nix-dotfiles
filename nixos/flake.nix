@@ -2,7 +2,7 @@
   description = "My personal NixOS/HomeManager configuration";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/20.09";
+    nixpkgs.url = "github:nixos/nixpkgs/21.05";
   };
 
   outputs = { self, nixpkgs, ... }@inputs:
