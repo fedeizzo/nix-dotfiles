@@ -1,71 +1,42 @@
 require('utils/nvim-core')
 
 vim.g.mapleader = ' '
+-- ENCODING
+vim.opt.encoding = 'utf-8'
+vim.opt.fileencoding = 'utf-8'
+-- WILD MENU
+vim.opt.wildignore = vim.opt.wildignore + {'*.a', '*.o', '*.bmp', '*.gif', '*.ico', '*.jpg', '*.png', '.DS_Store', '.git', '.hg', '.svn', '*~', '*.swp', '*.tmp'}
+vim.opt.wildmenu = true
+-- INDENT
+vim.opt.autoindent = true
+vim.opt.smartindent = true
+-- TAB
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.expandtab = true
+vim.opt.showtabline = 2
+vim.opt.foldmethod = 'expr'
+vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
+-- FOLD
+vim.opt.foldenable = false
+-- LINE NUMBER
+vim.opt.number = true
+vim.opt.relativenumber = true
+-- MOUSE
+vim.opt.mouse = 'a'
+-- SPLIT
+vim.opt.splitbelow = true
+-- SEARCH HIGHLIGHT
+vim.opt.hlsearch = true
+-- SPELL CHECK
+vim.opt.spell = false
+vim.opt.spelllang = vim.opt.spelllang + {'it'}
+-- COLORSCHEME
+vim.cmd [[colorscheme nord]]
+vim.opt.termguicolors = true
 
-local function core_options()
-  local set_options = {
-    -- ENCODING
-    enc = 'utf-8',
-    fenc = 'utf-8',
-    termencoding = 'utf-8',
-    -- VI COMPATIBILITY
-    nocompatible = false,
-    -- PATH
-    path = {'**'},
-    -- WILD MENU
-    wildignore = {
-      '*.a',
-      '*.o',
-      '*.bmp',
-      '*.gif',
-      '*.ico',
-      '*.jpg',
-      '*.png',
-      '.DS_Store',
-      '.git',
-      '.hg',
-      '.svn',
-      '*~',
-      '*.swp',
-      '*.tmp',
-    },
-    wildmenu = true,
-    -- INDENT
-    autoindent = true,
-    smartindent = true,
-    -- TAB
-    tabstop = 4,
-    shiftwidth = 4,
-    expandtab = true,
-    showtabline = 2,
-    foldmethod = 'expr',
-    foldexpr = 'nvim_treesitter#foldexpr()',
-    -- FOLD
-    nofoldenable = true,
-    -- LINE NUMBER
-    number = true,
-    relativenumber = true,
-    -- MOUSE
-    mouse = 'a',
-    -- SPLIT
-    splitbelow = true,
-    -- SEARCH HIGHLIGHT
-    hlsearch = true,
-    -- SPELL CHECK
-    nospell = true,
-    spelllang = {'it'},
-    -- COLORSCHEME
-    termguicolors = true,
-  }
-  local options = {
-    {'syntax', 'on'},
-    {'filetype', 'plugin indent', 'on'},
-    {'colorscheme', 'nord'},
-    {'setlocal', 'omnifunc=v:lua.vim.lsp.omnifunc'},
-  };
-  setOptions(set_options)
-  runCommand(options)
-end
+vim.cmd [[filetype plugin indent on]]
+vim.bo.omnifunc = "v:lua.vim.lsp.omnifunc"
 
 local function load_autocommands()
   local autogroups = {
@@ -77,28 +48,18 @@ local function load_autocommands()
   createAutogroups(autogroups)
 end
 
-local function keymaps()
-  local maps = {
-    imap = {{'jk', '<Esc>zz'}},
-    inoremap = {{'<Tab>', '<C-X><C-F>'}},
-    nnoremap = {
-      {'<silent> <Leader>h', ':noh<CR>'},
-      {'<silent> <Leader>dd', ':bd<CR>'},
-      {'<Leader>y', '"+'},
-      {'<silent> <Leader>c', ':lua automaticOutput()<CR>'},
-      {'<silent> <Leader>e', ':lua enumeratePythonFor()<CR>'},
-      {'<silent> <Leader>a', ':w<CR>'},
-      {'<silent> <Leader>q', ':q<CR>'},
-      {'<C-h>', '<C-w><C-h>'},
-      {'<C-j>', '<C-w><C-j>'},
-      {'<C-k>', '<C-w><C-k>'},
-      {'<C-l>', '<C-w><C-l>'},
-    },
-    vnoremap = {{'<Leader>y', '"+y<CR>'}},
-  }
-  createKeymaps(maps)
-end
+vim.api.nvim_set_keymap('i', '<Tab>', '<C-x><C-F>', {noremap = true})
+vim.api.nvim_set_keymap('n', '<Leader>h', ':noh<CR>', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', '<Leader>dd', ':bd<CR>', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', '<Leader>y', '"+', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', '<Leader>c', ':lua automaticOutput()<CR>', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', '<Leader>e', ':lua enumeratePython()<CR>', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', '<Leader>a', ':w<CR>', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', '<Leader>q', ':q<CR>', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', '<C-h>', '<C-w><C-h>', {noremap = true})
+vim.api.nvim_set_keymap('n', '<C-j>', '<C-w><C-j>', {noremap = true})
+vim.api.nvim_set_keymap('n', '<C-k>', '<C-w><C-k>', {noremap = true})
+vim.api.nvim_set_keymap('n', '<C-l>', '<C-w><C-l>', {noremap = true})
+vim.api.nvim_set_keymap('v', '<Leader>y', '"+<CR>', {noremap = true, silent = true})
 
-core_options()
 load_autocommands()
-keymaps()

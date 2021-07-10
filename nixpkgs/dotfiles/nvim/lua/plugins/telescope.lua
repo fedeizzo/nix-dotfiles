@@ -1,22 +1,10 @@
-local maps = {
-  nnoremap = {
-    {'<silent> <Leader>o', ':lua require\'telescope.builtin\'.git_files{}<CR>'},
-    {
-      '<silent> <Leader>l',
-      ':lua require\'telescope.builtin\'.buffers{show_all_buffers = true}<CR>',
-    },
-    {'<silent> <Leader>s', ':lua require\'telescope.builtin\'.builtin{}<CR>'},
-    -- {'<Leader>o', ":lua telescope-file()"};
-    {'<silent> <Leader>m', ':lua require\'telescope.builtin\'.treesitter{}<CR>'},
-    {
-      '<silent> <Leader>g',
-      ':lua require\'telescope.builtin\'.git_bcommits{}<CR>',
-    },
-    {'<silent> <Leader>f', ':lua require\'telescope.builtin\'.live_grep{}<CR>'},
-    -- {'<silent> <Leader>F', ":lua require'telescope.builtin'.grep_string{}<CR>"};
-  },
-}
-createKeymaps(maps)
+vim.api.nvim_set_keymap('n', '<Leader>o', ':lua require\'telescope\'.git_files{}', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', '<Leader>l', ':lua require\'telescope\'.buffers{show_all_buffers = true}', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', '<Leader>s', ':lua require\'telescope\'.builtin{}', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', '<Leader>m', ':lua require\'telescope\'.tresitter{}', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', '<Leader>g', ':lua require\'telescope\'.git_bcommits{}', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', '<Leader>f', ':lua require\'telescope\'.live_grep{}', {noremap = true, silent = true})
+
 require('telescope').setup {
   defaults = {
     layout_strategy = 'flex',

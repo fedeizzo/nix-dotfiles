@@ -1,12 +1,8 @@
-require('utils/nvim-core')
+vim.g.completopt = {'menuone', 'noinsert', 'noselect'}
+vim.opt.shortmess = 'c'
 
-local set_options = {completeopt = 'menuone,noinsert,noselect', shortmess = 'c'}
-local maps = {
-  inoremap = {
-    {'<expr> <Tab>', 'pumvisible() ? "<C-n>" : "<Tab>"'},
-    {'<expr> <S-Tab>', 'pumvisible() ? "<C-p>" : "<S-Tab>"'},
-  },
-}
+vim.api.nvim_set_keymap('i', '<expr> <Tab>', 'pumvisible() ? "<C-n>" : "<Tab>"', {noremap = true})
+vim.api.nvim_set_keymap('i', '<expr> <S-Tab>', 'pumvisible() ? "<C-p>" : "<S-Tab>"', {noremap = true})
 
 vim.g.completion_enable_snippet = 'vim-vsnip'
 vim.g.completion_auto_change_source = 1
@@ -42,6 +38,3 @@ vim.g.completion_chain_complete_list = {
     {mode = '<c-n>'},
   },
 }
-
-createKeymaps(maps)
-setOptions(set_options)

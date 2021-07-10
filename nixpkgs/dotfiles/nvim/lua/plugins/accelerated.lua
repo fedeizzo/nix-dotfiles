@@ -1,9 +1,4 @@
-require('utils/nvim-core')
-
-local maps = {
-  nmap = {
-    {'j', '<Plug>(accelerated_jk_gj)'},
-    {'k', '<Plug>(accelerated_jk_gk)'},
-  },
-}
-createKeymaps(maps)
+vim.api.nvim_set_keymap('n', '<Down>', '<Plug>(accelerated_jk_gj)', {})
+vim.api.nvim_set_keymap('n', '<Up>', '<Plug>(accelerated_jk_gk)', {})
+vim.api.nvim_set_keymap('n', 'j', '<Plug>(accelerated_jk_gj)', {})
+vim.api.nvim_set_keymap('n', 'k', '<Plug>(accelerated_jk_gk)', {})

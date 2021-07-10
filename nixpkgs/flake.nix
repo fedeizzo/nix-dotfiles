@@ -6,7 +6,10 @@
 
   inputs.flake-utils.url = "github:numtide/flake-utils";
   # inputs.neovim-nightly-overlay.url = "github:mjlbach/neovim-nightly-overlay";
-  inputs.neovim-nightly-overlay.url = "github:neovim/neovim/release-0.5?dir=contrib";
+  inputs.neovim-nightly-overlay = {
+    url = "github:neovim/neovim/release-0.5?dir=contrib";
+    inputs.nixpkgs.follows = "nixpkgs";
+  };
 
   inputs.home-manager = {
     url = "github:rycee/home-manager/release-21.05";
