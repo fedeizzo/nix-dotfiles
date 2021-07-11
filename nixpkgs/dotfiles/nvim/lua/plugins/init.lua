@@ -74,13 +74,10 @@ return require('packer').startup(
     -- LSP / COMLETION / DAP
     use 'neovim/nvim-lspconfig'
     use {
-      'nvim-lua/completion-nvim',
+      'hrsh7th/nvim-compe',
       requires = {
         {'hrsh7th/vim-vsnip'},
         {'hrsh7th/vim-vsnip-integ'},
-        {'hrsh7th/vim-vsnip-integ'},
-        {'steelsojka/completion-buffers'},
-        {'nvim-treesitter/completion-treesitter'},
       },
     }
     use 'nvim-lua/lsp-status.nvim'

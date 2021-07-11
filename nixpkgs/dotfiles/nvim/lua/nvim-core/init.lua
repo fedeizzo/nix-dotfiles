@@ -48,7 +48,7 @@ local function load_autocommands()
   createAutogroups(autogroups)
 end
 
-vim.api.nvim_set_keymap('i', '<Tab>', '<C-x><C-F>', {noremap = true})
+vim.api.nvim_set_keymap('i', '<Tab>', '<C-X><C-F>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<Leader>h', ':noh<CR>', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', '<Leader>dd', ':bd<CR>', {noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', '<Leader>y', '"+', {noremap = true, silent = true})
@@ -60,6 +60,6 @@ vim.api.nvim_set_keymap('n', '<C-h>', '<C-w><C-h>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<C-j>', '<C-w><C-j>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<C-k>', '<C-w><C-k>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<C-l>', '<C-w><C-l>', {noremap = true})
-vim.api.nvim_set_keymap('v', '<Leader>y', '"+<CR>', {noremap = true, silent = true})
+vim.api.nvim_set_keymap('v', '<Leader>y', '"+y<CR>', {noremap = true, silent = true})
 
 load_autocommands()
