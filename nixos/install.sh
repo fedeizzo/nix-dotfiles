@@ -18,10 +18,10 @@ install() {
     if [[ $1 == "new" ]]; then
         dst=/mnt/etc/nixos
     fi
-    sudo cp ./flake.nix $dst
-    sudo cp ./flake.lock $dst
-    sudo cp -r system $dst
-    sudo nixos-rebuild switch
+    cp ./flake.nix $dst
+    cp ./flake.lock $dst
+    cp -r system $dst
+    nixos-rebuild switch
 }
 
 case $1 in
