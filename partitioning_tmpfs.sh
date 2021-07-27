@@ -7,17 +7,19 @@ ROOT_DEV="/dev/sda"
 USER="fedeizzo"
 
 create_persistent_dir() {
+    dirs_list=$1
     for dir in $dirs_list; do
-        dir="/mnt/nix/persistent/$(echo "${sv#@}" | sed 's/_/\//g')"
-        mkdir -p "$dir"
+        dir_path="/mnt/nix/persistent/$(echo "${dir#@}" | sed 's/_/\//g')"
+        mkdir -p "$dir_path"
     done
 }
 
 bind_mount_persistent_dir() {
+    dirs_list=$1
     for dir in $dirs_list; do
-        dir="/mnt/nix/persistent/$(echo "${sv#@}" | sed 's/_/\//g')"
-        mount_point="/mnt/$(echo "${sv#@}" | sed 's/_/\//g')"
-        mount -o bind "$dir" "$mount_point"
+        dir_path="/mnt/nix/persistent/$(echo "${dir#@}" | sed 's/_/\//g')"
+        mount_point="/mnt/$(echo "${dir#@}" | sed 's/_/\//g')"
+        mount -o bind "$dir_path" "$mount_point"
     done
 }
 
@@ -81,6 +83,7 @@ persistent_dirs="/etc/nixos /home /swap /var/cache /var/lib /var/log /var/tmp"
 
 # create persistent dirs
 create_persistent_dir "$persistent_dirs"
+bind_mount_persistent_dir "$persistent_dirs"
 
 # create swapfile system
 truncate -s 0 /mnt/nix/persistent/swap/.swapfile
@@ -89,14 +92,13 @@ chmod 600 /mnt/nix/persistent/swap/.swapfile
 mkswap /mnt/nix/persistent/swap/.swapfile
 swapon /mnt/nix/persistent/swap/.swapfile
 
-bind_mount_persistent_dir
-
 # configure nixos
 nixos-generate-config --root /mnt
 
 # my personal config
 # ./install.sh -f laptop_tmpfs
 # nixos-install --no-root-passwd
+nixos-install --root /mnt --flake <myflakepath>
 
 # swapoff /mnt/nix/persistent/swap/.swapfile
 # umount -R /mnt
