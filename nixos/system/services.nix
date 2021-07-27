@@ -22,6 +22,7 @@
         Option "NaturalScrolling" "true"
       EndSection
     '';
+    # dell: move intel to nvidia
     videoDrivers = [ "intel" ];
 
     windowManager.xmonad = {
@@ -43,6 +44,8 @@
   };
   services.thermald = {
     enable = true;
+    # dell
+    # configFile = TODO: add path to generated config;
   };
   services.fstrim = {
     enable = true;

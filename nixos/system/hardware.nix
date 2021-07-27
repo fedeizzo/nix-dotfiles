@@ -19,6 +19,7 @@
     enable = true;
     powerOnBoot = true;
   };
+  # dell: remove this
   hardware.bumblebee = {
     enable = true;
     driver = "nvidia";

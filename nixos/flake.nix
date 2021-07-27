@@ -1,5 +1,5 @@
 {
-  description = "My personal NixOS/HomeManager configuration";
+  description = "My personal NixOS configuration";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/21.05";
@@ -22,6 +22,7 @@
           ./system/keymapTimeFont.nix
           ./system/networking.nix
           ./system/nixNixOS.nix
+          ./system/nvidia.nix
           ./system/programsEnv.nix
           ./system/security.nix
           ./system/services.nix
