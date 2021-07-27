@@ -5,14 +5,12 @@
   # SECURITY
   #################################
   security.sudo = {
-    enable = true;
-    wheelNeedsPassword = true;
+    enable = false;
   };
-  # dell
-  # security.doas = {
-  #   enable = true;
-  #   extraRules = [
-  #     { groups = [ "wheel" ]; keepEnv = true; persist = true; }
-  #   ];
-  # };
+  security.doas = {
+    enable = true;
+    extraRules = [
+      { groups = [ "wheel" ]; keepEnv = true; persist = true; }
+    ];
+  };
 }
