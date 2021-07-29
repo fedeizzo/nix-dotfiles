@@ -8,6 +8,17 @@
     enable = true;
     editor = false;
   };
+  # dell
+  # boot.loader.grub = {
+  #   enable = true;
+  #   theme = pkgs.nixos-grub2-theme;
+  #   device = "nodev";
+  #   version = 2;
+  #   efiSupport = true;
+  #   useOSProber = true;
+  #   enableCryptodisk = true;
+  #   efiInstallAsRemovable = true;
+  # };
   boot.loader.efi.canTouchEfiVariables = true;
   boot.cleanTmpDir = true;
   boot.kernelPackages = pkgs.linuxPackages_latest;

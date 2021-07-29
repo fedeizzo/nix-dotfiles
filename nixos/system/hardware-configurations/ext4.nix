@@ -23,7 +23,7 @@
     fsType = "vfat";
   };
 
-  boot.initrd.luks.devices."nixenc".device = "/dev/disk/by-partlabel/nixenc";
+  boot.initrd.luks.devices."nixenc".device = "/dev/disk/by-label/nixenc";
 
   swapDevices = [ ];
 
