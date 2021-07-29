@@ -12,7 +12,6 @@
     killall
     libnotify
     neofetch
-    unclutter
     wget
     xclip
     xorg.xbacklight

@@ -19,9 +19,6 @@ autorandr --change
 # Set wallpaper
 feh --bg-scale --no-fehbg /home/fedeizzo/.xmonad/pacwall.png
 
-# Start unclutter
-# unclutter -grab &
-
 # Update lockscreen images
 multilockscreen -u ~/nixOs-config/dotfiles/dot_config/bspwm/sfondo.jpg &
 
