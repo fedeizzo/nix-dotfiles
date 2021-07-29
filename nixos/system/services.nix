@@ -88,4 +88,17 @@
   };
   services.gnome.gnome-keyring.enable = true;
   security.pam.services.fedeizzo.enableGnomeKeyring = true;
+  # systemd.services.autorandr = {
+  #     description = "autorandr execution hook";
+  #     after = [ "sleep.target" ];
+  #     startLimitIntervalSec = 5;
+  #     startLimitBurst = 1;
+  #     serviceConfig = {
+  #       ExecStart = "${pkgs.autorandr}/bin/autorandr --batch --change --default default";
+  #       Type = "oneshot";
+  #       RemainAfterExit = false;
+  #       KillMode = "process";
+  #     };
+  #     wantedBy = [ "sleep.target" ];
+  # };
 }

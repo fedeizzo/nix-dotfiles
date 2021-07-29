@@ -1,1 +1,1 @@
-/nix/store/x9fjgpahx73gjr9v4jw1ya84rcknka5r-home-manager-files/.config/nixpkgs/config.nix
+/nix/store/2ribjn9xr3w19ia5fqsyxq0xmy468vvc-home-manager-files/.config/nixpkgs/config.nix

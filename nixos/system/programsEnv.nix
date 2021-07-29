@@ -12,11 +12,11 @@
     killall
     libnotify
     neofetch
-    # picom
     unclutter
     wget
     xclip
     xorg.xbacklight
+    autorandr
     xsel
     acpi
     arandr

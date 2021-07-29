@@ -34,7 +34,6 @@
       ];
     })
     arandr
-    autorandr
     bitwarden
     bitwarden-cli
     brightnessctl

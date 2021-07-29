@@ -1,5 +1,6 @@
 #!/bin/sh
 set -e
+HOSTNAME="fedeizzo-nixos"
 BOOT_DEV="/dev/sda"
 ROOT_DEV="/dev/sda"
 
@@ -28,6 +29,7 @@ sgdisk -p "$ROOT_DEV"
 # crypt root partition
 cryptsetup --type luks2 luksFormat "$root"
 cryptsetup open "$root" nixenc
+cryptsetup config "$root" --label nixenc
 
 # formatting filesystems
 mkfs.vfat -n boot "$boot"
@@ -36,17 +38,24 @@ root="/dev/mapper/nixenc"
 
 # mount root on mnt
 mount "$root" /mnt
+mkdir -p /mnt/etc/nixos
 
 # mount boot partition
 mkdir /mnt/boot
 mount "$boot" /mnt/boot
 
-# configure nixos
-nixos-generate-config --root /mnt
+# set iso root password and change user
+passwd root
 
-# my personal config
-./install.sh fresh
-nixos-install
+# setup nix flake
+su -c 'nix-env -iA nixos.nixUnstable'
+su -c 'nix-env -iA nixos.git'
+su -c 'mkdir -p ~/.config/nix'
+su -c 'echo "experimental-features = nix-command flakes" >> ~/.config/nix/nix.conf'
+
+# install all system
+su -c "cp -r nixos/* /mnt/etc/nixos"
+su -c "nixos-install --flake /mnt/etc/nixos#$HOSTNAME"
 
 umount -R /mnt
 cryptsetup close nixenc

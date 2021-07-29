@@ -84,10 +84,10 @@ disk_handler() {
     helpMessage="usage: backup disk [command]\n\nPossible commands:\n\tmount: mount disk in /mnt.\n\tumount: umount disk from /mnt.\n\tinfo: show info relative to disk usage.\n\thelp: print this message.\n"
     case $1 in
         "mount")
-            sudo mount /dev/sdb /mnt
+            doas mount /dev/sdb /mnt
             ;;
         "umount")
-            sudo umount /mnt
+            doas umount /mnt
             ;;
         "info")
             [ ! -d $BORG_REPO ] && echo "Mount backup SSD!" && exit 1
