@@ -5,7 +5,7 @@
     (modulesPath + "/installer/scan/not-detected.nix")
   ];
 
-  boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod" "sr_mod" "rtsx_pci_sdmmc" ];
+  boot.initrd.availableKernelModules = [ "thunderbolt" "vmd" "xhci_pci" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod" "sr_mod" "rtsx_pci_sdmmc" ];
   boot.initrd.kernelModules = [ "i915" ];
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
@@ -23,7 +23,7 @@
     fsType = "vfat";
   };
 
-  boot.initrd.luks.devices."nixenc".device = "/dev/disk/by-label/nixenc";
+  boot.initrd.luks.devices."nixenc".device = "/dev/disk/by-uuid/d5f0de1a-613a-4116-a102-c4be3780071a";
 
   swapDevices = [ ];
 
