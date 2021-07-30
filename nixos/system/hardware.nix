@@ -20,10 +20,10 @@
     powerOnBoot = true;
   };
   # dell: remove this
-  hardware.bumblebee = {
-    enable = true;
-    driver = "nvidia";
-  };
+  # hardware.bumblebee = {
+  #   enable = true;
+  #   driver = "nvidia";
+  # };
   hardware.cpu.intel.updateMicrocode = true;
   hardware.pulseaudio = {
     support32Bit = true;

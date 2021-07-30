@@ -14,11 +14,11 @@ in
   # NVIDIA
   #################################
   # dell
-  # environment.systemPackages = [ nvidia-offload ];
+  environment.systemPackages = [ nvidia-offload ];
 
-  # hardware.nvidia.prime = {
-  #   offload.enable = lib.mkDefault true;
-  #   intelBusId = lib.mkDefault "PCI:0:2:0";
-  #   nvidiaBusId = lib.mkDefault "PCI:1:0:0";
-  # };
+  hardware.nvidia.prime = {
+    offload.enable = lib.mkDefault true;
+    intelBusId = lib.mkDefault "PCI:0:2:0";
+    nvidiaBusId = lib.mkDefault "PCI:1:0:0";
+  };
 }

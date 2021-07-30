@@ -13,7 +13,7 @@
     "i915.enable_fbc=1"
     "i915.enable_psr=2"
     # dell
-    # "acpi_rev_override"
+    "acpi_rev_override"
   ];
 
   fileSystems."/" = { device = "/dev/disk/by-label/root";

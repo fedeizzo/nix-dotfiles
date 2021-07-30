@@ -54,8 +54,8 @@ su -c 'mkdir -p ~/.config/nix'
 su -c 'echo "experimental-features = nix-command flakes" >> ~/.config/nix/nix.conf'
 
 # install all system
-su -c "cp -r nixos/* /mnt/etc/nixos"
-su -c "nixos-install --flake /mnt/etc/nixos#$HOSTNAME"
+# su -c "cp -r nixos/* /mnt/etc/nixos"
+# su -c "nixos-install --flake /mnt/etc/nixos#$HOSTNAME"
 
-umount -R /mnt
-cryptsetup close nixenc
+# umount -R /mnt
+# cryptsetup close nixenc

@@ -23,7 +23,8 @@
       EndSection
     '';
     # dell: move intel to nvidia
-    videoDrivers = [ "intel" ];
+    # videoDrivers = [ "intel" ];
+    videoDrivers = [ "nvidia" ];
 
     windowManager.xmonad = {
       enable = true;
