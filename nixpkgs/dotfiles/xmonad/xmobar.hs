@@ -27,6 +27,6 @@ Config {
     ],
     sepChar = "%",
     alignSep = "}{",
-    template = "  %StdinReader% }{ %multicpu% %multicoretemp% | %memory% | %disku% | %wlp3s0wi% | %dynnetwork% | Vol: | %battery% | %date%  %trayerpad%"
+    template = "  %StdinReader% }{ %multicpu% %multicoretemp% | %memory% | %disku% | %wlp0s20f3wi% | %dynnetwork% | Vol: | %battery% | %date%  %trayerpad%"
 }
 
