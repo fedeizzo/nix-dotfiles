@@ -77,7 +77,7 @@
         description = "Update home-manager config";
       };
       take = {
-        argumentNames="dir";
+        argumentNames = "dir";
         body = ''
           mkdir -p $dir
           cd $dir

@@ -5,7 +5,7 @@ let
   version = "0.16.1";
 in
 stdenv.mkDerivation {
-  name= "${name}";
+  name = "${name}";
 
   src = fetchFromGitHub {
     owner = "tree-sitter";

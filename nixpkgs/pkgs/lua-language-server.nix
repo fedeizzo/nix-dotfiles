@@ -1,5 +1,5 @@
 # { stdenv, fetchFromGitHub, zlib, git, pkg-config, libxcb, alsaLib, xcbutil}:
-with import <nixpkgs> {};
+with import <nixpkgs> { };
 let
   name = "lua-language-server";
   version = "79bf3e605d282cdbe425eea1b5793fc97d8404da";

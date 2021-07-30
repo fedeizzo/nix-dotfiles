@@ -1,4 +1,4 @@
-{ stdenv, fetchFromGitHub, git, cmake}:
+{ stdenv, fetchFromGitHub, git, cmake }:
 
 let
   name = "LuaFormatter";
@@ -18,5 +18,5 @@ stdenv.mkDerivation {
     make
     make install
   '';
-  buildInputs = [cmake];
+  buildInputs = [ cmake ];
 }

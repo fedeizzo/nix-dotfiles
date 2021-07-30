@@ -1,4 +1,4 @@
-{ stdenv, fetchFromGitHub, rustPlatform, pkgconfig, openssl}:
+{ stdenv, fetchFromGitHub, rustPlatform, pkgconfig, openssl }:
 # with import <nixpkgs> {};
 
 rustPlatform.buildRustPackage rec {

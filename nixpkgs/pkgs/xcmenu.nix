@@ -1,4 +1,4 @@
-{ stdenv, fetchFromGitHub, zlib, git, pkg-config, libxcb, alsaLib, xcbutil}:
+{ stdenv, fetchFromGitHub, zlib, git, pkg-config, libxcb, alsaLib, xcbutil }:
 
 let
   name = "xcmenu";

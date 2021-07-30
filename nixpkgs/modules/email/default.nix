@@ -3,7 +3,7 @@
 {
   home.packages = with pkgs; [
     email-sync
-    libsecret 
+    libsecret
   ];
   accounts.email = {
     maildirBasePath = ".mail";
@@ -17,7 +17,7 @@
 
         imapnotify = {
           enable = true;
-          boxes = ["Inbox"];
+          boxes = [ "Inbox" ];
           onNotify = "/usr/bin/env";
           onNotifyPost = {
             mail = "${pkgs.notmuch}/bin/notmuch new && ${pkgs.libnotify}/bin/notify-send 'New mail arrived'";
@@ -42,17 +42,17 @@
       enable = true;
       bindings = {
         global = {
-            T = "search tag:todo";
+          T = "search tag:todo";
         };
         search = {
-            t = "toggletags todo";
-            D = "toggletags killed";
+          t = "toggletags todo";
+          D = "toggletags killed";
         };
         thread = {
-            B = "call hooks.open_in_browser(ui)";
+          B = "call hooks.open_in_browser(ui)";
         };
         envelope = {
-            B = "call hooks.open_in_browser(ui)";
+          B = "call hooks.open_in_browser(ui)";
         };
       };
       hooks = builtins.readFile ./alot_hooks.py;

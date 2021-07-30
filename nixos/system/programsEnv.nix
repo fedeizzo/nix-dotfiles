@@ -4,6 +4,7 @@
   #################################
   # PROGRAMS and ENV
   #################################
+  nixpkgs.overlays = [ (import ../pkgs) ];
   environment.systemPackages = with pkgs; [
     bc
     curl

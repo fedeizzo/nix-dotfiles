@@ -12,8 +12,8 @@
     withRuby = false;
   };
   home.file.".config/nvim" = {
-     source = ../dotfiles/nvim;
-     executable = false;
-     recursive = true;
+    source = ../dotfiles/nvim;
+    executable = false;
+    recursive = true;
   };
 }

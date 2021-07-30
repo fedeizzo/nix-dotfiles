@@ -22,16 +22,16 @@
       m = null;
       md = "mkdir";
     };
-      # %{{
-      #   w=$(tput cols)
-      #   if [ $w -le 80 ]; then
-      #       lf -remote "send $id set ratios 1:2"
-      #   elif [ $w -le 160 ]; then
-      #       lf -remote "send $id set ratios 1:2:3"
-      #   else
-      #       lf -remote "send $id set ratios 1:2:3"
-      #   fi
-      # }}
+    # %{{
+    #   w=$(tput cols)
+    #   if [ $w -le 80 ]; then
+    #       lf -remote "send $id set ratios 1:2"
+    #   elif [ $w -le 160 ]; then
+    #       lf -remote "send $id set ratios 1:2:3"
+    #   else
+    #       lf -remote "send $id set ratios 1:2:3"
+    #   fi
+    # }}
     extraConfig = ''
       # Change column amount
       set ratios 1:2:3

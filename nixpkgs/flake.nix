@@ -19,7 +19,7 @@
   outputs = { self, ... }@inputs:
     let
       overlays = [
-        inputs.neovim-nightly-overlay.overlay 
+        inputs.neovim-nightly-overlay.overlay
       ];
     in
     {

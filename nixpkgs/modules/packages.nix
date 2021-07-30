@@ -62,6 +62,7 @@
     libsecret
     w3m
     qgis
+    lutris
   ];
 
   programs.direnv = {

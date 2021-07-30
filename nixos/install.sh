@@ -21,6 +21,7 @@ install() {
     cp ./flake.nix $dst
     cp ./flake.lock $dst
     cp -r system $dst
+    cp -r pkgs $dst
     nixos-rebuild switch
 }
 

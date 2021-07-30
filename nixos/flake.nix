@@ -8,7 +8,7 @@
   outputs = { self, nixpkgs, ... }@inputs:
     let
       system = "x86_64-linux";
-    in  
+    in
     {
       nixosConfigurations.fedeizzo-nixos = nixpkgs.lib.nixosSystem {
         inherit system;

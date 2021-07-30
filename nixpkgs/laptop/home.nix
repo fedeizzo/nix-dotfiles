@@ -15,7 +15,7 @@ in
     ../modules/languages.nix
     ../modules/lf.nix
     ../modules/media.nix
-    ../modules/neovim.nix 
+    ../modules/neovim.nix
     ../modules/packages.nix
     ../modules/picom.nix
     ../modules/services.nix

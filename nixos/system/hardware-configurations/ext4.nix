@@ -1,7 +1,7 @@
-{ config, lib, pkgs, modulesPath,... }:
+{ config, lib, pkgs, modulesPath, ... }:
 
 {
-  imports =[
+  imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
   ];
 
@@ -16,10 +16,12 @@
     "acpi_rev_override"
   ];
 
-  fileSystems."/" = { device = "/dev/disk/by-label/root";
+  fileSystems."/" = {
+    device = "/dev/disk/by-label/root";
     fsType = "ext4";
   };
-  fileSystems."/boot" = { device = "/dev/disk/by-label/boot";
+  fileSystems."/boot" = {
+    device = "/dev/disk/by-label/boot";
     fsType = "vfat";
   };
 

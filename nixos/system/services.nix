@@ -39,7 +39,7 @@
       WIFI_PWR_ON_AC = "off";
       WIFI_PWR_ON_BAT = "on";
       CPU_HWP_ON_AC = "performance";
-      CPU_HWP_ON_BAT = "balance-performance";
+      CPU_HWP_ON_BAT = "performance";
       DEVICES_TO_ENABLE_ON_STARTUP = "bluetooth wifi";
     };
   };
@@ -88,7 +88,19 @@
     usePercentageForPolicy = false;
   };
   services.gnome.gnome-keyring.enable = true;
-  security.pam.services.fedeizzo.enableGnomeKeyring = true;
+  security.pam.services.lightdm.enableGnomeKeyring = true;
+  security.pam.services.lightdm-greeters.enableGnomeKeyring = true;
+  security.pam.services.login.fprintAuth = true;
+  security.pam.services.system-local-login.fprintAuth = true;
+  security.pam.services.lightdm.fprintAuth = true;
+  security.pam.services.doas.fprintAuth = true;
+  services.fprintd = {
+    enable = true;
+    tod = {
+      enable = true;
+      driver = pkgs.libfprint-2-tod1-goodix;
+    };
+  };
   # systemd.services.autorandr = {
   #     description = "autorandr execution hook";
   #     after = [ "sleep.target" ];
