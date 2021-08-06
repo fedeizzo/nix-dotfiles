@@ -18,6 +18,7 @@
   hardware.bluetooth = {
     enable = true;
     powerOnBoot = true;
+    disabledPlugins = [ "sap" ];
   };
   # dell: remove this
   # hardware.bumblebee = {
@@ -36,5 +37,9 @@
     enable = true;
     mediaKeys.enable = true;
   };
-
+  services.smartd = {
+    enable = true;
+    autodetect = true;
+    notifications.x11.enable = true;
+  };
 }

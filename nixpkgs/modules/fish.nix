@@ -46,6 +46,7 @@
       noblackscreen = "xset s off -dpms";
       find = "fd";
       lf = "lfrun";
+      gotop = "gotop -l kitchensink";
     };
     functions = {
       dt = {
