@@ -55,6 +55,9 @@ return require('packer').startup(
     use {'LnL7/vim-nix', ft = 'nix'}
     use {'tbastos/vim-lua', ft = 'lua'} -- 'tjdevries/nlua.nvim' TODO try this one
     use {'neovimhaskell/haskell-vim', ft = {'haskell', 'cabal'}}
+    
+    -- CODE BLOCKS
+    use 'hkupty/iron.nvim'
 
     -- COLORSCHEME
     use 'arcticicestudio/nord-vim'

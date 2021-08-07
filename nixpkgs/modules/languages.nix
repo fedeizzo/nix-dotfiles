@@ -17,8 +17,9 @@
 
     # python
     black
-    python38
-    python38Packages.debugpy
+    python39
+    python39Packages.debugpy
+    python39Packages.ipython
     nodePackages.pyright
 
     # bash
@@ -38,7 +39,7 @@
     rustfmt
 
     # latex
-    texlive.combined.scheme-full
+    # texlive.combined.scheme-full
 
     # note taking
     neuron-notes
