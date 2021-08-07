@@ -52,7 +52,8 @@
     devour
     xss-lock
     borgbackup
-    # steam
+    steam
+    steam-run
     minecraft
     ncdu
     thunderbird
@@ -62,7 +63,6 @@
     libsecret
     w3m
     qgis
-    lutris
   ];
 
   programs.direnv = {

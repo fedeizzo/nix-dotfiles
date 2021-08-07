@@ -15,6 +15,7 @@
     "i915.edp_vswing=2"
     # dell
     "acpi_rev_override"
+    "mem_sleep_default=deep"
   ];
 
   fileSystems."/" = {

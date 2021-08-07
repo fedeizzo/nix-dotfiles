@@ -16,50 +16,38 @@ return require('packer').startup(
   function()
     use {'wbthomason/packer.nvim', opt = true}
     -- UTILITY
-    -- icon support
-    use 'ryanoasis/vim-devicons'
-    use 'kyazdani42/nvim-web-devicons'
-    -- status line
+    use 'ryanoasis/vim-devicons' -- icon support
+    use 'kyazdani42/nvim-web-devicons' -- icon support
     use {
-      'hoob3rt/lualine.nvim',
+      'hoob3rt/lualine.nvim', -- status line
       requires = {'kyazdani42/nvim-web-devicons', opt = true},
     }
-    -- underline same work over cursor
-    use 'itchyny/vim-cursorword'
-    use 'rhysd/accelerated-jk'
-    -- print mark on left
-    use 'kshenoy/vim-signature'
-    use 'tpope/vim-commentary'
-    -- buffer line above
+    use 'itchyny/vim-cursorword' -- underline same work over cursor
+    use 'rhysd/accelerated-jk' -- acccelerate up and down movment
+    use 'kshenoy/vim-signature' -- print mark on the left
+    use 'tpope/vim-commentary' -- comment easy portion of code
     use {
-      'akinsho/nvim-bufferline.lua',
+      'akinsho/nvim-bufferline.lua', -- buffer line above
       requires = 'kyazdani42/nvim-web-devicons',
     }
-    -- motion
-    use 'ggandor/lightspeed.nvim'
-
-    use 'yggdroot/indentline'
-    use 'windwp/nvim-autopairs'
-    use 'unblevable/quick-scope'
-    -- start page
-    use 'glepnir/dashboard-nvim'
-    -- note taking
-    use 'oberblastmeister/neuron.nvim'
-    -- git
-    use {'lewis6991/gitsigns.nvim'}
-    use {'TimUntersberger/neogit'}
-    -- spell
+    use 'ggandor/lightspeed.nvim' -- easy motion between buffer
+    use 'yggdroot/indentline' -- indentation
+    use 'windwp/nvim-autopairs' -- auto pairings
+    use 'unblevable/quick-scope' -- highlight chars during inline search
+    use 'glepnir/dashboard-nvim' -- start page
+    use 'oberblastmeister/neuron.nvim' -- note taking
+    use {'lewis6991/gitsigns.nvim'} -- git
+    use {'TimUntersberger/neogit'} -- git
     use {
-      'lewis6991/spellsitter.nvim',
+      'lewis6991/spellsitter.nvim', -- humant lang spell
       config = function() require'spellsitter'.setup() end,
     }
+    use 'folke/twilight.nvim' -- highlight portion of code
 
     -- LANGUAGE SUPPORT
     use {'elzr/vim-json', ft = 'json'}
-    -- use {'plasticboy/vim-markdown',        ft='markdown'}
     use {'SidOfc/mkdx', ft = 'markdown'}
     use {'alaviss/nim.nvim', ft = 'nim'}
-    use {'vimwiki/vimwiki', cmd = 'VimwikiIndex'}
     use {'pangloss/vim-javascript', ft = 'javascript'}
     use {'mxw/vim-jsx', ft = 'javascript'}
     use {'HerringtonDarkholme/yats.vim', ft = 'typescript'}

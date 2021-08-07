@@ -53,7 +53,6 @@
     interval = "weekly";
   };
   xdg.portal.enable = true;
-  services.flatpak.enable = true;
   services.udev.extraRules = with pkgs; ''
     # This rule is needed for basic functionality of the controller in Steam and keyboard/mouse emulation
     SUBSYSTEM=="usb", ATTRS{idVendor}=="28de", MODE="0666"

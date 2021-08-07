@@ -39,7 +39,16 @@ in
   boot.kernelPackages = pkgs.linuxPackages_latest;
   boot.kernel.sysctl = {
     "vm.swappiness" = 10;
+    "dev.i915.perf_stream_paranoid" = 0;
   };
+  # boot.kernelPatches = [ {
+  #   name = "dell xps audio";
+  #   patch = null;
+  #   extraConfig = ''
+  #     CONFIG_SND_SOC_INTEL_USER_FRIENDLY_LONG_NAMES y
+  #     CONFIG_SND_SOC_INTEL_SOUNDWIRE_SOF_MACH m
+  #   '';
+  # } ];
   # dell
   boot.extraModprobeConfig = ''
     options iwlwifi power_save=1 disable_11ax=1

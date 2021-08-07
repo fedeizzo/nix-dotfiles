@@ -110,6 +110,7 @@
       set XDG_CONFIG_HOME "$HOME/.config"
       set XDG_CACHE_HOME "$HOME/.cache"
       set XDG_DATA_HOME "$HOME/.local/share"
+      set XDG_DATA_DIRS "$XDG_DATA_DIRS:/var/lib/flatpak/exports/share:/home/fedeizzo/.local/share/flatpak/exports/share"
       set CARGO_HOME "$XDG_DATA_HOME"/cargo
       set DOCKER_CONFIG "$XDG_CONFIG_HOME"/docker
       set GRADLE_USER_HOME "$XDG_DATA_HOME"/gradle
