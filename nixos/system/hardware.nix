@@ -37,9 +37,6 @@
     enable = true;
     mediaKeys.enable = true;
   };
-  environment.systemPackages = with pkgs; [
-    sof-firmware
-  ];
   services.smartd = {
     enable = true;
     autodetect = true;

@@ -24,7 +24,7 @@ return require('packer').startup(
     }
     use 'itchyny/vim-cursorword' -- underline same work over cursor
     use 'rhysd/accelerated-jk' -- acccelerate up and down movment
-    use 'kshenoy/vim-signature' -- print mark on the left
+    -- use 'kshenoy/vim-signature' -- print mark on the left
     use 'tpope/vim-commentary' -- comment easy portion of code
     use {
       'akinsho/nvim-bufferline.lua', -- buffer line above
@@ -40,7 +40,10 @@ return require('packer').startup(
     use {'TimUntersberger/neogit'} -- git
     use {
       'lewis6991/spellsitter.nvim', -- humant lang spell
-      config = function() require'spellsitter'.setup() end,
+      config = function() require'spellsitter'.setup {
+          hl = 'SpellBad',
+          captures = {'comment'},  -- set to {} to spellcheck everything
+        } end,
     }
     use 'folke/twilight.nvim' -- highlight portion of code
 

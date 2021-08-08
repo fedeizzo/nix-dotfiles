@@ -30,7 +30,7 @@ vim.opt.splitbelow = true
 vim.opt.hlsearch = true
 -- SPELL CHECK
 vim.opt.spell = false
-vim.opt.spelllang = vim.opt.spelllang + {'it'}
+-- vim.opt.spelllang = vim.opt.spelllang + {'it'}
 -- COLORSCHEME
 vim.cmd [[colorscheme nord]]
 vim.opt.termguicolors = true
