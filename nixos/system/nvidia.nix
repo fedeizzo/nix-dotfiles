@@ -17,7 +17,8 @@ in
   environment.systemPackages = [ nvidia-offload ];
 
   hardware.nvidia.prime = {
-    offload.enable = lib.mkDefault true;
+    offload.enable = true;
+    # sync.enable = true;
     intelBusId = lib.mkDefault "PCI:0:2:0";
     nvidiaBusId = lib.mkDefault "PCI:1:0:0";
   };
