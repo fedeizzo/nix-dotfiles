@@ -50,4 +50,7 @@
 
   # lua formatter
   xdg.configFile."luaformatter/config.yaml".source = ../dotfiles/lua_format.yaml;
+
+  # openbox
+  xdg.configFile."openbox/menu.xml".source = ../dotfiles/openbox/menu.xml;
 }

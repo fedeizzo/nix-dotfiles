@@ -30,6 +30,7 @@
       enable = true;
       enableContribAndExtras = true;
     };
+    windowManager.openbox.enable = true;
   };
   services.tlp = {
     enable = true;
@@ -102,6 +103,7 @@
       driver = pkgs.libfprint-2-tod1-goodix;
     };
   };
+  services.flatpak.enable = true;
   # systemd.services.autorandr = {
   #     description = "autorandr execution hook";
   #     after = [ "sleep.target" ];
