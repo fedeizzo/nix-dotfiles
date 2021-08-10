@@ -52,8 +52,6 @@
     devour
     xss-lock
     borgbackup
-    steam
-    steam-run
     minecraft
     ncdu
     thunderbird
