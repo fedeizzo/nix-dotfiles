@@ -6,6 +6,10 @@ let
     rev = "ea17ade04e49fd0ddfc04474b00cdbbdd81c6a3e";
     sha256 = "sha256-7hvrlyi31yNFvtJaaGCL0MZmod+TmRjIPsNqtyVddZg=";
   };
+  xpsaudioPatch = pkgs.fetchurl {
+    url = "https://github.com/kristinpaget/xps-15-9510-audio/blob/main/kernel.patch";
+    sha256 = "sha256-RtxuQ/ykWlnY2pELVp0uHk0oU+A7aYEfcY2nN5DMm6E=";
+  };
 in
 {
   #################################
@@ -36,18 +40,14 @@ in
   '';
   boot.loader.efi.canTouchEfiVariables = false;
   boot.cleanTmpDir = true;
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelPackages = pkgs.linuxPackages_5_13;
   boot.kernel.sysctl = {
     "vm.swappiness" = 10;
     "dev.i915.perf_stream_paranoid" = 0;
   };
   # boot.kernelPatches = [ {
   #   name = "dell xps audio";
-  #   patch = null;
-  #   extraConfig = ''
-  #     CONFIG_SND_SOC_INTEL_USER_FRIENDLY_LONG_NAMES y
-  #     CONFIG_SND_SOC_INTEL_SOUNDWIRE_SOF_MACH m
-  #   '';
+  #   patch = xpsaudioPatch;
   # } ];
   # dell
   boot.extraModprobeConfig = ''

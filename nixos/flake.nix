@@ -2,7 +2,8 @@
   description = "My personal NixOS configuration";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/21.05";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-21.05";
+    # nixpkgs.url = "github:nixos/nixpkgs/unstable";
   };
 
   outputs = { self, nixpkgs, ... }@inputs:
