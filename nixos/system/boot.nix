@@ -6,10 +6,6 @@ let
     rev = "ea17ade04e49fd0ddfc04474b00cdbbdd81c6a3e";
     sha256 = "sha256-7hvrlyi31yNFvtJaaGCL0MZmod+TmRjIPsNqtyVddZg=";
   };
-  xpsaudioPatch = pkgs.fetchurl {
-    url = "https://github.com/kristinpaget/xps-15-9510-audio/blob/main/kernel.patch";
-    sha256 = "sha256-RtxuQ/ykWlnY2pELVp0uHk0oU+A7aYEfcY2nN5DMm6E=";
-  };
 in
 {
   #################################
@@ -45,10 +41,10 @@ in
     "vm.swappiness" = 10;
     "dev.i915.perf_stream_paranoid" = 0;
   };
-  # boot.kernelPatches = [ {
-  #   name = "dell xps audio";
-  #   patch = xpsaudioPatch;
-  # } ];
+  boot.kernelPatches = [ {
+    name = "dell xps audio";
+    patch = ./kernelPatches/dellxpsaudio.patch;
+  } ];
   # dell
   boot.extraModprobeConfig = ''
     options iwlwifi power_save=1 disable_11ax=1
