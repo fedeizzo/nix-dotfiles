@@ -41,7 +41,7 @@
     xcmenu
     jq
     keyutils
-    multilockscreen
+    betterlockscreen
     openssh
     pamixer
     pandoc

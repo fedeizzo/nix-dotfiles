@@ -18,8 +18,10 @@
 
   outputs = { self, ... }@inputs:
     let
+      betterlockscreen = final: prev: (import ./overlays/betterlockscreen.nix) final prev;
       overlays = [
         inputs.neovim-nightly-overlay.overlay
+        betterlockscreen
       ];
     in
     {
