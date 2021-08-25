@@ -41,7 +41,7 @@
     xcmenu
     jq
     keyutils
-    betterlockscreen
+    unstable.betterlockscreen
     openssh
     pamixer
     pandoc

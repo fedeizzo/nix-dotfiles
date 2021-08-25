@@ -6,8 +6,8 @@ timedatectl set-ntp true
 # Start notification daemon
 dunst &
 
-# Start picom
-# picom -b
+# Start flameshot
+flameshot &
 
 # Start clipboardManager
 xcmenu -d
@@ -17,13 +17,13 @@ xcmenu -C
 autorandr --change
 
 # Set wallpaper
-feh --bg-scale --no-fehbg /home/fedeizzo/.xmonad/pacwall.png
+feh --bg-scale --no-fehbg /home/fedeizzo/.xmonad/wallpaper.png
 
 # Update lockscreen images
-multilockscreen -u ~/nixOs-config/dotfiles/dot_config/bspwm/sfondo.jpg &
+betterlockscreen -u /home/fedeizzo/.xmonad/wallpaper.png &
 
 # Launch lockscreen manager
-xss-lock -l -- multilockscreen -l blur --off 600 &
+xss-lock -l -- betterlockscreen -l blur --off 60 --blur 0.5 &
 
 # Update spotlight cache
 /home/fedeizzo/.sources/updateSpotlightCache.sh &

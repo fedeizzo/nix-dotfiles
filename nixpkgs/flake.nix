@@ -3,6 +3,7 @@
 
   # inputs.nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
   inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-21.05";
+  inputs.nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
   inputs.flake-utils.url = "github:numtide/flake-utils";
   # inputs.neovim-nightly-overlay.url = "github:mjlbach/neovim-nightly-overlay";
@@ -18,10 +19,10 @@
 
   outputs = { self, ... }@inputs:
     let
-      betterlockscreen = final: prev: (import ./overlays/betterlockscreen.nix) final prev;
+      untable-overlay = final: prev: { unstable = inputs.nixpkgs-unstable.legacyPackages.x86_64-linux; };
       overlays = [
         inputs.neovim-nightly-overlay.overlay
-        betterlockscreen
+        untable-overlay
       ];
     in
     {

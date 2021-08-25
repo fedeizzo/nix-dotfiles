@@ -5,7 +5,6 @@
   # cudaSupport = true;
   joypixels.acceptLicense = true;
   packageOverrides = pkgs: with pkgs; rec {
-    multilockscreen = callPackage ../pkgs/multilockscreen.nix { };
     xcmenu = callPackage ../pkgs/xcmenu.nix { };
     devour = callPackage ../pkgs/devour.nix { };
     rbw = callPackage ../pkgs/rbw.nix { };

@@ -37,7 +37,7 @@ import qualified XMonad.StackSet as W
 myTerminal = "st"
 
 -- The command to lock the screen or show the screensaver.
-myLockscreen = "multilockscreen -l blur --off 600"
+myLockscreen = "betterlockscreen -l blur --off 60 --blur 0.5"
 mySuspend = "systemctl suspend"
 
 -- The command to take a fullscreen screenshot.

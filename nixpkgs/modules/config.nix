@@ -41,7 +41,7 @@
     recursive = true;
   };
 
-  home.file.".xmonad/pacwall.png".source = ../dotfiles/xmonad/wallpaper.png;
+  home.file.".xmonad/wallpaper.png".source = ../dotfiles/xmonad/wallpaper.png;
 
   # SSH CONFIG
   home.file.".ssh/config" = {
