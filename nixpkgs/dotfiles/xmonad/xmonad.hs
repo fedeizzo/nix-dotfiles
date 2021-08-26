@@ -144,10 +144,10 @@ myLayouts = avoidStruts(
     ||| noBorders (fullscreenFull Full)
 
 black = "#2E3440"
-primaryColor = "#4C566A"
+frostColor = "#596680"
 
 myNormalBorderColor  = black
-myFocusedBorderColor = primaryColor
+myFocusedBorderColor = frostColor
 
 xmobarTitleColor = "#e5e9f0"
 xmobarCurrentWorkspaceColor = "#A3BE8C"

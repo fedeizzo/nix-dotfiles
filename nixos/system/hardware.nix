@@ -20,11 +20,6 @@
     powerOnBoot = true;
     disabledPlugins = [ "sap" ];
   };
-  # dell: remove this
-  # hardware.bumblebee = {
-  #   enable = true;
-  #   driver = "nvidia";
-  # };
   hardware.cpu.intel.updateMicrocode = true;
   hardware.pulseaudio = {
     support32Bit = true;
