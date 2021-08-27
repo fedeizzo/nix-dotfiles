@@ -9,6 +9,8 @@
 
     # haskell
     # cabal-install
+    # haskellPackages.haskell-language-server
+    haskellPackages.ormolu
 
     # lua
     lua

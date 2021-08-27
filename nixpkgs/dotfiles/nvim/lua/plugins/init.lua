@@ -32,8 +32,7 @@ return require('packer').startup(
     use 'unblevable/quick-scope' -- highlight chars during inline search
     use 'glepnir/dashboard-nvim' -- start page
     use 'oberblastmeister/neuron.nvim' -- note taking
-    use {'lewis6991/gitsigns.nvim'} -- git
-    use {'TimUntersberger/neogit'} -- git
+    use 'lewis6991/gitsigns.nvim' -- git
     use {
       'lewis6991/spellsitter.nvim', -- humant lang spell
       config = function() require'spellsitter'.setup {
