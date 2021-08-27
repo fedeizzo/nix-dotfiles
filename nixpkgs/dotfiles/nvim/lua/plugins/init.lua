@@ -26,10 +26,6 @@ return require('packer').startup(
     use 'rhysd/accelerated-jk' -- acccelerate up and down movment
     -- use 'kshenoy/vim-signature' -- print mark on the left
     use 'tpope/vim-commentary' -- comment easy portion of code
-    use {
-      'akinsho/nvim-bufferline.lua', -- buffer line above
-      requires = 'kyazdani42/nvim-web-devicons',
-    }
     use 'ggandor/lightspeed.nvim' -- easy motion between buffer
     use 'yggdroot/indentline' -- indentation
     use 'windwp/nvim-autopairs' -- auto pairings
@@ -68,10 +64,17 @@ return require('packer').startup(
     -- LSP / COMLETION / DAP
     use 'neovim/nvim-lspconfig'
     use {
-      'hrsh7th/nvim-compe',
+      'hrsh7th/nvim-cmp',
       requires = {
         {'hrsh7th/vim-vsnip'},
         {'hrsh7th/vim-vsnip-integ'},
+        {'hrsh7th/cmp-buffer'},
+        {'hrsh7th/cmp-latex-symbols'},
+        {'hrsh7th/cmp-path'},
+        {'hrsh7th/cmp-nvim-lua'},
+        {'hrsh7th/cmp-vsnip'},
+        {'hrsh7th/cmp-nvim-lsp'},
+        {'onsails/lspkind-nvim'},
       },
     }
     use 'nvim-lua/lsp-status.nvim'
