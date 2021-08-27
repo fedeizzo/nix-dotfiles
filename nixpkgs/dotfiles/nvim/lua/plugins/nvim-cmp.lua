@@ -27,6 +27,10 @@ cmp.setup{
             vim_item.kind = lspkind.presets.default[vim_item.kind]
             return vim_item
         end
+    },
+
+    documentation = {
+        border = {'╭', '─', '╮', '│',  '╯', '─', '╰', '│'}
     }
 }
 -- TODO: fix this
