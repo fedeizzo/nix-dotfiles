@@ -1,4 +1,5 @@
 import qualified Data.Map as M
+import Data.Monoid as DM
 import qualified Data.Text as T
 import Graphics.X11.ExtraTypes.XF86
 import System.Exit
@@ -11,6 +12,7 @@ import XMonad.Actions.GridSelect
 import XMonad.Actions.Search
 import XMonad.Actions.TagWindows
 import XMonad.Actions.UpdatePointer
+import XMonad.Actions.WorkspaceNames (getCurrentWorkspaceName, setCurrentWorkspaceName)
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.ManageDocks
@@ -70,16 +72,30 @@ myClipboardManager =
           Just i -> cmd i
           _ -> return ()
 
-myTagFunction s =
-  sequence_
-    [ withFocused (addTag s),
-      addWorkspace s,
-      withTaggedGlobalP s shiftHere
-    ]
+myTagFunction s = do
+  workspaceName <- getCurrentWorkspaceName
+  case workspaceName of
+    (Just name) ->
+      sequence_
+        [ withFocused (addTag s),
+          addWorkspace s,
+          setCurrentWorkspaceName s,
+          withTaggedGlobalP s shiftHere,
+          removeEmptyWorkspaceByTag name
+        ]
+    _ ->
+      sequence_
+        [ withFocused (addTag s),
+          addWorkspace s,
+          setCurrentWorkspaceName s,
+          withTaggedGlobalP s shiftHere
+        ]
 
 myMoveTaggedFunction s =
   sequence_
-    [ addWorkspace s,
+    [ removeEmptyWorkspace,
+      addWorkspace s,
+      setCurrentWorkspaceName s,
       withTaggedGlobalP s shiftHere
     ]
 
@@ -93,7 +109,7 @@ myScratchpads =
 
 myXmobarrc = "~/.xmonad/xmobar.hs"
 
-myWorkspaces = map show [1 .. 9]
+myWorkspaces = ["none", "void"]
 
 myFocusFollowsMouse :: Bool
 myFocusFollowsMouse = True
@@ -152,6 +168,7 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) =
       ((modMask, xK_s), tagPrompt myXPConfig (\s -> myTagFunction s)),
       ((modMask, xK_a), tagDelPrompt myXPConfig),
       ((modMask, xK_f), tagPrompt myXPConfig (\s -> myMoveTaggedFunction s)),
+      ((modMask .|. shiftMask, xK_f), selectWorkspace myXPConfig),
       ((modMask, xK_p), spawn myScreenshot),
       ((modMask, xK_x), spawn myLockscreen),
       -- , ((modMask .|. shiftMask, xK_x), spawn mySuspend)
@@ -168,7 +185,6 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) =
       ((0, xF86XK_MonBrightnessDown), spawn "brightnessctl set 10%-"),
       ((modMask .|. shiftMask, xK_q), kill),
       ((modMask, xK_space), sendMessage NextLayout),
-      ((modMask .|. shiftMask, xK_f), sendMessage (Toggle "Full")),
       ((modMask .|. shiftMask, xK_space), setLayout $ XMonad.layoutHook conf),
       ((modMask, xK_n), refresh),
       ((modMask, xK_j), windows W.focusDown),
@@ -184,10 +200,6 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) =
       ((modMask .|. shiftMask, xK_z), io (exitWith ExitSuccess)),
       ((modMask .|. shiftMask, xK_c), restart "xmonad" True)
     ]
-      ++ [ ((m .|. modMask, k), windows $ f i)
-           | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9],
-             (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]
-         ]
       ++ [((modMask, xK_Tab), swapNextScreen)]
       ++ [((modMask .|. shiftMask, xK_Tab), nextScreen)]
 
@@ -201,6 +213,13 @@ myManageHook =
         className =? "rbwAutofill" --> defaultFloating,
         isFullscreen --> (doF W.focusDown <+> doFullFloat)
       ]
+
+myNewApplicationEventHandler (MapRequestEvent {ev_window = w}) = do
+  workspaceName <- getCurrentWorkspaceName
+  case workspaceName of
+    (Just name) -> addTag name w
+    _ -> addTag "none" w
+myNewApplicationEventHandler _ = pure ()
 
 main = do
   xmproc <- spawnPipe ("xmobar " ++ myXmobarrc)
@@ -216,7 +235,8 @@ main = do
                     ppCurrent = xmobarColor xmobarCurrentWorkspaceColor "",
                     ppSep = "   ",
                     ppVisible = xmobarColor xmobarVisibleWorkspaceColor "" . wrap "[" "]"
-                  }
+                  },
+            handleEventHook = \e -> myNewApplicationEventHandler e >> return (DM.All True)
           }
 
 defaults =
