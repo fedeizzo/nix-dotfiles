@@ -1,5 +1,8 @@
 { config, pkgs, ... }:
 
+let
+  hdmiEventHandler = pkgs.writeShellScriptBin "hdmiEventHandler" (builtins.readFile ../bin/hdmiEventHandler.sh);
+in
 {
   #################################
   # SERVICES
@@ -13,15 +16,17 @@
     };
     layout = "us";
     xkbVariant = "altgr-intl";
-    libinput.enable = true;
-    extraConfig = ''
-      Section "InputClass"
-        Identifier "touchpad"
-        Driver "libinput"
-        MatchIsTouchpad "on"
-        Option "NaturalScrolling" "true"
-      EndSection
-    '';
+    libinput = {
+      enable = true;
+      
+      touchpad = {
+        tapping = true;
+        horizontalScrolling = true;
+        scrollMethod = "twofinger";
+        naturalScrolling = true;
+        disableWhileTyping = true;
+      };
+    };
 
     windowManager.xmonad = {
       enable = true;
@@ -58,12 +63,6 @@
     usePercentageForPolicy = false;
   };
   services.gnome.gnome-keyring.enable = true;
-  security.pam.services.lightdm.enableGnomeKeyring = true;
-  security.pam.services.lightdm-greeters.enableGnomeKeyring = true;
-  security.pam.services.login.fprintAuth = true;
-  security.pam.services.system-local-login.fprintAuth = true;
-  security.pam.services.lightdm.fprintAuth = true;
-  security.pam.services.doas.fprintAuth = true;
   services.fprintd = {
     enable = true;
     tod = {
@@ -71,17 +70,11 @@
       driver = pkgs.libfprint-2-tod1-goodix;
     };
   };
-  # systemd.services.autorandr = {
-  #     description = "autorandr execution hook";
-  #     after = [ "sleep.target" ];
-  #     startLimitIntervalSec = 5;
-  #     startLimitBurst = 1;
-  #     serviceConfig = {
-  #       ExecStart = "${pkgs.autorandr}/bin/autorandr --batch --change --default default";
-  #       Type = "oneshot";
-  #       RemainAfterExit = false;
-  #       KillMode = "process";
-  #     };
-  #     wantedBy = [ "sleep.target" ];
-  # };
+  environment.systemPackages = [
+    hdmiEventHandler
+    pkgs.xorg.xrandr
+  ];
+  # services.udev.extraRules = ''
+  #   KERNEL=="card0", SUBSYSTEM=="drm", ENV{DISPLAY}=":0", ENV{XAUTHORITY}="/home/fedeizzo/.Xauthority", RUN+="${hdmiEventHandler}/bin/hdmiEventHandler ${pkgs.xorg.xrandr}"
+  # '';
 }
