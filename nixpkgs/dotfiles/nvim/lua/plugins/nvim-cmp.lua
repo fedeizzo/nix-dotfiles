@@ -25,7 +25,8 @@ cmp.setup{
         { name = 'buffer' },
         { name = 'path' },
         { name = 'vsnip' },
-        { name = 'nvim_lsp' }
+        { name = 'nvim_lsp' },
+        { name = 'orgmode' }
     },
 
     formatting = {

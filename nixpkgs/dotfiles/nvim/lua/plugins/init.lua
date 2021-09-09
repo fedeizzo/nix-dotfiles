@@ -58,7 +58,8 @@ return require('packer').startup(
     use 'hkupty/iron.nvim'
 
     -- COLORSCHEME
-    use 'arcticicestudio/nord-vim'
+    -- use 'arcticicestudio/nord-vim'
+    use 'NarutoXY/nvim-highlite'
 
     -- LSP / COMLETION / DAP
     use 'neovim/nvim-lspconfig'
@@ -97,6 +98,12 @@ return require('packer').startup(
     use {
       'nvim-telescope/telescope.nvim',
       requires = {{'nvim-lua/popup.nvim'}, {'nvim-lua/plenary.nvim'}},
+    }
+
+    -- ORGMODE
+    use {
+        'kristijanhusak/orgmode.nvim',
+        -- requires = {{'akinsho/org-bullets.nvim'}}
     }
   end
 )
