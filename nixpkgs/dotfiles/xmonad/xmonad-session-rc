@@ -31,6 +31,9 @@ xss-lock -l -- betterlockscreen -l blur --off 60 --blur 0.5 &
 # run bitwarden agent
 /home/fedeizzo/.nix-profile/bin/rbw-agent
 
+# Run emanote
+cd /home/fedeizzo/zettelkasten && /home/fedeizzo/.nix-profile/bin/emanote &
+
 # run trayer system
 /home/fedeizzo/.nix-profile/bin/trayer \
     --monitor "primary" \
