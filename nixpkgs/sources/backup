@@ -32,6 +32,7 @@ backup() {
         $HOME/fbk \
         $HOME/uni \
         $HOME/personalProject \
+        $XDG_DATA_HOME/Anki2 \
         $HOME/zettelkasten
     backup_exit=$?
 
