@@ -1,0 +1,58 @@
+#!/usr/bin/env python
+import urllib.request as req
+import os
+import json
+
+
+class Plugin:
+    def __init__(self, id, name, author, desc, repo) -> None:
+        self.id = id
+        self.name = name
+        self.author = author
+        self.desc = desc
+        self.repo = repo
+
+    def __eq__(self, o: object) -> bool:
+        return (isinstance(o, self.__class__)) and getattr(
+            o, "id", None
+        ) == self.id
+
+    def __hash__(self) -> int:
+        return hash(self.id)
+
+    def to_json(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'author': self.author,
+            'description': self.desc,
+            'repo': self.repo
+        }
+
+def parse_Plugins(plugins):
+    return set(
+        map(
+            lambda p: Plugin(
+                p["id"],
+                p["name"],
+                p["author"],
+                p["description"],
+                p["repo"],
+            ),
+            plugins,
+        )
+    )
+
+
+url = "https://raw.githubusercontent.com/obsidianmd/obsidian-releases/master/community-plugins.json"
+local_cache = f"{os.environ['HOME']}/docs/obsidian-plugins.json"
+
+with open(local_cache, 'w+') as cache:
+    cache_content = json.loads(cache.read())
+    plugins_cache = parse_Plugins(cache_content)
+    print(f"cache_content: {cache_content}")
+    with req.urlopen(url) as f:
+        content = json.loads(f.read().decode("utf-8"))
+        plugins_list = parse_Plugins(content)
+    
+    cache.write(json.dumps(list(map(lambda p: p.to_json(), plugins_list))))

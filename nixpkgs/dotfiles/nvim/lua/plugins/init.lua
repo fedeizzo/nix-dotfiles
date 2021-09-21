@@ -27,7 +27,7 @@ return require('packer').startup(
     -- use 'kshenoy/vim-signature' -- print mark on the left
     use 'tpope/vim-commentary' -- comment easy portion of code
     use 'ggandor/lightspeed.nvim' -- easy motion between buffer
-    use 'yggdroot/indentline' -- indentation
+    use 'lukas-reineke/indent-blankline.nvim' -- indentation
     use 'windwp/nvim-autopairs' -- auto pairings
     use 'unblevable/quick-scope' -- highlight chars during inline search
     use 'glepnir/dashboard-nvim' -- start page
@@ -68,6 +68,7 @@ return require('packer').startup(
       requires = {
         {'hrsh7th/vim-vsnip'},
         {'hrsh7th/vim-vsnip-integ'},
+        {'rafamadriz/friendly-snippets'},
         {'hrsh7th/cmp-buffer'},
         {'hrsh7th/cmp-latex-symbols'},
         {'hrsh7th/cmp-path'},

@@ -61,6 +61,8 @@
     libsecret
     w3m
     qgis
+    obsidian
+    gimp
   ];
 
   programs.direnv = {

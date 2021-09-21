@@ -1,11 +1,13 @@
 function update_notes_date()
   local filename = vim.api.nvim_buf_get_name(0)
+  local current_line = vim.fn.line(".")
   if filename.find(filename, "zettelkasten") then 
     local current_date = os.date("%Y-%m-%dT%H:%M")
     vim.cmd(
       [[%s/date: [0-9]\{4\}-[01][0-9]-[0-3][0-9]T[0-2][0-9]:[0-6][0-9]/]] .. [[date: ]] .. current_date .. [[/]]
       )
     vim.cmd [[:nohlsearch]]
+    vim.cmd(":" .. current_line)
   end
 end
 
