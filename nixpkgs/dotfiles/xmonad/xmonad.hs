@@ -211,6 +211,7 @@ myManageHook =
       [ className =? "floatTerm" --> doFloat,
         className =? "Xmessage" --> doFloat,
         className =? "rbwAutofill" --> defaultFloating,
+        className =? "Anki" --> doFloat,
         isFullscreen --> (doF W.focusDown <+> doFullFloat)
       ]
 

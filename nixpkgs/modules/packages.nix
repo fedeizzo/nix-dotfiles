@@ -63,6 +63,7 @@
     qgis
     obsidian
     gimp
+    anki
   ];
 
   programs.direnv = {
