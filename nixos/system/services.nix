@@ -32,6 +32,7 @@ in
       enable = true;
       enableContribAndExtras = true;
     };
+    # xkbOptions = "ctrl:swapcaps";
   };
   services.tlp = {
     enable = true;

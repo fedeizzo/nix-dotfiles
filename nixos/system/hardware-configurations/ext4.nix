@@ -16,6 +16,7 @@
     # dell
     "acpi_rev_override"
     "mem_sleep_default=deep"
+    "nvidia-drm.modeset=1"
   ];
 
   fileSystems."/" = {
