@@ -64,6 +64,7 @@
     obsidian
     gimp
     anki
+    zotero
   ];
 
   programs.direnv = {
