@@ -37,15 +37,11 @@ in
   '';
   boot.loader.efi.canTouchEfiVariables = false;
   boot.cleanTmpDir = true;
-  boot.kernelPackages = pkgs.linuxPackages_5_13;
+  boot.kernelPackages = pkgs.linuxPackages_latest;
   boot.kernel.sysctl = {
     "vm.swappiness" = 10;
     "dev.i915.perf_stream_paranoid" = 0;
   };
-  boot.kernelPatches = [ {
-    name = "dell xps audio";
-    patch = ./kernelPatches/dellxpsaudio.patch;
-  } ];
   # dell
   boot.extraModprobeConfig = ''
     options iwlwifi power_save=1 disable_11ax=1
