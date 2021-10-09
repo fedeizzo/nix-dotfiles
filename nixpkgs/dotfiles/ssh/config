@@ -35,3 +35,6 @@ Host diclub
 Host dicam
         Hostname brennerlec.dicam.unitn.it
         User root
+Host aichallenge
+        Hostname hitvmiac-07.northeurope.cloudapp.azure.com
+        User azureadmin

@@ -23,7 +23,7 @@ pkgs.stdenv.mkDerivation rec {
   '';
 
   installPhase = ''
-      cp -r pack_3/lone $out/share/plymouth/themes
-    cat pack_3/lone/lone.plymouth | sed  "s@\/usr\/@$out\/@" > $out/share/plymouth/themes/lone/lone.plymouth
+      cp -r pack_3/owl $out/share/plymouth/themes
+    cat pack_3/owl/owl.plymouth | sed  "s@\/usr\/@$out\/@" > $out/share/plymouth/themes/owl/owl.plymouth
   '';
 }

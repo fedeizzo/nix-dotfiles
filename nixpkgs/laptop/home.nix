@@ -16,6 +16,7 @@ in
     ../modules/lf.nix
     ../modules/media.nix
     ../modules/neovim.nix
+    ../modules/notes.nix
     ../modules/packages.nix
     ../modules/picom.nix
     ../modules/services.nix

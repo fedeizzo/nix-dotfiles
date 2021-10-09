@@ -61,10 +61,9 @@
     libsecret
     w3m
     qgis
-    obsidian
     gimp
-    anki
-    zotero
+    calibre
+    libreoffice
   ];
 
   programs.direnv = {

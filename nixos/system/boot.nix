@@ -25,6 +25,7 @@ in
     useOSProber = true;
     enableCryptodisk = true;
     efiInstallAsRemovable = true;
+    configurationLimit = 5;
     splashImage = "${polyDarkTheme}/background.png";
     extraConfig = ''
       set theme=($drive1)//themes/poly-dark/theme.txt
@@ -52,6 +53,6 @@ in
   boot.plymouth = {
     enable = true;
     themePackages = [ pkgs.adi1090x-plymouth ];
-    theme = "lone";
+    theme = "owl";
   };
 }
