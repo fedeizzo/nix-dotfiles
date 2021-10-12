@@ -20,8 +20,8 @@
     xsel
     acpi
     arandr
-    docker
-    docker-compose
+    # docker
+    # docker-compose
     podman
     podman-compose
     git
@@ -32,12 +32,15 @@
     virt-manager
   ];
   virtualisation = {
-    docker = {
+    # docker = {
+    #   enable = true;
+    #   enableOnBoot = true;
+    #   enableNvidia = true;
+    # };
+    podman = {
       enable = true;
-      enableOnBoot = true;
       enableNvidia = true;
     };
-    podman.enable = true;
     libvirtd.enable = true;
   };
   environment.shells = [ pkgs.bash pkgs.fish ];
