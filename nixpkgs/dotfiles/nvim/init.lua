@@ -34,7 +34,7 @@ require('plugins/twilight')
 require('plugins/vim-json')
 require('plugins/vimmarkdown')
 require('plugins/vsnip')
-require('plugins/orgmode')
+-- require('plugins/orgmode')
 
 -- LANGUAGES SETTINGS
 require('languages/bash')
