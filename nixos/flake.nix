@@ -3,7 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-21.05";
-    # nixpkgs.url = "github:nixos/nixpkgs/unstable";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/994c6e6e4d84db8f2fddc7d9a79bdf555ac5ca7c";
   };
 
   outputs = { self, nixpkgs, ... }@inputs:
@@ -16,7 +16,14 @@
 
         specialArgs = { inherit system inputs; };
 
-        modules = ([
+        modules = let
+          defaults = { pkgs, ... }: {
+            _module.args.nixpkgs-unstable = import inputs.nixpkgs-unstable {
+              inherit (pkgs.stdenv.targetPlatform) system; 
+            };
+          };
+        in ([
+          defaults
           ./system/boot.nix
           ./system/hardware.nix
           ./system/hardware-configurations/ext4.nix

@@ -21,6 +21,7 @@ in
     ../modules/picom.nix
     ../modules/services.nix
     ../modules/st.nix
+    ../modules/wayland.nix
     ../modules/xmonad.nix
     ../modules/xresources.nix
     ../modules/zathura.nix

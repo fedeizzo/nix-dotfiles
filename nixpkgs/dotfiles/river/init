@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+mod="Mod1"
+
+# environment
+riverctl map normal $mod+Shift Q close
+riverctl map normal $mod+Shift E exit
+
+# spawn
+riverctl map normal $mod Return spawn st
+riverctl map normal $mod D spawn bmenu-run

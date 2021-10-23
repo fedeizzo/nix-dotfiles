@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+selected_workspace=$(swaymsg -t get_workspaces -r | jq -M '.[] | .name' | tr -d '"' | bemenu -p 'move' --tf '#a3be8c' --tb '#2e3440' --nb '#2e3440' --fb '#2e3440' --hb '#2e3440' --hf '#d08770')
+swaymsg move workspace $selected_workspace
+if [[ $1 == '-m' ]]; then
+    swaymsg workspace $selected_workspace
+fi

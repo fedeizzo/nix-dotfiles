@@ -1,10 +1,12 @@
-{ config, pkgs, ... }:
+{ config, pkgs, nixpkgs-unstable, ... }:
 
 {
   #################################
   # PROGRAMS and ENV
   #################################
-  nixpkgs.overlays = [ (import ../pkgs) ];
+  nixpkgs.overlays = [
+    (import ../pkgs)
+  ];
   environment.systemPackages = with pkgs; [
     bc
     curl
@@ -30,7 +32,11 @@
     vim
     xorg.xinit
     virt-manager
+    # nixpkgs-unstable.river
   ];
+  programs.sway = {
+    enable = true;
+  };
   virtualisation = {
     # docker = {
     #   enable = true;

@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+power_action=$(echo -e 'poweroff\nsuspend\nreboot' | bemenu -p 'power' --tf '#a3be8c' --tb '#2e3440' --nb '#2e3440' --fb '#2e3440' --hb '#2e3440' --hf '#d08770')
+case $power_action in
+    "poweroff")
+        poweroff
+        ;;
+    "suspend")
+        systemctl suspend
+        ;;
+    "reboot")
+        systemctl reboot
+        ;;
+esac
