@@ -5,7 +5,6 @@ let
 in
 {
   imports = [
-    ../modules/autorandr
     ../modules/chat.nix
     ../modules/config.nix
     ../modules/cuda.nix

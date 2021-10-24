@@ -36,6 +36,9 @@
   ];
   programs.sway = {
     enable = true;
+    extraOptions = [
+      "--my-next-gpu-wont-be-nvidia"
+    ];
   };
   virtualisation = {
     # docker = {

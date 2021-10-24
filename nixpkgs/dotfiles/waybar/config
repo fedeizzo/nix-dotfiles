@@ -2,7 +2,7 @@
     "position": "top", 
     "height": 14,
     "modules-left": ["sway/workspaces"],
-    "modules-right": ["cpu", "temperature", "memory", "pulseaudio", "network", "battery", "clock", "custom/power"],
+    "modules-right": ["cpu", "temperature", "memory", "pulseaudio", "network", "battery", "clock", "custom/power", "tray"],
     // Modules configuration
 	"sway/workspaces": {
 		"disable-scroll": true,

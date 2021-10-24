@@ -31,11 +31,11 @@
       SS = "systemctl";
       it = "setxkbmap it && xmodmap $HOME/.Xmodmap.back";
       us = "setxkbmap -layout us -variant altgr-intl && xmodmap $HOME/.Xmodmap.back";
-      streamlink = "streamlink -p 'devour vlc'";
-      vlc = "devour vlc";
-      zathura = "devour zathura";
-      llpp = "devour llpp";
-      sxiv = "devour sxiv";
+      streamlink = "streamlink -p 'swayhide vlc'";
+      vlc = "swayhide vlc";
+      zathura = "swayhide zathura";
+      llpp = "swayhide llpp";
+      imv = "swayhide imv";
       v = "nvim";
       open = "xdg-open";
       cat = "bat";
@@ -106,7 +106,7 @@
       set PATH $PATH ( find $HOME/.sources/ -type d -printf ":%p" )
       set PATH $PATH /home/fedeizzo/.nimble/bin
       set EDITOR "nvim"
-      set TERMINAL "st"
+      set TERMINAL "kitty"
       set PIPENV_CACHE_DIR "$XDG_CACHE_HOME"/pipenv
       set WPM_COUNTER 0
       set NNN_PLUG 't:treeview'

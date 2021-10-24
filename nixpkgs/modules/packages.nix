@@ -24,7 +24,6 @@
     openssl
     rbw
     pinentry-qt
-    xdotool
     nix-index
     rsync
     (nerdfonts.override {
@@ -33,7 +32,6 @@
         "RobotoMono"
       ];
     })
-    arandr
     bitwarden
     bitwarden-cli
     brightnessctl
@@ -41,22 +39,16 @@
     xcmenu
     jq
     keyutils
-    unstable.betterlockscreen
     openssh
     pamixer
     pandoc
     pavucontrol
     playerctl
     qutebrowser
-    xorg.xmodmap
-    devour
-    xss-lock
     borgbackup
-    minecraft
     ncdu
     thunderbird
     joypixels
-    trayer
     gnome3.gnome-keyring
     libsecret
     w3m

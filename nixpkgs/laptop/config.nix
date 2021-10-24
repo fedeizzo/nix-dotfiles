@@ -6,7 +6,7 @@
   joypixels.acceptLicense = true;
   packageOverrides = pkgs: with pkgs; rec {
     xcmenu = callPackage ../pkgs/xcmenu.nix { };
-    devour = callPackage ../pkgs/devour.nix { };
+    swayhide = callPackage ../pkgs/swayhide.nix { };
     rbw = callPackage ../pkgs/rbw.nix { };
     python-lsp-server = callPackage ../pkgs/python-lsp-server.nix { };
     lua-formatter = callPackage ../pkgs/lua-formatter.nix { };

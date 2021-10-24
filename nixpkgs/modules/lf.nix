@@ -39,10 +39,10 @@
       cmd open ''${{
           case $(file --mime-type "$f" -bL) in
               text/*|applicattion/json) $EDITOR "$f";;
-              video/*) devour vlc "$f";;
-              application/pdf) devour zathura "$f";;
-              image/*) devour sxiv "$f";;
-              *) devour xdg-open "$f";;
+              video/*) swayhide vlc "$f";;
+              application/pdf) swayhide zathura "$f";;
+              image/*) swayhide imv "$f";;
+              *) swayhide xdg-open "$f";;
           esac
       }}
 
@@ -60,9 +60,9 @@
           res="$(find . -maxdepth 1 -type f | fzf --reverse --header='Open file')"
           case $(file --mime-type "$res" -bL) in
               text/*|applicattion/json) $EDITOR "$res";;
-              video/*) devour vlc "$res";;
-              application/pdf) devour zathura "$res";;
-              image/*) devour sxiv "$res";;
+              video/*) swayhide vlc "$res";;
+              application/pdf) swayhide zathura "$res";;
+              image/*) swayhide imv "$res";;
               *) xdg-open "$res";;
           esac
       }}

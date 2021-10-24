@@ -2,7 +2,7 @@
 
 {
   services.picom = {
-    enable = true;
+    enable = false;
     package = pkgs.picom;
     fade = true;
     backend = "glx";
