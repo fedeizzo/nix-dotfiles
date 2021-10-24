@@ -29,17 +29,15 @@ return require('packer').startup(
     use 'ggandor/lightspeed.nvim' -- easy motion between buffer
     use 'lukas-reineke/indent-blankline.nvim' -- indentation
     use 'windwp/nvim-autopairs' -- auto pairings
-    use 'unblevable/quick-scope' -- highlight chars during inline search
     use 'glepnir/dashboard-nvim' -- start page
-    use 'oberblastmeister/neuron.nvim' -- note taking
     use 'lewis6991/gitsigns.nvim' -- git
-    use {
-      'lewis6991/spellsitter.nvim', -- humant lang spell
-      config = function() require'spellsitter'.setup {
-          hl = 'SpellBad',
-          captures = {'comment'},  -- set to {} to spellcheck everything
-        } end,
-    }
+    -- use {
+    --   'lewis6991/spellsitter.nvim', -- humant lang spell
+    --   config = function() require'spellsitter'.setup {
+    --       hl = 'SpellBad',
+    --       captures = {'comment'},  -- set to {} to spellcheck everything
+    --     } end,
+    -- }
     use 'folke/twilight.nvim' -- highlight portion of code
 
     -- LANGUAGE SUPPORT
@@ -88,6 +86,7 @@ return require('packer').startup(
     -- TREESITTER
     use {
       'nvim-treesitter/nvim-treesitter',
+      commit = 'ecd9efd48611c42d7e51b50028788bf2b74b5c91',
       requires = {
         {'nvim-treesitter/nvim-treesitter-refactor'},
         {'romgrk/nvim-treesitter-context'},

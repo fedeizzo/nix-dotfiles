@@ -18,6 +18,7 @@ in
     ../modules/notes.nix
     ../modules/packages.nix
     ../modules/picom.nix
+    ../modules/qutebrowser.nix
     ../modules/services.nix
     ../modules/st.nix
     ../modules/wayland.nix

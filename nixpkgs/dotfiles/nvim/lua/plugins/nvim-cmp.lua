@@ -3,8 +3,8 @@ local lspkind = require'lspkind'
 
 cmp.setup{
     mapping = {
-        ['<S-Tab>'] = cmp.mapping.select_prev_item(),
-        ['<Tab>'] = cmp.mapping.select_next_item(),
+        -- ['<S-Tab>'] = cmp.mapping.select_prev_item(),
+        -- ['<Tab>'] = cmp.mapping.select_next_item(),
         ['<C-d>'] = cmp.mapping.scroll_docs(-4),
         ['<C-f>'] = cmp.mapping.scroll_docs(4),
         ['<C-Space>'] = cmp.mapping.complete(),
@@ -22,22 +22,31 @@ cmp.setup{
     },
 
     sources = {
-        { name = 'buffer' },
+        { name = 'buffer', keyword_lenght = 5 },
         { name = 'path' },
         { name = 'vsnip' },
         { name = 'nvim_lsp' },
-        { name = 'orgmode' }
+        -- { name = 'orgmode' }
     },
 
     formatting = {
-        format = function(entry, vim_item)
-            vim_item.kind = lspkind.presets.default[vim_item.kind]
-            return vim_item
-        end
+        format = lspkind.cmp_format {
+            with_text = true,
+            menu = {
+                buffer = "[buf]",
+                nvim_lsp = "[LSP]",
+                path = "[path]",
+                vsnip = "[snip]",
+            },
+        },
     },
 
     documentation = {
         border = {'╭', '─', '╮', '│',  '╯', '─', '╰', '│'}
+    },
+    
+    experimental = {
+        ghost_text = true,
     }
 }
 -- TODO: fix this

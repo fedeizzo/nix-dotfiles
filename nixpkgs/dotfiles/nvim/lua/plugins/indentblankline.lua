@@ -1,6 +1,5 @@
-vim.opt.listchars = {
-    eol = "↴",
-}
+vim.opt.list = true
+vim.opt.listchars:append("eol:↴")
 
 require("indent_blankline").setup {
     buftype_exclude = {"terminal", "dashboard", "packer", "help"},
