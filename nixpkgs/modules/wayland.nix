@@ -21,12 +21,16 @@
     imv
     # screenshot for flameshoot
     grim
+    slurp
+    swappy
     # tray
     libappindicator
     # xdotool replacement
     ydotool
     # devour replacement
     swayhide
+    # autotiling
+    autotiling
   ];
   programs.kitty = {
     enable = true;
@@ -57,5 +61,38 @@
   };
   xdg.configFile."sway" = {
     source = ../dotfiles/sway;
+  };
+  xdg.configFile."environment.d/envvars.conf" = {
+    text = ''
+      XDG_CURRENT_DESKTOP=sway
+      XDG_RUNTIME_DIR=/run/user/$YOUR_USER_ID
+      WAYLAND_DISPLAY=wayland-1
+      SDL_VIDEODRIVER=wayland
+      _JAVA_AWT_WM_NONREPARENTING=1
+      QT_QPA_PLATFORM=wayland
+      XDG_CURRENT_DESKTOP=sway
+      XDG_SESSION_DESKTOP=sway
+      MOZ_ENABLE_WAYLAND = "1"
+      XDG_CURRENT_DESKTOP=Unity
+      XDG_SESSION_TYPE = "wayland"
+      GTK_USE_PORTAL=0
+    '';
+  };
+  home.file.".pam_environmet" = {
+    text = "XDG_CURRENT_DESKTOP DEFAULT=sway";
+  };
+  home.file.".xprofile" = {
+    text = ''
+      export SDL_VIDEODRIVER=wayland
+      export _JAVA_AWT_WM_NONREPARENTING=1
+      export QT_QPA_PLATFORM=wayland
+      export XDG_CURRENT_DESKTOP=sway
+      export XDG_SESSION_DESKTOP=sway
+      export MOZ_ENABLE_WAYLAND = "1"
+      export XDG_CURRENT_DESKTOP=Unity
+      export XDG_SESSION_TYPE = "wayland"
+      export GTK_USE_PORTAL=0
+    '';
+    executable = true;
   };
 }

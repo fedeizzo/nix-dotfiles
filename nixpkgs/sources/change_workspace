@@ -1,3 +1,6 @@
 #!/usr/bin/env bash
 selected_workspace=$(swaymsg -t get_workspaces -r | jq -M '.[] | .name' | tr -d '"' | bemenu -p 'change' --tf '#a3be8c' --tb '#2e3440' --nb '#2e3440' --fb '#2e3440' --hb '#2e3440' --hf '#d08770')
+current_output=$(swaymsg -t get_outputs --raw | jq '. | map(select(.focused == true)) | .[0].name' -r)
+
+swaymsg "[workspace=${selected_workspace}]" move workspace to output "${current_output}" 
 swaymsg workspace $selected_workspace

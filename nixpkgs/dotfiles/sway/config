@@ -1,7 +1,6 @@
 set $mod Mod4
 set $menu bemenu-run --tf '#a3be8c' --tb '#2e3440' --nb '#2e3440' --fb '#2e3440' --hb '#2e3440' --hf '#d08770' | xargs swaymsg exec --
 
-default_orientation horizontal
 xwayland enable
 
 # mouse
@@ -18,12 +17,16 @@ input 1267:12572:DLL0945:00_04F3:311C_Touchpad {
 seat * hide_cursor when-typing enable
 
 # keyboard
-
 input 1:1:AT_Translated_Set_2_keyboard {
     xkb_layout us
-    xkb_variant altgr-intl
     xkb_options ctrl:swapcaps
 }
+input * {
+    xkb_variant altgr-intl
+}
+
+# monitors
+output "Sharp Corporation 0x14D1 0x00000000" pos 0 0
 
 # border and gaps
 default_border pixel 1
@@ -39,7 +42,6 @@ gaps inner 5
 # gaps top 0
 
 
-for_window [class=".*"] split toggle
 for_window [app_id="telegramdesktop"] move scratchpad, show scratchpad
 for_window [app_id="floatingkitty"] move scratchpad, show scratchpad
 
@@ -49,6 +51,7 @@ bindsym {
     $mod+Shift+f exec /home/fedeizzo/.sources/rename_workspace
     $mod+s exec /home/fedeizzo/.sources/move_to_workspace
     $mod+Shift+s exec /home/fedeizzo/.sources/move_to_workspace -m
+    $mod+tab exec /home/fedeizzo/.sources/swap_output
 }
 
 # resize mode
@@ -93,7 +96,8 @@ bindsym {
     $mod+Return exec kitty
     $mod+d exec $menu
     $mod+r mode "resize"
-    $mod+p exec flameshot gui
+    $mod+p exec grim -g "$(slurp)" - | swappy -f -
+    $mod+Shift+p exec grim -g "$(swaymsg -t get_tree | jq -r '.. | select(.pid? and .visible?) | .rect | "\(.x),\(.y) \(.width)x\(.height)"' | slurp)" - | swappy -f -
     $mod+e exec "kitty /home/fedeizzo/.sources/lfrun"
     $mod+c exec clipman pick -t bemenu --tool-args="--tf '#a3be8c' --tb '#2e3440' --nb '#2e3440' --fb '#2e3440' --hb '#2e3440' --hf '#d08770'"
     $mod+Ctrl+c exec clipman clear --all
@@ -121,10 +125,14 @@ exec swayidle -w \
         resume 'swaymsg "output * dpms on"' \
         before-sleep 'swaylock --indicator-radius 0 -i $HOME/.config/sway/lock-screen.jpg'
 exec dunst
-exec flameshot
-exec timedatectl set-ntp true
 exec kanshi
 exec kitty --class='floatingkitty'
 exec wl-paste -t text --watch clipman store
-exec_always killall swaybg; swaybg -i $HOME/.config/sway/wallpaper.png
-exec_always killall .waybar-wrapped; waybar
+exec swaybg -i $HOME/.config/sway/wallpaper.png
+exec waybar
+exec autotiling
+# fix: gtk+ applications take 20 seconds to start
+exec systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK
+exec "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
+exec hash dbus-update-activation-environment 2>/dev/null && \
+     dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK

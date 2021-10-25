@@ -140,7 +140,15 @@
       set CABAL_DIR "XDG_DATA_HOME"/.cabal
       set fbk_login_name "fizzo@fbk.eu"
       set diclub_user_name "fizzo"
-      set DI_UNIT "DSIP"
+      export SDL_VIDEODRIVER=wayland
+      export _JAVA_AWT_WM_NONREPARENTING=1
+      export QT_QPA_PLATFORM=wayland
+      export XDG_CURRENT_DESKTOP=sway
+      export XDG_SESSION_DESKTOP=sway
+      export MOZ_ENABLE_WAYLAND = "1"
+      export XDG_CURRENT_DESKTOP=Unity
+      export XDG_SESSION_TYPE = "wayland"
+      export GTK_USE_PORTAL=0
     '';
     plugins = [
       {

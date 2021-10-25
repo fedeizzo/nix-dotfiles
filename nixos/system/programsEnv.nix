@@ -40,6 +40,14 @@
       "--my-next-gpu-wont-be-nvidia"
     ];
   };
+  xdg.portal = {
+    enable = true;
+    extraPortals = with pkgs; [
+      xdg-desktop-portal-wlr
+      xdg-desktop-portal-gtk
+    ];
+    gtkUsePortal = true;
+  };
   virtualisation = {
     # docker = {
     #   enable = true;

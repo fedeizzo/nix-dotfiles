@@ -5,6 +5,6 @@ profile laptop {
 profile home {
     output eDP-1 mode 1920x1200@59.950Hz
     output eDP-1 position 0,0
-    output DP-3 mode 1920x1080@60.000Hz
-    output DP-3 position 1200,0
+    output DP-7 mode 1920x1080@60.000Hz
+    output DP-7 position 1200,0
 }
