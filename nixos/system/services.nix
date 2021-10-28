@@ -55,7 +55,6 @@ in
     enable = true;
     interval = "weekly";
   };
-  xdg.portal.enable = true;
   users.groups = {
     steamps4 = { };
   };

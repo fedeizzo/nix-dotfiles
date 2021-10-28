@@ -1,5 +1,6 @@
 set $mod Mod4
 set $menu bemenu-run --tf '#a3be8c' --tb '#2e3440' --nb '#2e3440' --fb '#2e3440' --hb '#2e3440' --hf '#d08770' | xargs swaymsg exec --
+# set $menu j4-dmenu-desktop --dmenu='bemenu --tf "#a3be8c" --tb "#2e3440" --nb "#2e3440" --fb "#2e3440" --hb "#2e3440" --hf "#d08770"' --use-xdg-de --term=kitty
 
 xwayland enable
 
@@ -42,7 +43,7 @@ gaps inner 5
 # gaps top 0
 
 
-for_window [app_id="telegramdesktop"] move scratchpad, show scratchpad
+# for_window [app_id="telegramdesktop"] move scratchpad, show scratchpad
 for_window [app_id="floatingkitty"] move scratchpad, show scratchpad
 
 # tag keybinds
@@ -87,7 +88,7 @@ bindsym {
     $mod+Shift+q kill
 
     # scratchpad
-    $mod+u exec swaymsg [app_id="telegramdesktop"] scratchpad show
+    # $mod+u exec swaymsg [app_id="telegramdesktop"] scratchpad show
     $mod+i [app_id="floatingkitty"] scratchpad show
 }
 
@@ -131,8 +132,8 @@ exec wl-paste -t text --watch clipman store
 exec swaybg -i $HOME/.config/sway/wallpaper.png
 exec waybar
 exec autotiling
+exec QT_QPA_PLATFORM=wayland-egl telegram-desktop
 # fix: gtk+ applications take 20 seconds to start
-exec systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK
-exec "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
+exec systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP
 exec hash dbus-update-activation-environment 2>/dev/null && \
-     dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK
+     dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK 

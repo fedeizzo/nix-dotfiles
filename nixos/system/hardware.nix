@@ -32,18 +32,6 @@
     enable = false;
     mediaKeys.enable = false;
   };
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    package = nixpkgs-unstable.pipewire;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    media-session = {
-      enable = true;
-      package = nixpkgs-unstable.pipewire.mediaSession;
-    };
-  };
   services.smartd = {
     enable = true;
     autodetect = true;

@@ -8,7 +8,7 @@
     name = "fedeizzo";
     isNormalUser = true;
     createHome = true;
-    extraGroups = [ "wheel" "input" "video" "bumblebee" "docker" "autologin" "users" "networkmanager" "libvirtd" "steamps4" ];
+    extraGroups = [ "wheel" "input" "video" "bumblebee" "docker" "autologin" "users" "networkmanager" "libvirtd" "audio" ];
     shell = pkgs.fish;
   };
 }

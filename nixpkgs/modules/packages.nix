@@ -32,8 +32,8 @@
         "RobotoMono"
       ];
     })
-    bitwarden
-    bitwarden-cli
+    unstable.bitwarden
+    unstable.bitwarden-cli
     brightnessctl
     firefox
     xcmenu
@@ -56,6 +56,7 @@
     gimp
     calibre
     libreoffice
+    google-chrome
   ];
 
   programs.direnv = {

@@ -4,6 +4,7 @@
   home.packages = with pkgs; [
     # dmenu replacement
     bemenu
+    j4-dmenu-desktop
     # status bar
     waybar
     # xrandr replacement
@@ -32,24 +33,6 @@
     # autotiling
     autotiling
   ];
-  programs.kitty = {
-    enable = true;
-    font.name = "JetBrains Mono";
-    font.size = 11;
-    settings = {
-      "enable_audio_bell" = "no";
-    };
-    keybindings = {
-      "alt+k" = "scroll_line_up";
-      "alt+j" =  "scroll_line_up";
-    };
-    extraConfig = ''
-      include ./nord.conf
-    '';
-  };
-  xdg.configFile."kitty/nord.conf" = {
-    source = ../dotfiles/kitty/nord.conf;
-  };
   xdg.configFile."waybar/config" = {
     source = ../dotfiles/waybar/config;
   };
@@ -72,9 +55,9 @@
       QT_QPA_PLATFORM=wayland
       XDG_CURRENT_DESKTOP=sway
       XDG_SESSION_DESKTOP=sway
-      MOZ_ENABLE_WAYLAND = "1"
+      MOZ_ENABLE_WAYLAND="1"
       XDG_CURRENT_DESKTOP=Unity
-      XDG_SESSION_TYPE = "wayland"
+      XDG_SESSION_TYPE="wayland"
       GTK_USE_PORTAL=0
     '';
   };
@@ -88,9 +71,9 @@
       export QT_QPA_PLATFORM=wayland
       export XDG_CURRENT_DESKTOP=sway
       export XDG_SESSION_DESKTOP=sway
-      export MOZ_ENABLE_WAYLAND = "1"
+      export MOZ_ENABLE_WAYLAND="1"
       export XDG_CURRENT_DESKTOP=Unity
-      export XDG_SESSION_TYPE = "wayland"
+      export XDG_SESSION_TYPE="wayland"
       export GTK_USE_PORTAL=0
     '';
     executable = true;

@@ -39,12 +39,24 @@
     extraOptions = [
       "--my-next-gpu-wont-be-nvidia"
     ];
+    extraSessionCommands = ''
+      export SDL_VIDEODRIVER=wayland
+      export _JAVA_AWT_WM_NONREPARENTING=1
+      export QT_QPA_PLATFORM=wayland
+      export XDG_CURRENT_DESKTOP=sway
+      export XDG_SESSION_DESKTOP=sway
+      export XDG_CURRENT_DESKTOP=Unity
+      export XDG_SESSION_TYPE="wayland"
+      export GTK_USE_PORTAL=0
+      test -f $HOME/.profile && source $HOME/.profile
+      export MOZ_ENABLE_WAYLAND=1
+      systemctl --user import-environment
+    '';
   };
   xdg.portal = {
     enable = true;
     extraPortals = with pkgs; [
       xdg-desktop-portal-wlr
-      xdg-desktop-portal-gtk
     ];
     gtkUsePortal = true;
   };

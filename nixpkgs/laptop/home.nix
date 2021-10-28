@@ -8,9 +8,10 @@ in
     ../modules/chat.nix
     ../modules/config.nix
     ../modules/cuda.nix
-    ../modules/email
+    # ../modules/email
     ../modules/fish.nix
     ../modules/git.nix
+    ../modules/kitty.nix
     ../modules/languages.nix
     ../modules/lf.nix
     ../modules/media.nix
@@ -20,7 +21,6 @@ in
     ../modules/picom.nix
     ../modules/qutebrowser.nix
     ../modules/services.nix
-    ../modules/st.nix
     ../modules/wayland.nix
     ../modules/xmonad.nix
     ../modules/xresources.nix

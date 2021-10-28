@@ -19,10 +19,12 @@
 
   outputs = { self, ... }@inputs:
     let
-      untable-overlay = final: prev: { unstable = inputs.nixpkgs-unstable.legacyPackages.x86_64-linux; };
+      unstable-overlay = final: prev: {
+        unstable = inputs.nixpkgs-unstable.legacyPackages.x86_64-linux;
+      };
       overlays = [
         inputs.neovim-nightly-overlay.overlay
-        untable-overlay
+        unstable-overlay
       ];
     in
     {

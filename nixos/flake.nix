@@ -28,6 +28,7 @@
           ./system/hardware.nix
           ./system/hardware-configurations/ext4.nix
           ./system/keymapTimeFont.nix
+          ./system/pipewire.nix
           ./system/networking.nix
           ./system/nixNixOS.nix
           ./system/nvidia.nix
