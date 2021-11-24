@@ -49,7 +49,6 @@
     ncdu
     thunderbird
     joypixels
-    gnome3.gnome-keyring
     libsecret
     w3m
     qgis
@@ -57,10 +56,14 @@
     calibre
     libreoffice
     google-chrome
+    rclone
+    lazygit
+    unstable.qmk
   ];
 
   programs.direnv = {
     enable = true;
     nix-direnv.enable = true;
+    nix-direnv.enableFlakes = true;
   };
 }

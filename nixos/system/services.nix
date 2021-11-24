@@ -27,11 +27,8 @@ in
         disableWhileTyping = true;
       };
     };
+    windowManager.openbox.enable = true;
 
-    windowManager.xmonad = {
-      enable = true;
-      enableContribAndExtras = true;
-    };
     # xkbOptions = "ctrl:swapcaps";
   };
   services.tlp = {
@@ -62,7 +59,8 @@ in
     enable = true;
     usePercentageForPolicy = false;
   };
-  services.gnome.gnome-keyring.enable = true;
+  services.gnome.gnome-keyring.enable = false;
+  services.flatpak.enable = true;
   services.fprintd = {
     enable = true;
     tod = {

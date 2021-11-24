@@ -4,8 +4,8 @@
   #################################
   # SECURITY
   #################################
-  security.pam.services.lightdm.enableGnomeKeyring = true;
-  security.pam.services.lightdm-greeters.enableGnomeKeyring = true;
+  security.pam.services.lightdm.enableGnomeKeyring = false;
+  security.pam.services.lightdm-greeters.enableGnomeKeyring = false;
   security.pam.services.login.fprintAuth = true;
   security.pam.services.system-local-login.fprintAuth = true;
   security.pam.services.lightdm.fprintAuth = true;

@@ -33,8 +33,8 @@ cmp.setup{
         format = lspkind.cmp_format {
             with_text = true,
             menu = {
-                buffer = "[buf]",
                 nvim_lsp = "[LSP]",
+                buffer = "[buf]",
                 path = "[path]",
                 vsnip = "[snip]",
             },

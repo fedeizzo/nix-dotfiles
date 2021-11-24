@@ -25,7 +25,6 @@ return require('packer').startup(
     use 'itchyny/vim-cursorword' -- underline same work over cursor
     use 'rhysd/accelerated-jk' -- acccelerate up and down movment
     -- use 'kshenoy/vim-signature' -- print mark on the left
-    use 'tpope/vim-commentary' -- comment easy portion of code
     use 'ggandor/lightspeed.nvim' -- easy motion between buffer
     use 'lukas-reineke/indent-blankline.nvim' -- indentation
     use 'windwp/nvim-autopairs' -- auto pairings
@@ -51,12 +50,17 @@ return require('packer').startup(
     use {'LnL7/vim-nix', ft = 'nix'}
     use {'tbastos/vim-lua', ft = 'lua'} -- 'tjdevries/nlua.nvim' TODO try this one
     use {'neovimhaskell/haskell-vim', ft = {'haskell', 'cabal'}}
-    
+
+    -- COMMENT
+    use 'terrortylor/nvim-comment'
+
     -- CODE BLOCKS
     use 'hkupty/iron.nvim'
 
+    -- TERMINAL
+    use {"akinsho/toggleterm.nvim"}
+
     -- COLORSCHEME
-    -- use 'arcticicestudio/nord-vim'
     use 'NarutoXY/nvim-highlite'
 
     -- LSP / COMLETION / DAP
@@ -80,7 +84,10 @@ return require('packer').startup(
     use 'mhartington/formatter.nvim'
     use {
       'mfussenegger/nvim-dap',
-      requires = {{'theHamsta/nvim-dap-virtual-text'}, {'rcarriga/nvim-dap-ui'}},
+      requires = {
+          {'theHamsta/nvim-dap-virtual-text'},
+          {'rcarriga/nvim-dap-ui'}
+      },
     }
 
     -- TREESITTER

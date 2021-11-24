@@ -32,7 +32,7 @@
     vim
     xorg.xinit
     virt-manager
-    # nixpkgs-unstable.river
+    nixpkgs-unstable.qmk
   ];
   programs.sway = {
     enable = true;
@@ -105,4 +105,5 @@
   programs.ssh.askPassword = "";
   programs.ccache.enable = true;
   programs.gnupg.agent.enable = true;
+  programs.gnupg.agent.pinentryFlavor = "qt";
 }

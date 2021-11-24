@@ -51,6 +51,7 @@
       docker_clean_ps = "docker rm (docker ps --filter=status=exited --filter=status=created -q)";
       scp = "rsync -Pavzhe ssh";
       hg = "kitty +kitten hyperlinked_grep";
+      colorpicker = "grim -g (slurp -p) -t ppm - | convert - -format '%[pixel:p{0,0}]' txt:-";
     };
     functions = {
       dt = {

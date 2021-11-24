@@ -27,7 +27,7 @@
     # tray
     libappindicator
     # xdotool replacement
-    ydotool
+    wtype
     # devour replacement
     swayhide
     # autotiling

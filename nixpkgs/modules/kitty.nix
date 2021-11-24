@@ -11,7 +11,7 @@
     };
     keybindings = {
       "alt+k" = "scroll_page_up";
-      "alt+j" =  "scroll_page_up";
+      "alt+j" =  "scroll_page_down";
       "ctrl+t" =  "new_tab_with_cwd";
       "ctrl+tab" =  "next_tab";
     };

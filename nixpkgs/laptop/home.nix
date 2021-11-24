@@ -22,7 +22,7 @@ in
     ../modules/qutebrowser.nix
     ../modules/services.nix
     ../modules/wayland.nix
-    ../modules/xmonad.nix
+    # ../modules/xmonad.nix
     ../modules/xresources.nix
     ../modules/zathura.nix
   ];
