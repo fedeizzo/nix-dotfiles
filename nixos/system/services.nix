@@ -27,8 +27,6 @@ in
         disableWhileTyping = true;
       };
     };
-    windowManager.openbox.enable = true;
-
     # xkbOptions = "ctrl:swapcaps";
   };
   services.tlp = {
