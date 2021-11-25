@@ -14,7 +14,6 @@
 
     # lua
     lua
-    lua-formatter
     sumneko-lua-language-server
 
     # python

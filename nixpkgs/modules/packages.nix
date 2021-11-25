@@ -36,7 +36,6 @@
     unstable.bitwarden-cli
     brightnessctl
     firefox
-    xcmenu
     jq
     keyutils
     openssh
@@ -58,7 +57,7 @@
     google-chrome
     rclone
     lazygit
-    unstable.qmk
+    # unstable.qmk
   ];
 
   programs.direnv = {
