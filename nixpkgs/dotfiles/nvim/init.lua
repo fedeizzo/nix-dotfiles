@@ -35,7 +35,6 @@ require('plugins/vim-json')
 require('plugins/vimmarkdown')
 require('plugins/vsnip')
 require('plugins/which-key')
--- require('plugins/orgmode')
 
 -- LANGUAGES SETTINGS
 require('languages/bash')

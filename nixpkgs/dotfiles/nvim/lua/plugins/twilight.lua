@@ -1,3 +1,7 @@
 require('twilight').setup {
-    tresitter = true
+    tresitter = true,
+    expand = {
+        'function',
+        'method',
+    }
 }

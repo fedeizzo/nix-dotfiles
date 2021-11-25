@@ -37,19 +37,9 @@ return require('packer').startup(
     --       captures = {'comment'},  -- set to {} to spellcheck everything
     --     } end,
     -- }
-    use 'folke/twilight.nvim' -- highlight portion of code
 
-    -- LANGUAGE SUPPORT
-    use {'elzr/vim-json', ft = 'json'}
+    -- MARKDOWN
     use {'SidOfc/mkdx', ft = 'markdown'}
-    use {'alaviss/nim.nvim', ft = 'nim'}
-    use {'pangloss/vim-javascript', ft = 'javascript'}
-    use {'mxw/vim-jsx', ft = 'javascript'}
-    use {'HerringtonDarkholme/yats.vim', ft = 'typescript'}
-    use {'cespare/vim-toml', ft = 'toml'}
-    use {'LnL7/vim-nix', ft = 'nix'}
-    use {'tbastos/vim-lua', ft = 'lua'} -- 'tjdevries/nlua.nvim' TODO try this one
-    use {'neovimhaskell/haskell-vim', ft = {'haskell', 'cabal'}}
 
     -- COMMENT
     use 'numToStr/Comment.nvim'
@@ -103,6 +93,7 @@ return require('packer').startup(
         {'romgrk/nvim-treesitter-context'},
         {'p00f/nvim-ts-rainbow'},
         {'SmiteshP/nvim-gps'},
+        {'folke/twilight.nvim'},
       },
     }
 
