@@ -52,7 +52,7 @@ return require('packer').startup(
     use {'neovimhaskell/haskell-vim', ft = {'haskell', 'cabal'}}
 
     -- COMMENT
-    use 'terrortylor/nvim-comment'
+    use 'numToStr/Comment.nvim'
 
     -- CODE BLOCKS
     use 'hkupty/iron.nvim'
@@ -62,6 +62,9 @@ return require('packer').startup(
 
     -- COLORSCHEME
     use 'NarutoXY/nvim-highlite'
+
+    -- KEYBINDS HELPER
+    use 'folke/which-key.nvim'
 
     -- LSP / COMLETION / DAP
     use 'neovim/nvim-lspconfig'
@@ -93,11 +96,13 @@ return require('packer').startup(
     -- TREESITTER
     use {
       'nvim-treesitter/nvim-treesitter',
-      commit = 'ecd9efd48611c42d7e51b50028788bf2b74b5c91',
       requires = {
         {'nvim-treesitter/nvim-treesitter-refactor'},
+        {'nvim-treesitter/nvim-treesitter-textobjects'},
+        {'nvim-treesitter/nvim-tree-docs'},
         {'romgrk/nvim-treesitter-context'},
         {'p00f/nvim-ts-rainbow'},
+        {'SmiteshP/nvim-gps'},
       },
     }
 

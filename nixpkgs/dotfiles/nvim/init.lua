@@ -12,6 +12,7 @@ require('scripts/notes-manager')
 
 -- PLUGINS SETTINGS
 require('plugins/accelerated')
+require('plugins/comment')
 require('plugins/dashboard')
 require('plugins/diagnostic')
 require('plugins/formatter')
@@ -33,6 +34,7 @@ require('plugins/twilight')
 require('plugins/vim-json')
 require('plugins/vimmarkdown')
 require('plugins/vsnip')
+require('plugins/which-key')
 -- require('plugins/orgmode')
 
 -- LANGUAGES SETTINGS
