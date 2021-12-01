@@ -65,5 +65,7 @@ require'nvim-treesitter.configs'.setup {
     },
   },
 
-  tree_docs = { enable = true },
+  tree_docs = {
+      enable = true,
+  }
 }

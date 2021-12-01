@@ -52,6 +52,7 @@
       scp = "rsync -Pavzhe ssh";
       hg = "kitty +kitten hyperlinked_grep";
       colorpicker = "grim -g (slurp -p) -t ppm - | convert - -format '%[pixel:p{0,0}]' txt:-";
+      lz = "lazygit";
     };
     functions = {
       dt = {
