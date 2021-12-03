@@ -34,6 +34,8 @@ vim.opt.spell = false
 -- COLORSCHEME
 vim.cmd [[colorscheme nord]]
 vim.opt.termguicolors = true
+-- AUTOCHANGE WHILE SUBSTITUING
+vim.opt.inccommand = "nosplit"
 
 vim.cmd [[filetype plugin indent on]]
 vim.bo.omnifunc = "v:lua.vim.lsp.omnifunc"
