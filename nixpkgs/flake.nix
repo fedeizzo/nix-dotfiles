@@ -2,18 +2,18 @@
   description = "Home manager flake configuration";
 
   # inputs.nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-  inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-21.05";
+  inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-21.11";
   inputs.nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
   inputs.flake-utils.url = "github:numtide/flake-utils";
   # inputs.neovim-nightly-overlay.url = "github:mjlbach/neovim-nightly-overlay";
   inputs.neovim-nightly-overlay = {
-    url = "github:neovim/neovim/release-0.5?dir=contrib";
+    url = "github:neovim/neovim/release-0.6?dir=contrib";
     inputs.nixpkgs.follows = "nixpkgs";
   };
 
   inputs.home-manager = {
-    url = "github:rycee/home-manager/release-21.05";
+    url = "github:rycee/home-manager/release-21.11";
     inputs.nixpkgs.follows = "nixpkgs";
   };
 
@@ -41,6 +41,7 @@
           system = "x86_64-linux";
           homeDirectory = "/home/fedeizzo";
           username = "fedeizzo";
+          stateVersion = "21.11";
         };
       };
       linux = self.homeConfigurations.linux.activationPackage;

@@ -27,7 +27,7 @@ in
     ../modules/zathura.nix
   ];
 
-  home.stateVersion = "20.09";
+  home.stateVersion = "21.11";
   home.homeDirectory = "/home/fedeizzo";
   home.username = "fedeizzo";
   nixpkgs.config = import ./config.nix;

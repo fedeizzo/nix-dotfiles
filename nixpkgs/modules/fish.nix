@@ -98,7 +98,7 @@
       "ssh" = "TERM=xterm-256color ssh";
       "gh-md-toc" = "gh-md-toc --no-backup";
     };
-    promptInit = ''
+    interactiveShellInit = ''
       eval (starship init fish)
       fish_vi_key_bindings
       set -U __done_min_cmd_duration 120000
@@ -143,15 +143,15 @@
       set CABAL_DIR "XDG_DATA_HOME"/.cabal
       set fbk_login_name "fizzo@fbk.eu"
       set diclub_user_name "fizzo"
-      export SDL_VIDEODRIVER=wayland
-      export _JAVA_AWT_WM_NONREPARENTING=1
-      export QT_QPA_PLATFORM=wayaland
-      export XDG_CURRENT_DESKTOP=sway
-      export XDG_SESSION_DESKTOP=sway
-      export MOZ_ENABLE_WAYLAND = "1"
-      export XDG_CURRENT_DESKTOP=Unity
-      export XDG_SESSION_TYPE = "wayland"
-      export GTK_USE_PORTAL=0
+      set -x SDL_VIDEODRIVER "wayland"
+      set -x _JAVA_AWT_WM_NONREPARENTING 1
+      set -x QT_QPA_PLATFORM "wayaland"
+      set -x XDG_CURRENT_DESKTOP "sway"
+      set -x XDG_SESSION_DESKTOP "sway"
+      set -x MOZ_ENABLE_WAYLAND "1"
+      set -x XDG_CURRENT_DESKTOP "Unity"
+      set -x XDG_SESSION_TYPE "wayland"
+      set -x GTK_USE_PORTAL 0
     '';
     plugins = [
       {
