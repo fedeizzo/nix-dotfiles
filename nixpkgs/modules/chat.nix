@@ -3,7 +3,7 @@
 {
   home.packages = with pkgs; [
     slack
-    tdesktop
+    unstable.tdesktop
     teams
     zoom-us
     discord

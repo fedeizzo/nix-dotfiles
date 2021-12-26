@@ -53,7 +53,7 @@
     qgis
     gimp
     calibre
-    libreoffice
+    # libreoffice
     google-chrome
     rclone
     lazygit

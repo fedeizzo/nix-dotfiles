@@ -17,8 +17,8 @@
     keybindings = {
       o = "$(dragon -a -x \"$f\")";
       gt = "cd /tmp";
-      f = "betterFind";
-      F = "fzf_jump";
+      F = "betterFind";
+      f = "fzf_jump";
       m = null;
       md = "mkdir";
     };

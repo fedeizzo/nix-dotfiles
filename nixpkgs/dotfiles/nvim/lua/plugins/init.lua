@@ -40,6 +40,8 @@ return require('packer').startup(
 
     -- MARKDOWN
     use {'SidOfc/mkdx', ft = 'markdown'}
+    -- LATEX
+    use {'lervag/vimtex', ft = 'tex'}
 
     -- COMMENT
     use 'numToStr/Comment.nvim'
@@ -100,6 +102,7 @@ return require('packer').startup(
     -- TELESCOPE
     use {
       'nvim-telescope/telescope.nvim',
+      commit = '80cdb00b221f69348afc4fb4b701f51eb8dd3120',
       requires = {{'nvim-lua/popup.nvim'}, {'nvim-lua/plenary.nvim'}},
     }
   end
