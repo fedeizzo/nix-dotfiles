@@ -38,3 +38,8 @@ Host dicam
 Host aichallenge
         Hostname hitvmiac-07.northeurope.cloudapp.azure.com
         User azureadmin
+Host fbkdisk
+        Hostname 192.168.40.125
+        User user
+        ProxyJump sshFbk
+        IdentityFile ~/.ssh/fizzo@fbk.eu
