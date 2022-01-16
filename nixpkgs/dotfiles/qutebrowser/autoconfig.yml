@@ -19,6 +19,7 @@ settings:
     https://accounts.google.com/*: Mozilla/5.0 (X11; Linux x86_64; rv:57.0) Gecko/20100101
       Firefox/57.0
   content.notifications.enabled:
+    https://www.chess.com: false
     https://www.reddit.com: false
     https://www.youtube.com: false
   content.register_protocol_handler:

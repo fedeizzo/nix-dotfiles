@@ -145,7 +145,7 @@
       set diclub_user_name "fizzo"
       set -x SDL_VIDEODRIVER "wayland"
       set -x _JAVA_AWT_WM_NONREPARENTING 1
-      set -x QT_QPA_PLATFORM "wayaland"
+      set -x QT_QPA_PLATFORM "wayland"
       set -x XDG_CURRENT_DESKTOP "sway"
       set -x XDG_SESSION_DESKTOP "sway"
       set -x MOZ_ENABLE_WAYLAND "1"

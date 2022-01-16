@@ -58,6 +58,7 @@
     rclone
     lazygit
     # unstable.qmk
+    chessx
   ];
 
   programs.direnv = {

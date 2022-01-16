@@ -8,7 +8,7 @@
   inputs.flake-utils.url = "github:numtide/flake-utils";
   # inputs.neovim-nightly-overlay.url = "github:mjlbach/neovim-nightly-overlay";
   inputs.neovim-nightly-overlay = {
-    url = "github:neovim/neovim/release-0.6?dir=contrib";
+    url = "github:neovim/neovim/nightly?dir=contrib";
     inputs.nixpkgs.follows = "nixpkgs";
   };
 
