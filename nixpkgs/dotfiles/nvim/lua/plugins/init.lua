@@ -85,6 +85,14 @@ return require('packer').startup(
       },
     }
 
+    -- DIAGNOSTIC
+    use "https://git.sr.ht/~whynothugo/lsp_lines.nvim"
+    use {
+      "folke/trouble.nvim",
+      requires = "kyazdani42/nvim-web-devicons",
+    }
+    use 'sidebar-nvim/sidebar.nvim'
+
     -- TREESITTER
     use {
       'nvim-treesitter/nvim-treesitter',
