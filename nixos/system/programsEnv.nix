@@ -25,7 +25,6 @@
   environment.systemPackages = with pkgs; [
     bc
     curl
-    dunst
     haskellPackages.xmobar
     killall
     libnotify
@@ -41,6 +40,7 @@
     # docker-compose
     podman
     podman-compose
+    nvidia-podman
     git
     highlight
     lm_sensors

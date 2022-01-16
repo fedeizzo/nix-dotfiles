@@ -11,9 +11,8 @@ in
     enable = true;
     autorun = true;
     desktopManager.default = null;
-    displayManager.autoLogin = {
+    displayManager.lightdm = {
       enable = true;
-      user = "fedeizzo";
     };
     layout = "us";
     xkbVariant = "altgr-intl";

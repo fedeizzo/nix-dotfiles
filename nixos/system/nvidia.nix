@@ -21,6 +21,7 @@ in
     intelBusId = lib.mkDefault "PCI:0:2:0";
     nvidiaBusId = lib.mkDefault "PCI:1:0:0";
   };
+  hardware.nvidia.modesetting.enable = true;
   services.xserver.videoDrivers = [ "nvidia" ];
   #################################
   # NVIDIA GPU OFF
