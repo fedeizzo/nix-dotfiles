@@ -95,6 +95,9 @@ bindsym {
     # scratchpad
     # $mod+u exec swaymsg [app_id="telegramdesktop"] scratchpad show
     $mod+i [app_id="floatingkitty"] scratchpad show
+
+    # notification center
+    $mod+Shift+n exec swaync-client -t -sw
 }
 
 # keybinds
@@ -131,7 +134,7 @@ exec swayidle -w \
         timeout 600 'swaymsg "output * dpms off"' \
         resume 'swaymsg "output * dpms on"' \
         before-sleep 'swaylock --indicator-radius 0 -i $HOME/.config/sway/lock-screen.jpg'
-exec dunst
+exec swaync
 exec kanshi
 exec kitty --class='floatingkitty'
 exec wl-paste -t text --watch clipman store
@@ -140,7 +143,6 @@ exec waybar
 exec autotiling
 exec QT_QPA_PLATFORM=wayland-egl telegram-desktop
 exec obsidian
-exec swaylock --indicator-radius 0 -i $HOME/.config/sway/lock-screen.jpg
 # fix: gtk+ applications take 20 seconds to start
 exec systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP
 exec hash dbus-update-activation-environment 2>/dev/null && \

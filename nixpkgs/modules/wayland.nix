@@ -32,6 +32,8 @@
     swayhide
     # autotiling
     autotiling
+    # notification center
+    swaync
   ];
   xdg.configFile."waybar/config" = {
     source = ../dotfiles/waybar/config;
