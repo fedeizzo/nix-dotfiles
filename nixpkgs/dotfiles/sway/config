@@ -49,7 +49,7 @@ for_window [class="Microsoft Teams - Preview"] move container to workspace "team
 for_window [app_id="floatingkitty"] move scratchpad, show scratchpad
 for_window [app_id="org.qutebrowser.qutebrowser"] inhibit_idle fullscreen
 for_window [app_id="firefox"] inhibit_idle fullscreen
-
+for_window [app_id="anki"] floating enable
 
 # tag keybinds
 bindsym {

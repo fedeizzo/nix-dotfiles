@@ -19,6 +19,7 @@ require('telescope').setup {
       '%.qpj$',
       '%.prj$',
       '%.cpg$',
+      '.ccls-cache',
     },
   },
 }
