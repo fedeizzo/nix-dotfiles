@@ -192,4 +192,5 @@
       }
     ];
   };
+  # xdg.configFile."fish/conf.d/sway.fish".source = ../dotfiles/fish/conf.d/sway.fish;
 }
