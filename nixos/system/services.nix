@@ -11,14 +11,16 @@ in
     enable = true;
     autorun = true;
     desktopManager.default = null;
-    displayManager.lightdm = {
+    displayManager.lightdm.enable = false;
+    displayManager.sddm = {
       enable = true;
     };
+    displayManager.gdm.enable = false;
     layout = "us";
     xkbVariant = "altgr-intl";
     libinput = {
       enable = true;
-      
+
       touchpad = {
         tapping = true;
         horizontalScrolling = true;
