@@ -33,6 +33,8 @@ backup() {
         $HOME/uni \
         $HOME/personalProject \
         $XDG_DATA_HOME/Anki2 \
+        $XDG_DATA_HOME/fish/fish_history \
+        $XDG_DATA_HOME/z/data \
         $HOME/zettelkasten
     backup_exit=$?
 
