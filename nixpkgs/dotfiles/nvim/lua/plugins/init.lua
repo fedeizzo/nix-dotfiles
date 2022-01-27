@@ -14,9 +14,11 @@ vim.cmd [[packadd packer.nvim]]
 
 return require('packer').startup(
   function()
-    use {'wbthomason/packer.nvim', opt = true}
-    -- UTILITY
-    use 'ryanoasis/vim-devicons' -- icon support
+    use {
+        'wbthomason/packer.nvim',
+        event = "VimEnter",
+        opt = true
+    }
     use 'kyazdani42/nvim-web-devicons' -- icon support
     use {
       'hoob3rt/lualine.nvim', -- status line
@@ -24,19 +26,11 @@ return require('packer').startup(
     }
     use 'itchyny/vim-cursorword' -- underline same work over cursor
     use 'rhysd/accelerated-jk' -- acccelerate up and down movment
-    -- use 'kshenoy/vim-signature' -- print mark on the left
     use 'ggandor/lightspeed.nvim' -- easy motion between buffer
-    use 'lukas-reineke/indent-blankline.nvim' -- indentation
+    use 'lukas-reineke/indent-blankline.nvim'
     use 'windwp/nvim-autopairs' -- auto pairings
     use 'glepnir/dashboard-nvim' -- start page
     use 'lewis6991/gitsigns.nvim' -- git
-    -- use {
-    --   'lewis6991/spellsitter.nvim', -- humant lang spell
-    --   config = function() require'spellsitter'.setup {
-    --       hl = 'SpellBad',
-    --       captures = {'comment'},  -- set to {} to spellcheck everything
-    --     } end,
-    -- }
 
     -- MARKDOWN
     use {'SidOfc/mkdx', ft = 'markdown'}
@@ -46,20 +40,22 @@ return require('packer').startup(
     -- COMMENT
     use 'numToStr/Comment.nvim'
 
-    -- CODE BLOCKS
-    use 'hkupty/iron.nvim'
-
-    -- TERMINAL
-    use {"akinsho/toggleterm.nvim"}
-
     -- COLORSCHEME
     use 'NarutoXY/nvim-highlite'
 
     -- KEYBINDS HELPER
     use 'folke/which-key.nvim'
 
+    -- FORMATTER
+    use 'mhartington/formatter.nvim'
+
     -- LSP / COMLETION / DAP
     use 'neovim/nvim-lspconfig'
+    use {
+      "ray-x/lsp_signature.nvim",
+      after = "nvim-lspconfig",
+    }
+    use 'nvim-lua/lsp-status.nvim'
     use {
       'hrsh7th/nvim-cmp',
       requires = {
@@ -75,8 +71,6 @@ return require('packer').startup(
         {'onsails/lspkind-nvim'},
       },
     }
-    use 'nvim-lua/lsp-status.nvim'
-    use 'mhartington/formatter.nvim'
     use {
       'mfussenegger/nvim-dap',
       requires = {
@@ -91,7 +85,6 @@ return require('packer').startup(
       "folke/trouble.nvim",
       requires = "kyazdani42/nvim-web-devicons",
     }
-    use 'sidebar-nvim/sidebar.nvim'
 
     -- TREESITTER
     use {
@@ -110,7 +103,6 @@ return require('packer').startup(
     -- TELESCOPE
     use {
       'nvim-telescope/telescope.nvim',
-      commit = '80cdb00b221f69348afc4fb4b701f51eb8dd3120',
       requires = {{'nvim-lua/popup.nvim'}, {'nvim-lua/plenary.nvim'}},
     }
   end

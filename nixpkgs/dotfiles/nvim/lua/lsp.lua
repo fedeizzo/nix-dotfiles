@@ -1,6 +1,13 @@
 local M = {}
 
 M.on_attach = function(client, bufnr)
+  require "lsp_signature".on_attach({
+    bind = true,
+    handler_opts = {
+      border = "rounded",
+      hint_prefix = " ",
+    }
+  }, bufnr)
   local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
   local function buf_set_option(...) vim.api.nvim_buf_set_option(bufnr, ...) end
 

@@ -3,8 +3,6 @@ local lspkind = require'lspkind'
 
 cmp.setup{
     mapping = {
-        -- ['<S-Tab>'] = cmp.mapping.select_prev_item(),
-        -- ['<Tab>'] = cmp.mapping.select_next_item(),
         ['<C-d>'] = cmp.mapping.scroll_docs(-4),
         ['<C-f>'] = cmp.mapping.scroll_docs(4),
         ['<C-Space>'] = cmp.mapping.complete(),
@@ -49,27 +47,6 @@ cmp.setup{
         ghost_text = true,
     }
 }
--- TODO: fix this
--- vim.api.nvim_exec([[
---     autocmd FileType lua lua require'cmp'.setup.buffer {
---     \    sources = {
---     \        { name = 'nvim_lua'},
---     \        { name = 'buffer' },
---     \        { name = 'path' },
---     \        { name = 'vsnip' },
---     \        { name = 'nvim_lsp' }
---     \    },
---     \}]], false
--- )
--- vim.api.nvim_exec([[
---     autocmd FileType tex tex require'cmp'.setup.buffer {
---     \    sources = {
---     \        { name = 'latex_symbols'},
---     \        { name = 'path' },
---     \    },
---     \ }
---   ]], false
--- )
 lspkind.init({
     with_text = true,
     preset = 'codicons',
