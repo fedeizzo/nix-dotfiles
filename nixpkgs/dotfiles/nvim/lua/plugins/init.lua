@@ -49,6 +49,10 @@ return require('packer').startup(
     -- FORMATTER
     use 'mhartington/formatter.nvim'
 
+    -- FENNEL
+    use 'Olical/aniseed'
+    use 'Olical/conjure'
+
     -- LSP / COMLETION / DAP
     use 'neovim/nvim-lspconfig'
     use {
@@ -99,6 +103,7 @@ return require('packer').startup(
         {'folke/twilight.nvim'},
       },
     }
+    use 'nvim-treesitter/playground'
 
     -- TELESCOPE
     use {

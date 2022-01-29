@@ -49,5 +49,9 @@
     nixpkgs-fmt
     nixpkgs-lint
     rnix-lsp
+
+    # fennel
+    fennel
+    clojure-lsp
   ];
 }
