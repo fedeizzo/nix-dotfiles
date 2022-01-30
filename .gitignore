@@ -2,3 +2,5 @@ nixpkgs/result
 nixpkgs/config.nix
 .ccls-cache
 **/.ccls-cache
+.lsp
+.clj-kondo
