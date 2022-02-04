@@ -21,7 +21,7 @@
     python39
     python39Packages.debugpy
     python39Packages.ipython
-    nodePackages.pyright
+    unstable.nodePackages.pyright
 
     # bash
     nodePackages.bash-language-server
