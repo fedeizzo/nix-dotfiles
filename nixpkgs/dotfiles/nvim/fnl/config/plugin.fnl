@@ -20,7 +20,8 @@
   nil)
 
 (use
-  ;plugin manager
+ "/home/fedeizzo/personalProject/nvim-printer" {}
+ ;plugin manager
  :wbthomason/packer.nvim {:event :VimEnter}
  :kyazdani42/nvim-web-devicons {}
  ;acccelerate up and down movment
