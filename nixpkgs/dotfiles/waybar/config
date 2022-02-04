@@ -2,17 +2,13 @@
     "position": "top", 
     "height": 14,
     "modules-left": ["sway/workspaces"],
-    "modules-right": ["cpu", "temperature", "memory", "pulseaudio", "network", "battery", "clock", "custom/power", "tray"],
+    "modules-right": ["cpu", "temperature", "memory", "pulseaudio", "network", "battery", "clock", "tray"],
     // Modules configuration
 	"sway/workspaces": {
 		"disable-scroll": true,
 		"all-outputs": false,
 		"format": "{name}",
      },
-	"custom/power": {
-		"format": "",
-		"on-click": "power_management"
-	},
     "temperature": {
         "thermal-zone": 7,
         "critical-threshold": 80,

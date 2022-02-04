@@ -90,7 +90,7 @@ bindsym {
     $mod+space fullscreen toggle
 
     # close
-    $mod+Shift+q kill
+    $mod+q kill
 
     # scratchpad
     # $mod+u exec swaymsg [app_id="telegramdesktop"] scratchpad show
