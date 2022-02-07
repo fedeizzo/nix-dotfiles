@@ -26,6 +26,8 @@
  :kyazdani42/nvim-web-devicons {}
  ;acccelerate up and down movment
  :rhysd/accelerated-jk {:mod :accelerated}
+ ;highlight same word under cursor
+ :itchyny/vim-cursorword {}
  ;easy motion between buffer
  :ggandor/lightspeed.nvim {}
  ;vertical line for indentation

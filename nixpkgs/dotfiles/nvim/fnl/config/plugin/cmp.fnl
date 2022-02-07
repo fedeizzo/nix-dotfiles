@@ -7,7 +7,7 @@
 (defn snippet-function [args]
   (nvim.fn.vsnip#anonymous args.body))
 
-(lspkind.init {:with_text true
+(lspkind.init {:mode :symbol_text
                :preset :codicons
                :symbol_map {:Text ""
                             :Method ""
@@ -46,7 +46,7 @@
                        {:name  :nvim_lsp}]
             :snippet {:expand snippet-function}
             :formatting {:format
-                         (lspkind.cmp_format {:with_text true
+                         (lspkind.cmp_format {:mode :symbol_text
                                               :menu {:nvim_lsp "[LSP]"
                                                      :buffer "[buf]"
                                                      :path "[path]"
