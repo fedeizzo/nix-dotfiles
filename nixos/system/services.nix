@@ -75,4 +75,8 @@ in
   # services.udev.extraRules = ''
   #   KERNEL=="card0", SUBSYSTEM=="drm", ENV{DISPLAY}=":0", ENV{XAUTHORITY}="/home/fedeizzo/.Xauthority", RUN+="${hdmiEventHandler}/bin/hdmiEventHandler ${pkgs.xorg.xrandr}"
   # '';
+  # services.emacs = {
+  #   package = pkgs.emacsPgtkGcc;
+  #   enable = true;
+  # };
 }

@@ -10,7 +10,7 @@
     # haskell
     # cabal-install
     # haskellPackages.haskell-language-server
-    haskellPackages.ormolu
+    # haskellPackages.ormolu
 
     # lua
     lua
@@ -21,6 +21,7 @@
     python39
     python39Packages.debugpy
     python39Packages.ipython
+    python39Packages.pylint
     unstable.nodePackages.pyright
 
     # bash
@@ -40,10 +41,10 @@
     rustfmt
 
     # latex
-    # texlive.combined.scheme-full
+    texlive.combined.scheme-full
 
-    # note taking
-    neuron-notes
+    # plot
+    gnuplot
 
     # nix
     nixpkgs-fmt

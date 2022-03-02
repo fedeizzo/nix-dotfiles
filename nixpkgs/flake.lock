@@ -1,5 +1,20 @@
 {
   "nodes": {
+    "emacs-overlay": {
+      "locked": {
+        "lastModified": 1645953123,
+        "narHash": "sha256-Be06ikbfQTuRwsU6nxNbMSvSUOzmGzDOLBKXFMekrcA=",
+        "owner": "nix-community",
+        "repo": "emacs-overlay",
+        "rev": "058e38892484c1ab517c890b0aaee5d53565a494",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "emacs-overlay",
+        "type": "github"
+      }
+    },
     "flake-utils": {
       "locked": {
         "lastModified": 1642700792,
@@ -48,6 +63,24 @@
         "owner": "rycee",
         "ref": "release-21.11",
         "repo": "home-manager",
+        "type": "github"
+      }
+    },
+    "naersk": {
+      "inputs": {
+        "nixpkgs": "nixpkgs_2"
+      },
+      "locked": {
+        "lastModified": 1629707199,
+        "narHash": "sha256-sGxlmfp5eXL5sAMNqHSb04Zq6gPl+JeltIZ226OYN0w=",
+        "owner": "nmattia",
+        "repo": "naersk",
+        "rev": "df71f5e4babda41cd919a8684b72218e2e809fa9",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nmattia",
+        "repo": "naersk",
         "type": "github"
       }
     },
@@ -107,13 +140,50 @@
         "type": "github"
       }
     },
+    "nixpkgs_2": {
+      "locked": {
+        "lastModified": 1630696047,
+        "narHash": "sha256-0DJsF291VvAEX7u6vJt8xA13RS0i5aUTjGKMEDohHdg=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "bb1058f1f08b253fb65a2a4a5ca33d8c1632bb98",
+        "type": "github"
+      },
+      "original": {
+        "id": "nixpkgs",
+        "type": "indirect"
+      }
+    },
     "root": {
       "inputs": {
+        "emacs-overlay": "emacs-overlay",
         "flake-utils": "flake-utils",
         "home-manager": "home-manager",
         "neovim-nightly-overlay": "neovim-nightly-overlay",
         "nixpkgs": "nixpkgs",
-        "nixpkgs-unstable": "nixpkgs-unstable"
+        "nixpkgs-unstable": "nixpkgs-unstable",
+        "wayplover": "wayplover"
+      }
+    },
+    "wayplover": {
+      "inputs": {
+        "naersk": "naersk",
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1642444319,
+        "narHash": "sha256-Qzu1jmTiss5CBZb4OYxNXKHFQV6OdtPIJAmjCvUR98g=",
+        "owner": "TravisDavis-ops",
+        "repo": "wayplover",
+        "rev": "675159a9d328263eb56aa058fdc5919089cae515",
+        "type": "github"
+      },
+      "original": {
+        "owner": "TravisDavis-ops",
+        "repo": "wayplover",
+        "type": "github"
       }
     }
   },

@@ -19,6 +19,7 @@
       pkgs.joypixels
       pkgs.symbola
       pkgs.jetbrains-mono
+      pkgs.emacs-all-the-icons-fonts
     ];
     fontconfig = {
       defaultFonts = {

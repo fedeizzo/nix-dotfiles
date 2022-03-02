@@ -11,6 +11,14 @@
     url = "github:neovim/neovim/nightly?dir=contrib";
     inputs.nixpkgs.follows = "nixpkgs";
   };
+  inputs.emacs-overlay = {
+    url = "github:nix-community/emacs-overlay";
+    inputs.nixpkgs.follows = "nixpkgs";
+  };
+  inputs.wayplover = {
+    url = "github:TravisDavis-ops/wayplover";
+    inputs.nixpkgs.follows = "nixpkgs";
+  };
 
   inputs.home-manager = {
     url = "github:rycee/home-manager/release-21.11";
@@ -24,6 +32,7 @@
       };
       overlays = [
         inputs.neovim-nightly-overlay.overlay
+        inputs.emacs-overlay.overlay
         unstable-overlay
       ];
     in
@@ -37,6 +46,9 @@
               imports = [
                 ./laptop/home.nix
               ];
+              # home.packages = [
+              #   wayplover.defaultPackage
+              # ];
             };
           system = "x86_64-linux";
           homeDirectory = "/home/fedeizzo";

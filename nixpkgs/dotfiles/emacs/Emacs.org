@@ -1,0 +1,913 @@
+#+title: Emacs configuratin
+#+PROPERTY: header-args:emacs-lisp :tangle ~/.config/emacs/init.el
+
+* UI
+** Hiding elements
+#+begin_src emacs-lisp
+  (setq inhibit-startup-message t)
+  (setq use-file-dialog nil)
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1)
+  (menu-bar-mode -1)
+  (tooltip-mode -1)
+  (setq visible-bell t)
+#+end_src
+** Font
+#+begin_src emacs-lisp
+  (set-face-attribute 'default nil :font "JetBrains Mono" :weight 'normal :height 105)
+  (set-face-attribute 'fixed-pitch nil :font "JetBrains Mono" :weight 'normal :height 105)
+  (set-face-attribute 'variable-pitch nil :font "JetBrains Mono" :height 105 :weight 'normal)
+  (use-package ligature
+    :load-path "~/.config/emacs/ligature.el"
+    :config
+    ;; Enable all JetBrains Mono ligatures in programming modes
+    (ligature-set-ligatures 'prog-mode '("-|" "-~" "---" "-<<" "-<" "--" "->" "->>" "-->" "///" "/=" "/=="
+                                         "/>" "//" "/*" "*>" "***" "*/" "<-" "<<-" "<=>" "<=" "<|" "<||"
+                                         "<|||" "<|>" "<:" "<>" "<-<" "<<<" "<==" "<<=" "<=<" "<==>" "<-|"
+                                         "<<" "<~>" "<=|" "<~~" "<~" "<$>" "<$" "<+>" "<+" "</>" "</" "<*"
+                                         "<*>" "<->" "<!--" ":>" ":<" ":::" "::" ":?" ":?>" ":=" "::=" "=>>"
+                                         "==>" "=/=" "=!=" "=>" "===" "=:=" "==" "!==" "!!" "!=" ">]" ">:"
+                                         ">>-" ">>=" ">=>" ">>>" ">-" ">=" "&&&" "&&" "|||>" "||>" "|>" "|]"
+                                         "|}" "|=>" "|->" "|=" "||-" "|-" "||=" "||" ".." ".?" ".=" ".-" "..<"
+                                         "..." "+++" "+>" "++" "[||]" "[<" "[|" "{|" "??" "?." "?=" "?:" "##"
+                                         "###" "####" "#[" "#{" "#=" "#!" "#:" "#_(" "#_" "#?" "#(" ";;" "_|_"
+                                         "__" "~~" "~~>" "~>" "~-" "~@" "$>" "^=" "]#"))
+    ;; Enables ligature checks globally in all buffers. You can also do it
+    ;; per mode with `ligature-mode'.
+    (global-ligature-mode t))
+#+end_src
+
+** Other
+#+begin_src emacs-lisp
+  ;; line number
+  (column-number-mode)
+  (global-display-line-numbers-mode t)
+  ;; add hook to disable line numbers in org-mode
+  (dolist (mode '(org-mode-hook
+                  shell-mode-hook))
+    (add-hook mode (lambda () (display-line-numbers-mode 0))))
+  (set-default-coding-systems 'utf-8)
+#+end_src
+* Performance
+#+begin_src emacs-lisp
+  ;; -*- lexical-binding: t; -*-
+
+  ;; The default is 800 kilobytes.  Measured in bytes.
+  (setq gc-cons-threshold (* 50 1000 1000))
+
+  ;; Profile emacs startup
+  (add-hook 'emacs-startup-hook
+            (lambda ()
+              (message "*** Emacs loaded in %s seconds with %d garbage collections."
+                       (emacs-init-time "%.2f")
+                       gcs-done)))  ;; speed up startup time
+  (setq frame-inhibit-implied-resize t)
+  ;; disable package manager check on startup
+  (setq package-enable-at-startup nil)
+  (setq package-quickstart nil)
+#+end_src
+* Clean emacs directory
+#+begin_src emacs-lisp
+  ;; Change the user-emacs-directory to keep unwanted things out of ~/.emacs.d
+  (setq user-emacs-directory (expand-file-name "~/.cache/emacs/")
+        url-history-file (expand-file-name "url/history" user-emacs-directory))
+
+  ;; Keep customization settings in a temporary file (thanks Ambrevar!)
+  (setq custom-file
+        (if (boundp 'server-socket-dir)
+            (expand-file-name "custom.el" server-socket-dir)
+          (expand-file-name (format "emacs-custom-%s.el" (user-uid)) temporary-file-directory)))
+  (load custom-file t)
+#+end_src
+* General config
+#+begin_src emacs-lisp
+  (setq large-file-warning-threshold nil)
+  (setq vc-follow-symlinks t)
+  (setq ad-redefinition-action 'accept)
+  (setq create-lockfiles nil)
+  (setq evil-want-integration t)
+  (setq evil-want-keybinding nil)
+#+end_src
+* Keymaps
+** Global
+#+begin_src emacs-lisp
+  ;; use esc to esc from command mode, find files, etc
+  (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+  ;; global-set-key sets the keymap for all modes
+  ;; define-key assicoates the keymap only to a specific mode (emacs-lisp-mode-map variable to add maps)
+  (global-set-key (kbd "M-o") 'bufler-switch-buffer)
+#+end_src
+** Org-mode
+#+begin_src emacs-lisp
+  (global-set-key (kbd "C-c l") #'org-store-link)
+  (global-set-key (kbd "C-c a") #'fi/swith-to-agenda)
+  (global-set-key (kbd "C-c c") #'org-capture)
+#+end_src
+** Ranger
+#+begin_src emacs-lisp
+  (global-set-key (kbd "M-e") 'ranger)
+#+end_src
+
+* Packages
+** Better command
+#+begin_src emacs-lisp
+  (use-package amx
+    :config
+    (amx-mode 1))
+#+end_src
+
+** Completion
+*** Minibuffer
+#+begin_src emacs-lisp
+  (use-package ivy
+    :diminish ; diminish prevent to show the mode in the mode list in the mode line
+    :bind (("C-s" . swiper)
+           :map ivy-minibuffer-map
+           ("TAB" . ivy-alt-done)
+           ("C-l" . ivy-alt-done)
+           ("C-n" . ivy-net-line)
+           ("C-p" . ivy-previous-line)
+           :map ivy-switch-buffer-map
+           ("C-l" . ivy-done)
+           ("C-p" . ivy-previous-line)
+           ("C-d" . ivy-switch-buffer-kill)
+           :map ivy-reverse-i-search-map
+           ("C-p" . ivy-previous-line)
+           ("C-d" . ivy-reverse-i-search-kill))
+    :config
+    (ivy-mode 1))
+  ;; better minibuffer command
+  (use-package counsel
+    :bind (("M-x" . counsel-M-x)
+           ("C-x b" . counsel-ibuffer)
+           ("C-x C-f" . counsel-find-file)
+           :map minibuffer-local-map
+           ("C-r" . 'counsel-minibuffer-history)
+           )
+    :config
+    (setq ivy-initial-inputs-alist nil))
+  (use-package swiper) ; better search in the buffer
+#+end_src
+#+begin_src emacs-lisp
+  ;; completion for minibuffer
+
+  ;; details of command when navigating command lists (works with counsel-m-x)
+  (use-package ivy-rich
+    :init (ivy-rich-mode 1))
+
+  ;; better help message
+  (use-package helpful
+    :custom
+    (counsel-describe-function #'helpful-callable)
+    (counsel-describe-function #'helpful-variable)
+    :bind
+    ([remap describle-function] . counsel-describe-function)
+    ([remap describle-command] . helpful-command)
+    ([remap describle-variable] . counsel-describe-variable)
+    ([remap describle-key] . helpful-key))
+
+  ;; nord e
+  (use-package doom-themes
+    :config
+    (setq doom-themes-enable-bold t)
+    (setq doom-themes-enable-italic t)
+    (load-theme 'doom-nord t)
+    (doom-themes-visual-bell-config)
+    (doom-themes-org-config))
+
+  ;; modeline
+  (use-package doom-modeline
+    :init (doom-modeline-mode 1)
+    (setq doom-modeline-height 15))
+
+  ;; icons
+  (use-package all-the-icons
+    :if (display-graphic-p))
+
+  ;; keymaps definer
+#+end_src
+*** Anything
+#+begin_src emacs-lisp
+  (use-package company
+    :config
+    (add-hook 'after-init-hook 'global-company-mode)
+    (setq company-tooltip-align-annotations t)
+    (setq company-dabbrev-minimum-length 4)
+    (setq company-files-exclusions '(".git/" ".DS_Store"))
+    (setq company-idle-delay 0.1)
+    (setq company-backends '((
+                              company-capf
+                              company-files
+                              company-dabbrev-code
+                              company-dabbrev
+                              ))))
+  (use-package company-box
+    :hook (company-mode . company-box-mode))
+#+end_src
+** Dashboard
+#+begin_src emacs-lisp
+  (use-package dashboard
+    :config
+    (dashboard-setup-startup-hook)
+    )
+#+end_src
+** Deft for fast plain text files searching
+#+begin_src emacs-lisp
+  (use-package deft
+    :commands (deft)
+    :config
+    (setq deft-extensions '("org")
+          deft-directory "~/org-roam"
+          deft-recursive t
+          deft-use-filename-as-title t))
+#+end_src
+
+** Dired and treemacs
+#+begin_src emacs-lisp
+  (setq dired-listing-switches "-aBhl --group-directories-first")
+  (use-package ranger
+    :config
+    (ranger-override-dired-mode t)
+    (setq ranger-cleanup-on-disable t)
+    (setq ranger-preview-file t)
+    (setq ranger-show-literal nil))
+
+  (use-package treemacs)
+  (use-package treemacs-evil)
+  (use-package treemacs-projectile)
+#+end_src
+
+** Direnv and lorri integration
+#+begin_src emacs-lisp
+  (use-package direnv
+    :config
+    (direnv-mode))
+#+end_src
+
+** Evil mode
+#+begin_src emacs-lisp
+  ;; evil mode (see evil-collection and hydra)
+  (use-package evil
+    :init
+    (setq evil-want-integration t)
+    (setq evil-want-keybinding nil)
+    (setq evil-want-C-u-scroll t)
+    (setq evil-want-C-i-jump nil)
+    (setq evil-respect-visual-line-mode t)
+    (setq evil-undo-system 'undo-tree)
+    :config
+    (evil-mode 1)
+
+    (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
+    (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
+
+    ;; Use visual line motions even outside of visual-line-mode buffers
+    (evil-global-set-key 'motion (kbd "<down>") 'evil-next-visual-line)
+    (evil-global-set-key 'motion (kbd "<up>") 'evil-previous-visual-line)
+    (evil-global-set-key 'motion "j" 'evil-next-visual-line)
+    (evil-global-set-key 'motion "k" 'evil-previous-visual-line))
+
+  (use-package evil-collection
+    :after evil
+    :config
+    (evil-collection-init))
+  (use-package evil-commentary
+    :after evil
+    :config
+    (evil-commentary-mode 1))
+#+end_src
+
+** Buffer manager
+#+begin_src emacs-lisp
+  (use-package bufler
+    :config
+    (bufler-mode 1)
+    (evil-collection-define-key 'normal 'bufler-list-mode-map
+      (kbd "RET") 'bufler-list-buffer-switch
+      (kbd "M-RET") 'bufler-list-buffer-peek
+      "D" 'bufler-list-buffer-kill))
+#+end_src
+
+** Folding
+#+begin_src emacs-lisp
+  (use-package s)
+  (use-package dash)
+  (use-package origami)
+#+end_src
+
+** Format
+#+begin_src emacs-lisp
+  (use-package format-all)
+#+end_src
+
+** Hydra
+Installation
+#+begin_src emacs-lisp
+  (use-package hydra)
+  ;; understand and use postframe for bettew ui
+  ;; (use-package hydra-postframe)
+  (use-package major-mode-hydra
+    :bind
+    ("M-SPC" . major-mode-hydra))
+  (require 'hydra)
+#+end_src
+Hydra for elisp major mode
+#+begin_src emacs-lisp
+  (major-mode-hydra-define emacs-lisp-mode nil
+    ("Eval"
+     (("b" eval-buffer "buffer")
+      ("e" eval-defun "defun")
+      ("r" eval-region "region"))
+     "REPL"
+     (("I" ielm "ielm"))
+     "Test"
+     (("t" ert "prompt")
+      ("T" (ert t) "all")
+      ("F" (ert :failed) "failed"))
+     "Doc"
+     (("d" describe-foo-at-point "thing-at-pt")
+      ("f" describe-function "function")
+      ("v" describe-variable "variable")
+      ("i" info-lookup-symbol "info lookup"))))
+#+end_src
+Hydra for org-roam mode
+** init
+#+begin_src emacs-lisp
+  (require 'package)
+  (setq package-archives '(("melpa" . "https://melpa.org/packages/")
+                           ("org" . "https://orgmode.org/elpa/")
+                           ("elpa" . "https://elpa.gnu.org/packages/")))
+  (package-initialize)
+  (unless package-archive-contents
+    (package-refresh-contents))
+
+  (unless (package-installed-p 'use-package)
+    (package-install 'use-package))
+
+  (require 'use-package)
+  ;; if evaluating a package is not present download it
+  (setq use-package-always-ensure t)
+#+end_src
+** Keybind manager using leader
+#+begin_src emacs-lisp
+  (use-package general
+    :config
+    (general-evil-setup t)
+
+    (general-create-definer fi/org-roam-keys
+      :states 'normal
+      :keymaps '(org-roam-mode override)
+      :prefix "C-c C-r")
+    (fi/org-roam-keys
+      "f" 'org-roam-node-find
+      "i" 'org-roam-node-insert)
+
+    (nmap
+      "<SPC> s" 'save-buffer))
+#+end_src
+
+** LSP
+#+begin_src emacs-lisp
+  (use-package lsp-mode
+    :init
+    (setq lsp-keymap-prefix "C-l")
+    :hook (
+           (lsp-mode . lsp-enable-which-key-integration)
+           (sh-mode . lsp))
+    :commands lsp
+    :config
+    (lsp-modeline-code-actions-mode t)
+    (lsp-modeline-diagnostics-mode t)
+    (lsp-headerline-breadcrumb-mode t)
+    (advice-add 'lsp :before #'direnv-update-environment)
+    )
+  (use-package lsp-ui
+    :after lsp-mode
+    :config
+    (setq lsp-ui-sildeline-show-diagnostics t)
+    (setq lsp-ui-sideline-show-hover t)
+    (setq lsp-ui-sideline-show-code-actions t)
+    (setq lsp-ui-sideline-show-update-mode "line")
+    (setq lsp-ui-peek-enable t)
+    (setq lsp-ui-doc-enable t)
+    (setq lsp-ui-doc-use-webkit t)
+    (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
+    (define-key lsp-ui-mode-map [remap xref-find-references] #'lsp-ui-peek-find-references))
+  (use-package flycheck
+    :after lsp-mode)
+  (use-package lsp-ivy
+    :after lsp-mode)
+#+end_src
+*** python
+#+begin_src emacs-lisp
+  (use-package lsp-pyright
+    :ensure t
+    :hook (python-mode . (lambda ()
+                           (require 'lsp-pyright)
+                           (lsp))))
+#+end_src
+*** nix
+#+begin_src emacs-lisp
+  (use-package nix-mode
+    :mode "\\.nix\\'")
+  (setq lsp-nix-server-path "rnix-lsp")
+  (lsp-register-client
+   (make-lsp-client :new-connection (lsp-stdio-connection '("rnix-lsp"))
+                    :major-modes '(nix-mode)
+                    :server-id 'nix))
+#+end_src
+*** bash
+#+begin_src emacs-lisp
+
+#+end_src
+
+** Magit
+#+begin_src emacs-lisp
+  (use-package magit)
+#+end_src
+
+** Pairs
+#+begin_src emacs-lisp
+  (use-package rainbow-delimiters
+    :hook (prog-mode . rainbow-delimiters-mode))
+  (electric-pair-mode 1)
+#+end_src
+
+** Pdf tools
+#+begin_src emacs-lisp
+  (use-package tablist)
+  (use-package pdf-tools)
+  (pdf-tools-install)
+#+end_src
+
+** Project manager
+#+begin_src emacs-lisp
+  (use-package projectile
+    :diminish projectile-mode
+    :config (projectile-mode)
+    :custom (projectile-completion-system 'ivy)
+    :bind-keymap
+    ("C-c p" . projectile-command-map) ; set prefix for projectile package
+    :init
+    (setq projectile-project-search-path '("~/fbk" "~/personalProject" "~/uni"))
+    (setq projectile-switch-project-action #'project-dired)
+    (setq projectile-indexing-methond 'alien)
+    (setq projectile-sort-order 'modification-time)
+    (setq projectile-completion-system 'ivy)
+    )
+#+end_src
+
+** Super save
+#+begin_src emacs-lisp
+  (use-package super-save
+    :config
+    (super-save-mode 1))
+#+end_src
+
+** Text jumping
+#+begin_src emacs-lisp
+  (use-package avy
+    :config
+    (global-set-key (kbd "C-'") 'avy-goto-char-2))
+#+end_src
+
+** Treesitter
+#+begin_src emacs-lisp
+  (use-package tree-sitter
+    :config
+    (global-tree-sitter-mode)
+    (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
+  (use-package tree-sitter-langs)
+#+end_src
+
+** Undotree
+#+begin_src emacs-lisp
+  (use-package undo-tree
+    :config
+    (global-undo-tree-mode)
+    (setq undo-tree-auto-save-history nil)
+    (setq undo-tree-visualizer-diff t))
+#+end_src
+
+** Which key
+#+begin_src emacs-lisp
+  (use-package which-key
+    :init (which-key-mode) ; init called before package is loaded
+    :diminish which-key-mode
+    :config ; config called before the package is loaded
+    (setq which-key-idle-delay 0.3))
+
+#+end_src
+
+** Window balancing
+#+begin_src emacs-lisp
+  (use-package zoom
+    :config
+    (zoom-mode 1))
+#+end_src
+
+* Org mode
+Tasks are classified with these 5 elements:
+1. priority
+2. location
+3. effort estimate
+4. project (or in general the belonging field of the task)
+5. date (due date, to this is could be useful the usage of org-gcal)
+
+A spaced repetition mechanism to pair with org-roam notes.
+
+#+begin_src emacs-lisp
+  (defun dw/org-mode-setup ()
+    (org-indent-mode)
+    (variable-pitch-mode 1)
+    (auto-fill-mode 0)
+    (visual-line-mode 1)
+    (setq evil-auto-indent nil))
+
+  (use-package org
+    :hook (org-mode . dw/org-mode-setup)
+    :config
+    (setq org-ellipsis " ▾"
+          org-hide-emphasis-markers t
+          org-return-follows-link t
+          org-confirm-babel-evaluate nil
+          org-catch-invisible-edits 'show
+          org-src-window-setup 'current-window
+          ;; TODO find a location for all edits
+          ;; org-preview-latex-image-directory "/tmp/ltximg/"
+          ))
+
+
+  (use-package org-download
+    :after org
+    :config
+    (setq org-downlaod-screenshot-method "grim -g \"$(slurp)\" - | swappy -f -")
+    (setq org-downlaod-image-dir "./img"))
+#+end_src
+
+** Agenda
+#+begin_src emacs-lisp
+  (require 'org-habit)
+  (setq org-log-done 'time
+        org-log-into-drawer t
+        org-log-state-notes-insert-after-drawers nil)
+  (setq org-agenda-files '("~/org/tasks/inbox.org" "~/org/tasks/projects.org"))
+  (setq org-agenda-block-separator nil
+        org-agenda-start-with-log-mode t)
+  (setq org-columns-default-format "%40ITEM(Task) %Effort(EE){:} %CLOCKSUM(Time Spent) %SCHEDULED(Scheduled) %DEADLINE(Deadline)")
+  (setq org-columns-default-format-for-agenda "%40ITEM(Task) %Effort(EE){:} %CLOCKSUM(Time Spent) %SCHEDULED(Scheduled) %DEADLINE(Deadline)")
+  (setq org-agenda-prefix-format  '((agenda . " %i %-12:c%?-12t% s")
+                                    (todo . " %i %-20(concat \"[ \"(org-format-outline-path (org-get-outline-path)) \" ]\")")
+                                    (tags . " %i %-12:c")
+                                    (search . " %i %-12:c")))
+  (setq org-agenda-custom-commands `((" " "Agenda"
+                                      ((alltodo ""
+                                                ((org-agenda-overriding-header "Inbox")
+                                                 (org-agenda-files '("~/org/tasks/inbox.org"))))
+                                       (agenda ""
+                                               ((org-agenda-span 'week)
+                                                (org-deadline-warning-days 365)))
+                                       (todo "NEXT"
+                                             ((org-agenda-overriding-header "In Progress")
+                                              (org-agenda-files '("~/org/tasks/projects.org"))))
+                                       (todo "TODO"
+                                             ((org-agenda-overriding-header "Active Projects")
+                                              (org-agenda-files '("~/org/tasks/projects.org"))
+                                              (org-agenda-skip-function #'fi/skip-projects)))))))
+  (defun log-todo-next-creation-date (&rest ignore)
+    "Log NEXT creation time in the property drawer under the key 'ACTIVATED'"
+    (when (and (string= (org-get-todo-state) "NEXT")
+               (not (org-entry-get nil "ACTIVATED")))
+      (org-entry-put nil "ACTIVATED" (format-time-string "[%Y-%m-%d]"))))
+  (add-hook 'org-after-todo-state-change-hook #'log-todo-next-creation-date)
+
+#+end_src
+*** Keybinds
+#+begin_src emacs-lisp
+  (evil-define-key 'emacs org-agenda-mode-map "i" #'org-agenda-clock-in)
+  (evil-define-key 'emacs org-agenda-mode-map "I" #'fi/clock-in-and-advance)
+  (evil-define-key 'emacs org-agenda-mode-map "r" #'fi/org-process-inbox)
+  (evil-define-key 'emacs org-agenda-mode-map "R" #'org-agenda-refile)
+#+end_src
+*** Functions
+**** Inbox processing
+#+begin_src emacs-lisp
+  (defun fi/org-process-inbox ()
+    "Called in org-agenda-mode, processes all inbox items."
+    (interactive)
+    (org-agenda-bulk-mark-regexp "inbox:")
+    (fi/bulk-process-entries))
+  (defun fi/bulk-process-entries ()
+    (let ())
+    (if (not (null org-agenda-bulk-marked-entries))
+        (let ((entries (reverse org-agenda-bulk-marked-entries))
+              (processed 0)
+              (skipped 0))
+          (dolist (e entries)
+            (let ((pos (text-property-any (point-min) (point-max) 'org-hd-marker e)))
+              (if (not pos)
+                  (progn (message "Skipping removed entry at %s" e)
+                         (cl-incf skipped))
+                (goto-char pos)
+                (let (org-loop-over-headlines-in-active-region) (funcall 'fi/org-agenda-process-inbox-item))
+                ;; `post-command-hook' is not run yet.  We make sure any
+                ;; pending log note is processed.
+                (when (or (memq 'org-add-log-note (default-value 'post-command-hook))
+                          (memq 'org-add-log-note post-command-hook))
+                  (org-add-log-note))
+                (cl-incf processed))))
+          (org-agenda-redo)
+          (unless org-agenda-persistent-marks (org-agenda-bulk-unmark-all))
+          (message "Acted on %d entries%s%s"
+                   processed
+                   (if (= skipped 0)
+                       ""
+                     (format ", skipped %d (disappeared before their turn)"
+                             skipped))
+                   (if (not org-agenda-persistent-marks) "" " (kept marked)")))))
+
+  (defvar fi/org-current-effort "1:00"
+    "Current effort for agenda items.")
+
+  (defun fi/my-org-agenda-set-effort (effort)
+    "Set the effort property for the current headline."
+    (interactive
+     (list (read-string (format "Effort [%s]: " fi/org-current-effort) nil nil fi/org-current-effort)))
+    (setq fi/org-current-effort effort)
+    (org-agenda-check-no-diary)
+    (let* ((hdmarker (or (org-get-at-bol 'org-hd-marker)
+                         (org-agenda-error)))
+           (buffer (marker-buffer hdmarker))
+           (pos (marker-position hdmarker))
+           (inhibit-read-only t)
+           newhead)
+      (org-with-remote-undo buffer
+        (with-current-buffer buffer
+          (widen)
+          (goto-char pos)
+          (org-show-context 'agenda)
+          (funcall-interactively 'org-set-effort nil fi/org-current-effort)
+          (end-of-line 1)
+          (setq newhead (org-get-heading)))
+        (org-agenda-change-all-lines newhead hdmarker))))
+
+  (defun fi/org-agenda-process-inbox-item ()
+    "Process a single item in the org-agenda."
+    (org-with-wide-buffer
+     (org-agenda-set-tags)
+     (org-agenda-priority)
+     (call-interactively 'fi/my-org-agenda-set-effort)
+     (org-agenda-refile nil nil t)))
+#+end_src
+**** General
+#+begin_src emacs-lisp
+  (defun fi/switch-to-agenda ()
+    (interactive)
+    (org-agenda nil " "))
+
+  (defun fi/org-archive-done-tasks ()
+    "Archive all done tasks."
+    (interactive)
+    (org-map-entries 'org-archive-subtree "/DONE" 'file))
+
+  (defun fi/advance-todo ()
+    (org-todo 'right)
+    (remove-hook 'org-clock-in-hook #'fi/advance-todo))
+
+  (defun fi/clock-in-and-advance ()
+    (interactive)
+    (add-hook 'org-clock-in-hook 'fi/advance-todo)
+    (org-agenda-clock-in))
+  (defun fi/skip-projects ()
+    "Skip trees that are projects."
+    (save-restriction
+      (widen)
+      (let ((next-headline (save-excursion (or (outline-next-heading) (point-max)))))
+        (cond
+         ((org-is-habit-p)
+          next-headline)
+         (t
+          nil)))))
+#+end_src
+** Babel
+#+begin_src emacs-lisp
+  (require 'org-tempo)
+  (require 'ob-python)
+  (add-to-list 'org-structure-template-alist '("sh" . "src sh"))
+  (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
+  (add-to-list 'org-structure-template-alist '("li" . "src lisp"))
+  (add-to-list 'org-structure-template-alist '("sc" . "src scheme"))
+  (add-to-list 'org-structure-template-alist '("ts" . "src typescript"))
+  (add-to-list 'org-structure-template-alist '("py" . "src python"))
+  (add-to-list 'org-structure-template-alist '("go" . "src go"))
+  (add-to-list 'org-structure-template-alist '("yaml" . "src yaml"))
+  (add-to-list 'org-structure-template-alist '("json" . "src json"))
+#+end_src
+
+** Capture templates
+#+begin_src emacs-lisp
+  (use-package org-cliplink)
+  (setq fi/org-agenda-directory "~/org/tasks/")
+  (setq org-capture-templates
+        `(("i" "inbox" entry (file ,(concat fi/org-agenda-directory "inbox.org"))
+           ,(concat "* TODO %? :inbox:\n" "/Entered on/ %U"))
+          ("l" "link" entry (file ,(concat fi/org-agenda-directory "inbox.org"))
+           "* TODO %(org-cliplink-capturte)" :immediate-finish t)))
+#+end_src
+** Clocking work time
+Save clock history across Emacs sessions
+#+begin_src emacs-lisp
+                                          ;(setq org-clock-persist 'history)
+                                          ;(org-clock-persistence-insinuate)
+#+end_src
+** Face
+#+begin_src emacs-lisp
+  (use-package org-superstar
+    :after org
+    :hook (org-mode . org-superstar-mode)
+    :custom
+    (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
+
+  (with-eval-after-load 'org-faces
+    (dolist (face '((org-level-1 . 1.2)
+                    (org-level-2 . 1.1)
+                    (org-level-3 . 1.05)
+                    (org-level-4 . 1.0)
+                    (org-level-5 . 1.1)
+                    (org-level-6 . 1.1)
+                    (org-level-7 . 1.1)
+                    (org-level-8 . 1.1)))
+      (set-face-attribute (car face) nil :font "JetBrains Mono" :weight 'regular :height (cdr face)))
+
+    ;; Make sure org-indent face is available
+    (require 'org-indent)
+
+    ;; Ensure that anything that should be fixed-pitch in Org files appears that way
+    (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
+    (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
+    (set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch))
+    (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+    (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+    (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+    (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch))
+#+end_src
+** Fast capturing
+#+begin_src emacs-lisp
+  (setq org-default-notes-file (concat org-directory "~/org/fast_capturing.org"))
+#+end_src
+** Gnu plot
+#+begin_src emacs-lisp
+  (use-package gnuplot)
+#+end_src
+** Habit
+#+begin_src emacs-lisp
+  (require 'org-habit)
+#+end_src
+
+** todo
+#+begin_src emacs-lisp
+  (setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "HOLD(h)" "|" "DONE(d)")))
+#+end_src
+
+** Image
+#+begin_src emacs-lisp
+  (setq org-startup-with-latex-preview t)
+#+end_src
+** Latex
+*** Math
+#+begin_src emacs-lisp
+  (setq org-startup-with-latex-preview t)
+  (use-package org-fragtog
+    :config
+    (add-hook 'org-mode-hook 'org-fragtog-mode))
+  (add-to-list 'org-structure-template-alist '("al" . "src latex\n \\begin{align*}\n\\end{align*}\n"))
+#+end_src
+
+*** Build command
+This function changes the build command adding some option in order to support external package and other things
+#+begin_src emacs-lisp
+  (setq org-latex-pdf-process
+        (let
+            ((cmd (concat "pdflatex -shell-escape -interaction nonstopmode"
+                          " --synctex=1"
+                          " -output-directory %o %f")))
+          (list cmd
+                "cd %o; if test -r %b.idx; then makeindex %b.idx; fi"
+                "cd %o; bibtex %b"
+                cmd
+                cmd)))
+#+end_src
+
+*** Pseudocode
+Use an external package for the pseudocode, the deafault one is verbatim
+#+begin_src emacs-lisp
+  (require 'ox-latex)
+  (setq org-latex-listings t)
+  (add-to-list 'org-latex-packages-alist '("" "listings"))
+  (add-to-list 'org-latex-packages-alist '("" "color"))
+  (add-to-list 'org-latex-packages-alist '("" "svg"))
+#+end_src
+** Margin
+#+begin_src emacs-lisp
+  (defun dw/org-mode-visual-fill ()
+    (setq visual-fill-column-width 110
+          visual-fill-column-center-text t)
+    (visual-fill-column-mode 1))
+
+  (use-package visual-fill-column
+    :defer t
+    :hook (org-mode . dw/org-mode-visual-fill))
+#+end_src
+** Markdown syntax
+Make subscription only working with curly brackets
+#+begin_src emacs-lisp
+  (setq org-use-sub-superscripts "{}")
+  (setq org-startup-with-inline-images t)
+#+end_src
+** Org noter
+#+begin_src emacs-lisp
+  (use-package org-noter
+    :config
+    (setq org-noter-auto-save-last-location t)
+    (setq org-noter-notes-search-path '("~/org/noter"))
+    (setq org-noter-notes-window-behavior '(start scroll))
+    )
+#+end_src
+
+** Org roam
+Maybe it is better to run the db manually and not automatically at startup
+#+begin_src emacs-lisp
+  (use-package org-roam
+    :after org)
+  (require 'org-roam)
+  (setq org-roam-directory (file-truename "~/org-roam"))
+  (org-roam-db-autosync-mode)
+  (setq org-roam-mode-section-functions
+        (list #'org-roam-backlinks-section
+              #'org-roam-reflinks-section))
+  (add-to-list 'display-buffer-alist
+               '("\\*org-roam\\*"
+                 (display-buffer-in-side-window)
+                 (side . right)
+                 (slot . 0)
+                 (window-width . 0.33)
+                 (window-parameters . ((no-other-window . t)
+                                       (no-delete-other-windows . t)))))
+#+end_src
+The following setting allows to export a file following the roam links contained inside it
+#+begin_src emacs-lisp
+  (setq org-id-track-globally t)
+#+end_src
+Function to fix the reload the cache of org mode and org roam [[https://dev.to/devteam/resolving-an-unable-to-resolve-link-error-for-org-mode-in-emacs-2n1f][source]]
+#+begin_src emacs-lisp
+  ;; I encountered the following message when attempting
+  ;; to export data:
+  ;;
+  ;; "org-export-data: Unable to resolve link: FILE-ID"
+  (defun fi/force-org-rebuild-cache ()
+    "Rebuild the `org-mode' and `org-roam' cache."
+    (interactive)
+    (org-id-update-id-locations)
+    ;; Note: you may need `org-roam-db-clear-all'
+    ;; followed by `org-roam-db-sync'
+    (org-roam-db-sync)
+    (org-roam-update-org-id-locations))
+#+end_src
+
+** Property
+** Tag and refile
+~startgroup~ and ~endgroup~ is used to create a mutually exclusive relation between tags
+#+begin_src emacs-lisp
+  (setq org-tag-alist '(("@work" . ?w)
+                        ("@university" . ?u)
+                        ("@home" . ?h)
+                        ("@anywhere" . ?a)))
+  (setq org-fast-tag-selection-single-key nil)
+  (setq org-refile-use-outline-path 'file
+        org-outline-path-complete-in-steps nil)
+  (setq org-refile-allow-creating-parent-nodes 'confirm
+        org-refile-targets '(("projects.org" . (:maxlevel . 2))))
+#+end_src
+* Things to implement with org-mode
+** TODO habit tracker
+** TODO define a list of tags
+I think that it is a good idea to define three tags based on the level of focus required by the task:
+- high
+- medium
+- low
+Then tags associated to categories:
+- work
+- university
+- hobby
+Maybe tags associated to places:
+- @work
+- @home
+- @university
+Maybe it is a good idea to set buffer tags if I will decide to use a file for work, another for university, and so on.
+
+** TODO understand if I can use property
+Maybe properties can be used to to log some information like in a db, for instance books, papers, etc.
+
+** TODO understand if clocking work time is to overkill
+** TODO set up mathpix.el
+** TODO understand general and prefix

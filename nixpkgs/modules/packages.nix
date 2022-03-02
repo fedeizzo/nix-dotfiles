@@ -53,12 +53,15 @@
     qgis
     gimp
     calibre
-    # libreoffice
+    onlyoffice-bin
     google-chrome
     rclone
     lazygit
     # unstable.qmk
     chessx
+    plover.dev
+    graphviz
+    sshfs
   ];
 
   programs.direnv = {
