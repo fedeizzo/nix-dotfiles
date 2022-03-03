@@ -2,8 +2,8 @@
 
 {
   programs.emacs = {
-    package = pkgs.emacsPgtk;
     enable = true;
+    package = with pkgs; ((emacsPackagesFor emacsPgtkGcc).emacsWithPackages (epkgs: [ epkgs.vterm ]));
   };
   home.packages = with pkgs; [
     # poppler
