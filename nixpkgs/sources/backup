@@ -35,7 +35,9 @@ backup() {
         $XDG_DATA_HOME/Anki2 \
         $XDG_DATA_HOME/fish/fish_history \
         $XDG_DATA_HOME/z/data \
-        $HOME/zettelkasten
+        $HOME/zettelkasten \
+        $HOME/zettelkasten.back \
+        $HOME/org
     backup_exit=$?
 
     borg prune \
