@@ -10,7 +10,6 @@
     gawk
     gnused
     gnutls
-    gotop
     htop
     nmap
     powertop
