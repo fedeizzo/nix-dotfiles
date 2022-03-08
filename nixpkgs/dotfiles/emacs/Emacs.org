@@ -207,6 +207,7 @@
     (setq company-files-exclusions '(".git/" ".DS_Store"))
     (setq company-idle-delay 0.1)
     (setq company-backends '((
+                              company-yasnippet
                               company-capf
                               company-files
                               company-dabbrev-code
@@ -252,6 +253,7 @@
 #+begin_src emacs-lisp
   (use-package direnv
     :config
+    (setq direnv-always-show-summary nil)
     (direnv-mode))
 #+end_src
 
@@ -370,6 +372,7 @@ Hydra for org-roam mode
            (sh-mode . lsp))
     :commands lsp
     :config
+    (setq lsp-completion-provider :none)
     (lsp-modeline-code-actions-mode t)
     (lsp-modeline-diagnostics-mode t)
     (lsp-headerline-breadcrumb-mode t)
@@ -451,11 +454,24 @@ Hydra for org-roam mode
     )
 #+end_src
 
+** Snippets
+#+begin_src emacs-lisp
+  (use-package yasnippet
+    :config
+    (yas-global-mode 1))
+  (use-package yasnippet-snippets)
+#+end_src
+
 ** Super save
 #+begin_src emacs-lisp
   (use-package super-save
     :config
     (super-save-mode 1))
+#+end_src
+
+** Telegram
+#+begin_src emacs-lisp
+  ;; (setq telega-directory "~/.local/share/telega")
 #+end_src
 
 ** Term
@@ -545,6 +561,11 @@ A spaced repetition mechanism to pair with org-roam notes.
     (setq org-downlaod-image-dir "./img"))
 #+end_src
 
+Open other notes in the same window
+#+begin_src emacs-lisp
+  (setq org-link-frame-setup '((file . find-file)))
+#+end_src
+
 ** Agenda
 #+begin_src emacs-lisp
   (require 'org-habit)
@@ -555,7 +576,7 @@ A spaced repetition mechanism to pair with org-roam notes.
   (setq org-agenda-block-separator nil
         org-agenda-start-with-log-mode t)
   (setq org-columns-default-format "%40ITEM(Task) %Effort(EE){:} %CLOCKSUM(Time Spent) %SCHEDULED(Scheduled) %DEADLINE(Deadline)")
-  (setq org-columns-default-format-for-agenda "%40ITEM(Task) %Effort(EE){:} %CLOCKSUM(Time Spent) %SCHEDULED(Scheduled) %DEADLINE(Deadline)")
+  (setq org-columns-default-format-for-agenda "%40ITEM(Task) %Effort(Effort Estimated){:} %CLOCKSUM(Time Spent) %SCHEDULED(Scheduled) %DEADLINE(Deadline)")
   (setq org-agenda-prefix-format  '((agenda . " %i %-12:c%?-12t% s")
                                     (todo . " %i %-20(concat \"[ \"(org-format-outline-path (org-get-outline-path)) \" ]\")")
                                     (tags . " %i %-12:c")
@@ -566,7 +587,10 @@ A spaced repetition mechanism to pair with org-roam notes.
                                                  (org-agenda-files '("~/org/tasks/inbox.org"))))
                                        (agenda ""
                                                ((org-agenda-span 'week)
-                                                (org-deadline-warning-days 365)))
+                                                (org-deadline-warning-days 365)
+                                                (org-agenda-start-with-clockreport-mode t)
+                                                (org-agenda-clockreport-parameter-plist '(
+                                                                                          :maxlevel 3))))
                                        (todo "NEXT"
                                              ((org-agenda-overriding-header "In Progress")
                                               (org-agenda-files '("~/org/tasks/projects.org"))))
@@ -580,8 +604,36 @@ A spaced repetition mechanism to pair with org-roam notes.
                (not (org-entry-get nil "ACTIVATED")))
       (org-entry-put nil "ACTIVATED" (format-time-string "[%Y-%m-%d]"))))
   (add-hook 'org-after-todo-state-change-hook #'log-todo-next-creation-date)
-
+  (defun fi/my-clocktable-write (&rest args)
+    "Custom clocktable writer.
+          Uses the default writer but shifts the first column right."
+    (apply #'org-clocktable-write-default args)
+    (save-excursion
+      (forward-char)
+      (forward-char)
+      (org-table-move-column-right)
+      (org-table-move-column-right)
+      (org-table-move-column-right)
+      (org-table-move-column-right)
+      ))
+  (setq org-clocktable-defaults '(
+                                  :maxlevel 3
+                                  :tcolumns 3
+                                  :level nil
+                                  :formula %
+                                  :scope file
+                                  :hidefiles t
+                                  :wstart 1
+                                  :mstart 1
+                                  :lang "en"
+                                  :narrow 50!
+                                  :link t
+                                  :indent t
+                                  :properties ("Effort")
+                                  :formatter fi/my-clocktable-write
+                                  ))
 #+end_src
+
 *** Keybinds
 #+begin_src emacs-lisp
   (evil-define-key 'emacs org-agenda-mode-map "i" #'org-agenda-clock-in)
@@ -782,6 +834,30 @@ Save clock history across Emacs sessions
   (setq org-startup-with-latex-preview t)
 #+end_src
 ** Latex
+*** Export
+#+begin_src emacs-lisp
+    ;; (setq org-latex-default-class article)
+    ;; (add-to-list 'org-latex-classes
+    ;;              '("article" "\\documentclass[11pt,letterpaper]{article}"
+    ;;                ("\\section{%s}" . "\\section*{%s}")
+    ;;                ("\\subsection{%s}" . "\\subsection*{%s}")
+    ;;                ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+    ;;                ("\\paragraph{%s}" . "\\paragraph*{%s}")
+    ;;                ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+  (with-eval-after-load 'ox-latex
+    (add-to-list 'org-latex-classes
+                 '("org-plain-latex"
+                   "\\documentclass[geye]{elegantnote}
+                    \\documentclass[en]{elegantnote}
+              [NO-DEFAULT-PACKAGES]
+              [PACKAGES]
+              [EXTRA]"
+                   ("\\section{%s}". "\\section*{%s}")
+                   ("\\subsection{%s}". "\\subsection*{%s}")
+                   ("\\subsubsection{%s}". "\\subsubsection*{%s}")
+                   ("\\paragraph{%s}". "\\paragraph*{%s}")
+                   ("\\subparagraph{%s}". "\\subparagraph*{%s}"))))
+#+end_src
 *** Math
 #+begin_src emacs-lisp
   (setq org-startup-with-latex-preview t)

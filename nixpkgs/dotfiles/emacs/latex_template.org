@@ -1,0 +1,12 @@
+#+LaTeX_CLASS: org-plain-latex
+#+LaTeX_CLASS_OPTIONS: \usepackage[utf8]{inputenc}
+#+LaTeX_CLASS_OPTIONS: \usepackage[T1]{fontenc}
+#+LaTeX_CLASS_OPTIONS: \usepackage{textcomp}
+#+LaTeX_CLASS_OPTIONS: \usepackage{url}
+#+LaTeX_CLASS_OPTIONS: \usepackage{graphicx}
+#+LaTeX_CLASS_OPTIONS: \usepackage{float}
+#+LaTeX_CLASS_OPTIONS: \usepackage{parskip}
+#+LaTeX_CLASS_OPTIONS: \usepackage{emtpypage}
+#+LaTeX_CLASS_OPTIONS: \usepackage{xcolor}
+#+LaTeX_CLASS_OPTIONS: \usepackage{amsmath, amsfonts, mathtools, amsthm, amssymb}
+

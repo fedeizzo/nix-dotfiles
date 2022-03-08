@@ -3,7 +3,11 @@
 {
   programs.emacs = {
     enable = true;
-    package = with pkgs; ((emacsPackagesFor emacsPgtkGcc).emacsWithPackages (epkgs: [ epkgs.vterm ]));
+    package = with pkgs; ((emacsPackagesFor emacsPgtk).emacsWithPackages (epkgs: [
+      epkgs.vterm
+      # epkgs.telega
+      epkgs.org-roam-ui
+    ]));
   };
   home.packages = with pkgs; [
     # poppler
