@@ -108,7 +108,8 @@ bindsym {
     $mod+r mode "resize"
     $mod+p exec grim -g "$(slurp)" - | swappy -f -
     $mod+Shift+p exec grim -g "$(swaymsg -t get_tree | jq -r '.. | select(.pid? and .visible?) | .rect | "\(.x),\(.y) \(.width)x\(.height)"' | slurp)" - | swappy -f -
-    $mod+e exec "kitty /home/fedeizzo/.sources/lfrun"
+    $mod+w exec "kitty /home/fedeizzo/.sources/lfrun"
+    $mod+e exec "emacsclient -c"
     $mod+c exec clipman pick -t bemenu --tool-args="--tf '#a3be8c' --tb '#2e3440' --nb '#2e3440' --fb '#2e3440' --hb '#2e3440' --hf '#d08770'"
     $mod+Ctrl+c exec clipman clear --all
     XF86AudioRaiseVolume exec pamixer --increase 5

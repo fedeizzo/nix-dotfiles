@@ -1,13 +1,21 @@
 { config, pkgs, libs, ... }:
-
+let
+  myEmacs = with pkgs; ((emacsPackagesFor emacsPgtk).emacsWithPackages (epkgs: [
+    epkgs.vterm
+    epkgs.org-roam-ui
+  ]));
+in
 {
   programs.emacs = {
     enable = true;
-    package = with pkgs; ((emacsPackagesFor emacsPgtk).emacsWithPackages (epkgs: [
-      epkgs.vterm
-      # epkgs.telega
-      epkgs.org-roam-ui
-    ]));
+    package = myEmacs;
+  };
+  services.emacs = {
+    enable = true;
+    package = myEmacs;
+    client = {
+      enable = true;
+    };
   };
   home.packages = with pkgs; [
     # poppler

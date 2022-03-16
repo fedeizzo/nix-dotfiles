@@ -34,9 +34,12 @@
 #+end_src
 ** Font
 #+begin_src emacs-lisp
-  (set-face-attribute 'default nil :font "JetBrains Mono" :weight 'normal :height 105)
-  (set-face-attribute 'fixed-pitch nil :font "JetBrains Mono" :weight 'normal :height 105)
-  (set-face-attribute 'variable-pitch nil :font "JetBrains Mono" :height 105 :weight 'normal)
+  (defun fi/font-config (frame)
+    (set-face-attribute 'default nil :font "JetBrains Mono" :weight 'normal :height 105)
+    (set-face-attribute 'fixed-pitch nil :font "JetBrains Mono" :weight 'normal :height 105)
+    (set-face-attribute 'variable-pitch nil :font "JetBrains Mono" :height 105 :weight 'normal)
+    (remove-hook 'after-make-frame-functions #'fi/font-config))
+  (add-hook 'after-make-frame-functions #'fi/font-config)
   (use-package ligature
     :load-path "~/.config/emacs/ligature.el"
     :config
@@ -471,7 +474,7 @@ Hydra for org-roam mode
 
 ** Telegram
 #+begin_src emacs-lisp
-  ;; (setq telega-directory "~/.local/share/telega")
+  (setq telega-directory "/home/fedeizzo/.local/share/telega")
 #+end_src
 
 ** Term
@@ -803,13 +806,17 @@ Save clock history across Emacs sessions
     (require 'org-indent)
 
     ;; Ensure that anything that should be fixed-pitch in Org files appears that way
-    (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
-    (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
-    (set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch))
-    (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
-    (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
-    (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
-    (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch))
+
+    (defun fi/font-config-org (frame)
+      (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
+      (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
+      (set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch))
+      (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+      (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+      (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+      (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch))
+    (remove-hook 'after-make-frame-functions #'fi/font-config-org)
+    (add-hook 'after-make-frame-functions #'fi/font-config-org))
 #+end_src
 ** Fast capturing
 #+begin_src emacs-lisp
@@ -836,27 +843,35 @@ Save clock history across Emacs sessions
 ** Latex
 *** Export
 #+begin_src emacs-lisp
-    ;; (setq org-latex-default-class article)
-    ;; (add-to-list 'org-latex-classes
-    ;;              '("article" "\\documentclass[11pt,letterpaper]{article}"
-    ;;                ("\\section{%s}" . "\\section*{%s}")
-    ;;                ("\\subsection{%s}" . "\\subsection*{%s}")
-    ;;                ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-    ;;                ("\\paragraph{%s}" . "\\paragraph*{%s}")
-    ;;                ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+  ;; (setq org-latex-default-class article)
+  ;; (add-to-list 'org-latex-classes
+  ;;              '("article" "\\documentclass[11pt,letterpaper]{article}"
+  ;;                ("\\section{%s}" . "\\section*{%s}")
+  ;;                ("\\subsection{%s}" . "\\subsection*{%s}")
+  ;;                ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+  ;;                ("\\paragraph{%s}" . "\\paragraph*{%s}")
+  ;;                ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
   (with-eval-after-load 'ox-latex
     (add-to-list 'org-latex-classes
                  '("org-plain-latex"
                    "\\documentclass[geye]{elegantnote}
-                    \\documentclass[en]{elegantnote}
-              [NO-DEFAULT-PACKAGES]
-              [PACKAGES]
-              [EXTRA]"
+                                    \\documentclass[en]{elegantnote}
+                              [NO-DEFAULT-PACKAGES]
+                              [PACKAGES]
+                              [EXTRA]"
                    ("\\section{%s}". "\\section*{%s}")
                    ("\\subsection{%s}". "\\subsection*{%s}")
                    ("\\subsubsection{%s}". "\\subsubsection*{%s}")
                    ("\\paragraph{%s}". "\\paragraph*{%s}")
                    ("\\subparagraph{%s}". "\\subparagraph*{%s}"))))
+  (setq org-format-latex-options '(
+                                   :foreground default
+                                   :background default
+                                   :scale 0.5
+                                   :html-foreground "Black"
+                                   :html-background "Transparent"
+                                   :html-scale 1.0
+                                   :matchers ("begin" "$1" "$" "$$" "\\(" "\\[")))
 #+end_src
 *** Math
 #+begin_src emacs-lisp
