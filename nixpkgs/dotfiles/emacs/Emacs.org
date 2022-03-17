@@ -308,7 +308,9 @@
 #+begin_src emacs-lisp
   (use-package s)
   (use-package dash)
-  (use-package origami)
+  (use-package origami
+    :config
+    (origami-mode t))
 #+end_src
 
 ** Format
@@ -352,19 +354,48 @@ Hydra for org-roam mode
   (use-package general
     :config
     (general-evil-setup t)
+    (general-override-mode 1)
+
 
     (general-create-definer fi/org-roam-keys
       :states 'normal
       :keymaps '(org-roam-mode override)
       :prefix "C-c C-r")
+
     (fi/org-roam-keys
       "f" 'org-roam-node-find
       "i" 'org-roam-node-insert)
 
-    (nmap
-      "<SPC> s" 'save-buffer))
-#+end_src
+    (general-create-definer fi/leader
+      :states 'normal
+      :keymaps '(override)
+      :prefix "SPC")
 
+    (fi/leader
+      "s" 'save-buffer
+      ;; projectile
+      "pp" 'projectile-switch-project
+      "pk" 'projectile-kill-buffers
+      "pg" 'projectile-ripgrep
+      "pt" 'projectile-run-vterm
+      "pf" 'projectile-find-file
+      ;; origami
+      "zc" 'origami-close-node
+      "zC" 'origami-close-all-nodes
+      "zo" 'origami-open-node
+      "zO" 'origami-open-all-nodes
+      "zr" 'origami-close-node-recursively
+      "zR" 'origami-open-node-recursively))
+#+end_src
+** Ledger
+#+begin_src emacs-lisp
+   (use-package ledger-mode
+    :init
+    (setq ledger-clear-whole-transactions 1)
+    :config
+    (add-to-list 'evil-emacs-state-modes 'ledger-report-mode)
+    :mode "\\.dat\\'")
+#+end_src
 ** LSP
 #+begin_src emacs-lisp
   (use-package lsp-mode
@@ -446,8 +477,6 @@ Hydra for org-roam mode
     :diminish projectile-mode
     :config (projectile-mode)
     :custom (projectile-completion-system 'ivy)
-    :bind-keymap
-    ("C-c p" . projectile-command-map) ; set prefix for projectile package
     :init
     (setq projectile-project-search-path '("~/fbk" "~/personalProject" "~/uni"))
     (setq projectile-switch-project-action #'project-dired)
@@ -455,7 +484,7 @@ Hydra for org-roam mode
     (setq projectile-sort-order 'modification-time)
     (setq projectile-completion-system 'ivy)
     )
-#+end_src
+    #+end_src
 
 ** Snippets
 #+begin_src emacs-lisp
@@ -772,10 +801,10 @@ Open other notes in the same window
   (use-package org-cliplink)
   ;; (setq fi/org-agenda-directory "~/org/tasks/")
   (setq org-capture-templates
-	`(("i" "inbox" entry (file "~/org/tasks/inbox.org")
-	   ,(concat "* TODO %? :inbox:\n" "/Entered on/ %U"))
-	  ("l" "link" entry (file "~/org/tasks/inbox.org")
-	   "* TODO %(org-cliplink-capturte)" :immediate-finish t)))
+        `(("i" "inbox" entry (file "~/org/tasks/inbox.org")
+           ,(concat "* TODO %? :inbox:\n" "/Entered on/ %U"))
+          ("l" "link" entry (file "~/org/tasks/inbox.org")
+           "* TODO %(org-cliplink-capturte)" :immediate-finish t)))
 #+end_src
 ** Clocking work time
 Save clock history across Emacs sessions
@@ -792,22 +821,19 @@ Save clock history across Emacs sessions
     (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
 
   (with-eval-after-load 'org-faces
-    (dolist (face '((org-level-1 . 1.2)
-                    (org-level-2 . 1.1)
-                    (org-level-3 . 1.05)
-                    (org-level-4 . 1.0)
-                    (org-level-5 . 1.1)
-                    (org-level-6 . 1.1)
-                    (org-level-7 . 1.1)
-                    (org-level-8 . 1.1)))
-      (set-face-attribute (car face) nil :font "JetBrains Mono" :weight 'regular :height (cdr face)))
-
     ;; Make sure org-indent face is available
     (require 'org-indent)
-
     ;; Ensure that anything that should be fixed-pitch in Org files appears that way
-
     (defun fi/font-config-org (frame)
+      (dolist (face '((org-level-1 . 1.2)
+                      (org-level-2 . 1.1)
+                      (org-level-3 . 1.05)
+                      (org-level-4 . 1.0)
+                      (org-level-5 . 1.1)
+                      (org-level-6 . 1.1)
+                      (org-level-7 . 1.1)
+                      (org-level-8 . 1.1)))
+        (set-face-attribute (car face) nil :font "JetBrains Mono" :weight 'regular :height (cdr face)))
       (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
       (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
       (set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch))
@@ -994,7 +1020,8 @@ Function to fix the reload the cache of org mode and org roam [[https://dev.to/d
   (global-display-line-numbers-mode t)
   ;; add hook to disable line numbers in org-mode
   (dolist (mode '(org-mode-hook
-                  shell-mode-hook))
+                  shell-mode-hook
+                  vterm-mode-hook))
     (add-hook mode (lambda () (display-line-numbers-mode 0))))
   (set-default-coding-systems 'utf-8)
 #+end_src

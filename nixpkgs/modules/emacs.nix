@@ -21,6 +21,8 @@ in
     # poppler
     poppler_utils
     imagemagick
+    # ledger
+    ledger
   ];
   xdg.configFile."emacs/Emacs.org".source = ../dotfiles/emacs/Emacs.org;
 }
