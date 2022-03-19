@@ -9,7 +9,8 @@
 #Last Update    : 09/01/2021
 ###################################################################
 
-export BORG_REPO='/mnt/home_backup'
+# export BORG_REPO='/mnt/home_backup'
+export BORG_REPO='ssh://pi@192.168.1.25/./backup'
 export BORG_PASSCOMMAND='rbw get borg'
 
 backup() {
@@ -22,7 +23,7 @@ backup() {
         --exclude "**/venv" \
         --exclude "**/node_modules" \
         --exclude "/home/fedeizzo/fbk/pei/postgres_data" \
-        --compression zstd,22 \
+        --compression zstd,3 \
         ::'{hostname}-{now}' \
         $HOME/.gnupg \
         $HOME/.ssh \
@@ -35,7 +36,6 @@ backup() {
         $HOME/.local/share/fish/fish_history \
         $HOME/.local/share/z/data \
         $HOME/zettelkasten \
-        $HOME/zettelkasten.back \
         $HOME/org
     backup_exit=$?
 
@@ -46,8 +46,8 @@ backup() {
         --prefix '{hostname}-' \
         --show-rc \
         --keep-daily 1 \
-        --keep-weekly 2 \
-        --keep-monthly 4
+        --keep-weekly 1 \
+        --keep-monthly 1
     prune_exit=$?
 
     global_exit=$(( backup_exit > prune_exit ? backup_exit : prune_exit ))
@@ -111,21 +111,21 @@ helpMessage="usage: backup [command]\n\nPossible commands:\n\tcreate: start back
 
 case $1 in
     "create")
-        [ ! -d $BORG_REPO ] && echo "Mount backup SSD!" && exit 1
+        # [ ! -d $BORG_REPO ] && echo "Mount backup SSD!" && exit 1
         backup
         ;;
     "list")
-        [ ! -d $BORG_REPO ] && echo "Mount backup SSD!" && exit 1
+        # [ ! -d $BORG_REPO ] && echo "Mount backup SSD!" && exit 1
         list_repo
         ;;
     "info")
-        [ ! -d $BORG_REPO ] && echo "Mount backup SSD!" && exit 1
+        # [ ! -d $BORG_REPO ] && echo "Mount backup SSD!" && exit 1
         peek_backup
         ;;
-    "disk")
-        shift
-        disk_handler $1
-        ;;
+    # "disk")
+    #     shift
+    #     disk_handler $1
+    #     ;;
     "help"|*)
         echo -e $helpMessage
         ;;
