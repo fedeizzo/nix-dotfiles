@@ -53,6 +53,7 @@
       hg = "kitty +kitten hyperlinked_grep";
       colorpicker = "grim -g (slurp -p) -t ppm - | convert - -format '%[pixel:p{0,0}]' txt:-";
       lz = "lazygit";
+      er = "systemctl --user restart emacs.service";
     };
     functions = {
       dt = {

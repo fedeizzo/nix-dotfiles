@@ -213,8 +213,8 @@
                               company-yasnippet
                               company-capf
                               company-files
-                              company-dabbrev-code
-                              company-dabbrev
+                              ;; company-dabbrev-code
+                              ;; company-dabbrev
                               ))))
   (use-package company-box
     :hook (company-mode . company-box-mode))
@@ -352,40 +352,43 @@ Hydra for org-roam mode
 ** Keybind manager using leader
 #+begin_src emacs-lisp
   (use-package general
-    :config
-    (general-evil-setup t)
-    (general-override-mode 1)
+        :config
+        (general-evil-setup t)
+        (general-override-mode 1)
 
 
-    (general-create-definer fi/org-roam-keys
-      :states 'normal
-      :keymaps '(org-roam-mode override)
-      :prefix "C-c C-r")
+        (general-create-definer fi/org-roam-keys
+          :states 'normal
+          :keymaps '(org-roam-mode override)
+          :prefix "C-c C-r")
 
-    (fi/org-roam-keys
-      "f" 'org-roam-node-find
-      "i" 'org-roam-node-insert)
+        (fi/org-roam-keys
+          "f" 'org-roam-node-find
+          "i" 'org-roam-node-insert)
 
-    (general-create-definer fi/leader
-      :states 'normal
-      :keymaps '(override)
-      :prefix "SPC")
+        (general-create-definer fi/leader
+          :states 'normal
+          :keymaps '(override)
+          :prefix "SPC")
 
-    (fi/leader
-      "s" 'save-buffer
-      ;; projectile
-      "pp" 'projectile-switch-project
-      "pk" 'projectile-kill-buffers
-      "pg" 'projectile-ripgrep
-      "pt" 'projectile-run-vterm
-      "pf" 'projectile-find-file
-      ;; origami
-      "zc" 'origami-close-node
-      "zC" 'origami-close-all-nodes
-      "zo" 'origami-open-node
-      "zO" 'origami-open-all-nodes
-      "zr" 'origami-close-node-recursively
-      "zR" 'origami-open-node-recursively))
+        (fi/leader
+          "s" 'save-buffer
+          ;; projectile
+          "pp" 'projectile-switch-project
+          "pk" 'projectile-kill-buffers
+          "pg" 'projectile-ripgrep
+          "pt" 'projectile-run-vterm
+          "pf" 'projectile-find-file
+          ;; origami
+          "zc" 'origami-close-node
+          "zC" 'origami-close-all-nodes
+          "zo" 'origami-open-node
+          "zO" 'origami-open-all-nodes
+          "zr" 'origami-close-node-recursively
+          "zR" 'origami-open-node-recursively
+          ;; org roam
+          "ri" 'org-roam-node-insert
+          "rf" 'org-roam-node-find))
 #+end_src
 ** Ledger
 #+begin_src emacs-lisp
@@ -484,7 +487,12 @@ Hydra for org-roam mode
     (setq projectile-sort-order 'modification-time)
     (setq projectile-completion-system 'ivy)
     )
-    #+end_src
+#+end_src
+
+** Ripgrep
+#+begin_src emacs-lisp
+  (use-package ripgrep)
+#+end_src
 
 ** Snippets
 #+begin_src emacs-lisp
@@ -492,6 +500,12 @@ Hydra for org-roam mode
     :config
     (yas-global-mode 1))
   (use-package yasnippet-snippets)
+  (defun fi/my-org-latex-yas ()
+    "Activate org and LaTeX yas expansion in org-mode buffers."
+    (yas-minor-mode)
+    (yas-activate-extra-mode 'latex-mode))
+
+  (add-hook 'org-mode-hook #'fi/my-org-latex-yas)
 #+end_src
 
 ** Super save
@@ -893,7 +907,7 @@ Save clock history across Emacs sessions
   (setq org-format-latex-options '(
                                    :foreground default
                                    :background default
-                                   :scale 0.5
+                                   :scale 1.0
                                    :html-foreground "Black"
                                    :html-background "Transparent"
                                    :html-scale 1.0
@@ -927,7 +941,7 @@ This function changes the build command adding some option in order to support e
 Use an external package for the pseudocode, the deafault one is verbatim
 #+begin_src emacs-lisp
   (require 'ox-latex)
-  (setq org-latex-listings t)
+  (setq org-latex-listings 't)
   (add-to-list 'org-latex-packages-alist '("" "listings"))
   (add-to-list 'org-latex-packages-alist '("" "color"))
   (add-to-list 'org-latex-packages-alist '("" "svg"))
