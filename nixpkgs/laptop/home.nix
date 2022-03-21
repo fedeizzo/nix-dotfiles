@@ -7,10 +7,9 @@ in
   imports = [
     ../modules/bottom.nix
     ../modules/chat.nix
+    ../modules/cli.nix
     ../modules/config.nix
-    ../modules/cuda.nix
     ../modules/emacs.nix
-    # ../modules/email
     ../modules/fish.nix
     ../modules/git.nix
     ../modules/kitty.nix
@@ -20,12 +19,9 @@ in
     ../modules/neovim.nix
     ../modules/notes.nix
     ../modules/packages.nix
-    ../modules/picom.nix
     ../modules/qutebrowser.nix
     ../modules/services.nix
     ../modules/wayland.nix
-    # ../modules/xmonad.nix
-    ../modules/xresources.nix
     ../modules/zathura.nix
   ];
 

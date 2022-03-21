@@ -1,6 +1,9 @@
 { config, pkgs, libs, ... }:
 
 {
+  home.packages = with pkgs; [
+    qutebrowser
+  ];
   home.file = {
     ".config/qutebrowser/config.py" = {
       source = ../dotfiles/qutebrowser/config.py;

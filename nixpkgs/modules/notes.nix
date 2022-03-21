@@ -2,7 +2,6 @@
 
 {
   home.packages = with pkgs; [
-    obsidian
     zotero
     anki
     inkscape

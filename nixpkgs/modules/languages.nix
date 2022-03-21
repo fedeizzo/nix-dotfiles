@@ -7,15 +7,6 @@
     # tree-sitter
     tree-sitter
 
-    # haskell
-    # cabal-install
-    # haskellPackages.haskell-language-server
-    # haskellPackages.ormolu
-
-    # lua
-    lua
-    sumneko-lua-language-server
-
     # python
     black
     python39
@@ -50,9 +41,5 @@
     nixpkgs-fmt
     nixpkgs-lint
     rnix-lsp
-
-    # fennel
-    fennel
-    clojure-lsp
   ];
 }

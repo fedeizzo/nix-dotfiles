@@ -388,7 +388,8 @@ Hydra for org-roam mode
           "zR" 'origami-open-node-recursively
           ;; org roam
           "ri" 'org-roam-node-insert
-          "rf" 'org-roam-node-find))
+          "rf" 'org-roam-node-find
+          "rc" 'org-download-clipboard))
 #+end_src
 ** Ledger
 #+begin_src emacs-lisp
@@ -599,11 +600,15 @@ A spaced repetition mechanism to pair with org-roam notes.
           ;; org-preview-latex-image-directory "/tmp/ltximg/"
           ))
 
+  (defun fi/dummy-org-download-annotate-function (link)
+    "")
 
   (use-package org-download
     :after org
     :config
     (setq org-downlaod-screenshot-method "grim -g \"$(slurp)\" - | swappy -f -")
+    (setq org-download-annotate-function
+          #'fi/dummy-org-download-annotate-function)
     (setq org-downlaod-image-dir "./img"))
 #+end_src
 

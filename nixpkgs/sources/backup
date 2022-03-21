@@ -1,16 +1,6 @@
 #!/usr/bin/env bash
 
-###################################################################
-#Script Name	: backup
-#Description	: routine for backup with borg
-#Args         	: none
-#Author       	: Federico Izzo
-#Email         	: federico.izzo99@gmail.com
-#Last Update    : 09/01/2021
-###################################################################
-
-# export BORG_REPO='/mnt/home_backup'
-export BORG_REPO='ssh://pi@192.168.1.25/./backup'
+export BORG_REPO='ssh://pi@192.168.1.21/./backup'
 export BORG_PASSCOMMAND='rbw get borg'
 
 backup() {
@@ -84,48 +74,21 @@ peek_backup() {
     fi
 }
 
-disk_handler() {
-    helpMessage="usage: backup disk [command]\n\nPossible commands:\n\tmount: mount disk in /mnt.\n\tumount: umount disk from /mnt.\n\tinfo: show info relative to disk usage.\n\thelp: print this message.\n"
-    case $1 in
-        "mount")
-            doas mount /dev/sda /mnt
-            ;;
-        "umount")
-            doas umount /mnt
-            ;;
-        "info")
-            [ ! -d $BORG_REPO ] && echo "Mount backup SSD!" && exit 1
-            du -ch --max-depth=0 --exclude 'lost+found' /mnt/* | sort -hr
-            df -h | grep '/dev/sda' | awk -F' ' '{print "used: " $3 " " $5 ", avail: " $4 ", total: " $2}'
-            ;;
-        "help"|*)
-            echo -e $helpMessage
-            ;;
-    esac
-}
-
 info() { printf "\n%s %s\n\n" "$( date )" "$*" >&2; }
 trap 'echo $( date ) Backup interrupted >&2; exit 2' INT TERM
 
-helpMessage="usage: backup [command]\n\nPossible commands:\n\tcreate: start backup and prune operation.\n\tlist: list all backup in the repository.\n\tinfo: show info relative to one backup.\n\tdisk: utilities for disk used as backup.\n\thelp: print this message.\n"
+helpMessage="usage: backup [command]\n\nPossible commands:\n\tcreate: start backup and prune operation.\n\tlist: list all backup in the repository.\n\tinfo: show info relative to one backup.\n\thelp: print this message.\n"
 
 case $1 in
     "create")
-        # [ ! -d $BORG_REPO ] && echo "Mount backup SSD!" && exit 1
         backup
         ;;
     "list")
-        # [ ! -d $BORG_REPO ] && echo "Mount backup SSD!" && exit 1
         list_repo
         ;;
     "info")
-        # [ ! -d $BORG_REPO ] && echo "Mount backup SSD!" && exit 1
         peek_backup
         ;;
-    # "disk")
-    #     shift
-    #     disk_handler $1
-    #     ;;
     "help"|*)
         echo -e $helpMessage
         ;;

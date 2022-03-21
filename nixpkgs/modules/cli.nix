@@ -1,0 +1,47 @@
+{ config, pkgs, libs, ... }:
+
+{
+  home.packages = with pkgs; [
+    coreutils
+    dragon-drop
+    exa
+    fd
+    fzf
+    gawk
+    gnused
+    gnutls
+    htop
+    nmap
+    powertop
+    unzip
+    xsv
+    zsh
+    cachix
+    bat
+    ripgrep
+    openssl
+    rbw
+    nix-index
+    rsync
+    unstable.bitwarden-cli
+    brightnessctl
+    jq
+    openssh
+    pamixer
+    pandoc
+    borgbackup
+    ncdu
+    playerctl
+    libsecret
+    w3m
+    rclone
+    lazygit
+    graphviz
+    sshfs
+    ffmpeg
+    flac
+    file
+    mpd-mpris
+    home-manager
+  ];
+}

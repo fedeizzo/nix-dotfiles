@@ -2,29 +2,8 @@
 
 {
   home.packages = with pkgs; [
-    coreutils
-    dragon-drop
-    exa
-    fd
-    fzf
-    gawk
-    gnused
-    gnutls
-    htop
-    nmap
-    powertop
     universal-ctags
-    unzip
-    xsv
-    zsh
-    cachix
-    bat
-    ripgrep
-    openssl
-    rbw
     pinentry-qt
-    nix-index
-    rsync
     (nerdfonts.override {
       fonts = [
         "Meslo"
@@ -32,40 +11,14 @@
       ];
     })
     unstable.bitwarden
-    unstable.bitwarden-cli
-    brightnessctl
     firefox
-    jq
     keyutils
-    openssh
-    pamixer
-    pandoc
     pavucontrol
-    playerctl
-    qutebrowser
-    borgbackup
-    ncdu
-    thunderbird
     joypixels
-    libsecret
-    w3m
     qgis
     gimp
     calibre
     onlyoffice-bin
     google-chrome
-    rclone
-    lazygit
-    # unstable.qmk
-    chessx
-    plover.dev
-    graphviz
-    sshfs
   ];
-
-  programs.direnv = {
-    enable = true;
-    nix-direnv.enable = true;
-    nix-direnv.enableFlakes = true;
-  };
 }

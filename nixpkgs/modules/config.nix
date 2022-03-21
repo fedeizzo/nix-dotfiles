@@ -12,7 +12,4 @@
   home.file.".ssh/config" = {
     source = ../dotfiles/ssh/config;
   };
-
-  # lua formatter
-  xdg.configFile."luaformatter/config.yaml".source = ../dotfiles/lua_format.yaml;
 }
