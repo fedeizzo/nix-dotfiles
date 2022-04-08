@@ -79,9 +79,4 @@ in
   #   package = pkgs.emacsPgtkGcc;
   #   enable = true;
   # };
-  programs.direnv = {
-    enable = true;
-    nix-direnv.enable = true;
-    nix-direnv.enableFlakes = true;
-  };
 }

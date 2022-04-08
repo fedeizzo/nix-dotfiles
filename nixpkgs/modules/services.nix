@@ -2,7 +2,14 @@
 
 {
   services.lorri.enable = true;
-  services.network-manager-applet.enable = true;
+  home.packages = with pkgs; [
+    networkmanager_dmenu
+  ];
+  programs.direnv = {
+    enable = true;
+    nix-direnv.enable = true;
+    nix-direnv.enableFlakes = true;
+  };
   systemd.user.services = {
     mpris-proxy = {
       Unit = {

@@ -37,8 +37,7 @@
   (defun fi/font-config (frame)
     (set-face-attribute 'default nil :font "JetBrains Mono" :weight 'normal :height 105)
     (set-face-attribute 'fixed-pitch nil :font "JetBrains Mono" :weight 'normal :height 105)
-    (set-face-attribute 'variable-pitch nil :font "JetBrains Mono" :height 105 :weight 'normal)
-    (remove-hook 'after-make-frame-functions #'fi/font-config))
+    (set-face-attribute 'variable-pitch nil :font "JetBrains Mono" :height 105 :weight 'normal))
   (add-hook 'after-make-frame-functions #'fi/font-config)
   (use-package ligature
     :load-path "~/.config/emacs/ligature.el"
@@ -393,12 +392,23 @@ Hydra for org-roam mode
 #+end_src
 ** Ledger
 #+begin_src emacs-lisp
-   (use-package ledger-mode
+  (use-package ledger-mode
     :init
     (setq ledger-clear-whole-transactions 1)
     :config
     (add-to-list 'evil-emacs-state-modes 'ledger-report-mode)
-    :mode "\\.dat\\'")
+    (setq ledger-report-use-native-highlighting t)
+    (setq ledger-reports
+          (("bal" "%(binary) -f %(ledger-file) bal")
+           ("reg" "%(binary) -f %(ledger-file) reg")
+           ("payee" "%(binary) -f %(ledger-file) reg @%(payee)")
+           ("account" "%(binary) -f %(ledger-file) reg %(account)"))
+          :mode "\\.dat\\'"))
+  (add-hook 'ledger-mode-hook
+            (lambda ()
+              (setq-local tab-always-indent 'complete)
+              (setq-local completion-cycle-threshold t)
+              (setq-local ledger-complete-in-steps t)))
 #+end_src
 ** LSP
 #+begin_src emacs-lisp
@@ -886,29 +896,50 @@ Save clock history across Emacs sessions
   (setq org-startup-with-latex-preview t)
 #+end_src
 ** Latex
-*** Export
+*** Acutex
 #+begin_src emacs-lisp
-  ;; (setq org-latex-default-class article)
-  ;; (add-to-list 'org-latex-classes
-  ;;              '("article" "\\documentclass[11pt,letterpaper]{article}"
-  ;;                ("\\section{%s}" . "\\section*{%s}")
-  ;;                ("\\subsection{%s}" . "\\subsection*{%s}")
-  ;;                ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-  ;;                ("\\paragraph{%s}" . "\\paragraph*{%s}")
-  ;;                ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+  (use-package tex
+    :ensure auctex
+    :config
+    (setq TeX-parse-self t
+          TeX-auto-save t))
+#+end_src
+*** Export
+- memoir class is used for mathematical books
+- textcomp add fonts support
+- 
+#+begin_src emacs-lisp
   (with-eval-after-load 'ox-latex
+    (setq org-latex-classes nil)
     (add-to-list 'org-latex-classes
-                 '("org-plain-latex"
-                   "\\documentclass[geye]{elegantnote}
-                                    \\documentclass[en]{elegantnote}
-                              [NO-DEFAULT-PACKAGES]
-                              [PACKAGES]
-                              [EXTRA]"
-                   ("\\section{%s}". "\\section*{%s}")
-                   ("\\subsection{%s}". "\\subsection*{%s}")
-                   ("\\subsubsection{%s}". "\\subsubsection*{%s}")
-                   ("\\paragraph{%s}". "\\paragraph*{%s}")
-                   ("\\subparagraph{%s}". "\\subparagraph*{%s}"))))
+                 '("personal"
+                   "\\documentclass[a4paper,11pt,notitlepage,margin=2.5cm]{article}
+                  \\usepackage[utf8]{inputenc}
+                  \\usepackage[T1]{fontenc}
+                  \\usepackage{textcomp}
+                  \\usepackage{url}
+                  \\usepackage{graphicx}
+                  \\usepackage{float}
+                  \\usepackage{parskip}
+                  \\usepackage{xcolor}
+                  \\usepackage{amsmath, amsfonts, mathtools, amsthm, amssymb}
+                  \\usepackage{enumitem}
+                  \\setlist[itemize]{noitemsep}
+                  \\usepackage{geometry}
+                  \\geometry{
+                      a4paper,
+                      total={170mm,257mm},
+                      left=20mm,
+                      top=20mm,
+                  }
+                  "
+                   ("\\section{%s}" . "\\section*{%s}")
+                   ("\\subsection{%s}" . "\\subsection*{%s}")
+                   ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                   ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                   ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+    (setq org-latex-default-class "personal"))
   (setq org-format-latex-options '(
                                    :foreground default
                                    :background default
