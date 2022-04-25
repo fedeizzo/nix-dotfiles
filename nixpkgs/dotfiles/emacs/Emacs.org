@@ -5,8 +5,9 @@
 #+begin_src emacs-lisp
   (require 'package)
   (setq package-archives '(("melpa" . "https://melpa.org/packages/")
-                           ("org" . "https://orgmode.org/elpa/")
-                           ("elpa" . "https://elpa.gnu.org/packages/")))
+                           ("elpa" . "https://elpa.gnu.org/packages/")
+                           ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+                           ))
   (package-initialize)
   (unless package-archive-contents
     (package-refresh-contents))
@@ -321,8 +322,7 @@
 Installation
 #+begin_src emacs-lisp
   (use-package hydra)
-  ;; understand and use postframe for bettew ui
-  ;; (use-package hydra-postframe)
+  (use-package hydra-postframe)
   (use-package major-mode-hydra
     :bind
     ("M-SPC" . major-mode-hydra))
@@ -349,66 +349,45 @@ Hydra for elisp major mode
 #+end_src
 Hydra for org-roam mode
 ** Keybind manager using leader
+This section must be the last one because it should stay after any function declaration
+
 #+begin_src emacs-lisp
-  (use-package general
-        :config
-        (general-evil-setup t)
-        (general-override-mode 1)
+    (use-package general
+          :config
+          (general-evil-setup t)
+          (general-override-mode 1)
 
 
-        (general-create-definer fi/org-roam-keys
-          :states 'normal
-          :keymaps '(org-roam-mode override)
-          :prefix "C-c C-r")
+          (general-create-definer fi/leader
+            :states 'normal
+            :keymaps '(override)
+            :prefix "SPC")
 
-        (fi/org-roam-keys
-          "f" 'org-roam-node-find
-          "i" 'org-roam-node-insert)
-
-        (general-create-definer fi/leader
-          :states 'normal
-          :keymaps '(override)
-          :prefix "SPC")
-
-        (fi/leader
-          "s" 'save-buffer
-          ;; projectile
-          "pp" 'projectile-switch-project
-          "pk" 'projectile-kill-buffers
-          "pg" 'projectile-ripgrep
-          "pt" 'projectile-run-vterm
-          "pf" 'projectile-find-file
-          ;; origami
-          "zc" 'origami-close-node
-          "zC" 'origami-close-all-nodes
-          "zo" 'origami-open-node
-          "zO" 'origami-open-all-nodes
-          "zr" 'origami-close-node-recursively
-          "zR" 'origami-open-node-recursively
-          ;; org roam
-          "ri" 'org-roam-node-insert
-          "rf" 'org-roam-node-find
-          "rc" 'org-download-clipboard))
+          (fi/leader
+            "s" 'save-buffer
+            ;; origami
+            "zc" 'origami-close-node
+            "zC" 'origami-close-all-nodes
+            "zo" 'origami-open-node
+            "zO" 'origami-open-all-nodes
+            "zr" 'origami-close-node-recursively
+            "zR" 'origami-open-node-recursively))
 #+end_src
-** Ledger
+
+** hledger
 #+begin_src emacs-lisp
-  (use-package ledger-mode
-    :init
-    (setq ledger-clear-whole-transactions 1)
+  (use-package hledger-mode
     :config
-    (add-to-list 'evil-emacs-state-modes 'ledger-report-mode)
-    (setq ledger-report-use-native-highlighting t)
-    (setq ledger-reports
-          (("bal" "%(binary) -f %(ledger-file) bal")
-           ("reg" "%(binary) -f %(ledger-file) reg")
-           ("payee" "%(binary) -f %(ledger-file) reg @%(payee)")
-           ("account" "%(binary) -f %(ledger-file) reg %(account)"))
-          :mode "\\.dat\\'"))
-  (add-hook 'ledger-mode-hook
-            (lambda ()
-              (setq-local tab-always-indent 'complete)
-              (setq-local completion-cycle-threshold t)
-              (setq-local ledger-complete-in-steps t)))
+    (setq
+     hledger-jfile "~/docs/finance/finance.journal"
+     hledger-currency-string "€"
+     hledger-top-income-account "revenue"
+     hledger-ratios-income-accounts "revenue"
+     hledger-year-of-birth 1999
+     hledger-life-expectancy 80
+     ))
+
+  (add-to-list 'auto-mode-alist '("\\.journal\\'" . hledger-mode))
 #+end_src
 ** LSP
 #+begin_src emacs-lisp
@@ -440,6 +419,9 @@ Hydra for org-roam mode
     (define-key lsp-ui-mode-map [remap xref-find-references] #'lsp-ui-peek-find-references))
   (use-package flycheck
     :after lsp-mode)
+  (use-package flycheck-hledger
+    :after (flycheck ledger-mode)
+    :demand t)
   (use-package lsp-ivy
     :after lsp-mode)
 #+end_src
@@ -464,6 +446,10 @@ Hydra for org-roam mode
 *** bash
 #+begin_src emacs-lisp
 
+#+end_src
+*** rust
+#+begin_src emacs-lisp
+  (use-package rustic)
 #+end_src
 
 ** Magit
@@ -498,6 +484,19 @@ Hydra for org-roam mode
     (setq projectile-sort-order 'modification-time)
     (setq projectile-completion-system 'ivy)
     )
+#+end_src
+Hydra
+#+begin_src emacs-lisp
+  (pretty-hydra-define projectile-hydra-main (:color blue :title "Projectile" :quit-key "q")
+    ("Global"
+     (("p" projectile-switch-project "switch project"))
+     "Current"
+     (("f" projectile-find-file "find file")
+      ("g" projectile-ripgrep "search all")
+      ("t" projectile-run-vterm "open terminal")
+      ("k" projectile-kill-buffers "close project")))
+    )
+  (fi/leader "p" 'projectile-hydra-main/body)
 #+end_src
 
 ** Ripgrep
@@ -695,13 +694,6 @@ Open other notes in the same window
                                   ))
 #+end_src
 
-*** Keybinds
-#+begin_src emacs-lisp
-  (evil-define-key 'emacs org-agenda-mode-map "i" #'org-agenda-clock-in)
-  (evil-define-key 'emacs org-agenda-mode-map "I" #'fi/clock-in-and-advance)
-  (evil-define-key 'emacs org-agenda-mode-map "r" #'fi/org-process-inbox)
-  (evil-define-key 'emacs org-agenda-mode-map "R" #'org-agenda-refile)
-#+end_src
 *** Functions
 **** Inbox processing
 #+begin_src emacs-lisp
@@ -804,8 +796,10 @@ Open other notes in the same window
 #+end_src
 ** Babel
 #+begin_src emacs-lisp
+  (use-package org-contrib)
   (require 'org-tempo)
   (require 'ob-python)
+  (require 'ob-hledger)
   (use-package ein)
   (add-to-list 'org-structure-template-alist '("sh" . "src sh"))
   (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
@@ -821,6 +815,8 @@ Open other notes in the same window
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((ein . t)
+     (hledger . t)
+     (gnuplot .t)
      ;; other languages..
      ))
 #+end_src
@@ -914,25 +910,60 @@ Save clock history across Emacs sessions
     (add-to-list 'org-latex-classes
                  '("personal"
                    "\\documentclass[a4paper,11pt,notitlepage,margin=2.5cm]{article}
-                  \\usepackage[utf8]{inputenc}
-                  \\usepackage[T1]{fontenc}
-                  \\usepackage{textcomp}
-                  \\usepackage{url}
-                  \\usepackage{graphicx}
-                  \\usepackage{float}
-                  \\usepackage{parskip}
-                  \\usepackage{xcolor}
-                  \\usepackage{amsmath, amsfonts, mathtools, amsthm, amssymb}
-                  \\usepackage{enumitem}
-                  \\setlist[itemize]{noitemsep}
-                  \\usepackage{geometry}
-                  \\geometry{
-                      a4paper,
-                      total={170mm,257mm},
-                      left=20mm,
-                      top=20mm,
-                  }
-                  "
+                    \\usepackage[utf8]{inputenc}
+                    \\usepackage[T1]{fontenc}
+                    \\usepackage{textcomp}
+                    \\usepackage{url}
+                    \\usepackage{graphicx}
+                    \\usepackage{hyperref}
+                    \\usepackage{float}
+                    \\usepackage{parskip}
+                    \\usepackage{xcolor}
+                    \\usepackage{amsmath, amsfonts, mathtools, amsthm, amssymb}
+                    \\usepackage{enumitem}
+                    \\setlist[itemize]{noitemsep}
+                    \\usepackage{geometry}
+                    \\geometry{
+                        a4paper,
+                        total={170mm,257mm},
+                        left=20mm,
+                        top=20mm,
+                    }
+
+                    % Polar Night
+                    \\definecolor{NordDarkBlack}{HTML}{2E3440}     % nord0
+                    \\definecolor{NordBlack}{HTML}{3B4252}         % nord1
+                    \\definecolor{NordMediumBlack}{HTML}{434C5e}   % nord2
+                    \\definecolor{NordBrightBlack}{HTML}{4C566A}   % nord3
+                    % Snow Storm
+                    \\definecolor{NordWhite}{HTML}{D8DEE9}         % nord4
+                    \\definecolor{NordBrighterWhite}{HTML}{E5E9F0}         % nord5
+                    \\definecolor{NordBrightestWhite}{HTML}{ECEFF4}   % nord6
+                    % Frost
+                    \\definecolor{NordCyan}{HTML}{8FBCBB}          % nord7
+                    \\definecolor{NordBrightCyan}{HTML}{88C0D0}    % nord8
+                    \\definecolor{NordBlue}{HTML}{81A1C1}          % nord9
+                    \\definecolor{NordBrightBlue}{HTML}{5E81AC}    % nord10
+                    % Aurora
+                    \\definecolor{NordRed}{HTML}{BF616A}           % nord11
+                    \\definecolor{NordOrange}{HTML}{D08770}        % nord12
+                    \\definecolor{NordYellow}{HTML}{EBCB8B}        % nord13
+                    \\definecolor{NordGreen}{HTML}{A3BE8C}         % nord14
+                    \\definecolor{NordMagenta}{HTML}{B48EAD}       % nord15
+
+                    \\hypersetup{
+                        colorlinks=true,
+                        linkcolor=black,
+                        filecolor=NordBrightBlack,
+                        urlcolor=NordBrightBlack,
+                        citecolor=NordBrightBlack,
+                    }
+                    \\urlstyle{same}
+                    \\renewcommand\\contentsname{
+                      ~\\hfill {\\LARGE Table of contents}\\\\
+                      \\rule{\\textwidth}{0.4pt}
+                    }
+                    "
                    ("\\section{%s}" . "\\section*{%s}")
                    ("\\subsection{%s}" . "\\subsection*{%s}")
                    ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
@@ -948,6 +979,22 @@ Save clock history across Emacs sessions
                                    :html-background "Transparent"
                                    :html-scale 1.0
                                    :matchers ("begin" "$1" "$" "$$" "\\(" "\\[")))
+
+  (setq org-latex-title-command "
+  \\begin{titlepage}
+          \\raggedleft
+          \\vspace*{\\baselineskip}
+          {\\Large %a}\\\\
+          \\vspace*{0.167\\textheight}
+          \\textbf{\\LARGE Personal notes of}\\\\[\\baselineskip]
+          {{\\color{NordMediumBlack}{\\Huge %t}}\\\\[\\baselineskip]}
+          {\\Large \\textit{%s}}
+          \\vfill
+          {\\large $\\mathcal{FI}$}
+          \\vspace*{3\\baselineskip}
+  \\end{titlepage}
+  ")
+  (setq org-latex-toc-command "\\tableofcontents \\clearpage")
 #+end_src
 *** Math
 #+begin_src emacs-lisp
@@ -1015,6 +1062,10 @@ Maybe it is better to run the db manually and not automatically at startup
   (use-package org-roam
     :after org)
   (require 'org-roam)
+  (setq org-roam-capture-templates
+        '(("d" "default" plain "%?"
+           :target (file+head "${slug}.org" "#+title: ${title} ")
+           :unnarrowed t)))
   (setq org-roam-directory (file-truename "~/zettelkasten"))
   (org-roam-db-autosync-mode)
   (setq org-roam-mode-section-functions
@@ -1048,6 +1099,104 @@ Function to fix the reload the cache of org mode and org roam [[https://dev.to/d
     (org-roam-db-sync)
     (org-roam-update-org-id-locations))
 #+end_src
+hydra
+#+begin_src emacs-lisp
+
+  (pretty-hydra-define org-roam-hydra-main (:color blue :title "Projectile" :quit-key "q")
+    ("Current"
+     (("i" org-roam-node-insert "inesert node")
+      ("f" org-roam-node-find "find node")
+      ("c" org-download-clipboard "paste clipboard")))
+    )
+  (fi/leader "n" 'org-roam-hydra-main/body)
+#+end_src
+
+*** Zetteldesk
+There are two ways to insert a node in the desk:
+- ~zetteldesk-add-to-desktop~
+- ~zetteldesk-add-node-to-desktop~
+
+Backlinks can be addede with a filter ~zetteldesk-add-poi-or-moc-backlink-to-desktop~.
+Same can be done with ~remove~ keyword.
+
+Once a desktop is created the navigation through it is made with:
+- ~zetteldesk-switch-to-buffer~
+- ~zetteldesk-node-find~
+- ~zetteldesk-node-insert~
+
+To insert content inside the scratch buffer there are two functions:
+- ~zetteldesk-insert-node-contents~
+- ~zetteldesk-insert-node-contents-without-links~
+
+#+begin_src emacs-lisp
+  (use-package zetteldesk
+    :after org-roam
+    :load-path "~/.config/emacs/zetteldesk.el"
+    :config
+    (zetteldesk-mode))
+  (require 'zetteldesk)
+#+end_src
+Custom function for content insert
+#+begin_src emacs-lisp
+  (defun fi/zetteldesk-insert-all-nodes-contents-without-link ()
+    (interactive)
+    (let* ((nodes (-filter #'zetteldesk-node-p (org-roam-node-list)))
+           (location (zetteldesk-insert-location)))
+      (while nodes
+        (let* ((node (car nodes))
+               (file (org-roam-node-file node)))
+          (with-current-buffer location
+            (goto-char (point-max))
+            (newline)
+            (insert-file-contents file nil 67)
+            (kill-matching-lines "^#\\+title.*")))
+        (setq nodes (cdr nodes)))
+      (with-current-buffer location
+        (beginning-of-buffer)
+        (insert "
+  ,#+title:
+  ,#+author:
+  ,#+subtitle:
+  ,#+date:"))
+      (switch-to-buffer-other-window "*zetteldesk-scratch*")))
+#+end_src
+Hydra config
+#+begin_src emacs-lisp
+  (pretty-hydra-define zetteldesk-add-hydra (:color blue :title "Add to Zetteldesk" :quit-key "q")
+    ("Org-Roam"
+     (("n" zetteldesk-add-node-to-desktop "Add Node")
+      ("b" zetteldesk-add-backlinks-to-desktop "Add Node + All its backlinks"))
+      "Other"
+      (("a" zetteldesk-add-to-desktop "Add Buffer"))))
+
+  (pretty-hydra-define zetteldesk-remove-hydra (:color blue :title "Remove from Zetteldesk" :quit-key "q")
+    ("Org-Roam"
+     (("n" zetteldesk-remove-node-from-desktop "Remove Node")
+      ("b" zetteldesk-remove-backlinks-from-desktop "Remove Node + All its backlinks"))
+     "Other"
+     (("r" zetteldesk-remove-from-desktop "Remove Buffer"))))
+
+  (pretty-hydra-define zetteldesk-insert-hydra (:color blue :title "Insert from the Zetteldesk" :quit-key "q")
+    ("Org-Roam"
+     (("n" zetteldesk-insert-node-contents-without-link "Node Contents in *zetteldesk-scratch")
+      ("a" fi/zetteldesk-insert-all-nodes-contents-without-link  "All nodes Contents in *zetteldesk-scratch"))
+     "Supplementary Material to *zetteldesk-scratch*"
+     (("p" zetteldesk-insert-link-to-pdf "Link to PDF"))))
+
+  (pretty-hydra-define zetteldesk-main-hydra (:color blue :title "Zetteldesk Hydra" :quit-key "q")
+    ("Filter Functions"
+     (("n" zetteldesk-node-find "Find Zetteldesk Node"))
+
+     "Add/Remove Hydras"
+     (("r" zetteldesk-remove-hydra/body "Run the Removing Hydra")
+      ("a" zetteldesk-add-hydra/body "Run the Adding Hydra"))
+
+     "Inserting Things and *zetteldesk-scratch*"
+     (("s" zetteldesk-switch-to-scratch-buffer "Switch to *zetteldesk-scratch*")
+      ("i" zetteldesk-insert-hydra/body "Run the Insert Hydra"))))
+
+  (fi/leader "u" 'zetteldesk-main-hydra/body)
+#+end_src
 
 ** Property
 ** Tag and refile
@@ -1075,6 +1224,30 @@ Function to fix the reload the cache of org mode and org roam [[https://dev.to/d
     (add-hook mode (lambda () (display-line-numbers-mode 0))))
   (set-default-coding-systems 'utf-8)
 #+end_src
+* Mouse keybinds
+#+begin_src emacs-lisp
+  (defun fi/switch-last-buffer (arg)
+    "Switch to last visited buffer.
+
+      Use prefix arg to specify the order of the buffer, most to least
+      recent. Does not update buffer list, so, for example, after moving to the
+      nth most recent buffer, use unprefixed command to get back to original
+      buffer."
+    (interactive "P")
+    (switch-to-buffer (if arg
+                          (elt (buffer-list) arg)
+                        (other-buffer))
+                      t))
+
+  (defun fi/zetteldesk-add-current-buffer-to-desktop ()
+    "Add current buffer to zetteldek desktop"
+    (interactive)
+    (zetteldesk-add-to-desktop (current-buffer)))
+
+  (global-set-key [mouse-8] 'fi/switch-last-buffer)
+  (global-set-key [mouse-9] 'fi/zetteldesk-add-current-buffer-to-desktop)
+#+end_src
+
 * Things to implement with org-mode
 ** TODO habit tracker
 ** TODO define a list of tags

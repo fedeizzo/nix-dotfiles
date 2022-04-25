@@ -23,6 +23,9 @@ in
     imagemagick
     # ledger
     ledger
+    unstable.hledger
+    unstable.hledger-ui
+    unstable.hledger-web
   ];
   xdg.configFile."emacs/Emacs.org".source = ../dotfiles/emacs/Emacs.org;
 }
