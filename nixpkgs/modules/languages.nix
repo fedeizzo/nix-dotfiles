@@ -30,6 +30,7 @@
     # rust
     rust-analyzer
     rustfmt
+    lld
 
     # latex
     texlive.combined.scheme-full
