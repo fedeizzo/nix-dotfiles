@@ -26,6 +26,13 @@ input * {
     xkb_variant altgr-intl
 }
 
+# wacom tablet
+# input 1386:890:Wacom_One_by_Wacom_S_Pen {
+#     map_to_output DP-6
+#     map_from_region 0.0x0.0 1.0x0.901
+# }
+
+
 # monitors
 output "Sharp Corporation 0x14D1 0x00000000" pos 0 0
 
@@ -50,6 +57,12 @@ for_window [app_id="floatingkitty"] move scratchpad, show scratchpad
 for_window [app_id="org.qutebrowser.qutebrowser"] inhibit_idle fullscreen
 for_window [app_id="firefox"] inhibit_idle fullscreen
 for_window [app_id="anki"] floating enable
+for_window [app_id="org.inkscape.Inkscape"] floating enable
+
+# inkscape vim
+for_window [app_id="inkscapevim"] floating enable
+for_window [app_id="inkscapevim"] resize set width 50 ppt
+for_window [app_id="inkscapevim"] resize set height 45 ppt
 
 # tag keybinds
 bindsym {

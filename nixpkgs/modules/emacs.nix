@@ -1,6 +1,6 @@
 { config, pkgs, libs, ... }:
 let
-  myEmacs = with pkgs; ((emacsPackagesFor emacsPgtk).emacsWithPackages (epkgs: [
+  myEmacs = with pkgs; ((emacsPackagesFor emacsPgtkGcc).emacsWithPackages (epkgs: [
     epkgs.vterm
     epkgs.org-roam-ui
   ]));

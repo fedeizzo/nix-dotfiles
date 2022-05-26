@@ -48,6 +48,9 @@
     xorg.xinit
     virt-manager
     nixpkgs-unstable.qmk
+    # to fix xournal problem
+    pkgs.gnome.adwaita-icon-theme
+    pkgs.shared-mime-info
   ];
   programs.sway = {
     enable = true;
@@ -88,7 +91,12 @@
     libvirtd.enable = true;
   };
   environment.shells = [ pkgs.bash pkgs.fish ];
-  environment.pathsToLink = [ "/share/fish" ];
+  environment.pathsToLink = [
+    "/share/fish"
+    # to fix xournal problem
+    "/share/icons"
+    "/share/mime"
+  ];
   environment.variables = {
     "EDITOR" = "nvim";
     "READER" = "zathura";

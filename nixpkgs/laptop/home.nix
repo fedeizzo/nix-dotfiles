@@ -12,6 +12,7 @@ in
     ../modules/emacs.nix
     ../modules/fish.nix
     ../modules/git.nix
+    ../modules/gtk-qt.nix
     ../modules/kitty.nix
     ../modules/languages.nix
     ../modules/lf.nix

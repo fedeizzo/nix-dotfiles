@@ -42,6 +42,7 @@
     flac
     file
     mpd-mpris
+    moreutils
     home-manager
   ];
 }
