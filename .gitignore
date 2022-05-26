@@ -4,3 +4,5 @@ nixpkgs/config.nix
 **/.ccls-cache
 .lsp
 .clj-kondo
+*~
+.build
