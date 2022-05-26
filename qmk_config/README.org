@@ -6,13 +6,13 @@ Structure inspired by:
 - [[https://github.com/Kranex/qmk-config][Kranex qmk config]]
 
 Build:
-1. run `./flash.sh build`.
+1. run ~./flash.sh build~.
   
 Usage:
 1. define the keymap in tables;
 2. tangle this file;
 3. (optional) execute the python code cell to generate the the keymap image;
-4. run `./flash.sh flash lily` or `./flash.sh flash corne`.
+4. run ~./flash.sh flash lily~ or ~./flash.sh flash corne~.
 ** Lily58
 *** Base
 #+NAME: base-layer-left
