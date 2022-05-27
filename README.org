@@ -1,0 +1,22 @@
+* Personal config
+Personal config for NixOS managed with Nix package manager.
+
+#+ATTR_ORG: :width 900
+[[file:./images/screenshot.png]]
+
+** Fresh install
+*** Ext4
+Partitioning is made with /ext4/ file system:
+
+| Partition | Size             |
+| UEFI      | 260Mib           |
+| root      | rest of the disk |
+
+The root is encrypted with /cryptsetup./ 
+
+*** BTRFS
+OUTDATED
+
+*** TmpFS
+OUTDATED
+
