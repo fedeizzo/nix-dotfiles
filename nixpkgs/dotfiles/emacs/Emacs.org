@@ -868,6 +868,7 @@ Open other notes in the same window
      (hledger . t)
      (gnuplot .t)
      (dot . t)
+     (shell . t)
      ;; other languages..
      ))
 #+end_src
