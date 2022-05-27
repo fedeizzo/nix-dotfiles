@@ -10,10 +10,16 @@ Build:
   
 Usage:
 1. define the keymap in tables;
-2. tangle this file;
-3. (optional) execute the python code cell to generate the the keymap image;
-4. run ~./flash.sh flash lily~ or ~./flash.sh flash corne~.
+2. run ~org-babel-execute-buffer~;
+3. run ~org-babel-tangle~;
+4. (optional) execute the python code cell to generate the the keymap image;
+5. run ~./flash.sh flash lily~ or ~./flash.sh flash corne~.
+
 ** Lily58
+[[file:./lily58/layers/base.png]]
+[[file:./lily58/layers/num.png]]
+[[file:./lily58/layers/navigation.png]]
+
 *** Base
 #+NAME: base-layer-left
 | KC_ESC         | KC_1 | KC_2 | KC_3 | KC_4 | KC_5 |
@@ -72,8 +78,11 @@ Usage:
 | KC_NO | KC_ENT | KC_TRNS | KC_NO | KC_NO |
 
 *** Visualization
-#+name: html-table-generator
-#+begin_src python :var in_layer_left="None" :var in_layer_right="None" :var in_layer_left_thumb="None" :var in_layer_right_thumb="None" :results verbatim
+#+name: image-manipulation
+#+begin_src python :var layer_name="Base" :var img_path="./lily58/layers/base.png" :var in_layer_left=base-layer-left :var in_layer_right=base-layer-right :var in_layer_right_thumb=base-layer-right-thumb :var in_layer_left_thumb=base-layer-left-thumb :results none silent
+  from PIL import Image, ImageDraw, ImageFont
+
+
   mapper = {
       "QUOT": "'",
       "COMMA": ",",
@@ -87,93 +96,104 @@ Usage:
       key = key.replace("KC_", "")
       key = mapper.get(key, key)
       if key.startswith("LCTL("):
-          key = key.replace("LCTL(", "CTRL+")
+          key = key.replace("LCTL(", "C+\n")
           key = key.replace(")", "")
       if key.startswith("LGUI("):
-          key = key.replace("LGUI(", "GUI+")
+          key = key.replace("LGUI(", "G+\n")
           key = key.replace(")", "")
       if key.startswith("LCTL_T"):
-          key = key.replace("LCTL_T(", "CTRL/")
+          key = key.replace("LCTL_T(", "C/\n")
           key = key.replace(")", "")
       if key.startswith("SFT_T"):
-          key = key.replace("SFT_T(", "SHIFT/")
+          key = key.replace("SFT_T(", "S/\n")
           key = key.replace(")", "")
       if key.startswith("LGUI_T"):
-          key = key.replace("LGUI_T(", "GUI/")
+          key = key.replace("LGUI_T(", "G/\n")
           key = key.replace(")", "")
       if key.startswith("LT"):
           key = key.replace("LT(", "")
           key = key.replace(")", "")
-          key = key.replace(", ", "/")
+          key = key.replace(", ", "/\n")
       if key.startswith("NO"):
           key = key.replace("NO", "")
       return key
 
 
-  table = ""
-  for i, (lrow, rrow) in enumerate(zip(in_layer_left, in_layer_right)):
-      table += "<tr>\n"
-      if i == 3:
-          row = lrow + [in_layer_left_thumb[0][-1], in_layer_left_thumb[0][0]] + rrow
-      else:
-          row = lrow + [" ", " "] + rrow
-      for key in row:
-          if key == " ":
-              table += "<td border='0'>      </td>\n"
-          else:
-              table += "<td height='75px' width='75px'>" + format_key(key) + "</td>\n"
-      table += "</tr>\n"
+  def draw_left_keyboard(draw, layer):
+      row_x = [20, 80, 137, 190, 243, 294]
+      row_y = [
+          [45, 38, 27, 22, 27, 38],
+          [100, 93, 82, 77, 82, 93],
+          [155, 148, 137, 132, 137, 148],
+          [210, 203, 192, 187, 192, 203],
+      ]
+      for ir, col in enumerate(layer):
+          ys = row_y[ir]
+          for ik, (key, y) in enumerate(zip(col, ys)):
+              x = row_x[ik]
+              draw.text((x, y), format_key(key), fill=(0, 0, 0), font=font)
 
-  table += "<tr>\n"
-  table += "<td border='0'></td>\n"
-  table += "<td border='0'></td>\n"
-  table += "<td border='0'></td>\n"
-  for key in in_layer_left_thumb[0][:-1]:
-      if key == " ":
-          table += "<td border='0'>      </td>\n"
-      else:
-          table += "<td height='75px' width='75px'>" + format_key(key) + "</td>\n"
-  for key in in_layer_right_thumb[0][:-1]:
-      table += "<td height='75px' width='75px'>" + format_key(key) + "</td>\n"
-  table += "</tr>\n"
-  return table
+
+  def draw_left_thumb_keyboard(draw, layer):
+      row_x = [155, 206, 263, 340, 342]
+      row_y = [240, 240, 245, 255, 168]
+      for ik, key in enumerate(layer):
+          x = row_x[ik]
+          y = row_y[ik]
+          draw.text((x, y), format_key(key), fill=(0, 0, 0), font=font)
+
+
+  def draw_right_keyboard(draw, layer):
+      row_x = [510, 564, 618, 668, 723, 774]
+      row_y = [
+          [38, 27, 22, 27, 38, 45],
+          [93, 82, 77, 82, 93, 100],
+          [148, 137, 132, 137, 148, 155],
+          [203, 192, 187, 192, 203, 210],
+      ]
+      for ir, col in enumerate(layer):
+          ys = row_y[ir]
+          for ik, (key, y) in enumerate(zip(col, ys)):
+              x = row_x[ik]
+              draw.text((x, y), format_key(key), fill=(0, 0, 0), font=font)
+
+
+  def draw_right_thumb_keyboard(draw, layer):
+      row_x = [450, 467, 530, 585, 638]
+      row_y = [168, 255, 245, 240, 240]
+      for ik, key in enumerate(layer):
+          x = row_x[ik]
+          y = row_y[ik]
+          draw.text((x, y), format_key(key), fill=(0, 0, 0), font=font)
+
+
+  img = Image.open("./assets/lily58.png")
+  draw = ImageDraw.Draw(img)
+  font = ImageFont.truetype("./assets/FreeMono.ttf", size=14)
+
+  draw_left_keyboard(draw, in_layer_left)
+  draw_left_thumb_keyboard(draw, in_layer_left_thumb[0])
+  draw_right_keyboard(draw, in_layer_right)
+  draw_right_thumb_keyboard(draw, in_layer_right_thumb[0])
+
+  font = ImageFont.truetype("./assets/FreeMono.ttf", size=28)
+  if layer_name == "Num" or layer_name == "Nav":
+      draw.text((386, 80), layer_name, fill=(236, 239, 244), font=font)
+  elif layer_name == "Base":
+      draw.text((381, 80), layer_name, fill=(236, 239, 244), font=font)
+  img.save(img_path)
 #+end_src
 
-#+begin_src dot :file lily58.png :exports results :noweb yes
-  digraph {
-    rankdir="TB"    
-    node [ shape=none ]
-
-    base [ label = <
-      <table border="0" cellborder="1" cellspacing="0" cellpadding="2">
-        <<html-table-generator(in_layer_left=base-layer-left, in_layer_left_thumb=base-layer-left-thumb, in_layer_right=base-layer-right, in_layer_right_thumb=base-layer-right-thumb)>>
-      </table>>
-    ]
-
-    num [ label = <
-      <table border="0" cellborder="1" cellspacing="0" cellpadding="2">
-        <<html-table-generator(in_layer_left=num-layer-left, in_layer_left_thumb=num-layer-left-thumb, in_layer_right=num-layer-right, in_layer_right_thumb=num-layer-right-thumb)>>
-      </table>>
-    ]
-
-    nav [ label = <
-      <table border="0" cellborder="1" cellspacing="0" cellpadding="2">
-        <<html-table-generator(in_layer_left=navigation-layer-left, in_layer_left_thumb=navigation-layer-left-thumb, in_layer_right=navigation-layer-right, in_layer_right_thumb=navigation-layer-right-thumb)>>
-      </table>>
-    ]
-    base -> num [style=invis]
-    num -> nav [style=invis]
-  }
+#+begin_src python :noweb yes :results none silent
+  <<image-manipulation(layer_name="Base", img_path="./lily58/layers/base.png", in_layer_left=base-layer-left, in_layer_right=base-layer-right, in_layer_right_thumb=base-layer-right-thumb, in_layer_left_thumb=base-layer-left-thumb)>>
+  <<image-manipulation(layer_name="Num", img_path="./lily58/layers/num.png", in_layer_left=num-layer-left, in_layer_right=num-layer-right, in_layer_right_thumb=num-layer-right-thumb, in_layer_left_thumb=num-layer-left-thumb)>>
+  <<image-manipulation(layer_name="Nav", img_path="./lily58/layers/navigation.png", in_layer_left=navigation-layer-left, in_layer_right=navigation-layer-right, in_layer_right_thumb=navigation-layer-right-thumb, in_layer_left_thumb=navigation-layer-left-thumb)>>
 #+end_src
-
-#+ATTR_ORG: :width 700
-#+RESULTS:
-[[file:lily58.png]]
 
 *** File generation
 **** Keymap
 #+name: layer-generator
-#+begin_src python :session :var in_layer_left="None" :var in_layer_right="None" :var in_layer_left_thumb="None" :var in_layer_right_thumb="None" :results verbatim
+#+begin_src python :session :var in_layer_left="None" :var in_layer_right="None" :var in_layer_left_thumb="None" :var in_layer_right_thumb="None" :results verbatim silent
   left_padding = 13
 
 
@@ -238,7 +258,7 @@ Usage:
   )
 #+end_src
 
-#+begin_src C :main no :noweb yes :mkdirp yes :tangle ./lily58/keymap.c :mkdirp yes
+#+begin_src C :main no :noweb yes :mkdirp yes :tangle ./lily58/keymap.c :mkdirp yes :results none silent
   #include QMK_KEYBOARD_H
 
   enum layer_number {
@@ -260,7 +280,7 @@ Usage:
 #+end_src
 
 **** Config
-#+begin_src C :main no :noweb yes :mkdirp yes :tangle ./lily58/config.h :mkdirp yes
+#+begin_src C :main no :noweb yes :mkdirp yes :tangle ./lily58/config.h :mkdirp yes :results none silent
   #pragma once
   #define MASTER_RIGHT
 
@@ -274,7 +294,7 @@ Usage:
 #+end_src
 
 **** Rules
-#+begin_src C :main no :noweb yes :mkdirp yes :tangle ./lily58/rules.mk :mkdirp yes
+#+begin_src C :main no :noweb yes :mkdirp yes :tangle ./lily58/rules.mk :mkdirp yes :results none silent
   BOOTMAGIC_ENABLE = no      # Enable Bootmagic Lite
   MOUSEKEY_ENABLE = no       # Mouse keys
   EXTRAKEY_ENABLE =  yes     # Audio control and System control

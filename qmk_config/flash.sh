@@ -1,6 +1,4 @@
-#!/run/current-system/sw/bin/env nix-shell
-#!nix-shell -i bash -p avrdude
-
+#!/usr/bin/env bash
 
 podman --help &> /dev/null
 isPodman=$?
