@@ -6,3 +6,4 @@ nixpkgs/config.nix
 .clj-kondo
 *~
 .build
+.envrc
