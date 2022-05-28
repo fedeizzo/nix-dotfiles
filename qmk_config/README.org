@@ -21,102 +21,48 @@ Usage:
 [[file:./lily58/layers/navigation.png]]
 
 *** Base
-#+NAME: base-layer-left
-| KC_ESC         | KC_1 | KC_2 | KC_3 | KC_4 | KC_5 |
-| LGUI(KC_TAB)   | KC_Q | KC_W | KC_F | KC_P | KC_B |
-| LCTL_T(KC_ESC) | KC_A | KC_R | KC_S | KC_T | KC_G |
-| KC_CAPS        | KC_Z | KC_X | KC_C | KC_D | KC_V |
+#+NAME: base-layer
+| ESC   | 1 | 2 | 3 | 4 | 5 |   | 6 | 7 | 8 | 9 | 0 | ESC   |
+| G+TAB | Q | W | F | P | B |   | J | L | U | Y | ' | C+T   |
+| LCTL  | A | R | S | T | G |   | M | N | E | I | O | ;     |
+| CAPS  | Z | X | C | D | V |   | K | H | , | . | / | C+TAB |
 
-#+NAME:  base-layer-right
-| KC_6 | KC_7 | KC_8     | KC_9   | KC_0    | KC_ESC       |
-| KC_J | KC_L | KC_U     | KC_Y   | KC_QUOT | LCTL(KC_T)   |
-| KC_M | KC_N | KC_E     | KC_I   | KC_O    | KC_SCLN      |
-| KC_K | KC_H | KC_COMMA | KC_DOT | KC_SLSH | LCTL(KC_TAB) |
-
-#+NAME: base-layer-left-thumb
-| KC_NO | LT(_NAV, KC_ESC) | LGUI_T(KC_SPC) | SFT_T(KC_TAB) | KC_NO |
-
-#+NAME: base-layer-right-thumb
-| KC_NO | LCTL_T(KC_ENT) | LT(_NUM, KC_BSPC) | KC_LALT | KC_NO |
+#+NAME: base-layer-thumb
+| NO    | _NAV/ESC | G/SPC | S/TAB | [ | ] | C/ENT | _NUM/BSPC | LALT | NO |
 
 *** Navigation
-#+NAME: navigation-layer-left
-| KC_NO | KC_NO | KC_NO | KC_NO | KC_NO | KC_NO |
-| KC_NO | KC_NO | KC_NO | KC_NO | KC_NO | KC_NO |
-| KC_NO | KC_NO | KC_NO | KC_NO | KC_NO | KC_NO |
-| KC_NO | KC_NO | KC_NO | KC_NO | KC_NO | KC_NO |
+#+NAME: navigation-layer
+| NO | NO | NO | NO | NO | NO |   | NO   | NO   | NO   | NO   | NO | NO |
+| NO | NO | NO | NO | NO | NO |   | MPRV | VOLD | VOLU | MNXT | NO | NO |
+| NO | NO | NO | NO | NO | NO |   | LEFT | DOWN | UP   | RGHT | NO | NO |
+| NO | NO | NO | NO | NO | NO |   | HOME | END  | MPLY | MUTE | NO | NO |
 
-#+NAME: navigation-layer-right
-| KC_NO   | KC_NO   | KC_NO   | KC_NO   | KC_NO | KC_NO |
-| KC_MPRV | KC_VOLD | KC_VOLU | KC_MNXT | KC_NO | KC_NO |
-| KC_LEFT | KC_DOWN | KC_UP   | KC_RGHT | KC_NO | KC_NO |
-| KC_HOME | KC_END  | KC_MPLY | KC_MUTE | KC_NO | KC_NO |
-
-#+NAME: navigation-layer-left-thumb
-| KC_NO | KC_NO | KC_TRNS | KC_NO | KC_NO |
-
-#+NAME: navigation-layer-right-thumb
-| KC_NO | KC_ENT | KC_BSPC | KC_NO | KC_NO |
+#+NAME: navigation-layer-thumb
+| NO | NO | TRNS | NO | NO | NO | ENT | BSPC | NO | NO |
 
 *** Num
-#+NAME: num-layer-left
-| KC_NO | KC_NO   | KC_NO | KC_NO | KC_NO | KC_NO   |
-| RESET | KC_LBRC | KC_7  | KC_8  | KC_9  | KC_RBRC |
-| KC_NO | KC_0    | KC_4  | KC_5  | KC_6  | KC_EQL  |
-| KC_NO | KC_GRV  | KC_1  | KC_2  | KC_3  | KC_BSLS |
+#+NAME: num-layer
+| NO | NO | NO | NO | NO | NO |   | NO   | NO | NO | NO | NO | NO |
+| NO | [  |  7 |  8 |  9 | ]  |   | {    | (  | *  | &  | }  | NO |
+| NO | 0  |  4 |  5 |  6 | =  |   | +    | ^  | %  | $  | )  | NO |
+| NO | `  |  1 |  2 |  3 | \  |   | PIPE | #  | @  | !  | ~  | NO |
 
-#+NAME: num-layer-right
-| KC_NO   | KC_NO   | KC_NO   | KC_NO   | KC_NO   | KC_NO |
-| KC_LCBR | KC_LPRN | KC_ASTR | KC_AMPR | KC_RCBR | KC_NO |
-| KC_PLUS | KC_CIRC | KC_PERC | KC_DLR  | KC_RPRN | KC_NO |
-| KC_PIPE | KC_HASH | KC_AT   | KC_EXLM | KC_TILD | KC_NO |
-
-#+NAME: num-layer-left-thumb
-| KC_NO | KC_UNDS | KC_SPC | KC_MINS | KC_NO |
-
-#+NAME: num-layer-right-thumb
-| KC_NO | KC_ENT | KC_TRNS | KC_NO | KC_NO |
+#+NAME: num-layer-thumb
+| NO | _ | SPC | - | NO | NO | ENT | TRNS | NO | NO |
 
 *** Visualization
 #+name: image-manipulation
-#+begin_src python :var layer_name="Base" :var img_path="./lily58/layers/base.png" :var in_layer_left=base-layer-left :var in_layer_right=base-layer-right :var in_layer_right_thumb=base-layer-right-thumb :var in_layer_left_thumb=base-layer-left-thumb :results none silent
+#+begin_src python :var layer_name="Base" :var img_path="./lily58/layers/base.png" :var in_layer=base-layer :var in_layer_thumb=base-layer-thumb :results none silent
   from PIL import Image, ImageDraw, ImageFont
 
 
-  mapper = {
-      "QUOT": "'",
-      "COMMA": ",",
-      "DOT": ".",
-      "SLSH": "/",
-      "SCLN": ";",
-  }
-
-
   def format_key(key):
-      key = key.replace("KC_", "")
-      key = mapper.get(key, key)
-      if key.startswith("LCTL("):
-          key = key.replace("LCTL(", "C+\n")
-          key = key.replace(")", "")
-      if key.startswith("LGUI("):
-          key = key.replace("LGUI(", "G+\n")
-          key = key.replace(")", "")
-      if key.startswith("LCTL_T"):
-          key = key.replace("LCTL_T(", "C/\n")
-          key = key.replace(")", "")
-      if key.startswith("SFT_T"):
-          key = key.replace("SFT_T(", "S/\n")
-          key = key.replace(")", "")
-      if key.startswith("LGUI_T"):
-          key = key.replace("LGUI_T(", "G/\n")
-          key = key.replace(")", "")
-      if key.startswith("LT"):
-          key = key.replace("LT(", "")
-          key = key.replace(")", "")
-          key = key.replace(", ", "/\n")
-      if key.startswith("NO"):
-          key = key.replace("NO", "")
-      return key
+      if key == "PIPE":
+          return "|"
+      elif key == "NO":
+          return ""
+      else:
+          return str(key)
 
 
   def draw_left_keyboard(draw, layer):
@@ -171,10 +117,18 @@ Usage:
   draw = ImageDraw.Draw(img)
   font = ImageFont.truetype("./assets/FreeMono.ttf", size=14)
 
-  draw_left_keyboard(draw, in_layer_left)
-  draw_left_thumb_keyboard(draw, in_layer_left_thumb[0])
-  draw_right_keyboard(draw, in_layer_right)
-  draw_right_thumb_keyboard(draw, in_layer_right_thumb[0])
+  layer_left = [
+  list(map(lambda x: format_key(x), row[:6])) for row in in_layer
+  ]
+  layer_right = [
+  list(map(lambda x: format_key(x), row[7:])) for row in in_layer
+  ]
+  thumb_left = list(map(lambda x: format_key(x), in_layer_thumb[0][:5]))
+  thumb_right = list(map(lambda x: format_key(x), in_layer_thumb[0][5:]))
+  draw_left_keyboard(draw, layer_left)
+  draw_left_thumb_keyboard(draw, thumb_left)
+  draw_right_keyboard(draw, layer_right)
+  draw_right_thumb_keyboard(draw, thumb_right)
 
   font = ImageFont.truetype("./assets/FreeMono.ttf", size=28)
   if layer_name == "Num" or layer_name == "Nav":
@@ -185,77 +139,81 @@ Usage:
 #+end_src
 
 #+begin_src python :noweb yes :results none silent
-  <<image-manipulation(layer_name="Base", img_path="./lily58/layers/base.png", in_layer_left=base-layer-left, in_layer_right=base-layer-right, in_layer_right_thumb=base-layer-right-thumb, in_layer_left_thumb=base-layer-left-thumb)>>
-  <<image-manipulation(layer_name="Num", img_path="./lily58/layers/num.png", in_layer_left=num-layer-left, in_layer_right=num-layer-right, in_layer_right_thumb=num-layer-right-thumb, in_layer_left_thumb=num-layer-left-thumb)>>
-  <<image-manipulation(layer_name="Nav", img_path="./lily58/layers/navigation.png", in_layer_left=navigation-layer-left, in_layer_right=navigation-layer-right, in_layer_right_thumb=navigation-layer-right-thumb, in_layer_left_thumb=navigation-layer-left-thumb)>>
+  <<image-manipulation(layer_name="Base", img_path="./lily58/layers/base.png", in_layer=base-layer, in_layer_thumb=base-layer-thumb)>>
+  <<image-manipulation(layer_name="Num", img_path="./lily58/layers/num.png", in_layer=num-layer, in_layer_thumb=num-layer-thumb)>>
+  <<image-manipulation(layer_name="Nav", img_path="./lily58/layers/navigation.png", in_layer=navigation-layer, in_layer_thumb=navigation-layer-thumb)>>
 #+end_src
 
 *** File generation
 **** Keymap
 #+name: layer-generator
-#+begin_src python :session :var in_layer_left="None" :var in_layer_right="None" :var in_layer_left_thumb="None" :var in_layer_right_thumb="None" :results verbatim silent
-  left_padding = 13
+#+begin_src python :session :var in_layer=base-layer :var in_layer_thumb=base-layer-thumb :results verbatim silent
+  mapper = {
+      ",": "KC_COMMA",
+      ".": "KC_DOT",
+      "/": "KC_SLSH",
+      ";": "KC_SCLN",
+      "'": "KC_QUOT",
+      "[": "KC_LBRC",
+      "]": "KC_RBRC",
+      "{": "KC_LCBR",
+      "}": "KC_RCBR",
+      "(": "KC_LPRN",
+      ")": "KC_RPRN",
+      "`": "KC_GRV",
+      "\\": "KC_BSLS",
+      "=": "KC_EQL",
+      "*": "KC_ASTR",
+      "&": "KC_AMPR",
+      "+": "KC_PLUS",
+      "^": "KC_CIRC",
+      "%": "KC_PERC",
+      "$": "KC_DLR",
+      "|": "KC_PIPE",
+      "#": "KC_HASH",
+      "@": "KC_AT",
+      "!": "KC_EXLM",
+      "~": "KC_TILD",
+      "-": "KC_MINS",
+      "_": "KC_UNDS",
+      "G+TAB": "LGUI(KC_TAB)",
+      "G/SPC": "LGUI_T(KC_SPC)",
+      "C+T": "LCTL(KC_T)",
+      "C+TAB": "LCTL(KC_TAB)",
+      "_NAV/ESC": "LT(_NAV, KC_ESC)",
+      "S/TAB": "SFT_T(KC_TAB)",
+      "C/ENT": "LCTL_T(KC_ENT)",
+      "_NUM/BSPC": "LT(_NUM, KC_BSPC)",
+  }
 
 
   def format_key(key, comma=True):
-      if comma:
-          return f"{key}, ".ljust(left_padding)
-      else:
-          return f"{key}".ljust(left_padding)
+      key = mapper.get(str(key), f"KC_{key}")
+      return f"{key}"
 
 
-  def generate_left_keyboard(layer, layer_thumb):
-      result = ""
-      for i, row in enumerate(layer):
-          for key in row:
-              result += format_key(key)
-          if i != len(layer) - 1:
-              result += "\n"
-
-      result += format_key(layer_thumb[0][-1])
-      result += "\n"
-      result += " " * 3 * left_padding
-      for key in layer_thumb[0][:-1]:
-          result += format_key(key)
-      return result
-
-
-  def generate_right_keyboard(layer, layer_thumb):
-      result = ""
-      for i, row in enumerate(layer):
-          if i == 3:
-              result += format_key(layer_thumb[0][0])
-          else:
-              result += " " * left_padding
-          for key in row:
-              result += format_key(key)
-          if i != len(layer) - 1:
-              result += "\n"
-
-      result += "\n"
-      for i, key in enumerate(layer_thumb[0][1:]):
-          if i == len(layer_thumb[0][1:]) - 1:
-            result += format_key(key, comma=False)
-          else:
-            result += format_key(key)
-      return result
-
-
-  def generate_keyboard(layer_left, layer_left_thumb, layer_right, layer_right_thumb):
-      right = generate_left_keyboard(layer_left, layer_left_thumb).split("\n")
-      left = generate_right_keyboard(layer_right, layer_right_thumb).split("\n")
+  def generate_keyboard(layer, layer_thumb):
+      layer_left = [
+          ",".join(list(map(lambda x: format_key(x), row[:6]))) for row in layer
+      ]
+      layer_right = [
+          ",".join(list(map(lambda x: format_key(x), row[7:]))) for row in layer
+      ]
+      thumb_left = ",".join(list(map(lambda x: format_key(x), layer_thumb[:4])))
+      extra_key_left = format_key(layer_thumb[4])
+      extra_key_right = format_key(layer_thumb[5])
+      thumb_right = ",".join(list(map(lambda x: format_key(x), layer_thumb[6:])))
       keyboard = ""
-      for i, (r, l) in enumerate(zip(right, left)):
+      for i, (l, r) in enumerate(zip(layer_left, layer_right)):
           if i < 3:
-              keyboard += f'{r} {" " * left_padding} {l}\n'
+              keyboard += f"{l},{r},\n"
           else:
-              keyboard += f"{r}  {l}\n"
+              keyboard += f"{l},{extra_key_left},{extra_key_right},{r},\n"
+      keyboard += f"{thumb_left},{thumb_right}"
       return keyboard
 
 
-  generate_keyboard(
-      in_layer_left, in_layer_left_thumb, in_layer_right, in_layer_right_thumb
-  )
+  generate_keyboard(in_layer, in_layer_thumb[0])
 #+end_src
 
 #+begin_src C :main no :noweb yes :mkdirp yes :tangle ./lily58/keymap.c :mkdirp yes :results none silent
@@ -268,13 +226,13 @@ Usage:
   };
   const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_BASE] = LAYOUT(
-      <<layer-generator(in_layer_left=base-layer-left, in_layer_left_thumb=base-layer-left-thumb, in_layer_right=base-layer-right, in_layer_right_thumb=base-layer-right-thumb)>>
+      <<layer-generator(in_layer=base-layer, in_layer_thumb=base-layer-thumb)>>
     ),
     [_NUM] = LAYOUT(
-      <<layer-generator(in_layer_left=num-layer-left, in_layer_left_thumb=num-layer-left-thumb, in_layer_right=num-layer-right, in_layer_right_thumb=num-layer-right-thumb)>>
+      <<layer-generator(in_layer=num-layer, in_layer_thumb=num-layer-thumb)>>
     ),
     [_NAV] = LAYOUT(
-      <<layer-generator(in_layer_left=navigation-layer-left, in_layer_left_thumb=navigation-layer-left-thumb, in_layer_right=navigation-layer-right, in_layer_right_thumb=navigation-layer-right-thumb)>>
+      <<layer-generator(in_layer=navigation-layer, in_layer_thumb=navigation-layer-thumb)>>
     )
   };
 #+end_src
