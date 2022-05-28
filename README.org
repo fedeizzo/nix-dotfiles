@@ -4,8 +4,54 @@ Personal config for NixOS managed with Nix package manager.
 #+ATTR_ORG: :width 900
 [[file:./images/screenshot.png]]
 
-** Fresh install
-*** Ext4
+** System
+The system configuration is divided into modules inside the ~system~ directory.
+
+#+begin_src shell :results raw
+  exa -T --sort=type nixos/system
+#+end_src
+
+#+RESULTS:
+nixos/system
+├── hardware-configurations
+│  ├── btrfs.nix
+│  └── ext4.nix
+├── boot.nix
+├── hardware.nix
+├── keymapTimeFont.nix
+├── networking.nix
+├── nixNixOS.nix
+├── nvidia.nix
+├── pipewire.nix
+├── programsEnv.nix
+├── security.nix
+├── services.nix
+└── user.nix
+
+There are two hardware-configurations, for more information about the partitioning please refer to fresh install section:
+- ~ext4.nix~, currently used for the XPS 9510.
+- ~btrfs.nix~, outdated btrfs configuration.
+
+Files description:
+- ~boot.nix~ contains grub settings and some parameters related to early stages of the system.
+- ~hardware.nix~ contains configuration of hardware inside the laptop (audio, bluetooth, thermal management, ...).
+- ~keymapTimeFont.nix~ defines the keymap of the keyboard and some settings related to fonts of the system.
+- ~networking.nix~ has some networking settings.
+- ~nixNixOS.nix~ cotains setup for nix package manager, mainly for nix flake addition.
+- ~nvidia.nix~ configuration of nvidia offload mode for /3050ti/ video card inside the laptop.
+- ~pipewire.nix~ pipewire configuration required for wayland usage.
+- ~programsEnv.nix~ list of packages installed system-wide.
+- ~security.nix~ settings related to pam and doas.
+- ~user.nix~ user initialization.
+
+*** Installation
+#+begin_src sh
+  cd nixos
+  doas ./install.sh
+#+end_src
+
+*** Fresh install
+**** Ext4
 Partitioning is made with /ext4/ file system:
 
 | Partition | Size             |
@@ -14,9 +60,11 @@ Partitioning is made with /ext4/ file system:
 
 The root is encrypted with /cryptsetup./ 
 
-*** BTRFS
+**** BTRFS
 OUTDATED
 
-*** TmpFS
+**** TmpFS
 OUTDATED
+
+** User
 
