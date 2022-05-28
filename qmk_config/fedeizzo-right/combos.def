@@ -1,0 +1,5 @@
+SUBS(ABOUT          ,           "about",    KC_A, KC_B)
+SUBS(AT             ,               "@",    KC_A, KC_T)
+SUBS(BECAUSE        ,         "because",    KC_B, KC_C)
+SUBS(MK             ,            "make",    KC_M, KC_K)
+SUBS(WITH           ,            "with",    KC_W, KC_I)

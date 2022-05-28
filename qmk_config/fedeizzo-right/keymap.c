@@ -1,0 +1,226 @@
+#include QMK_KEYBOARD_H
+#include <stdio.h>
+#include "keymap_us_international.h"
+
+// #include "g/keymap_combo.h"
+#ifdef PIMORONI_TRACKBALL_ENABLE
+#include "drivers/sensors/pimoroni_trackball.h"
+#include "pointing_device.h"
+bool set_scrolling = false;
+#define TRACKBALL_PRECISION 3
+#define TRACKBALL_PRECISION_HIGH 1
+#define TRACKBALL_PRECISION_SCROLLING 0.7
+#endif
+#ifdef OLED_ENABLE
+#    define MIN_WALK_SPEED      10
+#    define MIN_RUN_SPEED       40
+#    define ANIM_FRAME_DURATION 200
+#    define ANIM_SIZE           96
+uint32_t anim_timer = 0;
+uint32_t anim_sleep = 0;
+uint8_t current_frame = 0;
+int   current_wpm = 0;
+#endif
+
+enum crkbd_layers {
+    _BASE,
+    _NAVIGATION,
+    _NUM,
+    _GAMING
+};
+
+enum custom_keycodes {
+    BALL_LC = SAFE_RANGE,
+    BALL_SCR,
+    BALL_PRC,
+};
+
+const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
+  [_BASE] = LAYOUT_split_3x6_3(
+      LGUI(KC_TAB)  ,    KC_Q,    KC_W,    KC_F,    KC_P,    KC_B,                 KC_J,    KC_L,    KC_U,    KC_Y, KC_QUOT, LCTL(KC_T),
+      LCTL_T(KC_ESC),    KC_A,    KC_R,    KC_S,    KC_T,    KC_G,                 KC_M,    KC_N,    KC_E,    KC_I,    KC_O, KC_SCLN,
+                KC_CAPS,    KC_Z,    KC_X,    KC_C,    KC_D,    KC_V,                 KC_K,    KC_H, KC_COMM,  KC_DOT, KC_SLSH, LCTL(KC_TAB),
+           LT(_NAVIGATION, KC_ESC), LGUI_T(KC_SPC),  SFT_T(KC_TAB), LCTL_T(KC_ENT), LT(_NUM, KC_BSPC), KC_LALT
+
+  ),
+  [_NAVIGATION] = LAYOUT_split_3x6_3(
+      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      KC_MPRV, KC_VOLD, KC_VOLU, KC_MNXT, XXXXXXX, XXXXXXX,
+      XXXXXXX, XXXXXXX, XXXXXXX,BALL_PRC,BALL_SCR, BALL_LC,                      KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, XXXXXXX, XXXXXXX,
+      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,                      KC_HOME,  KC_END, KC_MPLY, KC_MUTE, XXXXXXX, XXXXXXX,
+                                          XXXXXXX, _______, XXXXXXX,     KC_ENT, KC_BSPC, XXXXXXX
+  ),
+  [_NUM] = LAYOUT_split_3x6_3(
+        RESET, KC_LBRC,    KC_7,    KC_8,    KC_9, KC_RBRC,                      KC_LCBR, KC_LPRN, KC_ASTR, KC_AMPR, KC_RCBR, XXXXXXX,
+      XXXXXXX,    KC_0,    KC_4,    KC_5,    KC_6,  KC_EQL,                      KC_PLUS, KC_CIRC, KC_PERC,  KC_DLR, KC_RPRN, XXXXXXX,
+      XXXXXXX,  KC_GRV,    KC_1,    KC_2,    KC_3, KC_BSLS,                      KC_PIPE, KC_HASH,   KC_AT, KC_EXLM, KC_TILD, TO(_GAMING),
+                                          KC_UNDS,  KC_SPC, KC_MINS,     KC_ENT, KC_BSPC, TO(_BASE)
+  ),
+  [_GAMING] = LAYOUT_split_3x6_3(
+       KC_TAB,    KC_1,    KC_Q,    KC_W,    KC_E,    KC_R,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+      KC_LCTL,    KC_2,    KC_A,    KC_S,    KC_D,    KC_F,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+      XXXXXXX,    KC_3,    KC_Z,    KC_C,    KC_C,    KC_V,                      XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, TO(_BASE),
+                                          XXXXXXX, KC_SPC, KC_LSFT,     XXXXXXX, XXXXXXX, XXXXXXX
+  ),
+};
+
+ 
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode){
+#ifdef PIMORONI_TRACKBALL_ENABLE
+        case BALL_LC:
+            record->event.pressed?register_code(KC_BTN1):unregister_code(KC_BTN1);
+            break;
+        case BALL_SCR:
+            if(record->event.pressed){
+                set_scrolling = true;
+                pimoroni_trackball_set_precision(TRACKBALL_PRECISION_SCROLLING);
+            } else{
+                set_scrolling = false;
+                pimoroni_trackball_set_precision(TRACKBALL_PRECISION);
+            }
+        break;
+        case BALL_PRC:
+            if(record->event.pressed){
+                pimoroni_trackball_set_precision(TRACKBALL_PRECISION_SCROLLING);
+            } else{
+                pimoroni_trackball_set_precision(TRACKBALL_PRECISION);
+            }
+        break;
+#endif
+        default:
+        break;
+    }
+  return true;
+}
+
+#ifdef PIMORONI_TRACKBALL_ENABLE
+report_mouse_t pointing_device_task_user(report_mouse_t mouse_report) {
+    if (set_scrolling) {
+        mouse_report.h = mouse_report.x;
+        mouse_report.v = mouse_report.y;
+        mouse_report.x = mouse_report.y = 0;
+    }
+    return mouse_report;
+}
+#endif
+
+void keyboard_post_init_user(void) {
+#ifdef PIMORONI_TRACKBALL_ENABLE
+    pimoroni_trackball_set_precision(TRACKBALL_PRECISION);
+    pimoroni_trackball_set_rgbw(0,0,0,80);
+#endif
+}
+
+#ifdef PIMORONI_TRACKBALL_ENABLE
+layer_state_t layer_state_set_user(layer_state_t state) {
+    // autoshift_enable();
+    switch (get_highest_layer(state)) {
+    case _BASE:
+        pimoroni_trackball_set_rgbw(0,0,0,80);
+        break;
+    case _NAVIGATION:
+        pimoroni_trackball_set_rgbw(0,153,95,0);
+        break;
+    case _NUM:
+        pimoroni_trackball_set_rgbw(153,113,0,0);
+        break;
+    default:
+        pimoroni_trackball_set_rgbw(0,0,0,80);
+        break;
+    }
+  return state;
+}
+#endif
+
+#ifdef OLED_ENABLE
+oled_rotation_t oled_init_user(oled_rotation_t rotation) { return OLED_ROTATION_270; }
+
+static void render_luna(int LUNA_X, int LUNA_Y) {
+    /* Sit */
+    static const char PROGMEM sit[2][ANIM_SIZE] = {/* 'sit1', 32x22px */
+                                                   {
+                                                       0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xe0, 0x1c, 0x02, 0x05, 0x02, 0x24, 0x04, 0x04, 0x02, 0xa9, 0x1e, 0xe0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xe0, 0x10, 0x08, 0x68, 0x10, 0x08, 0x04, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x06, 0x82, 0x7c, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x02, 0x04, 0x0c, 0x10, 0x10, 0x20, 0x20, 0x20, 0x28, 0x3e, 0x1c, 0x20, 0x20, 0x3e, 0x0f, 0x11, 0x1f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                                                   },
+
+                                                   /* 'sit2', 32x22px */
+                                                   {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xe0, 0x1c, 0x02, 0x05, 0x02, 0x24, 0x04, 0x04, 0x02, 0xa9, 0x1e, 0xe0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xe0, 0x90, 0x08, 0x18, 0x60, 0x10, 0x08, 0x04, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x0e, 0x82, 0x7c, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x02, 0x04, 0x0c, 0x10, 0x10, 0x20, 0x20, 0x20, 0x28, 0x3e, 0x1c, 0x20, 0x20, 0x3e, 0x0f, 0x11, 0x1f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}};
+
+    /* Walk */
+    static const char PROGMEM walk[2][ANIM_SIZE] = {/* 'walk1', 32x22px */
+                                                    {
+                                                        0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x40, 0x20, 0x10, 0x90, 0x90, 0x90, 0xa0, 0xc0, 0x80, 0x80, 0x80, 0x70, 0x08, 0x14, 0x08, 0x90, 0x10, 0x10, 0x08, 0xa4, 0x78, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x07, 0x08, 0xfc, 0x01, 0x00, 0x00, 0x00, 0x00, 0x80, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08, 0x18, 0xea, 0x10, 0x0f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x1c, 0x20, 0x20, 0x3c, 0x0f, 0x11, 0x1f, 0x03, 0x06, 0x18, 0x20, 0x20, 0x3c, 0x0c, 0x12, 0x1e, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                                                    },
+
+                                                    /* 'walk2', 32x22px */
+                                                    {
+                                                        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x40, 0x20, 0x20, 0x20, 0x40, 0x80, 0x00, 0x00, 0x00, 0x00, 0xe0, 0x10, 0x28, 0x10, 0x20, 0x20, 0x20, 0x10, 0x48, 0xf0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x1f, 0x20, 0xf8, 0x02, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x03, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x10, 0x30, 0xd5, 0x20, 0x1f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x3f, 0x20, 0x30, 0x0c, 0x02, 0x05, 0x09, 0x12, 0x1e, 0x02, 0x1c, 0x14, 0x08, 0x10, 0x20, 0x2c, 0x32, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                                                    }};
+
+    /* Run */
+    static const char PROGMEM run[2][ANIM_SIZE] = {/* 'run1', 32x22px */
+                                                   {
+                                                       0x00, 0x00, 0x00, 0x00, 0xe0, 0x10, 0x08, 0x08, 0xc8, 0xb0, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x80, 0x40, 0x40, 0x3c, 0x14, 0x04, 0x08, 0x90, 0x18, 0x04, 0x08, 0xb0, 0x40, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x02, 0xc4, 0xa4, 0xfc, 0x00, 0x00, 0x00, 0x00, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0xc8, 0x58, 0x28, 0x2a, 0x10, 0x0f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0e, 0x09, 0x04, 0x04, 0x04, 0x04, 0x02, 0x03, 0x02, 0x01, 0x01, 0x02, 0x02, 0x04, 0x08, 0x10, 0x26, 0x2b, 0x32, 0x04, 0x05, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00,
+                                                   },
+
+                                                   /* 'run2', 32x22px */
+                                                   {
+                                                       0x00, 0x00, 0x00, 0xe0, 0x10, 0x10, 0xf0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x80, 0x80, 0x78, 0x28, 0x08, 0x10, 0x20, 0x30, 0x08, 0x10, 0x20, 0x40, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x04, 0x08, 0x10, 0x11, 0xf9, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x10, 0xb0, 0x50, 0x55, 0x20, 0x1f, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x02, 0x0c, 0x10, 0x20, 0x28, 0x37, 0x02, 0x1e, 0x20, 0x20, 0x18, 0x0c, 0x14, 0x1e, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                                                   }};
+
+    /* animation */
+    void animate_luna(void) {
+        /* jump */
+            oled_set_cursor(LUNA_X, LUNA_Y - 1);
+            oled_write("     ", false);
+
+            oled_set_cursor(LUNA_X, LUNA_Y);
+
+        /* switch frame */
+        current_frame = (current_frame + 1) % 2;
+
+        if (current_wpm <= MIN_WALK_SPEED) {
+            oled_write_raw_P(sit[abs(1 - current_frame)], ANIM_SIZE);
+
+        } else if (current_wpm <= MIN_RUN_SPEED) {
+            oled_write_raw_P(walk[abs(1 - current_frame)], ANIM_SIZE);
+
+        } else {
+            oled_write_raw_P(run[abs(1 - current_frame)], ANIM_SIZE);
+        }
+    }
+
+    /* animation timer */
+    if (timer_elapsed32(anim_timer) > ANIM_FRAME_DURATION) {
+        anim_timer = timer_read32();
+        animate_luna();
+    }
+
+    /* this fixes the screen on and off bug */
+    if (current_wpm > 0) {
+        oled_on();
+        anim_sleep = timer_read32();
+    } else if (timer_elapsed32(anim_sleep) > OLED_TIMEOUT) {
+        oled_off();
+    }
+}
+static void print_status_narrow(void) {
+    render_luna(0, 0);
+    oled_set_cursor(17, 0);
+    uint8_t n = get_current_wpm();
+    char    wpm_str[4];
+    wpm_str[3] = '\0';
+    wpm_str[2] = '0' + n % 10;
+    wpm_str[1] = '0' + (n /= 10) % 10;
+    wpm_str[0] = '0' + n / 10;
+    oled_write(wpm_str, false);
+}
+
+bool oled_task_user(void) {
+    current_wpm   = get_current_wpm();
+    if (is_keyboard_master()) {
+        print_status_narrow();
+    } else {
+    }
+    return false;
+}
+#endif
