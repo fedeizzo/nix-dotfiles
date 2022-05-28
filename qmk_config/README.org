@@ -13,7 +13,7 @@ Usage:
 2. run ~org-babel-execute-buffer~;
 3. run ~org-babel-tangle~;
 4. (optional) execute the python code cell to generate the the keymap image;
-5. run ~./flash.sh flash lily~ or ~./flash.sh flash corne~.
+5. run ~./flash.sh flash lily~ or ~./flash.sh flash corne~ (add dialout group to the user before this step).
 
 ** Lily58
 [[file:./lily58/layers/base.png]]
