@@ -1,9 +1,6 @@
 { config, pkgs, nixpkgs-unstable, ... }:
 
 {
-  #################################
-  # PROGRAMS and ENV
-  #################################
   nixpkgs.overlays = [
     (import ../pkgs)
     (self: super: {

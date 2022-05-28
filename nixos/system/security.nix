@@ -1,9 +1,6 @@
 { config, pkgs, ... }:
 
 {
-  #################################
-  # SECURITY
-  #################################
   security.pam.services.lightdm.enableGnomeKeyring = false;
   security.pam.services.lightdm-greeters.enableGnomeKeyring = false;
   security.pam.services.login.fprintAuth = true;

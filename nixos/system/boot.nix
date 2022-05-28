@@ -8,15 +8,6 @@ let
   };
 in
 {
-  #################################
-  # BOOT
-  #################################
-  # boot.loader.systemd-boot = {
-  #   enable = true;
-  #   editor = false;
-  # };
-  # boot.loader.efi.canTouchEfiVariables = true;
-  # dell
   boot.loader.grub = {
     enable = true;
     device = "nodev";
@@ -42,7 +33,6 @@ in
     "vm.swappiness" = 10;
     "dev.i915.perf_stream_paranoid" = 0;
   };
-  # dell
   boot.extraModprobeConfig = ''
     options iwlwifi power_save=1 disable_11ax=1
   '';

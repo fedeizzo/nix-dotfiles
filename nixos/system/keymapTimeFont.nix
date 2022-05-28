@@ -1,9 +1,6 @@
 { config, pkgs, ... }:
 
 {
-  #################################
-  # KEYMAP and TIME and FONT
-  #################################
   i18n.defaultLocale = "en_US.UTF-8";
   console = {
     keyMap = "us";

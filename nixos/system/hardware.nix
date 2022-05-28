@@ -1,9 +1,6 @@
 { config, lib, pkgs, nixpkgs-unstable, ... }:
 
 {
-  #################################
-  # HARDWARE
-  #################################
   powerManagement.enable = true;
   hardware.opengl = {
     driSupport32Bit = true;
@@ -21,13 +18,6 @@
     disabledPlugins = [ "sap" ];
   };
   hardware.cpu.intel.updateMicrocode = true;
-  # hardware.pulseaudio = {
-  #   support32Bit = true;
-  #   enable = true;
-  #   extraModules = [ pkgs.pulseaudio-modules-bt ];
-  #   extraConfig = "load-module module-bluetooth-discover a2dp_config=\"ldac_eqmid=sq\"\n";
-  #   package = pkgs.pulseaudioFull;
-  # };
   sound = {
     enable = false;
     mediaKeys.enable = false;
