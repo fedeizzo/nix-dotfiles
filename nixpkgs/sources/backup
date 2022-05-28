@@ -13,6 +13,7 @@ backup() {
         --exclude "**/venv" \
         --exclude "**/node_modules" \
         --exclude "**/.venv" \
+        --exclude "**/data" \
         --exclude "/home/fedeizzo/fbk/pei/postgres_data" \
         --compression zstd,3 \
         ::'{hostname}-{now}' \
@@ -26,7 +27,6 @@ backup() {
         $HOME/personalProject \
         $HOME/.local/share/fish/fish_history \
         $HOME/.local/share/z/data \
-        $HOME/.hledger.journal \
         $HOME/zettelkasten \
         $HOME/org
     backup_exit=$?
