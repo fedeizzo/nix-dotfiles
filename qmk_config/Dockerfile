@@ -2,6 +2,6 @@ FROM qmkfm/base_container
 
 WORKDIR /prova
 
-RUN git clone --recurse-submodules https://github.com/qmk/qmk_firmware
+RUN qmk setup --yes
 
 WORKDIR /qmk_firmware

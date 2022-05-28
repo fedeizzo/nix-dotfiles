@@ -72,7 +72,7 @@ Usage:
 | KC_PIPE | KC_HASH | KC_AT   | KC_EXLM | KC_TILD | KC_NO |
 
 #+NAME: num-layer-left-thumb
-| KC_NO | KC_UNDS | KC_NO | KC_MINS | KC_NO |
+| KC_NO | KC_UNDS | KC_SPC | KC_MINS | KC_NO |
 
 #+NAME: num-layer-right-thumb
 | KC_NO | KC_ENT | KC_TRNS | KC_NO | KC_NO |

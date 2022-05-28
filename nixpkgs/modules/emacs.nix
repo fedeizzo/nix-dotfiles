@@ -1,6 +1,6 @@
 { config, pkgs, libs, ... }:
 let
-  myEmacs = with pkgs; ((emacsPackagesFor emacsPgtkGcc).emacsWithPackages (epkgs: [
+  myEmacs = with pkgs; ((emacsPackagesFor emacsPgtkNativeComp).emacsWithPackages (epkgs: [
     epkgs.vterm
     epkgs.org-roam-ui
   ]));
@@ -24,8 +24,6 @@ in
     # ledger
     ledger
     unstable.hledger
-    unstable.hledger-ui
-    unstable.hledger-web
   ];
   xdg.configFile."emacs/Emacs.org".source = ../dotfiles/emacs/Emacs.org;
 }

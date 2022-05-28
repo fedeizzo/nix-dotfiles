@@ -6,7 +6,6 @@ in
 {
   imports = [
     ../modules/bottom.nix
-    ../modules/chat.nix
     ../modules/cli.nix
     ../modules/config.nix
     ../modules/emacs.nix
@@ -16,9 +15,7 @@ in
     ../modules/kitty.nix
     ../modules/languages.nix
     ../modules/lf.nix
-    ../modules/media.nix
     ../modules/neovim.nix
-    ../modules/notes.nix
     ../modules/packages.nix
     ../modules/qutebrowser.nix
     ../modules/services.nix

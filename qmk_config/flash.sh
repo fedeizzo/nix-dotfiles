@@ -22,6 +22,7 @@ case $1 in
 		;;
 	    "lily")
 		mkdir -p .build
+		mkdir -p /tmp/qmk_config/
 		echo "Building firmware"
 		${containerRunner} run \
 				--rm \
@@ -29,9 +30,12 @@ case $1 in
 				-v $(pwd)/.build:/build_result \
 				-v $(pwd)/lily58:/qmk_firmware/keyboards/lily58/keymaps/tmp_123456:ro \
 				qmk-config \
-				/bin/bash -c 'make lily58:tmp_123456 && mv lily58_rev1_tmp_123456.hex /build_result/lily58.hex' &> /dev/null
+				/bin/bash -c 'qmk compile -kb lily58 -km tmp_123456 && mv lily58_rev1_tmp_123456.hex /build_result/lily58.hex' &> /tmp/qmk_config/log
 		if [[ $? != 0 ]]; then
 		    echo "Error during the build of the firmware"
+		    cat /tmp/qmk_config/log
+		    rm -r .build
+		    rm -r /tmp/qmk_config
 		    exit 1
 		fi
 		echo "Waiting the keyboard in reset mode"
@@ -41,6 +45,7 @@ case $1 in
 		    if [[ $? == 0 ]]; then
 			echo "Done"
 			rm -r .build
+			rm -r /tmp/qmk_config
 			exit 0
 		    fi
 		    case $waitTime in
