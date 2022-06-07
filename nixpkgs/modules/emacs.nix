@@ -18,6 +18,15 @@ in
     };
   };
   home.packages = with pkgs; [
+    # fast capture with org-protocol
+    (makeDesktopItem {
+      name = "org-protocol";
+      exec = "emacsclient %u";
+      comment = "Org protocol";
+      desktopName = "org-protocol";
+      type = "Application";
+      mimeType = "x-scheme-handler/org-protocol";
+    })
     # poppler
     poppler_utils
     imagemagick

@@ -4,7 +4,8 @@
 * init
 #+begin_src emacs-lisp
   (require 'package)
-  (setq package-archives '(("melpa" . "https://melpa.org/packages/")
+  (setq package-archives '(
+                           ("melpa" . "https://melpa.org/packages/")
                            ("elpa" . "https://elpa.gnu.org/packages/")
                            ("nongnu" . "https://elpa.nongnu.org/nongnu/")
                            ))
@@ -218,13 +219,6 @@
                               ))))
   (use-package company-box
     :hook (company-mode . company-box-mode))
-#+end_src
-** Dashboard
-#+begin_src emacs-lisp
-  (use-package dashboard
-    :config
-    (dashboard-setup-startup-hook)
-    )
 #+end_src
 ** Deft for fast plain text files searching
 #+begin_src emacs-lisp
@@ -670,172 +664,166 @@ Open other notes in the same window
 
 ** Agenda
 #+begin_src emacs-lisp
+  (setq org-directory "~/org")
+  (setq fi/tasks-to-process-file (concat org-directory "/to_process/tasks.org"))
+  (setq fi/tasks-file (concat org-directory "/tasks.org"))
+  (setq fi/readings-file (concat org-directory "/readings.org"))
+  (setq fi/things-to-read-file (concat org-directory "/to_process/readings.org"))
+  (setq fi/habits-file (concat org-directory "/habits.org"))
+  (setq fi/agenda-files
+        (list fi/tasks-to-process-file
+              fi/things-to-read-file
+              fi/habits-file
+              fi/tasks-file
+              fi/readings-file))
+#+end_src
+
+Required dependencies:
+#+begin_src emacs-lisp
   (require 'org-habit)
-  (setq org-log-done 'time
-        org-log-into-drawer t
-        org-log-state-notes-insert-after-drawers nil)
-  (setq org-agenda-files '("~/org/tasks/inbox.org" "~/org/tasks/projects.org"))
-  (setq org-agenda-block-separator nil
-        org-agenda-start-with-log-mode t)
-  (setq org-columns-default-format "%40ITEM(Task) %Effort(EE){:} %CLOCKSUM(Time Spent) %SCHEDULED(Scheduled) %DEADLINE(Deadline)")
-  (setq org-columns-default-format-for-agenda "%40ITEM(Task) %Effort(Effort Estimated){:} %CLOCKSUM(Time Spent) %SCHEDULED(Scheduled) %DEADLINE(Deadline)")
-  (setq org-agenda-prefix-format  '((agenda . " %i %-12:c%?-12t% s")
-                                    (todo . " %i %-20(concat \"[ \"(org-format-outline-path (org-get-outline-path)) \" ]\")")
-                                    (tags . " %i %-12:c")
-                                    (search . " %i %-12:c")))
-  (setq org-agenda-custom-commands `((" " "Agenda"
-                                      ((alltodo ""
-                                                ((org-agenda-overriding-header "Inbox")
-                                                 (org-agenda-files '("~/org/tasks/inbox.org"))))
-                                       (agenda ""
-                                               ((org-agenda-span 'week)
-                                                (org-deadline-warning-days 365)
-                                                (org-agenda-start-with-clockreport-mode t)
-                                                (org-agenda-clockreport-parameter-plist '(
-                                                                                          :maxlevel 3))))
-                                       (todo "NEXT"
-                                             ((org-agenda-overriding-header "In Progress")
-                                              (org-agenda-files '("~/org/tasks/projects.org"))))
-                                       (todo "TODO"
-                                             ((org-agenda-overriding-header "Active Projects")
-                                              (org-agenda-files '("~/org/tasks/projects.org"))
-                                              (org-agenda-skip-function #'fi/skip-projects)))))))
-  (defun log-todo-next-creation-date (&rest ignore)
-    "Log NEXT creation time in the property drawer under the key 'ACTIVATED'"
-    (when (and (string= (org-get-todo-state) "NEXT")
-               (not (org-entry-get nil "ACTIVATED")))
-      (org-entry-put nil "ACTIVATED" (format-time-string "[%Y-%m-%d]"))))
-  (add-hook 'org-after-todo-state-change-hook #'log-todo-next-creation-date)
-  (defun fi/my-clocktable-write (&rest args)
-    "Custom clocktable writer.
-          Uses the default writer but shifts the first column right."
-    (apply #'org-clocktable-write-default args)
-    (save-excursion
-      (forward-char)
-      (forward-char)
-      (org-table-move-column-right)
-      (org-table-move-column-right)
-      (org-table-move-column-right)
-      (org-table-move-column-right)
-      ))
-  (setq org-clocktable-defaults '(
-                                  :maxlevel 3
-                                  :tcolumns 3
-                                  :level nil
-                                  :formula %
-                                  :scope file
-                                  :hidefiles t
-                                  :wstart 1
-                                  :mstart 1
-                                  :lang "en"
-                                  :narrow 50!
-                                  :link t
-                                  :indent t
-                                  :properties ("Effort")
-                                  :formatter fi/my-clocktable-write
-                                  ))
+  (require 'org-protocol)
+  (use-package org-cliplink)
 #+end_src
 
-*** Functions
-**** Inbox processing
+todo keywords:
+- ~TODO~: things to do;
+- ~NEXT~: next thing to do in a project, so one next task per project;
+- ~HOLD~: paused task for some reason;
+- ~DONE~: finished task.
+
 #+begin_src emacs-lisp
-  (defun fi/org-process-inbox ()
-    "Called in org-agenda-mode, processes all inbox items."
+  (setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "HOLD(h)" "|" "DONE(d)")))
+#+end_src
+
+tags:
+- ~emacs~
+- ~linux~
+- ~work~
+- ~uni~
+- ~ML~
+
+#+begin_src emacs-lisp
+  (setq org-tag-alist
+        '(("emacs" . ?e)
+          ("linux" . ?x)
+          ("work" . ?w)
+          ("uni" . ?u)
+          ("ml" . ?m)))
+#+end_src
+
+Agenda:
+- a keybind to add/change deadline of a task;
+- a keybind to note down an appointment (this is different from scheduled, for note down it is sufficient to write the date)
+- a keybind to add/change scheduled of a task (In Org mode, scheduling means setting a date when you want to start working on an action item);
+
+Clockin:
+- estiamate keybind;
+- clockin dynamic based on project? when i move to a project (hook of projectile) asks for which task should be clocked in;
+- setup automatic asking for how much time to remove from the count after idle time
+  
+*** Agenda
+#+begin_src emacs-lisp
+  (setq
+   org-agenda-files fi/agenda-files
+   org-agenda-breadcrumbs-separator " ❱ "
+   org-agenda-block-separator "──────────"
+   org-agenda-prefix-format " %i "
+   )
+  (setq org-agenda-custom-commands
+        '(
+          (" " "Agenda"
+           ((agenda ""
+                    ((org-agenda-overriding-header  " This week")
+                     (org-agenda-files fi/agenda-files)))
+            ;; (agenda ""
+            ;;         ((org-agenda-overriding-header  " Today")
+            ;;          (org-agenda-span 1)
+            ;;          (org-agenda-files fi/agenda-files)))
+            (todo "TODO"
+                  ((org-agenda-overriding-header " To process")
+                   (org-agenda-files (list fi/tasks-to-process-file fi/things-to-read-file))))
+            (todo "NEXT"
+                  ((org-agenda-overriding-header " NEXT")))
+            (todo "TODO"
+                  ((org-agenda-overriding-header " TODO")
+                   (org-agenda-files (list fi/tasks-file))))
+            (todo "TODO"
+                  ((org-agenda-overriding-header " Readings")
+                   (org-agenda-files (list fi/readings-file)))))
+           )
+          ))
+
+  (setq org-agenda-category-icon-alist
+        `(
+          ("readings" ,(list (all-the-icons-faicon "book")) nil nil :ascent center :mask heuristic)
+          ("tasks" ,(list (all-the-icons-material "list")) nil nil :ascent center :mask heuristic)
+          ("work" ,(list (all-the-icons-material "work")) nil nil :ascent center :mask heuristic)
+          ("uni" ,(list (all-the-icons-faicon "university")) nil nil :ascent center :mask heuristic)
+          ("emacs" ,(list (all-the-icons-fileicon "emacs")) nil nil :ascent center :mask heuristic)
+          ("linux" ,(list (all-the-icons-faicon "linux")) nil nil :ascent center :mask heuristic)))
+
+  (defun fi/refile-reading ()
     (interactive)
-    (org-agenda-bulk-mark-regexp "inbox:")
-    (fi/bulk-process-entries))
-  (defun fi/bulk-process-entries ()
-    (let ())
-    (if (not (null org-agenda-bulk-marked-entries))
-        (let ((entries (reverse org-agenda-bulk-marked-entries))
-              (processed 0)
-              (skipped 0))
-          (dolist (e entries)
-            (let ((pos (text-property-any (point-min) (point-max) 'org-hd-marker e)))
-              (if (not pos)
-                  (progn (message "Skipping removed entry at %s" e)
-                         (cl-incf skipped))
-                (goto-char pos)
-                (let (org-loop-over-headlines-in-active-region) (funcall 'fi/org-agenda-process-inbox-item))
-                ;; `post-command-hook' is not run yet.  We make sure any
-                ;; pending log note is processed.
-                (when (or (memq 'org-add-log-note (default-value 'post-command-hook))
-                          (memq 'org-add-log-note post-command-hook))
-                  (org-add-log-note))
-                (cl-incf processed))))
-          (org-agenda-redo)
-          (unless org-agenda-persistent-marks (org-agenda-bulk-unmark-all))
-          (message "Acted on %d entries%s%s"
-                   processed
-                   (if (= skipped 0)
-                       ""
-                     (format ", skipped %d (disappeared before their turn)"
-                             skipped))
-                   (if (not org-agenda-persistent-marks) "" " (kept marked)")))))
+    ;; (org-agenda-set-tags)
+    (setq org-refile-targets '((fi/readings-file :maxlevel . 2)))
+    (org-agenda-refile)
+    (setq org-refile-targets nil)
+    (org-agenda-redo-all))
 
-  (defvar fi/org-current-effort "1:00"
-    "Current effort for agenda items.")
+  (defun fi/refile-task ()
+    (interactive)
+    ;; (org-agenda-set-tags)
+    (setq org-refile-targets '((fi/tasks-file :maxlevel . 2)))
+    (org-agenda-priority)
+    (org-agenda-set-effort)
+    (org-agenda-refile)
+    (setq org-refile-targets nil)
+    (org-agenda-redo-all))
 
-  (defun fi/my-org-agenda-set-effort (effort)
-    "Set the effort property for the current headline."
-    (interactive
-     (list (read-string (format "Effort [%s]: " fi/org-current-effort) nil nil fi/org-current-effort)))
-    (setq fi/org-current-effort effort)
-    (org-agenda-check-no-diary)
-    (let* ((hdmarker (or (org-get-at-bol 'org-hd-marker)
-                         (org-agenda-error)))
-           (buffer (marker-buffer hdmarker))
-           (pos (marker-position hdmarker))
-           (inhibit-read-only t)
-           newhead)
-      (org-with-remote-undo buffer
-        (with-current-buffer buffer
-          (widen)
-          (goto-char pos)
-          (org-show-context 'agenda)
-          (funcall-interactively 'org-set-effort nil fi/org-current-effort)
-          (end-of-line 1)
-          (setq newhead (org-get-heading)))
-        (org-agenda-change-all-lines newhead hdmarker))))
+  (defun fi/prova ()
+    (interactive)
+    (setq content (buffer-string))
+    (setq width (- (window-body-width) 7))
+    (setq top-border (concat "┌" (make-string width ?─) "┐\n"))
+    (setq bottom-border (concat "└" (make-string width ?─) "┘\n"))
+    (with-current-buffer "*scratch*"
+      (insert top-border)
+      (dolist (line (split-string content "\n"))
+        (insert (concat "│ " line (make-string (- width (+(length line) 1)) ? ) "│\n")))
+      )
+    (insert bottom-border)
+    )
 
-  (defun fi/org-agenda-process-inbox-item ()
-    "Process a single item in the org-agenda."
-    (org-with-wide-buffer
-     (org-agenda-set-tags)
-     (org-agenda-priority)
-     (call-interactively 'fi/my-org-agenda-set-effort)
-     (org-agenda-refile nil nil t)))
-#+end_src
-**** General
-#+begin_src emacs-lisp
+  (setq org-agenda-window-setup 'current-window)
+
+
   (defun fi/switch-to-agenda ()
     (interactive)
     (org-agenda nil " "))
 
-  (defun fi/org-archive-done-tasks ()
-    "Archive all done tasks."
-    (interactive)
-    (org-map-entries 'org-archive-subtree "/DONE" 'file))
-
-  (defun fi/advance-todo ()
-    (org-todo 'right)
-    (remove-hook 'org-clock-in-hook #'fi/advance-todo))
-
-  (defun fi/clock-in-and-advance ()
-    (interactive)
-    (add-hook 'org-clock-in-hook 'fi/advance-todo)
-    (org-agenda-clock-in))
-  (defun fi/skip-projects ()
-    "Skip trees that are projects."
-    (save-restriction
-      (widen)
-      (let ((next-headline (save-excursion (or (outline-next-heading) (point-max)))))
-        (cond
-         ((org-is-habit-p)
-          next-headline)
-         (t
-          nil)))))
+  (fi/leader "a" #'fi/switch-to-agenda)
 #+end_src
+
+*** Capture
+#+begin_src emacs-lisp
+  (setq org-default-notes-file fi/tasks-to-process-file)
+  ;; (defun transform-square-brackets-to-round-ones(string-to-transform)
+  ;;   "Transforms [ into ( and ] into ), other chars left unchanged."
+  ;;   (concat 
+  ;;   (mapcar #'(lambda (c) (if (equal c ?[) ?\( (if (equal c ?]) ?\) c))) string-to-transform))
+  ;;   )
+
+  (setq org-capture-templates
+        '(
+          ("t" "To-do task to process" entry (file fi/tasks-to-process-file) "* TODO%?\n" :empty-lines 1)
+          ("r" "Thing to read" entry (file+headline fi/things-to-read-file "Manual") "* TODO %(org-cliplink-capture)\n" :empty-lines 1 :immediate-finish t)
+          ("p" "Protocol text" entry (file+headline fi/things-to-read-file "Protocol") "* TODO %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?" :empty-lines 1 :immediate-finish t)
+          ("L" "Protocol link" entry (file+headline fi/things-to-read-file "Protocol") "* TODO [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n" :empty-lines 1 :immediate-finish t)
+          ))
+#+end_src
+
+*** Habits
+Refer to ~/org/habits.org
 
 ** Async
 #+begin_src emacs-lisp
@@ -873,22 +861,6 @@ Open other notes in the same window
      ))
 #+end_src
 
-** Capture templates
-#+begin_src emacs-lisp
-  (use-package org-cliplink)
-  ;; (setq fi/org-agenda-directory "~/org/tasks/")
-  (setq org-capture-templates
-        `(("i" "inbox" entry (file "~/org/tasks/inbox.org")
-           ,(concat "* TODO %? :inbox:\n" "/Entered on/ %U"))
-          ("l" "link" entry (file "~/org/tasks/inbox.org")
-           "* TODO %(org-cliplink-capturte)" :immediate-finish t)))
-#+end_src
-** Clocking work time
-Save clock history across Emacs sessions
-#+begin_src emacs-lisp
-                                          ;(setq org-clock-persist 'history)
-                                          ;(org-clock-persistence-insinuate)
-#+end_src
 ** Face
 #+begin_src emacs-lisp
   (use-package org-superstar
@@ -921,10 +893,6 @@ Save clock history across Emacs sessions
     (remove-hook 'after-make-frame-functions #'fi/font-config-org)
     (add-hook 'after-make-frame-functions #'fi/font-config-org))
 #+end_src
-** Fast capturing
-#+begin_src emacs-lisp
-  (setq org-default-notes-file (concat org-directory "fast_capturing.org"))
-#+end_src
 ** Gnu plot
 #+begin_src emacs-lisp
   (use-package gnuplot)
@@ -932,11 +900,6 @@ Save clock history across Emacs sessions
 ** Habit
 #+begin_src emacs-lisp
   (require 'org-habit)
-#+end_src
-
-** todo
-#+begin_src emacs-lisp
-  (setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "HOLD(h)" "|" "DONE(d)")))
 #+end_src
 
 ** Image
@@ -1315,6 +1278,64 @@ Custom function for content insert
   ,#+subtitle:
   ,#+date:"))
       (switch-to-buffer-other-window "*zetteldesk-scratch*")))
+
+  (defun fi/get-all-org-roam-ids-current-buffer ()
+    (org-element-map (org-element-parse-buffer) 'link
+      (lambda (link)
+        (when (string= (org-element-property :type link) "id")
+          (org-element-property :path link)))))
+
+  (defun fi/get-org-level-from-list (regex-item)
+    "Return the org heading level giving list in the buffer"
+    (search-forward regex-item)
+    (/ (current-indentation) 2))
+
+
+  (defun fi/demote-org-roam-node (level text)
+    "Demote an org tree given its level and regex"
+    (let ((match-str (concat "LEVEL=" (number-to-string level) "+ITEM={" text "}")))
+      (print match-str)
+      (org-map-entries (lambda () (org-demote-subtree)) match-str))
+    )
+
+  (defun fi/zetteldesk-insert-all-nodes-contents-current-buffer-list ()
+    (interactive)
+    (beginning-of-buffer)
+    (setq new-headings '())
+    (dolist (id (fi/get-all-org-roam-ids-current-buffer))
+      (let* ((node (org-roam-node-from-id id))
+             (filename (org-roam-node-file node))
+             (org-level (fi/get-org-level-from-list id))
+             (node-buffer (find-file-noselect filename))
+             (location (zetteldesk-insert-location)))
+        (with-current-buffer node-buffer
+          (setq heading-texts (org-map-entries (lambda () (fifth (org-heading-components))) "LEVEL=1"))
+          (dolist (heading-text heading-texts)
+            (when (not (= org-level 0))
+              (push (list org-level heading-text) new-headings)
+              )))
+        (kill-buffer node-buffer)
+        (with-current-buffer location
+          (goto-char (point-max))
+          (newline)
+          (insert-file-contents filename)
+          (kill-matching-lines "^#\\+title.*"))
+        ))
+    (setq new-headings (reverse new-headings))
+    (let ((location (zetteldesk-insert-location)))
+      (with-current-buffer location
+        (org-mode)
+        (beginning-of-buffer)
+        (insert "
+  ,#+title:
+  ,#+author:
+  ,#+subtitle:
+  ,#+date:")
+        (dolist (new-heading new-headings)
+          (dotimes (level (first new-heading))
+            (fi/demote-org-roam-node (+ level 1) (second new-heading))))
+        ))
+    (switch-to-buffer-other-window "*zetteldesk-scratch*"))
 #+end_src
 Hydra config
 #+begin_src emacs-lisp
@@ -1356,19 +1377,6 @@ Hydra config
 #+end_src
 
 ** Property
-** Tag and refile
-~startgroup~ and ~endgroup~ is used to create a mutually exclusive relation between tags
-#+begin_src emacs-lisp
-  (setq org-tag-alist '(("@work" . ?w)
-                        ("@university" . ?u)
-                        ("@home" . ?h)
-                        ("@anywhere" . ?a)))
-  (setq org-fast-tag-selection-single-key nil)
-  (setq org-refile-use-outline-path 'file
-        org-outline-path-complete-in-steps nil)
-  (setq org-refile-allow-creating-parent-nodes 'confirm
-        org-refile-targets '(("projects.org" . (:maxlevel . 2))))
-#+end_src
 * Line number
 #+begin_src emacs-lisp
   ;; line number
@@ -1404,27 +1412,3 @@ Hydra config
   (global-set-key [mouse-8] 'fi/switch-last-buffer)
   (global-set-key [mouse-9] 'fi/zetteldesk-add-current-buffer-to-desktop)
 #+end_src
-
-* Things to implement with org-mode
-** TODO habit tracker
-** TODO define a list of tags
-I think that it is a good idea to define three tags based on the level of focus required by the task:
-- high
-- medium
-- low
-Then tags associated to categories:
-- work
-- university
-- hobby
-Maybe tags associated to places:
-- @work
-- @home
-- @university
-Maybe it is a good idea to set buffer tags if I will decide to use a file for work, another for university, and so on.
-
-** TODO understand if I can use property
-Maybe properties can be used to to log some information like in a db, for instance books, papers, etc.
-
-** TODO understand if clocking work time is to overkill
-** TODO set up mathpix.el
-** TODO understand general and prefix
