@@ -37,9 +37,12 @@ in
       "application/pdf" = "org.pwmt.zathura.desktop";
       "inode/directory" = "lf.desktop";
       "text/plain" = "nvim.desktop";
-      "text/html" = "org.qutebrowser.qutebrowser.desktop";
-      "x-scheme-handler/http" = "org.qutebrowser.qutebrowser.desktop";
-      "x-scheme-handler/https" = "org.qutebrowser.qutebrowser.desktop";
+      # "text/html" = "org.qutebrowser.qutebrowser.desktop";
+      # "x-scheme-handler/http" = "org.qutebrowser.qutebrowser.desktop";
+      # "x-scheme-handler/https" = "org.qutebrowser.qutebrowser.desktop";
+      "text/html" = "firefox";
+      "x-scheme-handler/http" = "firefox";
+      "x-scheme-handler/https" = "firefox";
     };
   };
 }
