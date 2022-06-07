@@ -1,3 +1,4 @@
+#+STARTUP: hideblocks
 * QMK keyboard configs
 Personal QMK configuration for [[https://github.com/foostan/crkbd][corne]] and [[https://github.com/kata0510/Lily58][lily58]] keyboards.
 
@@ -22,13 +23,13 @@ Usage:
 
 *** Base
 #+NAME: base-layer
-| ESC   | 1 | 2 | 3 | 4 | 5 |   | 6 | 7 | 8 | 9 | 0 | ESC   |
-| G+TAB | Q | W | F | P | B |   | J | L | U | Y | ' | C+T   |
-| LCTL  | A | R | S | T | G |   | M | N | E | I | O | ;     |
-| CAPS  | Z | X | C | D | V |   | K | H | , | . | / | C+TAB |
+| ESC   | 1 | 2 | 3 | 4 | 5 |   | 6 | 7 | 8 | 9 | 0 | ESC  |
+| G+TAB | Q | W | F | P | B |   | J | L | U | Y | ' | C+T  |
+| LCTL  | A | R | S | T | G |   | M | N | E | I | O | ;    |
+| CAPS  | Z | X | C | D | V |   | K | H | , | . | / | LSFT |
 
 #+NAME: base-layer-thumb
-| NO    | _NAV/ESC | G/SPC | S/TAB | [ | ] | C/ENT | _NUM/BSPC | LALT | NO |
+| NO | _NAV/ESC | G/SPC | S/TAB | C+T | C+TAB | C/ENT | _NUM/BSPC | LALT | G+TAB |
 
 *** Navigation
 #+NAME: navigation-layer
@@ -42,10 +43,10 @@ Usage:
 
 *** Num
 #+NAME: num-layer
-| NO | NO | NO | NO | NO | NO |   | NO   | NO | NO | NO | NO | NO |
-| NO | [  |  7 |  8 |  9 | ]  |   | {    | (  | *  | &  | }  | NO |
-| NO | 0  |  4 |  5 |  6 | =  |   | +    | ^  | %  | $  | )  | NO |
-| NO | `  |  1 |  2 |  3 | \  |   | PIPE | #  | @  | !  | ~  | NO |
+| NO | F1 | F2 | F3 | F4 | F5 |   | F6   | F7 | F8 | F9 | F10 | NO |
+| NO | [  |  7 |  8 |  9 | ]  |   | {    | (  | *  | &  | }   | NO |
+| NO | 0  |  4 |  5 |  6 | =  |   | +    | ^  | %  | $  | )   | NO |
+| NO | `  |  1 |  2 |  3 | \  |   | PIPE | #  | @  | !  | ~   | NO |
 
 #+NAME: num-layer-thumb
 | NO | _ | SPC | - | NO | NO | ENT | TRNS | NO | NO |
@@ -253,17 +254,21 @@ Usage:
 
 **** Rules
 #+begin_src C :main no :noweb yes :mkdirp yes :tangle ./lily58/rules.mk :mkdirp yes :results none silent
-  BOOTMAGIC_ENABLE = no      # Enable Bootmagic Lite
-  MOUSEKEY_ENABLE = no       # Mouse keys
-  EXTRAKEY_ENABLE =  yes     # Audio control and System control
-  CONSOLE_ENABLE = no        # Console for debug
-  COMMAND_ENABLE = no        # Commands for debug and configuration
-  NKRO_ENABLE = no
-  BACKLIGHT_ENABLE = no      # Enable keyboard backlight functionality
   AUDIO_ENABLE = no          # Audio output
-  RGBLIGHT_ENABLE = no       # Enable WS2812 RGB underlight.
-  SWAP_HANDS_ENABLE = no     # Enable one-hand typing
+  BACKLIGHT_ENABLE = no      # Enable keyboard backlight functionality
+  BOOTMAGIC_ENABLE = no      # Enable Bootmagic Lite
+  COMMAND_ENABLE = no        # Commands for debug and configuration
+  AUTO_SHIFT_ENABLE = no
+  BLUETOOTH_ENABLE = no
+  CONSOLE_ENABLE = no        # Console for debug
+  EXTRAKEY_ENABLE =  yes     # Audio control and System control
+  MOUSEKEY_ENABLE = no       # Mouse keys
+  NKRO_ENABLE = no
   OLED_ENABLE= no            # OLED display
+  RGBLIGHT_ENABLE = no       # Enable WS2812 RGB underlight.
+  SPACE_CADET_ENABLE=no
   SPLIT_KEYBOARD = yes
+  SWAP_HANDS_ENABLE = no     # Enable one-hand typing
+  TAP_DANCE_ENABLE = no
 #+end_src
 
