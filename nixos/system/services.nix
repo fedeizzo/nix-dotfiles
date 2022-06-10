@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, nixpkgs-old, ... }:
 
 let
   hdmiEventHandler = pkgs.writeShellScriptBin "hdmiEventHandler" (builtins.readFile ../bin/hdmiEventHandler.sh);
@@ -63,6 +63,7 @@ in
   services.flatpak.enable = true;
   services.fprintd = {
     enable = true;
+    package = nixpkgs-old.fprintd;
     tod = {
       enable = true;
       driver = pkgs.libfprint-2-tod1-goodix;

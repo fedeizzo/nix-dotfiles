@@ -3,7 +3,7 @@
 {
   home.packages = with pkgs; [
     coreutils
-    dragon-drop
+    xdragon
     exa
     fd
     fzf

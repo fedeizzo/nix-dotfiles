@@ -8,7 +8,7 @@
   programs.direnv = {
     enable = true;
     nix-direnv.enable = true;
-    nix-direnv.enableFlakes = true;
+    # nix-direnv.enableFlakes = true;
   };
   systemd.user.services = {
     mpris-proxy = {

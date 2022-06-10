@@ -4,7 +4,7 @@
   nixpkgs.config = {
     allowUnfree = true;
   };
-  system.stateVersion = "21.11";
+  system.stateVersion = "22.05";
   nix = {
     autoOptimiseStore = true;
     package = pkgs.nixFlakes;

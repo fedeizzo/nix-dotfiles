@@ -52,7 +52,7 @@
   programs.sway = {
     enable = true;
     extraOptions = [
-      "--my-next-gpu-wont-be-nvidia"
+      "--unsupported-gpu"
     ];
     extraSessionCommands = ''
       export SDL_VIDEODRIVER=wayland

@@ -2,7 +2,8 @@
   description = "My personal NixOS configuration";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-21.11";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-22.05";
+    nixpkgs-old.url = "github:nixos/nixpkgs/nixos-21.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     emacs-overlay = {
       url = "github:nix-community/emacs-overlay";
@@ -24,6 +25,9 @@
           let
             defaults = { pkgs, ... }: {
               _module.args.nixpkgs-unstable = import inputs.nixpkgs-unstable {
+                inherit (pkgs.stdenv.targetPlatform) system;
+              };
+              _module.args.nixpkgs-old = import inputs.nixpkgs-old {
                 inherit (pkgs.stdenv.targetPlatform) system;
               };
             };
