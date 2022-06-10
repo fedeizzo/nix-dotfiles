@@ -2,23 +2,36 @@
 #+PROPERTY: header-args:emacs-lisp :tangle ~/.config/emacs/init.el
 
 * init
+~use-package~ keywords:
+- ~:init~ code exectued before package is loaded;
+- ~:config~ code exectued after package is loaded, this code is executed lazily;
+- ~:commands~ creates an autoload for commands for lazy loading. This allow to define keybind without the ~'~ 
+- ~:bind~ new keybinds after package is loaded. Defined  in this way ~:bind (("M-o l" . my-command))~;
+- ~:bind-keymap~ is the similar to ~:bind~ and allows to specify keybind command instead of commands;
+- ~:custom~ defines customizable variable of package (for very particular cases, most of the time is better to use ~setq~ in the ~:init~ or ~:config~ section);
+- ~:load-path~ allows to laod a package from a directory inside the filesystem or another source;
+- ~:hook~ add functions into package hookds.
+
 #+begin_src emacs-lisp
-  (require 'package)
-  (setq package-archives '(
-                           ("melpa" . "https://melpa.org/packages/")
-                           ("elpa" . "https://elpa.gnu.org/packages/")
-                           ("nongnu" . "https://elpa.nongnu.org/nongnu/")
-                           ))
-  (package-initialize)
-  (unless package-archive-contents
-    (package-refresh-contents))
-
-  (unless (package-installed-p 'use-package)
-    (package-install 'use-package))
-
-  (require 'use-package)
-  ;; if evaluating a package is not present download it
-  (setq use-package-always-ensure t)
+  (defvar bootstrap-version)
+  (let ((bootstrap-file
+         (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+        (bootstrap-version 5))
+    (unless (file-exists-p bootstrap-file)
+      (with-current-buffer
+          (url-retrieve-synchronously
+           "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+           'silent 'inhibit-cookies)
+        (goto-char (point-max))
+        (eval-print-last-sexp)))
+    (load bootstrap-file nil 'nomessage))
+  (setq package-enable-at-startup nil)
+  (straight-use-package 'use-package)
+  (use-package straight
+               :custom (straight-use-package-by-default t))
+  ;; (setq package-archives '(("melpa" . "https://melpa.org/packages/")
+  ;;                          ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+  ;;                          ("elpa" . "https://elpa.gnu.org/packages/")))
 
   (setq warning-minimum-level :error)
 #+end_src
@@ -26,13 +39,14 @@
 * UI
 ** Hiding elements
 #+begin_src emacs-lisp
-  (setq inhibit-startup-message t)
-  (setq use-file-dialog nil)
+  (setq
+   inhibit-startup-message t
+   use-file-dialog nil
+   visible-bell nil)
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
   (menu-bar-mode -1)
   (tooltip-mode -1)
-  (setq visible-bell t)
 #+end_src
 ** Font
 #+begin_src emacs-lisp
@@ -42,6 +56,7 @@
     (set-face-attribute 'variable-pitch nil :font "JetBrains Mono" :height 105 :weight 'normal))
   (add-hook 'after-make-frame-functions #'fi/font-config)
   (use-package ligature
+    :straight nil
     :load-path "~/.config/emacs/ligature.el"
     :config
     ;; Enable all JetBrains Mono ligatures in programming modes
@@ -59,6 +74,26 @@
     ;; Enables ligature checks globally in all buffers. You can also do it
     ;; per mode with `ligature-mode'.
     (global-ligature-mode t))
+#+end_src
+
+** Theme
+#+begin_src emacs-lisp
+  (use-package doom-themes
+    :config
+    (setq doom-themes-enable-bold t)
+    (setq doom-themes-enable-italic t)
+    (load-theme 'doom-nord t)
+    (doom-themes-visual-bell-config)
+    (doom-themes-org-config))
+
+  ;; modeline
+  (use-package doom-modeline
+    :init (doom-modeline-mode 1)
+    (setq doom-modeline-height 15))
+
+  ;; icons
+  (use-package all-the-icons
+    :if (display-graphic-p))
 #+end_src
 
 * Performance
@@ -100,8 +135,6 @@
   (setq vc-follow-symlinks t)
   (setq ad-redefinition-action 'accept)
   (setq create-lockfiles nil)
-  (setq evil-want-integration t)
-  (setq evil-want-keybinding nil)
 #+end_src
 * Keymaps
 ** Global
@@ -112,26 +145,16 @@
   ;; define-key assicoates the keymap only to a specific mode (emacs-lisp-mode-map variable to add maps)
   (global-set-key (kbd "M-o") 'bufler-switch-buffer)
 #+end_src
-** Org-mode
-#+begin_src emacs-lisp
-  (global-set-key (kbd "C-c l") #'org-store-link)
-  (global-set-key (kbd "C-c a") #'fi/swith-to-agenda)
-  (global-set-key (kbd "C-c c") #'org-capture)
-#+end_src
-** Ranger
-#+begin_src emacs-lisp
-  (global-set-key (kbd "M-e") 'ranger)
-#+end_src
 
 * Packages
-** Better command
+** Better command - amx
 #+begin_src emacs-lisp
-  (use-package amx
-    :config
-    (amx-mode 1))
+    (use-package amx
+      :config
+      (amx-mode 1))
 #+end_src
 
-** Completion
+** Completion - ivy counsel helpful company
 *** Minibuffer
 #+begin_src emacs-lisp
   (use-package ivy
@@ -161,12 +184,6 @@
            )
     :config
     (setq ivy-initial-inputs-alist nil))
-  (use-package swiper) ; better search in the buffer
-#+end_src
-#+begin_src emacs-lisp
-  ;; completion for minibuffer
-
-  ;; details of command when navigating command lists (works with counsel-m-x)
   (use-package ivy-rich
     :init (ivy-rich-mode 1))
 
@@ -180,26 +197,6 @@
     ([remap describle-command] . helpful-command)
     ([remap describle-variable] . counsel-describe-variable)
     ([remap describle-key] . helpful-key))
-
-  ;; nord e
-  (use-package doom-themes
-    :config
-    (setq doom-themes-enable-bold t)
-    (setq doom-themes-enable-italic t)
-    (load-theme 'doom-nord t)
-    (doom-themes-visual-bell-config)
-    (doom-themes-org-config))
-
-  ;; modeline
-  (use-package doom-modeline
-    :init (doom-modeline-mode 1)
-    (setq doom-modeline-height 15))
-
-  ;; icons
-  (use-package all-the-icons
-    :if (display-graphic-p))
-
-  ;; keymaps definer
 #+end_src
 *** Anything
 #+begin_src emacs-lisp
@@ -220,30 +217,20 @@
   (use-package company-box
     :hook (company-mode . company-box-mode))
 #+end_src
-** Deft for fast plain text files searching
+** Deft for fast plain text files searching - disabled
 #+begin_src emacs-lisp
-  (use-package deft
-    :commands (deft)
-    :config
-    (setq deft-extensions '("org")
-          deft-directory "~/zettelkasten/"
-          deft-recursive t
-          deft-use-filename-as-title t))
+  ;; (use-package deft
+  ;;   :commands (deft)
+  ;;   :config
+  ;;   (setq deft-extensions '("org")
+  ;;         deft-directory "~/zettelkasten/"
+  ;;         deft-recursive t
+  ;;         deft-use-filename-as-title t))
 #+end_src
 
-** Dired and treemacs
+** TODO Dired
 #+begin_src emacs-lisp
   (setq dired-listing-switches "-aBhl --group-directories-first")
-  (use-package ranger
-    :config
-    (ranger-override-dired-mode t)
-    (setq ranger-cleanup-on-disable t)
-    (setq ranger-preview-file t)
-    (setq ranger-show-literal nil))
-
-  (use-package treemacs)
-  (use-package treemacs-evil)
-  (use-package treemacs-projectile)
 #+end_src
 
 ** Direnv and lorri integration
@@ -256,15 +243,14 @@
 
 ** Evil mode
 #+begin_src emacs-lisp
-  ;; evil mode (see evil-collection and hydra)
   (use-package evil
     :init
-    (setq evil-want-integration t)
-    (setq evil-want-keybinding nil)
-    (setq evil-want-C-u-scroll t)
-    (setq evil-want-C-i-jump nil)
-    (setq evil-respect-visual-line-mode t)
-    (setq evil-undo-system 'undo-tree)
+    (setq evil-want-integration t
+          evil-want-keybinding nil
+          evil-want-C-u-scroll t
+          evil-want-C-i-jump nil
+          evil-respect-visual-line-mode t
+          evil-undo-system 'undo-tree)
     :config
     (evil-mode 1)
 
@@ -280,14 +266,18 @@
   (use-package evil-collection
     :after evil
     :config
-    (evil-collection-init))
+    (evil-collection-init)
+    (evil-collection-define-key 'normal 'dired-mode-map
+      "h" 'dired-up-directory
+      "l" 'dired-find-file)
+    )
   (use-package evil-commentary
     :after evil
     :config
     (evil-commentary-mode 1))
 #+end_src
 
-** Buffer manager
+** Buffer manager - bufler
 #+begin_src emacs-lisp
   (use-package bufler
     :config
@@ -298,25 +288,28 @@
       "D" 'bufler-list-buffer-kill))
 #+end_src
 
-** Folding
+** Folding - origami
 #+begin_src emacs-lisp
   (use-package s)
   (use-package dash)
   (use-package origami
     :config
-    (origami-mode t))
+    (origami-mode))
 #+end_src
 
-** Format
+** Format - format-all
 #+begin_src emacs-lisp
-  (use-package format-all)
+  (use-package format-all
+    :config
+    (add-hook 'prog-mode-hook 'format-all-mode)
+    (add-hook 'format-all-mode-hook 'format-all-ensure-formatter))
 #+end_src
 
 ** Hydra
 Installation
 #+begin_src emacs-lisp
   (use-package hydra)
-  (use-package hydra-postframe)
+  ;; (use-package hydra-postframe)
   (use-package major-mode-hydra
     :bind
     ("M-SPC" . major-mode-hydra))
@@ -473,17 +466,18 @@ This section must be the last one because it should stay after any function decl
 #+begin_src emacs-lisp
 
 #+end_src
+
 *** rust
 #+begin_src emacs-lisp
   (use-package rustic)
 #+end_src
 
-** Magit
+** TODO Magit
 #+begin_src emacs-lisp
   (use-package magit)
 #+end_src
 
-** Pairs
+** Pairs - rainbow-delimiters
 #+begin_src emacs-lisp
   (use-package rainbow-delimiters
     :hook (prog-mode . rainbow-delimiters-mode))
@@ -497,25 +491,25 @@ This section must be the last one because it should stay after any function decl
   (pdf-tools-install)
 #+end_src
 
-** Popwin
+** Autoclose help buffers - popwin
 #+begin_src emacs-lisp
   (use-package popwin
     :config
     (popwin-mode 1))
 #+end_src
 
-** Project manager
+** Project manager - projectile
 #+begin_src emacs-lisp
   (use-package projectile
     :diminish projectile-mode
     :config (projectile-mode)
     :custom (projectile-completion-system 'ivy)
     :init
-    (setq projectile-project-search-path '("~/fbk" "~/personalProject" "~/uni"))
-    (setq projectile-switch-project-action #'project-dired)
-    (setq projectile-indexing-methond 'alien)
-    (setq projectile-sort-order 'modification-time)
-    (setq projectile-completion-system 'ivy)
+    (setq projectile-project-search-path '("~/fbk" "~/personalProject" "~/uni")
+          projectile-switch-project-action #'project-dired
+          projectile-indexing-methond 'alien
+          projectile-sort-order 'modification-time
+          projectile-completion-system 'ivy)
     )
 #+end_src
 Hydra
@@ -525,19 +519,28 @@ Hydra
      (("p" projectile-switch-project "switch project"))
      "Current"
      (("f" projectile-find-file "find file")
-      ("g" projectile-ripgrep "search all")
+      ("g" fi/ripgrep-regexp "search all")
       ("t" projectile-run-vterm "open terminal")
       ("k" projectile-kill-buffers "close project")))
     )
   (fi/leader "p" 'projectile-hydra-main/body)
 #+end_src
 
-** Ripgrep
+** Search in all files - ripgrep
 #+begin_src emacs-lisp
+  (defun fi/ripgrep-regexp (regex)
+    "Custom ripgrep-regexp that adds directory with projectile"
+    (interactive "sRipgrep search for: ")
+    (ripgrep-regexp regex (projectile-acquire-root)))
   (use-package ripgrep)
 #+end_src
 
-** Snippets
+** Search - swiper
+#+begin_src emacs-lisp
+  (use-package swiper)
+#+end_src
+
+** Snippets - yasnippet
 #+begin_src emacs-lisp
   (use-package yasnippet
     :config
@@ -551,29 +554,32 @@ Hydra
   (add-hook 'org-mode-hook #'fi/my-org-latex-yas)
 #+end_src
 
-** Super save
+** Save on events - super-save
 #+begin_src emacs-lisp
   (use-package super-save
     :config
     (super-save-mode 1))
 #+end_src
 
-** Telegram
+** Telegram - disabled
 #+begin_src emacs-lisp
-  (setq telega-directory "/home/fedeizzo/.local/share/telega")
+  ;; (setq telega-directory "/home/fedeizzo/.local/share/telega")
 #+end_src
 
-** Term
+** Terminal - vterm
+Vterm cannot be installed easily using nixos, for this reason the package management is leaved to nixos. Please refer to ~emacs.nix~ module.
+
 #+begin_src emacs-lisp
   ;; (use-package vterm)
   (setq vterm-kill-buffer-on-exit t)
 #+end_src
 
-** Text jumping
+** Text jumping - avy
 #+begin_src emacs-lisp
   (use-package avy
     :config
-    (global-set-key (kbd "C-'") 'avy-goto-char-2))
+    (fi/leader
+      "f" 'avy-goto-char-2)
 #+end_src
 
 ** Treesitter
@@ -590,16 +596,18 @@ Hydra
   (use-package undo-tree
     :config
     (global-undo-tree-mode)
-    (setq undo-tree-auto-save-history nil)
-    (setq undo-tree-visualizer-diff t))
+    (setq undo-tree-auto-save-history nil
+          undo-tree-visualizer-diff t
+          undo-tree-visualizer-relative-timestamps t
+          undo-tree-visualizer-timestamps t))
 #+end_src
 
 ** Which key
 #+begin_src emacs-lisp
   (use-package which-key
-    :init (which-key-mode) ; init called before package is loaded
+    :init (which-key-mode)
     :diminish which-key-mode
-    :config ; config called before the package is loaded
+    :config
     (setq which-key-idle-delay 0.3))
 
 #+end_src
@@ -633,18 +641,15 @@ A spaced repetition mechanism to pair with org-roam notes.
       :hook (org-mode . dw/org-mode-setup)
       :config
       (setq org-ellipsis " ▾"
-            org-hide-emphasis-markers t
-            org-return-follows-link t
-            org-confirm-babel-evaluate nil
-            org-catch-invisible-edits 'show
-            org-src-window-setup 'current-window
-            ;; TODO find a location for all edits
-            ;; org-preview-latex-image-directory "/tmp/ltximg/"
-            ))
+	    org-hide-emphasis-markers t
+	    org-return-follows-link t
+	    org-confirm-babel-evaluate nil
+	    org-catch-invisible-edits 'show
+	    org-src-window-setup 'current-window))
 
     (defun fi/dummy-org-download-annotate-function (link)
       ""
-      "#+ATTR_ORG: :width 250px\n#+ATTR_LATEX: :width 250px\n"
+      "#+ATTR_ORG: :width 250px\n#+ATTR_LATEX: :width 250px :placement [H] \n#+CAPTION: \n"
 
   )
 
@@ -653,7 +658,7 @@ A spaced repetition mechanism to pair with org-roam notes.
       :config
       (setq org-downlaod-screenshot-method "grim -g \"$(slurp)\" - | swappy -f -")
       (setq org-download-annotate-function
-            #'fi/dummy-org-download-annotate-function)
+	    #'fi/dummy-org-download-annotate-function)
       (setq org-downlaod-image-dir "./img"))
 #+end_src
 
@@ -695,20 +700,26 @@ todo keywords:
   (setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "HOLD(h)" "|" "DONE(d)")))
 #+end_src
 
-tags:
-- ~emacs~
-- ~linux~
-- ~work~
-- ~uni~
-- ~ML~
+Enforce that ~DONE~ can be set only if all children have ~DONE~ set:
 
 #+begin_src emacs-lisp
-  (setq org-tag-alist
-        '(("emacs" . ?e)
-          ("linux" . ?x)
-          ("work" . ?w)
-          ("uni" . ?u)
-          ("ml" . ?m)))
+  (setq-default org-enforce-todo-dependencies t)
+#+end_src
+
+  tags:
+  - ~emacs~
+  - ~linux~
+  - ~work~
+  - ~uni~
+  - ~ML~
+
+#+begin_src emacs-lisp
+    (setq org-tag-alist
+          '(("emacs" . ?e)
+            ("linux" . ?x)
+            ("work" . ?w)
+            ("uni" . ?u)
+            ("ml" . ?m)))
 #+end_src
 
 Agenda:
@@ -753,14 +764,14 @@ Clockin:
            )
           ))
 
-  (setq org-agenda-category-icon-alist
-        `(
-          ("readings" ,(list (all-the-icons-faicon "book")) nil nil :ascent center :mask heuristic)
-          ("tasks" ,(list (all-the-icons-material "list")) nil nil :ascent center :mask heuristic)
-          ("work" ,(list (all-the-icons-material "work")) nil nil :ascent center :mask heuristic)
-          ("uni" ,(list (all-the-icons-faicon "university")) nil nil :ascent center :mask heuristic)
-          ("emacs" ,(list (all-the-icons-fileicon "emacs")) nil nil :ascent center :mask heuristic)
-          ("linux" ,(list (all-the-icons-faicon "linux")) nil nil :ascent center :mask heuristic)))
+  ;; (setq org-agenda-category-icon-alist
+  ;;       `(
+  ;;         ("readings" ,(list (all-the-icons-faicon "book")) nil nil :ascent center :mask heuristic)
+  ;;         ("tasks" ,(list (all-the-icons-material "list")) nil nil :ascent center :mask heuristic)
+  ;;         ("work" ,(list (all-the-icons-material "work")) nil nil :ascent center :mask heuristic)
+  ;;         ("uni" ,(list (all-the-icons-faicon "university")) nil nil :ascent center :mask heuristic)
+  ;;         ("emacs" ,(list (all-the-icons-fileicon "emacs")) nil nil :ascent center :mask heuristic)
+  ;;         ("linux" ,(list (all-the-icons-faicon "linux")) nil nil :ascent center :mask heuristic)))
 
   (defun fi/refile-reading ()
     (interactive)
@@ -780,20 +791,6 @@ Clockin:
     (setq org-refile-targets nil)
     (org-agenda-redo-all))
 
-  (defun fi/prova ()
-    (interactive)
-    (setq content (buffer-string))
-    (setq width (- (window-body-width) 7))
-    (setq top-border (concat "┌" (make-string width ?─) "┐\n"))
-    (setq bottom-border (concat "└" (make-string width ?─) "┘\n"))
-    (with-current-buffer "*scratch*"
-      (insert top-border)
-      (dolist (line (split-string content "\n"))
-        (insert (concat "│ " line (make-string (- width (+(length line) 1)) ? ) "│\n")))
-      )
-    (insert bottom-border)
-    )
-
   (setq org-agenda-window-setup 'current-window)
 
 
@@ -807,12 +804,10 @@ Clockin:
 *** Capture
 #+begin_src emacs-lisp
   (setq org-default-notes-file fi/tasks-to-process-file)
-  ;; (defun transform-square-brackets-to-round-ones(string-to-transform)
-  ;;   "Transforms [ into ( and ] into ), other chars left unchanged."
-  ;;   (concat 
-  ;;   (mapcar #'(lambda (c) (if (equal c ?[) ?\( (if (equal c ?]) ?\) c))) string-to-transform))
-  ;;   )
-
+  (defun transform-square-brackets-to-round-ones(string-to-transform)
+    "Transforms [ into ( and ] into ), other chars left unchanged."
+    (concat
+     (mapcar (lambda (c) (if (equal c ?\[) ?\( (if (equal c ?\]) ?\) c))) string-to-transform)))
   (setq org-capture-templates
         '(
           ("t" "To-do task to process" entry (file fi/tasks-to-process-file) "* TODO%?\n" :empty-lines 1)
@@ -820,11 +815,18 @@ Clockin:
           ("p" "Protocol text" entry (file+headline fi/things-to-read-file "Protocol") "* TODO %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?" :empty-lines 1 :immediate-finish t)
           ("L" "Protocol link" entry (file+headline fi/things-to-read-file "Protocol") "* TODO [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n" :empty-lines 1 :immediate-finish t)
           ))
+  (global-set-key (kbd "C-c c") #'org-capture)
 #+end_src
 
 *** Habits
 Refer to ~/org/habits.org
 
+** Annotation of files
+Annotations are block of texts associated with a file. The main advantage of this feature for me is the possibility to annotate part of code while reading a codebase not written by me.
+#+begin_src emacs-lisp
+  ;; (require 'org-annotate-file)
+  ;; (setq org-annotate-file-storage-file "~/org/annotations.org")
+#+end_src
 ** Async
 #+begin_src emacs-lisp
   (use-package async)
@@ -863,12 +865,15 @@ Refer to ~/org/habits.org
 
 ** Face
 #+begin_src emacs-lisp
-  (use-package org-superstar
-    :after org
-    :hook (org-mode . org-superstar-mode)
-    :custom
-    (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
-
+  (use-package org-modern
+    :config
+    (setq
+     org-modern-block t
+     org-pretty-entities t
+     org-modern-table nil
+     org-modern-hide-stars nil))
+  (add-hook 'org-mode-hook #'org-modern-mode)
+  (add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
   (with-eval-after-load 'org-faces
     ;; Make sure org-indent face is available
     (require 'org-indent)
@@ -958,7 +963,8 @@ Refer to ~/org/habits.org
         (copy-file "/home/fedeizzo/zettelkasten/template.svg" filename)
         (insert (format "
   ,#+ATTR_ORG: :width 450px
-  ,#+ATTR_LATEX: :width 450px
+  ,#+ATTR_LATEX: :width 450px :placement [H]
+  ,#+CAPTION: 
   [[file:%s]]
   " filename)))
       (setq proc (start-process "ink" nil "inkscape" (format "%s" (expand-file-name filename))))
@@ -971,8 +977,8 @@ Refer to ~/org/habits.org
 ** Latex
 *** Acutex
 #+begin_src emacs-lisp
-  (use-package tex
-    :ensure auctex
+  (use-package tex-site
+    :straight auctex
     :config
     (setq TeX-parse-self t
           TeX-auto-save t))
@@ -1221,6 +1227,7 @@ To insert content inside the scratch buffer there are two functions:
 #+begin_src emacs-lisp
   (use-package zetteldesk
     :after org-roam
+    :straight nil
     :load-path "~/.config/emacs/zetteldesk.el"
     :config
     (zetteldesk-mode))
@@ -1228,62 +1235,17 @@ To insert content inside the scratch buffer there are two functions:
 #+end_src
 Custom function for content insert
 #+begin_src emacs-lisp
-  (defun fi/zetteldesk-insert-all-nodes-contents-without-link ()
-    (interactive)
-    (let* ((nodes (-filter #'zetteldesk-node-p (org-roam-node-list)))
-           (location (zetteldesk-insert-location)))
-      (while nodes
-        (let* ((node (car nodes))
-               (file (org-roam-node-file node)))
-          (with-current-buffer location
-            (goto-char (point-max))
-            (newline)
-            (insert-file-contents file nil 67)
-            (kill-matching-lines "^#\\+title.*")))
-        (setq nodes (cdr nodes)))
-      (with-current-buffer location
-        (beginning-of-buffer)
-        (insert "
-  ,#+title:
-  ,#+author:
-  ,#+subtitle:
-  ,#+date:"))
-      (switch-to-buffer-other-window "*zetteldesk-scratch*")))
-
-  (defun fi/get-all-org-roam-nodes-current-buffer ()
-    (cl-map 'list #'org-roam-node-from-id (org-element-map (org-element-parse-buffer) 'link
-                                            (lambda (link)
-                                              (when (string= (org-element-property :type link) "id")
-                                                (org-element-property :path link))))))
-
-
-  (defun fi/zetteldesk-insert-all-nodes-contents-current-buffer ()
-    (interactive)
-    (let* ((nodes (fi/get-all-org-roam-nodes-current-buffer))
-           (location (zetteldesk-insert-location)))
-      (while nodes
-        (let* ((node (car nodes))
-               (file (org-roam-node-file node)))
-          (with-current-buffer location
-            (goto-char (point-max))
-            (newline)
-            (insert-file-contents file nil 67)
-            (kill-matching-lines "^#\\+title.*")))
-        (setq nodes (cdr nodes)))
-      (with-current-buffer location
-        (beginning-of-buffer)
-        (insert "
-  ,#+title:
-  ,#+author:
-  ,#+subtitle:
-  ,#+date:"))
-      (switch-to-buffer-other-window "*zetteldesk-scratch*")))
-
   (defun fi/get-all-org-roam-ids-current-buffer ()
     (org-element-map (org-element-parse-buffer) 'link
       (lambda (link)
-        (when (string= (org-element-property :type link) "id")
-          (org-element-property :path link)))))
+	(when (string= (org-element-property :type link) "id")
+	  (org-element-property :path link)))))
+
+  (defun fi/get-all-relative-files-current-buffer ()
+    (org-element-map (org-element-parse-buffer) 'link
+      (lambda (link)
+	(when (string= (org-element-property :type link) "file")
+	  (org-element-property :path link)))))
 
   (defun fi/get-org-level-from-list (regex-item)
     "Return the org heading level giving list in the buffer"
@@ -1294,48 +1256,71 @@ Custom function for content insert
   (defun fi/demote-org-roam-node (level text)
     "Demote an org tree given its level and regex"
     (let ((match-str (concat "LEVEL=" (number-to-string level) "+ITEM={" text "}")))
-      (print match-str)
       (org-map-entries (lambda () (org-demote-subtree)) match-str))
     )
 
+  (defun fi/delete-properties-drawer ()
+    "Delete properties drawers and its content"
+    (kill-matching-lines "^#\\+title.*")
+    (kill-matching-lines "^:PROPERTIES.*")
+    (kill-matching-lines "^:ID.*")
+    (kill-matching-lines "^:END.*")
+    (kill-matching-lines "^:ROAM.*"))
+
   (defun fi/zetteldesk-insert-all-nodes-contents-current-buffer-list ()
     (interactive)
+    (fi/force-org-rebuild-cache)
     (beginning-of-buffer)
     (setq new-headings '())
+    (setq absolute-file-links '())
+    (setq org-startup-with-latex-preview nil)
     (dolist (id (fi/get-all-org-roam-ids-current-buffer))
       (let* ((node (org-roam-node-from-id id))
-             (filename (org-roam-node-file node))
-             (org-level (fi/get-org-level-from-list id))
-             (node-buffer (find-file-noselect filename))
-             (location (zetteldesk-insert-location)))
-        (with-current-buffer node-buffer
-          (setq heading-texts (org-map-entries (lambda () (fifth (org-heading-components))) "LEVEL=1"))
-          (dolist (heading-text heading-texts)
-            (when (not (= org-level 0))
-              (push (list org-level heading-text) new-headings)
-              )))
-        (kill-buffer node-buffer)
-        (with-current-buffer location
-          (goto-char (point-max))
-          (newline)
-          (insert-file-contents filename)
-          (kill-matching-lines "^#\\+title.*"))
-        ))
+	     (filename (org-roam-node-file node))
+	     (org-level (fi/get-org-level-from-list id))
+	     (node-buffer (find-file-noselect filename))
+	     (location (zetteldesk-insert-location)))
+	(with-current-buffer node-buffer
+	  (setq heading-texts (org-map-entries (lambda () (fifth (org-heading-components))) "LEVEL=1"))
+	  (dolist (heading-text heading-texts)
+	    (when (not (= org-level 0))
+	      (push (list org-level heading-text) new-headings)
+	      ))
+	  (dolist (link (fi/get-all-relative-files-current-buffer))
+	    (push (list link (file-truename link)) absolute-file-links))
+	  )
+	(kill-buffer node-buffer)
+	(with-current-buffer location
+	  (goto-char (point-max))
+	  (newline)
+	  (insert-file-contents filename)
+	  (fi/delete-properties-drawer))
+	))
     (setq new-headings (reverse new-headings))
     (let ((location (zetteldesk-insert-location)))
       (with-current-buffer location
-        (org-mode)
-        (beginning-of-buffer)
-        (insert "
+	(org-mode)
+	(beginning-of-buffer)
+	(insert "
   ,#+title:
   ,#+author:
   ,#+subtitle:
   ,#+date:")
-        (dolist (new-heading new-headings)
-          (dotimes (level (first new-heading))
-            (fi/demote-org-roam-node (+ level 1) (second new-heading))))
-        ))
-    (switch-to-buffer-other-window "*zetteldesk-scratch*"))
+	(dolist (new-heading new-headings)
+	  (dotimes (level (first new-heading))
+	    (fi/demote-org-roam-node (+ level 1) (second new-heading))))
+	(dolist (link-pair absolute-file-links)
+	  (let ((relative-link (first link-pair))
+		(absolute-link (second link-pair)))
+	    (beginning-of-buffer)
+	    (while (re-search-forward relative-link nil t)
+	      (replace-match absolute-link))
+	    )
+	  )
+	))
+    (switch-to-buffer-other-window "*zetteldesk-scratch*")
+    (setq org-startup-with-latex-preview t)
+    )
 #+end_src
 Hydra config
 #+begin_src emacs-lisp
@@ -1389,6 +1374,7 @@ Hydra config
     (add-hook mode (lambda () (display-line-numbers-mode 0))))
   (set-default-coding-systems 'utf-8)
 #+end_src
+
 * Mouse keybinds
 #+begin_src emacs-lisp
   (defun fi/switch-last-buffer (arg)
@@ -1409,6 +1395,13 @@ Hydra config
     (interactive)
     (zetteldesk-add-to-desktop (current-buffer)))
 
+  (defun fi/open-file-new-split ()
+    "Open at mouse in other window"
+    (interactive)
+    (let ((org-link-frame-setup '((file . find-file-other-window))))
+      (org-open-at-point)))
+
+  (global-set-key [C-down-mouse-1] 'fi/open-file-new-split)
   (global-set-key [mouse-8] 'fi/switch-last-buffer)
   (global-set-key [mouse-9] 'fi/zetteldesk-add-current-buffer-to-desktop)
 #+end_src
