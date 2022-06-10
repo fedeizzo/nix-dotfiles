@@ -579,7 +579,7 @@ Vterm cannot be installed easily using nixos, for this reason the package manage
   (use-package avy
     :config
     (fi/leader
-      "f" 'avy-goto-char-2)
+      "f" 'avy-goto-char-2))
 #+end_src
 
 ** Treesitter

@@ -35,7 +35,9 @@
           ([
             defaults
             ({ pkgs, ... }: {
-              nixpkgs.overlays = [ inputs.emacs-overlay.overlay ];
+              nixpkgs.overlays = [
+                inputs.emacs-overlay.overlay
+              ];
             })
             ./system/boot.nix
             ./system/hardware.nix
