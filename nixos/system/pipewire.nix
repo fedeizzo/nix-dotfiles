@@ -1,13 +1,15 @@
-{ config, lib, pkgs, nixpkgs-unstable, ... }:
+{ config, lib, pkgs, nixpkgs-unstable, nixpkgs-old, ... }:
 
 {
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
+    socketActivation = true;
+    audio.enable = true;
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
-    media-session.enable = true;
-    wireplumber.enable = false;
+    media-session.enable = false;
+    wireplumber.enable = true;
   };
 }

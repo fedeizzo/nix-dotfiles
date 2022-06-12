@@ -12,9 +12,7 @@ in
     autorun = true;
     desktopManager.default = null;
     displayManager.lightdm.enable = false;
-    displayManager.sddm = {
-      enable = true;
-    };
+    displayManager.sddm.enable = true;
     displayManager.gdm.enable = false;
     layout = "us";
     xkbVariant = "altgr-intl";
@@ -29,7 +27,7 @@ in
         disableWhileTyping = true;
       };
     };
-    # xkbOptions = "ctrl:swapcaps";
+    xkbOptions = "ctrl:swapcaps";
   };
   services.tlp = {
     enable = true;
