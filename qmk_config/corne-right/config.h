@@ -11,9 +11,9 @@
 #define USE_SERIAL_PD2
 
 // Combo feature timeout (defaults to TAPPING_TERM)
-#define COMBO_TERM 50
+// #define COMBO_TERM 50
 // Size of combo_events enum.
-#define COMBO_VARIABLE_LEN
+// #define COMBO_VARIABLE_LEN
 
 #define TAPPING_FORCE_HOLD
 #define TAPPING_TERM 175
