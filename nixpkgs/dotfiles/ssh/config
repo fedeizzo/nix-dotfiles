@@ -13,7 +13,7 @@ Host mappiamo
 Host dsip
         Hostname 137.117.39.162
         User dsip
-        LocalForward 38081 localhost:38081
+        LocalForward 58081 localhost:58081
         LocalForward 48093 localhost:48093
         LocalForward 48100 localhost:48100
         LocalForward 48101 localhost:48101
