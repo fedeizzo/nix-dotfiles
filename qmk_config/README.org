@@ -42,13 +42,25 @@ Usage:
 
 *** Num
 #+NAME: lily58-num-layer
-| NO | F1 | F2 | F3 | F4 | F5 |    |   | F6   | F7 | F8 | F9 | F10 | NO |
-| NO | [  |  7 |  8 |  9 | ]  |    |   | {    | (  | *  | &  | }   | NO |
-| NO | 0  |  4 |  5 |  6 | =  |    |   | +    | ^  | %  | $  | )   | NO |
-| NO | `  |  1 |  2 |  3 | \  | NO | NO | PIPE | #  | @  | !  | ~   | NO |
+| NO | F1 | F2 | F3 | F4 | F5 |    |    | F6   | F7 | F8 | F9 | F10 | NO     |
+| NO | [  |  7 |  8 |  9 | ]  |    |    | {    | (  | *  | &  | }   | NO     |
+| NO | 0  |  4 |  5 |  6 | =  |    |    | +    | ^  | %  | $  | )   | NO     |
+| NO | `  |  1 |  2 |  3 | \  | NO | NO | PIPE | #  | @  | !  | ~   | QWERTY |
 
 #+NAME: lily58-num-layer-thumb
 | NO | _ | SPC | - | ENT | TRNS | NO | NO |
+
+*** Qwerty
+Mainly used for gaming.
+
+#+NAME: lily58-qwerty-layer
+| ESC  | 1 | 2 | 3 | 4 | 5 |    |    | 6 | 7 | 8 | 9 | 0 | NO   |
+| TAB  | Q | W | E | R | T |    |    | Y | U | I | O | P | NO   |
+| LCTL | A | S | D | F | G |    |    | H | J | K | L | ; | NO   |
+| LSFT | Z | X | C | V | B | NO | NO | N | M | , | . | / | BASE |
+
+#+NAME: lily58-qwerty-layer-thumb
+| LGUI | LSFT | SPC | LALT | ENT | TRNS | NO | NO |
 
 *** Visualization
 #+NAME: x-pixels-lily58
@@ -78,6 +90,7 @@ Usage:
     _BASE,
     _NUM,
     _NAV,
+    _QWERTY
   };
   const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_BASE] = LAYOUT(
@@ -88,6 +101,9 @@ Usage:
     ),
     [_NAV] = LAYOUT(
       <<layer-generator(in_layer=lily58-navigation-layer, in_layer_thumb=lily58-navigation-layer-thumb)>>
+    ),
+    [_QWERTY] = LAYOUT(
+      <<layer-generator(in_layer=lily58-qwerty-layer, in_layer_thumb=lily58-qwerty-layer-thumb)>>
     )
   };
 #+end_src
@@ -725,6 +741,8 @@ bool oled_task_user(void) {
       "TR_PR": "BALL_PRC",
       "TR_SCR": "BALL_SRC",
       "TR_LC": "BALL_LC",
+      "QWERTY": "TO(_QWERTY)",
+      "BASE": "TO(_BASE)",
   }
 
 
