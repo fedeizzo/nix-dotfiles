@@ -8,11 +8,11 @@ in
   # SERVICES
   #################################
   services.xserver = {
-    enable = true;
-    autorun = true;
+    enable = false;
+    autorun = false;
     desktopManager.default = null;
     displayManager.lightdm.enable = false;
-    displayManager.sddm.enable = true;
+    displayManager.sddm.enable = false;
     displayManager.gdm.enable = false;
     layout = "us";
     xkbVariant = "altgr-intl";

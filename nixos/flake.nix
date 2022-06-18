@@ -9,9 +9,13 @@
       url = "github:nix-community/emacs-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    hyprland = {
+      url = "github:vaxerski/Hyprland";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
   };
 
-  outputs = { self, nixpkgs, ... }@inputs:
+  outputs = { self, nixpkgs, hyprland, ... }@inputs:
     let
       system = "x86_64-linux";
     in
@@ -51,6 +55,8 @@
             ./system/security.nix
             ./system/services.nix
             ./system/user.nix
+            hyprland.nixosModules.default
+            { programs.hyprland.enable = true; }
           ]);
       };
     };
