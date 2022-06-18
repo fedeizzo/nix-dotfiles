@@ -2,27 +2,29 @@
   description = "Home manager flake configuration";
 
   # inputs.nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-  inputs.nixpkgs.url = "github:nixos/nixpkgs/nixos-22.05";
-  inputs.nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-22.05";
+    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
-  inputs.flake-utils.url = "github:numtide/flake-utils";
-  # inputs.neovim-nightly-overlay.url = "github:mjlbach/neovim-nightly-overlay";
-  inputs.neovim-nightly-overlay = {
-    url = "github:neovim/neovim/nightly?dir=contrib";
-    inputs.nixpkgs.follows = "nixpkgs";
-  };
-  inputs.emacs-overlay = {
-    url = "github:nix-community/emacs-overlay";
-    inputs.nixpkgs.follows = "nixpkgs";
-  };
-  inputs.wayplover = {
-    url = "github:TravisDavis-ops/wayplover";
-    inputs.nixpkgs.follows = "nixpkgs";
-  };
+    flake-utils.url = "github:numtide/flake-utils";
+    # inputs.neovim-nightly-overlay.url = "github:mjlbach/neovim-nightly-overlay";
+    neovim-nightly-overlay = {
+      url = "github:neovim/neovim/nightly?dir=contrib";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    emacs-overlay = {
+      url = "github:nix-community/emacs-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    wayplover = {
+      url = "github:TravisDavis-ops/wayplover";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
-  inputs.home-manager = {
-    url = "github:rycee/home-manager/release-22.05";
-    inputs.nixpkgs.follows = "nixpkgs";
+    home-manager = {
+      url = "github:rycee/home-manager/release-22.05";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { self, ... }@inputs:
