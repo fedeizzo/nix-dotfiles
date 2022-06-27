@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+hyprctl keyword unbind SUPER,I
+kitty --class floatingkitty &
+disown
+sleep 1
+hyprctl dispatch movetoworkspacesilent special
+hyprctl keyword bind SUPER,I,togglespecialworkspace,

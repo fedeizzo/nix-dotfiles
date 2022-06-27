@@ -40,6 +40,11 @@
           swayhide = final.callPackage ./pkgs/swayhide.nix { };
           swaync = final.callPackage ./pkgs/swaync.nix { };
         })
+        (self: super: {
+          waybar = super.waybar.overrideAttrs (oldAttrs: {
+            mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ];
+          });
+        })
       ];
       allowUnfree = { nixpkgs.config.allowUnfree = true; };
     in

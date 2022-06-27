@@ -1,7 +1,14 @@
 #!/usr/bin/env bash
+swaymsg -t get_tree &> /dev/null
+last_cmd=$?
 set -e
-selected_workspace=$(swaymsg -t get_workspaces -r | jq -M '.[] | select(.focused==false) | .name' | tr -d '"' | bemenu -p 'move' --tf '#a3be8c' --tb '#2e3440' --nb '#2e3440' --fb '#2e3440' --hb '#2e3440' --hf '#d08770')
-swaymsg move workspace $selected_workspace
-if [[ $1 == '-m' ]]; then
-    swaymsg workspace $selected_workspace
+if [[ $last_cmd == 0 ]]; then
+    selected_workspace=$(swaymsg -t get_workspaces -r | jq -M '.[] | select(.focused==false) | .name' | tr -d '"' | bemenu -p 'move' --tf '#a3be8c' --tb '#2e3440' --nb '#2e3440' --fb '#2e3440' --hb '#2e3440' --hf '#d08770')
+    swaymsg move workspace $selected_workspace
+    if [[ $1 == '-m' ]]; then
+	swaymsg workspace $selected_workspace
+    fi
+else
+    selected_workspace=$(hyprctl workspaces | sed '/\(^\t.*\|^$\)/d' | awk -F '[()]' '{print $(NF-1)}' | bemenu -p 'change' --tf '#a3be8c' --tb '#2e3440' --nb '#2e3440' --fb '#2e3440' --hb '#2e3440' --hf '#d08770')
+    hyprctl dispatch movetoworkspacesilent name:$selected_workspace
 fi

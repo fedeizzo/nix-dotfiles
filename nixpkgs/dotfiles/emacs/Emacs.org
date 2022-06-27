@@ -12,6 +12,12 @@
 - ~:load-path~ allows to laod a package from a directory inside the filesystem or another source;
 - ~:hook~ add functions into package hookds.
 
+~straight~:
+- ~straight-normalize-all~ updates packages to what is written inside the config file;
+- ~straight-fetch-all~ self-explainatory;
+- ~straight-merge-all~ self-explainatory;
+- ~straight-freeze-versions~ dumps all versions in the lockfile.
+
 #+begin_src emacs-lisp
   (defvar bootstrap-version)
   (let ((bootstrap-file
@@ -28,12 +34,30 @@
   (setq package-enable-at-startup nil)
   (straight-use-package 'use-package)
   (use-package straight
-               :custom (straight-use-package-by-default t))
+    :custom (straight-use-package-by-default t))
   ;; (setq package-archives '(("melpa" . "https://melpa.org/packages/")
   ;;                          ("nongnu" . "https://elpa.nongnu.org/nongnu/")
   ;;                          ("elpa" . "https://elpa.gnu.org/packages/")))
 
   (setq warning-minimum-level :error)
+  (defun dw/org-mode-setup ()
+    (org-indent-mode)
+    (variable-pitch-mode 1)
+    (auto-fill-mode 0)
+    (visual-line-mode 1)
+    (setq evil-auto-indent nil))
+
+  (use-package org
+    :straight '(org :type built-in)
+    :hook (org-mode . dw/org-mode-setup)
+    :config
+    (setq org-ellipsis " ▾"
+          org-hide-emphasis-markers t
+          org-return-follows-link t
+          org-confirm-babel-evaluate nil
+          org-catch-invisible-edits 'show
+          org-src-window-setup 'current-window))
+  (use-package org-contrib)
 #+end_src
 
 * UI
@@ -241,6 +265,16 @@
     (direnv-mode))
 #+end_src
 
+** Elfeed
+#+begin_src emacs-lisp
+  ;; (use-package elfeed
+  ;;   :config
+  ;;   (setq elfeed-feeds
+  ;; 	'("http://nullprogram.com/feed/"
+  ;;           "https://planet.emacslife.com/atom.xml"))
+  ;;   )
+#+end_src
+
 ** Evil mode
 #+begin_src emacs-lisp
   (use-package evil
@@ -375,6 +409,25 @@ This section must be the last one because it should stay after any function decl
      ))
 
   (add-to-list 'auto-mode-alist '("\\.journal\\'" . hledger-mode))
+  ;; (add-to-list 'align-rules-list
+  ;;              `(hledger-accounts
+  ;;                (regexp . ,(rx (+ space)
+  ;;                               (+? anything)
+  ;;                               (group-n 1 space (+ space)
+  ;;                                        (? ?-)
+  ;;                                        (+ digit)
+  ;;                                        (? ?.)
+  ;;                                        (* digit))))
+  ;;                (group . 1)
+  ;;                (spacing . 2)
+  ;;                (justify . t)
+  ;;                (separate . entire)
+  ;;                (modes . '(hledger-mode))))
+
+  (defun fi/hledger-format ()
+    "Format an hledger buffer with align"
+    (interactive)
+    (align (point-min) (point-max)))
 #+end_src
 ** LSP
 #+begin_src emacs-lisp
@@ -630,36 +683,20 @@ Tasks are classified with these 5 elements:
 A spaced repetition mechanism to pair with org-roam notes.
 
 #+begin_src emacs-lisp
-    (defun dw/org-mode-setup ()
-      (org-indent-mode)
-      (variable-pitch-mode 1)
-      (auto-fill-mode 0)
-      (visual-line-mode 1)
-      (setq evil-auto-indent nil))
 
-    (use-package org
-      :hook (org-mode . dw/org-mode-setup)
-      :config
-      (setq org-ellipsis " ▾"
-	    org-hide-emphasis-markers t
-	    org-return-follows-link t
-	    org-confirm-babel-evaluate nil
-	    org-catch-invisible-edits 'show
-	    org-src-window-setup 'current-window))
+  (defun fi/dummy-org-download-annotate-function (link)
+    ""
+    "#+ATTR_ORG: :width 250px\n#+ATTR_LATEX: :width 250px :placement [H] \n#+CAPTION: \n"
 
-    (defun fi/dummy-org-download-annotate-function (link)
-      ""
-      "#+ATTR_ORG: :width 250px\n#+ATTR_LATEX: :width 250px :placement [H] \n#+CAPTION: \n"
+    )
 
-  )
-
-    (use-package org-download
-      :after org
-      :config
-      (setq org-downlaod-screenshot-method "grim -g \"$(slurp)\" - | swappy -f -")
-      (setq org-download-annotate-function
-	    #'fi/dummy-org-download-annotate-function)
-      (setq org-downlaod-image-dir "./img"))
+  (use-package org-download
+    :after org
+    :config
+    (setq org-downlaod-screenshot-method "grim -g \"$(slurp)\" - | swappy -f -")
+    (setq org-download-annotate-function
+          #'fi/dummy-org-download-annotate-function)
+    (setq org-downlaod-image-dir "./img"))
 #+end_src
 
 Open other notes in the same window
@@ -834,7 +871,6 @@ Annotations are block of texts associated with a file. The main advantage of thi
 
 ** Babel
 #+begin_src emacs-lisp
-  (use-package org-contrib)
   (require 'org-tempo)
   (require 'ob-python)
   (require 'ob-hledger)
@@ -901,10 +937,6 @@ Annotations are block of texts associated with a file. The main advantage of thi
 ** Gnu plot
 #+begin_src emacs-lisp
   (use-package gnuplot)
-#+end_src
-** Habit
-#+begin_src emacs-lisp
-  (require 'org-habit)
 #+end_src
 
 ** Image
@@ -1144,7 +1176,7 @@ Make subscription only working with curly brackets
   (use-package org-noter
     :config
     (setq org-noter-auto-save-last-location t)
-    (setq org-noter-notes-search-path '("~/org/noter"))
+    (setq org-noter-notes-search-path '("~/zettelkasten/noter"))
     (setq org-noter-notes-window-behavior '(start scroll))
     )
 #+end_src
@@ -1153,6 +1185,7 @@ Make subscription only working with curly brackets
 Maybe it is better to run the db manually and not automatically at startup
 #+begin_src emacs-lisp
   (use-package org-roam
+    ;; :straight (org-roam :type git :host github :repo "org-roam/org-roam" :branch "v2.2.2")
     :after org)
   (require 'org-roam)
   (setq org-roam-capture-templates
@@ -1195,16 +1228,18 @@ Function to fix the reload the cache of org mode and org roam [[https://dev.to/d
 hydra
 #+begin_src emacs-lisp
 
-    (pretty-hydra-define org-roam-hydra-main (:color blue :title "Org roam" :quit-key "q")
-      ("Node"
-       (("i" org-roam-node-insert "inesert node")
-        ("f" org-roam-node-find "find node"))
-       "Clipboard"
-        (("c" org-download-clipboard "paste clipboard"))
-       "Inkscape"
-        (("s" fi/org-roam-inkscape-diagram "open/edit svg file")))
-      )
-    (fi/leader "n" 'org-roam-hydra-main/body)
+  (pretty-hydra-define org-roam-hydra-main (:color blue :title "Org roam" :quit-key "q")
+    ("Node"
+     (("i" org-roam-node-insert "inesert node")
+      ("f" org-roam-node-find "find node"))
+     "Clipboard"
+     (("c" org-download-clipboard "paste clipboard"))
+     "Inkscape"
+     (("s" fi/org-roam-inkscape-diagram "open/edit svg file"))
+     "Custom functions"
+     (("r" fi/rename-images-in-file-with-caption "sync filename with caption")
+      ("e" fi/zetteldesk-insert-all-nodes-contents-current-buffer-list "export roam cluster"))))
+  (fi/leader "n" 'org-roam-hydra-main/body)
 #+end_src
 
 *** Zetteldesk
@@ -1238,14 +1273,14 @@ Custom function for content insert
   (defun fi/get-all-org-roam-ids-current-buffer ()
     (org-element-map (org-element-parse-buffer) 'link
       (lambda (link)
-	(when (string= (org-element-property :type link) "id")
-	  (org-element-property :path link)))))
+        (when (string= (org-element-property :type link) "id")
+          (org-element-property :path link)))))
 
   (defun fi/get-all-relative-files-current-buffer ()
     (org-element-map (org-element-parse-buffer) 'link
       (lambda (link)
-	(when (string= (org-element-property :type link) "file")
-	  (org-element-property :path link)))))
+        (when (string= (org-element-property :type link) "file")
+          (org-element-property :path link)))))
 
   (defun fi/get-org-level-from-list (regex-item)
     "Return the org heading level giving list in the buffer"
@@ -1269,58 +1304,105 @@ Custom function for content insert
 
   (defun fi/zetteldesk-insert-all-nodes-contents-current-buffer-list ()
     (interactive)
-    (fi/force-org-rebuild-cache)
+    ;; (fi/force-org-rebuild-cache)
     (beginning-of-buffer)
     (setq new-headings '())
     (setq absolute-file-links '())
     (setq org-startup-with-latex-preview nil)
     (dolist (id (fi/get-all-org-roam-ids-current-buffer))
       (let* ((node (org-roam-node-from-id id))
-	     (filename (org-roam-node-file node))
-	     (org-level (fi/get-org-level-from-list id))
-	     (node-buffer (find-file-noselect filename))
-	     (location (zetteldesk-insert-location)))
-	(with-current-buffer node-buffer
-	  (setq heading-texts (org-map-entries (lambda () (fifth (org-heading-components))) "LEVEL=1"))
-	  (dolist (heading-text heading-texts)
-	    (when (not (= org-level 0))
-	      (push (list org-level heading-text) new-headings)
-	      ))
-	  (dolist (link (fi/get-all-relative-files-current-buffer))
-	    (push (list link (file-truename link)) absolute-file-links))
-	  )
-	(kill-buffer node-buffer)
-	(with-current-buffer location
-	  (goto-char (point-max))
-	  (newline)
-	  (insert-file-contents filename)
-	  (fi/delete-properties-drawer))
-	))
+             (filename (org-roam-node-file node))
+             (org-level (fi/get-org-level-from-list id))
+             (node-buffer (find-file-noselect filename))
+             (location (zetteldesk-insert-location)))
+        (with-current-buffer node-buffer
+          (setq heading-texts (org-map-entries (lambda () (fifth (org-heading-components))) "LEVEL=1"))
+          (dolist (heading-text heading-texts)
+            (when (not (= org-level 0))
+              (push (list org-level heading-text) new-headings)
+              ))
+          (dolist (link (fi/get-all-relative-files-current-buffer))
+            (push (list link (file-truename link)) absolute-file-links))
+          )
+        (kill-buffer node-buffer)
+        (with-current-buffer location
+          (goto-char (point-max))
+          (newline)
+          (insert-file-contents filename)
+          (fi/delete-properties-drawer))
+        ))
     (setq new-headings (reverse new-headings))
     (let ((location (zetteldesk-insert-location)))
       (with-current-buffer location
-	(org-mode)
-	(beginning-of-buffer)
-	(insert "
+        (org-mode)
+        (beginning-of-buffer)
+        (insert "
   ,#+title:
   ,#+author:
   ,#+subtitle:
   ,#+date:")
-	(dolist (new-heading new-headings)
-	  (dotimes (level (first new-heading))
-	    (fi/demote-org-roam-node (+ level 1) (second new-heading))))
-	(dolist (link-pair absolute-file-links)
-	  (let ((relative-link (first link-pair))
-		(absolute-link (second link-pair)))
-	    (beginning-of-buffer)
-	    (while (re-search-forward relative-link nil t)
-	      (replace-match absolute-link))
-	    )
-	  )
-	))
+        (dolist (new-heading new-headings)
+          (dotimes (level (first new-heading))
+            (fi/demote-org-roam-node (+ level 1) (second new-heading))))
+        (dolist (link-pair absolute-file-links)
+          (let ((relative-link (first link-pair))
+                (absolute-link (second link-pair)))
+            (beginning-of-buffer)
+            (while (re-search-forward relative-link nil t)
+              (replace-match absolute-link))
+            )
+          )
+        ))
     (switch-to-buffer-other-window "*zetteldesk-scratch*")
     (setq org-startup-with-latex-preview t)
     )
+#+end_src
+Rename attached images with caption:
+#+begin_src emacs-lisp
+  (defun fi/get-all-images (&optional element)
+    (org-element-map (or element (org-element-parse-buffer)) 'link
+      (lambda (link)
+        (when (string= (org-element-property :type link) "file")
+          (org-element-property :path link)))))
+
+  (defun fi/get-all-paragraphs ()
+    (org-element-map (org-element-parse-buffer) 'paragraph
+      (lambda (paragraph)
+        paragraph)))
+
+  (defun fi/extract-caption-from-paragraph (paragraph)
+    (if-let (caption (org-element-property :caption paragraph))
+        (substring-no-properties (first (first (first caption))))
+      ))
+
+  (defun fi/caption-as-filename (caption)
+    (concat (replace-regexp-in-string "[\(\)\.]" ""
+                                      (replace-regexp-in-string " " "_" caption)) ".png")
+    )
+
+  (defun fi/obtain-filename-pairs ()
+    (let ((filename-pairs '()))
+      (dolist (paragraph (fi/get-all-paragraphs))
+        (let ((caption (fi/extract-caption-from-paragraph paragraph)))
+          (when caption
+            (let* ((image-path (first (fi/get-all-images paragraph)))
+                   (image-dir (file-name-directory image-path))
+                   (new-image-name (fi/caption-as-filename caption))
+                   (new-image-path (concat image-dir new-image-name)))
+              (push (list image-path new-image-path) filename-pairs)))))
+      filename-pairs))
+
+  (defun fi/rename-images-in-file-with-caption ()
+    (interactive)
+    (dolist (filenames-pair (fi/obtain-filename-pairs))
+      (let ((old-path (first filenames-pair))
+            (new-path (second filenames-pair)))
+        (when (not (string= old-path new-path))
+          (rename-file old-path new-path)
+          (beginning-of-buffer)
+          (while (re-search-forward old-path nil t)
+            (replace-match new-path)))
+        )))
 #+end_src
 Hydra config
 #+begin_src emacs-lisp

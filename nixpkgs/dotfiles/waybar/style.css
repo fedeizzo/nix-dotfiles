@@ -28,6 +28,12 @@ window#waybar {
     border-radius: 5px;
 }
 
+#workspaces button.active {
+    color: #2e3440;
+    background-color: #88c0d0;
+    border-radius: 5px;
+}
+
 #workspaces button:hover {
 	background-color: #5e81ac;
 	border-radius: 5px;

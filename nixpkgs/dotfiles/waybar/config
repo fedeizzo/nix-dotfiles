@@ -1,14 +1,19 @@
 {
     "position": "top", 
     "height": 14,
-    "modules-left": ["sway/workspaces"],
+    "modules-left": ["sway/workspaces", "wlr/workspaces"],
     "modules-right": ["cpu", "temperature", "memory", "pulseaudio", "network", "battery", "clock", "tray"],
     // Modules configuration
-	"sway/workspaces": {
-		"disable-scroll": true,
-		"all-outputs": false,
-		"format": "{name}",
-     },
+    "sway/workspaces": {
+       "disable-scroll": true,
+       "all-outputs": false,
+       "format": "{name}",
+    },
+    "wlr/workspaces": {
+       "disable-scroll": true,
+       "all-outputs": false,
+       "format": "{name}",
+    },
     "temperature": {
         "thermal-zone": 7,
         "critical-threshold": 80,
