@@ -13,14 +13,17 @@
       # A lot GUI programs need this, nearly all wayland applications
       "cma=128M"
     ];
-    loader.raspberryPi.firmwareConfig = "dtparam=sd_poll_once=on";
+    loader = {
+      raspberryPi.firmwareConfig = "dtparam=sd_poll_once=on";
+      raspberryPi = {
+        enable = true;
+        version = 4;
+      };
+      grub.enable = false;
+      efi.canTouchEfiVariables = true;
+      systemd-boot.enable = true;
+    };
   };
-
-  boot.loader.raspberryPi = {
-    enable = true;
-    version = 4;
-  };
-  boot.loader.grub.enable = false;
 
   # Required for the Wireless firmware
   hardware.enableRedistributableFirmware = true;
