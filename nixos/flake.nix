@@ -13,17 +13,17 @@
       url = "github:hyprwm/Hyprland";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
   };
 
-  outputs = { self, nixpkgs, hyprland, ... }@inputs:
-    let
-      system = "x86_64-linux";
-    in
+  outputs = { self, nixpkgs, hyprland, nixos-hardware, ... }@inputs:
     {
+      # by default the configuration used for nixos-rebuild switch
+      # is matched with the current hostname
       nixosConfigurations.fedeizzo-nixos = nixpkgs.lib.nixosSystem {
-        inherit system;
+        system = "x86_64-linux";
 
-        specialArgs = { inherit system inputs; };
+        specialArgs = { inherit inputs; };
 
         modules =
           let
@@ -58,6 +58,12 @@
             hyprland.nixosModules.default
             { programs.hyprland.enable = true; }
           ]);
+      };
+
+      nixosConfigurations.rasp-nixos = nixpkgs.lib.nixosSystem {
+        modules = [
+          nixos-hardware.nixosModules.raspberry-pi-4
+        ];
       };
     };
 }
