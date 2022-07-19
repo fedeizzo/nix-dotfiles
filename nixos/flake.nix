@@ -61,6 +61,9 @@
       };
 
       nixosConfigurations.rasp-nixos = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+
+        specialArgs = { inherit inputs; };
         modules = [
           nixos-hardware.nixosModules.raspberry-pi-4
           ./raspberry/nixos.nix
@@ -69,3 +72,5 @@
       };
     };
 }
+
+
