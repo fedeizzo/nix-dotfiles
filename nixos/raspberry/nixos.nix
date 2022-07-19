@@ -15,10 +15,10 @@
     ];
     loader = {
       raspberryPi.firmwareConfig = "dtparam=sd_poll_once=on";
-      # raspberryPi = {
-      #   enable = true;
-      #   version = 4;
-      # };
+      raspberryPi = {
+        enable = true;
+        version = 4;
+      };
       grub.enable = false;
       efi.canTouchEfiVariables = true;
       systemd-boot.enable = false;
@@ -31,9 +31,9 @@
   # NETWORKING
   networking = {
     hostName = "rasp-nixos"; # Define your hostname.
-    networkmanager = {
-      enable = true;
-    };
+    # networkmanager = {
+    #   enable = true;
+    # };
   };
 
   # KEYMAP AND TIME
