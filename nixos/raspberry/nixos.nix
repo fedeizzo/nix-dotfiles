@@ -32,7 +32,7 @@
   networking = {
     hostName = "rasp-nixos"; # Define your hostname.
     networkmanager = {
-      enable = false;
+      enable = true;
     };
   };
 
