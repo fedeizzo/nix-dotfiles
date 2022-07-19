@@ -43,7 +43,7 @@ mount "$boot" /mnt/boot
 if [ -z $block_before_install ]; then
     # setup UEFI
     nix-env -iA nixos.wget nixos.unzip
-    cd /mnt/boot && wget 'https://github.com/pftf/RPi4/releases/download/v1.33/RPi4_UEFI_Firmware_v1.33.zip && unzip RPi4_UEFI_Firmware_v1.33.zip'
+    cd /mnt/boot && wget 'https://github.com/pftf/RPi4/releases/download/v1.33/RPi4_UEFI_Firmware_v1.33.zip' && unzip RPi4_UEFI_Firmware_v1.33.zip
     rm /mnt/boot/README.md
     rm RPi4_UEFI_Firmware_v1.33.zip
 
