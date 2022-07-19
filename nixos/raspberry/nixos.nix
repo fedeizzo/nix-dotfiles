@@ -4,7 +4,7 @@
   boot = {
     kernelPackages = pkgs.linuxPackages_rpi4;
     tmpOnTmpfs = true;
-    clearTmpDir = true;
+    cleanTmpDir = true;
     # ttyAMA0 is the serial console broken out to the GPIO
     kernelParams = [
       "8250.nr_uarts=1"
