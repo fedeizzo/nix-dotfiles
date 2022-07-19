@@ -41,26 +41,23 @@ mkdir /mnt/boot
 mount "$boot" /mnt/boot
 
 if [ -z $block_before_install ]; then
-    # set iso root password and change user
-    passwd root
-
     # setup UEFI
-    su -c 'nix-env -iA nixos.wget nixos.unzip'
-    su -c 'cd /mnt/boot && wget https://github.com/pftf/RPi4/releases/download/v1.33/RPi4_UEFI_Firmware_v1.33.zip && unzip RPi4_UEFI_Firmware_v1.33.zip'
-    su -c 'rm /mnt/boot/README.md'
-    su -c 'rm RPi4_UEFI_Firmware_v1.33.zip'
+    nix-env -iA nixos.wget nixos.unzip
+    cd /mnt/boot && wget 'https://github.com/pftf/RPi4/releases/download/v1.33/RPi4_UEFI_Firmware_v1.33.zip && unzip RPi4_UEFI_Firmware_v1.33.zip'
+    rm /mnt/boot/README.md
+    rm RPi4_UEFI_Firmware_v1.33.zip
 
     # setup nix flake
-    su -c 'nix-env -iA nixos.nixUnstable'
-    su -c 'nix-env -iA nixos.git'
-    su -c 'mkdir -p ~/.config/nix'
-    su -c 'echo "experimental-features = nix-command flakes" >> ~/.config/nix/nix.conf'
+    nix-env -iA nixos.nixUnstable
+    nix-env -iA nixos.git
+    mkdir -p ~/.config/nix
+    echo "experimental-features = nix-command flakes" >> ~/.config/nix/nix.conf
 
     # install all system
-    su -c "cp nixos/flake.nix /mnt/etc/nixos"
-    su -c "cp nixos/flake.lock /mnt/etc/nixos"
-    su -c "cp -r nixos/raspberry /mnt/etc/nixos"
-    su -c "nixos-install --flake /mnt/etc/nixos#$HOSTNAME"
+    cp nixos/flake.nix /mnt/etc/nixos
+    cp nixos/flake.lock /mnt/etc/nixos
+    cp -r nixos/raspberry /mnt/etc/nixos
+    nixos-install --flake /mnt/etc/nixos#$HOSTNAME
 
     umount -R /mnt
 elif [ $block_before_install == "-b" ]; then
