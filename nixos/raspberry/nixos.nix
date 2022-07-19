@@ -21,7 +21,7 @@
       # };
       grub.enable = false;
       efi.canTouchEfiVariables = true;
-      systemd-boot.enable = true;
+      systemd-boot.enable = false;
     };
   };
 
