@@ -15,10 +15,10 @@
     ];
     loader = {
       raspberryPi.firmwareConfig = "dtparam=sd_poll_once=on";
-      raspberryPi = {
-        enable = true;
-        version = 4;
-      };
+      # raspberryPi = {
+      #   enable = true;
+      #   version = 4;
+      # };
       grub.enable = false;
       efi.canTouchEfiVariables = true;
       systemd-boot.enable = true;
