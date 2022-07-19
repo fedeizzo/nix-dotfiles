@@ -31,9 +31,9 @@
   # NETWORKING
   networking = {
     hostName = "rasp-nixos"; # Define your hostname.
-    # networkmanager = {
-    #   enable = true;
-    # };
+    networkmanager = {
+      enable = false;
+    };
   };
 
   # KEYMAP AND TIME
