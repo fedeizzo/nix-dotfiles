@@ -15,13 +15,13 @@
     ];
     loader = {
       raspberryPi.firmwareConfig = "dtparam=sd_poll_once=on";
-      # raspberryPi = {
-      #   enable = true;
-      #   version = 4;
-      # };
+      raspberryPi = {
+        enable = true;
+        version = 4;
+      };
       grub.enable = false;
-      efi.canTouchEfiVariables = true;
       systemd-boot.enable = false;
+      generic-extlinux-compatible.enable = true;
     };
   };
 
@@ -46,6 +46,7 @@
 
   # PACKAGES
   environment.systemPackages = with pkgs; [
+    raspberrypifw
     bc
     curl
     killall
