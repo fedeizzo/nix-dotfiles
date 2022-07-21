@@ -15,10 +15,6 @@
     ];
     loader = {
       raspberryPi.firmwareConfig = "dtparam=sd_poll_once=on";
-      raspberryPi = {
-        enable = true;
-        version = 4;
-      };
       grub.enable = false;
       systemd-boot.enable = false;
       generic-extlinux-compatible.enable = true;
