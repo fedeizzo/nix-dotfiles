@@ -16,7 +16,7 @@ parted -a optimal $ROOT_DEV -- mkpart primary 513MiB 100%
 boot="$BOOT_DEV"1
 root="$ROOT_DEV"2
 
-mkfs.fat -F 32 -n boot -L boot "$boot"
+mkfs.fat -F 32 -n boot "$boot"
 mkfs.ext4 -L root "$root"
 
 # mount root on mnt
@@ -27,6 +27,7 @@ mkdir -p /mnt/etc/nixos
 mkdir /mnt/boot
 mount "$boot" /mnt/boot
 
+block_before_install=$1
 if [ -z $block_before_install ]; then
     # setup UEFI
     cwd=$(pwd)
