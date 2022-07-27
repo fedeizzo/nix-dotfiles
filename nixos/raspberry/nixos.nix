@@ -52,6 +52,7 @@
     docker-compose
     dnsmasq
     hostapd
+    firefox
   ];
   virtualisation = {
     docker = {
