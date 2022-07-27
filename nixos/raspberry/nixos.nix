@@ -30,7 +30,38 @@
     networkmanager = {
       enable = true;
     };
+    # defaultGateway = "192.168.119.255";
+    # nameservers = [ "8.8.8.8" ];
+    # interfaces.eth0.ipv4.addresses = [{
+    #   address = "192.168.118.0";
+    #   prefixLength = 22;
+    # }];
   };
+  # services.hostapd = {
+  #   enable = true;
+  #   ssid = "Rete1220J";
+  #   interface = "wlp1s0u1u3";
+  #   # wpaPassphrase = "";
+  # };
+  # services.dnsmasq = {
+  #   enable = true;
+  #   servers = [
+  #     "8.8.8.8"
+  #     "8.8.4.4"
+  #   ];
+  #   extraConfig = ''
+  #     interface=wlp1s0u1u3
+  #     listen-address = 192.168.5.1
+  #     bind-interfaces
+  #     domain-needed
+  #     bogus-priv
+  #     dhcp-range=192.168.5.50,192.168.5.150,12h
+  #   '';
+  # };
+  # boot.kernel.sysctl = {
+  #   net.ipv4.ip_forward = 1;
+  # };
+
 
   # KEYMAP AND TIME
   i18n.defaultLocale = "en_US.UTF-8";
@@ -75,7 +106,7 @@
     };
 
     displayManager = {
-      startx.enable = true;
+      startx.enable = false;
       defaultSession = "none+i3";
     };
 
@@ -126,10 +157,11 @@
     };
     # Free up to 1GiB whenever there is less than 100MiB left.
     extraOptions = ''
-      min-free = ${toString (100 * 1024 * 1024)}
+        min-free = ${toString (100 * 1024 * 1024)}
       max-free = ${toString (1024 * 1024 * 1024)}
       experimental-features = nix-command flakes
     '';
   };
   system.stateVersion = "22.05";
 }
+
