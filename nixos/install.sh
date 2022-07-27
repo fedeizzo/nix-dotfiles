@@ -21,6 +21,7 @@ install() {
     cp ./flake.nix $dst
     cp ./flake.lock $dst
     cp -r system $dst
+    cp -r raspberry $dst
     cp -r pkgs $dst
     cp -r bin $dst
     nixos-rebuild switch
