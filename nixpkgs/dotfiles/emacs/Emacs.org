@@ -899,6 +899,11 @@ Annotations are block of texts associated with a file. The main advantage of thi
      ))
 #+end_src
 
+** Export
+#+begin_src emacs-lisp
+  (use-package ox-epub)
+#+end_src
+
 ** Face
 #+begin_src emacs-lisp
   (use-package org-modern
@@ -1337,10 +1342,12 @@ Custom function for content insert
         (org-mode)
         (beginning-of-buffer)
         (insert "
-  ,#+title:
-  ,#+author:
-  ,#+subtitle:
-  ,#+date:")
+  ,#+TITLE:
+  ,#+SUBTITLE:
+  ,#+UID:
+  ,#+AUTHOR:
+  ,#+DATE:
+  ,#+OPTIONS: tex:dvipng")
         (dolist (new-heading new-headings)
           (dotimes (level (first new-heading))
             (fi/demote-org-roam-node (+ level 1) (second new-heading))))
