@@ -44,5 +44,6 @@
     mpd-mpris
     moreutils
     home-manager
+    zip
   ];
 }
