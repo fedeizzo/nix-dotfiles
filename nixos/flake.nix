@@ -9,14 +9,10 @@
       url = "github:nix-community/emacs-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    hyprland = {
-      url = "github:hyprwm/Hyprland";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
-    };
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
   };
 
-  outputs = { self, nixpkgs, hyprland, nixos-hardware, ... }@inputs:
+  outputs = { self, nixpkgs, nixos-hardware, ... }@inputs:
     {
       # by default the configuration used for nixos-rebuild switch
       # is matched with the current hostname
@@ -55,8 +51,6 @@
             ./system/security.nix
             ./system/services.nix
             ./system/user.nix
-            hyprland.nixosModules.default
-            { programs.hyprland.enable = true; }
           ]);
       };
 

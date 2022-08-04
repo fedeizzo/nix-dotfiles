@@ -4,4 +4,4 @@ kitty --class floatingkitty &
 disown
 sleep 1
 hyprctl dispatch movetoworkspacesilent special
-hyprctl keyword bind SUPER,I,togglespecialworkspace,
+hyprctl keyword bind SUPER,I,togglespecialworkspace

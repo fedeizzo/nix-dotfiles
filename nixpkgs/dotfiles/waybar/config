@@ -11,7 +11,7 @@
     },
     "wlr/workspaces": {
        "disable-scroll": true,
-       "all-outputs": false,
+       "all-outputs": true,
        "format": "{name}",
     },
     "temperature": {

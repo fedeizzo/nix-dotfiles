@@ -61,6 +61,12 @@
   # boot.kernel.sysctl = {
   #   net.ipv4.ip_forward = 1;
   # };
+  networking.firewall.enable = true;
+  networking.firewall.trustedInterfaces = [ "tailscale0" ];
+
+  # SSH & VPN
+  services.tailscale.enable = true;
+  services.openssh.enable = true;
 
 
   # KEYMAP AND TIME

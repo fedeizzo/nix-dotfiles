@@ -16,9 +16,13 @@
       url = "github:nix-community/emacs-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    wayplover = {
-      url = "github:TravisDavis-ops/wayplover";
-      inputs.nixpkgs.follows = "nixpkgs";
+    hyprland = {
+      url = "github:hyprwm/Hyprland";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
+    hyprwm-contrib = {
+      url = "github:hyprwm/contrib";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
     home-manager = {
@@ -35,6 +39,7 @@
       overlays = [
         inputs.neovim-nightly-overlay.overlay
         inputs.emacs-overlay.overlay
+        # inputs.hyprwm-contrib
         unstable-overlay
         (final: prev: {
           swayhide = final.callPackage ./pkgs/swayhide.nix { };
@@ -58,10 +63,8 @@
               imports = [
                 ./laptop/home.nix
                 allowUnfree
+                inputs.hyprland.homeManagerModules.default
               ];
-              # home.packages = [
-              #   wayplover.defaultPackage
-              # ];
             };
           system = "x86_64-linux";
           homeDirectory = "/home/fedeizzo";

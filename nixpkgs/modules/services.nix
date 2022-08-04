@@ -1,7 +1,6 @@
 { config, pkgs, libs, ... }:
 
 {
-  services.lorri.enable = true;
   home.packages = with pkgs; [
     networkmanager_dmenu
   ];
@@ -10,6 +9,7 @@
     nix-direnv.enable = true;
     # nix-direnv.enableFlakes = true;
   };
+  services.lorri.enable = false;
   systemd.user.services = {
     mpris-proxy = {
       Unit = {

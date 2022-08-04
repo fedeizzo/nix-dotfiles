@@ -1,40 +1,47 @@
 { pkgs, inputs, system, ... }:
 
 {
-  home.packages = with pkgs; [
-    # dmenu replacement
-    bemenu
-    j4-dmenu-desktop
-    # status bar
-    waybar
-    # xrandr replacement
-    wlr-randr
-    # autorandr replacement
-    kanshi
-    # arandr replacement
-    wdisplays
-    # feh replacement
-    swaybg
-    # clipboard
-    wl-clipboard
-    clipman
-    # image viewer
-    imv
-    # screenshot for flameshoot
-    grim
-    slurp
-    swappy
-    # tray
-    libappindicator
-    # xdotool replacement
-    wtype
-    # devour replacement
-    swayhide
-    # autotiling
-    autotiling
-    # notification center
-    swaync
-  ];
+
+  wayland.windowManager.hyprland = {
+    enable = true;
+    xwayland = true;
+    extraConfig = builtins.readFile ../dotfiles/hyprland.conf;
+  };
+  home.packages = with pkgs;
+    [
+      # dmenu replacement
+      bemenu
+      j4-dmenu-desktop
+      # status bar
+      waybar
+      # xrandr replacement
+      wlr-randr
+      # autorandr replacement
+      kanshi
+      # arandr replacement
+      wdisplays
+      # feh replacement
+      swaybg
+      # clipboard
+      wl-clipboard
+      clipman
+      # image viewer
+      imv
+      # screenshot for flameshoot
+      grim
+      slurp
+      swappy
+      # tray
+      libappindicator
+      # xdotool replacement
+      wtype
+      # devour replacement
+      swayhide
+      # autotiling
+      autotiling
+      # notification center
+      swaync
+    ];
   xdg.configFile."waybar/config" = {
     source = ../dotfiles/waybar/config;
   };
