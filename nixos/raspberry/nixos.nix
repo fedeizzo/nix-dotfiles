@@ -52,11 +52,11 @@
           listenPort = 51820;
 
           postSetup = ''
-            ${pkgs.iptables}/bin/iptables -t nat -A POSTROUTING -s 10.100.0.0/24 -o eth0 -j MASQUERADE
+            ${pkgs.iptables}/bin/iptables -t nat -A POSTROUTING -s 192.168.1.31/24 -o eth0 -j MASQUERADE
           '';
 
           postShutdown = ''
-            ${pkgs.iptables}/bin/iptables -t nat -D POSTROUTING -s 10.100.0.0/24 -o eth0 -j MASQUERADE
+            ${pkgs.iptables}/bin/iptables -t nat -D POSTROUTING -s 192.168.1.31/24 -o eth0 -j MASQUERADE
           '';
 
           # Path to the private key file.
