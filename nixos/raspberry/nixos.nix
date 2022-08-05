@@ -36,50 +36,14 @@
     }];
     nat = {
       enable = true;
-      internalInterfaces = [ "wg0" ];
+      internalInterfaces = [ "tailscale0" ];
     };
     firewall = {
       enable = true;
-      trustedInterfaces = [ "wg0" ];
-      allowedUDPPorts = [ 51820 ];
-    };
-    wireguard = {
-      enable = true;
-      interfaces = {
-        wg0 = {
-          ips = [ "192.168.1.31" ];
-
-          listenPort = 51820;
-
-          postSetup = ''
-            ${pkgs.iptables}/bin/iptables -t nat -A POSTROUTING -s 192.168.1.31/24 -o eth0 -j MASQUERADE
-          '';
-
-          postShutdown = ''
-            ${pkgs.iptables}/bin/iptables -t nat -D POSTROUTING -s 192.168.1.31/24 -o eth0 -j MASQUERADE
-          '';
-
-          # Path to the private key file.
-          #
-          # Note: The private key can also be included inline via the privateKey option,
-          # but this makes the private key world-readable; thus, using privateKeyFile is
-          # recommended.
-          # privateKeyFile = "path to private key file";
-          privateKey = "TODO";
-
-          peers = [
-            # {
-            #   # John Doe
-            #   publicKey = "{john doe's public key}";
-            #   # visible other machine in the private network
-            #   allowedIPs = [ "10.100.0.3/32" ];
-            # }
-          ];
-        };
-      };
+      trustedInterfaces = [ "tailscale0" ];
+      allowedUDPPorts = [ ${services.tailscale.port} ];
     };
   };
-
 
   services.openssh = {
     enable = true;
@@ -91,6 +55,13 @@
     permitRootLogin = "no";
   };
   services.fail2ban.enable = true;
+  # tailscale up
+  # ip link show tailscale0
+  # jorntalctl -fu tailscale
+  services.tailscale = {
+    enable = true;
+    port = 51820;
+  };
 
   # KEYMAP AND TIME
   i18n.defaultLocale = "en_US.UTF-8";
@@ -102,6 +73,7 @@
 
   # PACKAGES
   environment.systemPackages = with pkgs; [
+    tailscale
     raspberrypifw
     bc
     curl
