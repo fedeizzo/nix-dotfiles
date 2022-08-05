@@ -41,7 +41,7 @@
     firewall = {
       enable = true;
       trustedInterfaces = [ "tailscale0" ];
-      allowedUDPPorts = [ ${services.tailscale.port} ];
+      allowedUDPPorts = [ 51820 ];
     };
   };
 
