@@ -30,10 +30,10 @@
     networkmanager = {
       enable = true;
     };
-    interfaces.eth0.ipv4.addresses = [{
-      address = "192.168.1.31";
-      prefixLength = 24;
-    }];
+    # interfaces.eth0.ipv4.addresses = [{
+    #   address = "192.168.1.31";
+    #   prefixLength = 24;
+    # }];
     nat = {
       enable = true;
       internalInterfaces = [ "tailscale0" ];
