@@ -87,7 +87,7 @@
     allowSFTP = false; # Don't set this if you need sftp
     challengeResponseAuthentication = false;
     openFirewall = false;
-    forxardX11 = false;
+    forwardX11 = false;
     permitRootLogin = "no";
   };
   services.fail2ban.enable = true;
