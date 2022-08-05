@@ -64,6 +64,7 @@ Modules description:
 - ~zathura.nix~: configuration [[https://git.pwmt.org/pwmt/zathura][zathura]].
 
 TODO: create a derivation or a patch for [[https://github.com/EliverLara/firefox-nordic-theme][firefox nordic theme]].
+TODO: find a way to add the registry with nix registry add fedeizzo ~/nixOs-config/nixpkgs/flaketemplates
 
 ** Installation
 #+begin_src sh

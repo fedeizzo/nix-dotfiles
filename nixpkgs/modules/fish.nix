@@ -105,6 +105,19 @@
         '';
         description = "Comunication channel for emacs-vterm";
       };
+      flakify = {
+        description = "Use a flake template";
+        argumentNames = "name";
+        body = ''
+          if ! test -e ./flake.nix
+            nix flake init -t fedeizzo#$name
+          end
+          if ! test -e ./.envrc
+            echo "use flake" > .envrc
+          end
+          direnv allow
+        '';
+      };
     };
     shellAbbrs = {
       "..." = "cd ../..";

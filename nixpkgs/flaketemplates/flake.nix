@@ -3,13 +3,9 @@
 
   outputs = { self, ... }: {
     templates = {
-      latex-report = {
-        path = ./latex-report-template;
-        description = "A latex whitepaper project";
-      };
-      rust-hello = {
-        path = ./rust-hello-template;
-        description = "Simple Hello World in Rust";
+      python = {
+        path = ./python-mach-nix;
+        description = "A white python mach-nix project";
       };
     };
   };
