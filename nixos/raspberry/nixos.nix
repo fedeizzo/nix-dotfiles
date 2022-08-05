@@ -79,124 +79,125 @@
         };
       };
     };
+  };
 
-    services.openssh = {
+
+  services.openssh = {
+    enable = true;
+    passwordAuthentication = false;
+    allowSFTP = false; # Don't set this if you need sftp
+    challengeResponseAuthentication = false;
+    openFirewall = false;
+    forxardX11 = false;
+    permitRootLogin = "no";
+  };
+  services.fail2ban.enable = true;
+
+  # KEYMAP AND TIME
+  i18n.defaultLocale = "en_US.UTF-8";
+  console = {
+    keyMap = "us";
+  };
+  time.timeZone = "Europe/Rome";
+  time.hardwareClockInLocalTime = true;
+
+  # PACKAGES
+  environment.systemPackages = with pkgs; [
+    raspberrypifw
+    bc
+    curl
+    killall
+    wget
+    git
+    vim
+    docker-compose
+    dnsmasq
+    hostapd
+    firefox
+  ];
+  virtualisation = {
+    docker = {
       enable = true;
-      passwordAuthentication = false;
-      allowSFTP = false; # Don't set this if you need sftp
-      challengeResponseAuthentication = false;
-      openFirewall = false;
-      forxardX11 = false;
-      permitRootLogin = "no";
+      enableOnBoot = true;
+      enableNvidia = false;
     };
-    services.fail2ban.enable = true;
+  };
+  programs.bash = {
+    enableCompletion = true;
+    enableLsColors = true;
+  };
 
-    # KEYMAP AND TIME
-    i18n.defaultLocale = "en_US.UTF-8";
-    console = {
-      keyMap = "us";
-    };
-    time.timeZone = "Europe/Rome";
-    time.hardwareClockInLocalTime = true;
+  # i3
+  # services.xserver = {
+  #   enable = true;
 
-    # PACKAGES
-    environment.systemPackages = with pkgs; [
-      raspberrypifw
-      bc
-      curl
-      killall
-      wget
-      git
-      vim
-      docker-compose
-      dnsmasq
-      hostapd
-      firefox
+  #   desktopManager = {
+  #     xterm.enable = false;
+  #   };
+
+  #   displayManager = {
+  #     startx.enable = false;
+  #     defaultSession = "none+i3";
+  #   };
+
+  #   windowManager.i3 = {
+  #     enable = true;
+  #     extraPackages = with pkgs; [
+  #       dmenu #application launcher most people use
+  #       i3status # gives you the default i3 status bar
+  #       i3lock #default i3 screen locker
+  #     ];
+  #   };
+  # };
+
+  # SECURITY
+  security.sudo.enable = false;
+  security.doas = {
+    enable = true;
+    extraRules = [
+      { groups = [ "wheel" ]; keepEnv = true; persist = true; }
     ];
-    virtualisation = {
-      docker = {
-        enable = true;
-        enableOnBoot = true;
-        enableNvidia = false;
-      };
-    };
-    programs.bash = {
-      enableCompletion = true;
-      enableLsColors = true;
-    };
+  };
+  # Show log with journactl -f
+  security.auditd.enable = true;
+  security.audit.enable = true;
+  security.audit.rules = [
+    "-a exit,always -F arch=b64 -S execve"
+  ];
 
-    # i3
-    # services.xserver = {
-    #   enable = true;
-
-    #   desktopManager = {
-    #     xterm.enable = false;
-    #   };
-
-    #   displayManager = {
-    #     startx.enable = false;
-    #     defaultSession = "none+i3";
-    #   };
-
-    #   windowManager.i3 = {
-    #     enable = true;
-    #     extraPackages = with pkgs; [
-    #       dmenu #application launcher most people use
-    #       i3status # gives you the default i3 status bar
-    #       i3lock #default i3 screen locker
-    #     ];
-    #   };
-    # };
-
-    # SECURITY
-    security.sudo.enable = false;
-    security.doas = {
-      enable = true;
-      extraRules = [
-        { groups = [ "wheel" ]; keepEnv = true; persist = true; }
-      ];
-    };
-    # Show log with journactl -f
-    security.auditd.enable = true;
-    security.audit.enable = true;
-    security.audit.rules = [
-      "-a exit,always -F arch=b64 -S execve"
+  # USER
+  users.users.rasp = {
+    name = "rasp";
+    isNormalUser = true;
+    createHome = true;
+    extraGroups = [
+      "wheel"
+      "docker"
+      "autologin"
+      "users"
+      "networkmanager"
     ];
+    shell = pkgs.bash;
+  };
 
-    # USER
-    users.users.rasp = {
-      name = "rasp";
-      isNormalUser = true;
-      createHome = true;
-      extraGroups = [
-        "wheel"
-        "docker"
-        "autologin"
-        "users"
-        "networkmanager"
-      ];
-      shell = pkgs.bash;
+  # NIX STUFF
+  nixpkgs.config = {
+    allowUnfree = true;
+  };
+  nix = {
+    autoOptimiseStore = true;
+    package = pkgs.nixFlakes;
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 30d";
     };
-
-    # NIX STUFF
-    nixpkgs.config = {
-      allowUnfree = true;
-    };
-    nix = {
-      autoOptimiseStore = true;
-      package = pkgs.nixFlakes;
-      gc = {
-        automatic = true;
-        dates = "weekly";
-        options = "--delete-older-than 30d";
-      };
-      # Free up to 1GiB whenever there is less than 100MiB left.
-      extraOptions = ''
-          min-free = ${toString (100 * 1024 * 1024)}
-        max-free = ${toString (1024 * 1024 * 1024)}
-        experimental-features = nix-command flakes
-      '';
-    };
-    system.stateVersion = "22.05";
-  }
-
+    # Free up to 1GiB whenever there is less than 100MiB left.
+    extraOptions = ''
+        min-free = ${toString (100 * 1024 * 1024)}
+      max-free = ${toString (1024 * 1024 * 1024)}
+      experimental-features = nix-command flakes
+    '';
+  };
+  system.stateVersion = "22.05";
+}
