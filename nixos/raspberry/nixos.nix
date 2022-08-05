@@ -36,7 +36,6 @@
     }];
     nat = {
       enable = true;
-      externalInterfaces = "wlp1s0u1u3";
       internalInterfaces = [ "wg0" ];
     };
     firewall = {
