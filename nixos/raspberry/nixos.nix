@@ -85,7 +85,6 @@
       passwordAuthentication = false;
       allowSFTP = false; # Don't set this if you need sftp
       challengeResponseAuthentication = false;
-      passwordAuthentication = false;
       openFirewall = false;
       forxardX11 = false;
       permitRootLogin = "no";
