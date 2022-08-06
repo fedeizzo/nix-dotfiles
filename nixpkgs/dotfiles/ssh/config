@@ -44,3 +44,6 @@ Host fbkdisk
         User user
         ProxyJump sshFbk
         IdentityFile ~/.ssh/fizzo@fbk.eu
+Host home-lab
+        Hostname home-lab
+        User rasp
