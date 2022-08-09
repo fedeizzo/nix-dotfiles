@@ -14,4 +14,19 @@
   xdg.configFile."networkmanager-dmenu/config.ini" = {
     source = ../dotfiles/networkmanager-dmenu.ini;
   };
+
+  nix.registry = {
+    fedeizzo = {
+      from = {
+        id = "fedeizzo";
+        type = "indirect";
+      };
+      to = {
+        dir = "nixpkgs/flaketemplates";
+        owner = "fedeizzo";
+        repo = "nix-dotfiles";
+        type = "github";
+      };
+    };
+  };
 }

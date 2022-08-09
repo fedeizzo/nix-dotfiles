@@ -61,7 +61,7 @@
           set oldDir (pwd)
           find \
             --absolute-path \
-            --full-path $HOME/nixOs-config/nixpkgs/ \
+            --full-path $HOME/nix-dotfiles/nixpkgs/ \
             --type 'file' | \
           fzf \
             --preview 'bat \
@@ -78,7 +78,7 @@
       up = {
         body = ''
           set oldDir (pwd)
-          cd $HOME/nixOs-config/nixpkgs/
+          cd $HOME/nix-dotfiles/nixpkgs/
           ./install.sh
           cd $oldDir
         '';

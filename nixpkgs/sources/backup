@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-export BORG_REPO='ssh://pi@192.168.1.10/./backup'
-export BORG_PASSCOMMAND='rbw get borg'
+export BORG_REPO='rasp@home-lab:backup/laptop'
+export BORG_PASSCOMMAND='rbw get borgBackup'
 
 backup() {
     info "Starting backup"
@@ -19,9 +19,10 @@ backup() {
         ::'{hostname}-{now}' \
         $HOME/.gnupg \
         $HOME/.ssh \
-        $HOME/.gnupg \
+        $HOME/.aspell.en.prepl \
+        $HOME/.aspell.en.pws \
         $HOME/docs \
-        $HOME/nixOs-config \
+        $HOME/nix-dotfiles \
         $HOME/fbk \
         $HOME/uni \
         $HOME/personalProject \
