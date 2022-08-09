@@ -27,6 +27,8 @@
       systemd-boot.enable = false;
       generic-extlinux-compatible.enable = false;
     };
+    kernel.sysctl."net.ipv4.ip_forward" = 1;
+    kernel.sysctl."net.ipv6.conf.all.forwarding" = 1;
   };
 
   # Required for the Wireless firmware
@@ -38,18 +40,25 @@
     networkmanager = {
       enable = true;
     };
-    # interfaces.eth0.ipv4.addresses = [{
-    #   address = "192.168.1.31";
-    #   prefixLength = 24;
-    # }];
+    useDHCP = false;
+    defaultGateway = "192.168.1.1";
+    nameservers = [ "1.1.1.1" ];
+    interfaces.eth0 = {
+      ipv4.addresses = [{
+        address = "192.168.1.65";
+        prefixLength = 24;
+      }];
+    };
     nat = {
       enable = true;
       internalInterfaces = [ "tailscale0" ];
     };
     firewall = {
       enable = true;
+      interfaces.eth0.allowedTCPPorts = [ 443 ];
       trustedInterfaces = [ "tailscale0" ];
       allowedUDPPorts = [ 51820 ];
+      checkReversePath = "loose";
     };
   };
 
@@ -57,7 +66,7 @@
     enable = true;
     passwordAuthentication = false;
     allowSFTP = false; # Don't set this if you need sftp
-    challengeResponseAuthentication = false;
+    kbdInteractiveAuthentication = false;
     openFirewall = false;
     forwardX11 = false;
     permitRootLogin = "no";
@@ -69,6 +78,24 @@
   services.tailscale = {
     enable = true;
     port = 51820;
+  };
+  services.borgbackup.jobs = {
+    home-server-backup = {
+      paths = [ "/home/rasp/home-server" ];
+      doInit = true;
+      repo = "/home/rasp/backup/home-server";
+      encryption = {
+        mode = "repokey-blake2";
+        passCommand = "cat /run/keys/borgbackup_passphrase";
+      };
+      compression = "zstd,3";
+      startAt = "daily";
+      prune.keep = {
+        daily = 1;
+        weekly = 3;
+        monthly = 4;
+      };
+    };
   };
   # add gpio group
   users.groups.gpio = { };
@@ -83,7 +110,7 @@
     enable = true;
     script = ''
       while true; do
-        ontemp=60
+        ontemp=55
         temp=$(${pkgs.libraspberrypi}/bin/vcgencmd measure_temp | egrep -o '[0-9]*\.[0-9]*')
         temp0=$${temp%.*}
 
