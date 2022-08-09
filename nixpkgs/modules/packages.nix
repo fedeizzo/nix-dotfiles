@@ -33,6 +33,7 @@
     zotero
     anki
     inkscape-with-extensions
+    # hugo
     (unstable.xournalpp.overrideAttrs (old: rec {
       vi-xournalpp = fetchFromGitHub {
         owner = "raw-bacon";

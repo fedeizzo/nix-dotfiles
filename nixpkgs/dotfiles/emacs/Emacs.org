@@ -1,4 +1,4 @@
-#+title: Emacs configuratin
+#+title: Emacs configuration
 #+PROPERTY: header-args:emacs-lisp :tangle ~/.config/emacs/init.el
 
 * init
@@ -525,6 +525,14 @@ This section must be the last one because it should stay after any function decl
   (use-package rustic)
 #+end_src
 
+*** yaml
+#+begin_src emacs-lisp
+  (use-package yaml-mode
+    :config
+    (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
+    (add-to-list 'auto-mode-alist '("\\.yaml\\'" . yaml-mode)))
+#+end_src
+
 ** TODO Magit
 #+begin_src emacs-lisp
   (use-package magit)
@@ -612,6 +620,22 @@ Hydra
   (use-package super-save
     :config
     (super-save-mode 1))
+#+end_src
+
+** Spell
+#+begin_src emacs-lisp
+  (setq-default ispell-program-name "aspell")
+  (defun fi/org-ispell ()
+    "Configure `ispell-skip-region-alist' for `org-mode'."
+    (make-local-variable 'ispell-skip-region-alist)
+    (add-to-list 'ispell-skip-region-alist '(org-property-drawer-re))
+    (add-to-list 'ispell-skip-region-alist '("~" "~"))
+    (add-to-list 'ispell-skip-region-alist '("=" "="))
+    (add-to-list 'ispell-skip-region-alist '("^#\\+BEGIN_SRC" . "^#\\+END_SRC")))
+  (add-hook 'org-mode-hook #'fi/org-ispell)
+  (add-hook 'org-mode-hook 'flyspell-mode)
+  (use-package flyspell-correct
+    :after flyspell)
 #+end_src
 
 ** Telegram - disabled
@@ -902,6 +926,10 @@ Annotations are block of texts associated with a file. The main advantage of thi
 ** Export
 #+begin_src emacs-lisp
   (use-package ox-epub)
+  (use-package ox-hugo
+    :after ox
+    :config
+    (setq org-hugo-base-dir "~/personalProject/hugo-website"))
 #+end_src
 
 ** Face
@@ -1159,6 +1187,16 @@ Use an external package for the pseudocode, the deafault one is verbatim
   (add-to-list 'org-latex-packages-alist '("" "color"))
   (add-to-list 'org-latex-packages-alist '("" "svg"))
 #+end_src
+** Last modified
+#+begin_src emacs-lisp
+  (add-hook 'org-mode-hook (lambda ()
+                             (setq-local time-stamp-active t
+                                         time-stamp-line-limit 18
+                                         time-stamp-start "^#\\+LAST_MODIFIED: [ \t]*"
+                                         time-stamp-end "$"
+                                         time-stamp-format "\[%Y-%m-%d %a %H:%M:%S\]")
+                             (add-hook 'before-save-hook 'time-stamp nil 'local)))
+#+end_src
 ** Margin
 #+begin_src emacs-lisp
   (defun dw/org-mode-visual-fill ()
@@ -1193,10 +1231,6 @@ Maybe it is better to run the db manually and not automatically at startup
     ;; :straight (org-roam :type git :host github :repo "org-roam/org-roam" :branch "v2.2.2")
     :after org)
   (require 'org-roam)
-  (setq org-roam-capture-templates
-        '(("d" "default" plain "%?"
-           :target (file+head "${slug}.org" "#+title: ${title} ")
-           :unnarrowed t)))
   (setq org-roam-directory (file-truename "~/zettelkasten"))
   (org-roam-db-autosync-mode)
   (setq org-roam-mode-section-functions
@@ -1230,13 +1264,29 @@ Function to fix the reload the cache of org mode and org roam [[https://dev.to/d
     (org-roam-db-sync)
     (org-roam-update-org-id-locations))
 #+end_src
+Function for custom creation of node inside a directory representing a topic
+#+begin_src emacs-lisp
+  (defun fi/org-roam-extract-topic ()
+    (let* (
+           ;; (cwd (file-name-directory (other-buffer)))
+           (cwd (file-name-directory (buffer-file-name (nth 1 (buffer-list)))))
+           (current-topic (string-replace (concat org-roam-directory "/") "" cwd)))
+      (if (string= current-topic "")
+          ""
+        current-topic
+        )))
+  (setq org-roam-capture-templates
+        '(("d" "default" plain "%?"
+           :target (file+head "%(fi/org-roam-extract-topic)${slug}.org" "#+title: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M:%S>]\n#+LAST_MODIFIED: [%<%Y-%m-%d %a %H:%M:%S>]")
+           :unnarrowed t)))
+#+end_src
 hydra
 #+begin_src emacs-lisp
-
   (pretty-hydra-define org-roam-hydra-main (:color blue :title "Org roam" :quit-key "q")
     ("Node"
      (("i" org-roam-node-insert "inesert node")
-      ("f" org-roam-node-find "find node"))
+      ("f" org-roam-node-find "find node")
+      ("h" org-id-get-create "add id current node"))
      "Clipboard"
      (("c" org-download-clipboard "paste clipboard"))
      "Inkscape"

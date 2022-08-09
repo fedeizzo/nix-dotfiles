@@ -33,6 +33,12 @@ in
     # ledger
     ledger
     unstable.hledger
+    # spell
+    aspell
+    aspellDicts.en
+    aspellDicts.en-science
+    aspellDicts.en-computers
+    aspellDicts.it
   ];
   xdg.configFile."emacs/Emacs.org".source = ../dotfiles/emacs/Emacs.org;
   xdg.configFile."emacs/early-init.el".text = ''
