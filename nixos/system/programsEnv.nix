@@ -126,4 +126,6 @@
   programs.ccache.enable = true;
   programs.gnupg.agent.enable = true;
   programs.gnupg.agent.pinentryFlavor = "qt";
+
+  programs.adb.enable = true;
 }

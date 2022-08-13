@@ -938,7 +938,7 @@ Annotations are block of texts associated with a file. The main advantage of thi
     :config
     (setq
      org-modern-block t
-     org-pretty-entities t
+     org-pretty-entities nil
      org-modern-table nil
      org-modern-hide-stars nil))
   (add-hook 'org-mode-hook #'org-modern-mode)

@@ -77,6 +77,7 @@
   # jorntalctl -fu tailscale
   services.tailscale = {
     enable = true;
+    package = pkgs.tailscalewithnginx;
     port = 51820;
   };
   services.borgbackup.jobs = {

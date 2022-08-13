@@ -51,5 +51,7 @@
     drawio
     geogebra
     pdf2svg
+    yubikey-manager
+    yubikey-manager-qt
   ];
 }

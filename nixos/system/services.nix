@@ -71,7 +71,6 @@ in
     hdmiEventHandler
     pkgs.xorg.xrandr
   ];
-
   services.tailscale.enable = true;
   # services.emacs = {
   #   package = pkgs.emacsPgtkGcc;
