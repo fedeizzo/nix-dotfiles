@@ -10,9 +10,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+    deploy-rs.url = "github:serokell/deploy-rs";
   };
 
-  outputs = { self, nixpkgs, nixos-hardware, ... }@inputs:
+  outputs = { self, nixpkgs, nixos-hardware, deploy-rs, ... }@inputs:
     {
       # by default the configuration used for nixos-rebuild switch
       # is matched with the current hostname
@@ -84,6 +85,20 @@
           ./raspberry/hardware-configuration.nix
         ];
       };
+      deploy.nodes.rasp-nixos = {
+        hostname = "home-lab";
+        sshUser = "rasp";
+        sudo = "doas -u";
+        sshOpts = [ ];
+        magicRollback = true;
+        autoRollback = true;
+        fastConnection = false;
+        profiles.system = {
+          user = "root";
+          path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.rasp-nixos;
+        };
+      };
+      checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) deploy-rs.lib;
     };
 }
 
