@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 export BORG_REPO='rasp@home-lab:backup/laptop'
-export BORG_PASSCOMMAND='rbw get borgBackup'
+export BORG_PASSCOMMAND='gpg --decrypt /home/fedeizzo/.config/borg/borg-passphrase.enc'
 
 backup() {
     info "Starting backup"
