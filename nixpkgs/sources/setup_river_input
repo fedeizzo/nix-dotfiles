@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+sleep 5
+riverctl input 1267:12572:DLL0945:00_04F3:311C_Touchpad accel-profile none
+riverctl input 1267:12572:DLL0945:00_04F3:311C_Touchpad click-method clickfinger
+riverctl input 1267:12572:DLL0945:00_04F3:311C_Touchpad drag enabled
+riverctl input 1267:12572:DLL0945:00_04F3:311C_Touchpad drag-lock enabled
+riverctl input 1267:12572:DLL0945:00_04F3:311C_Touchpad disable-while-typing enabled
+riverctl input 1267:12572:DLL0945:00_04F3:311C_Touchpad natural-scroll enabled
+riverctl input 1267:12572:DLL0945:00_04F3:311C_Touchpad tap enabled
+riverctl input 1267:12572:DLL0945:00_04F3:311C_Touchpad scroll-method two-finger

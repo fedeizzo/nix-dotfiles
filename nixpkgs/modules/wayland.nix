@@ -9,6 +9,8 @@
   };
   home.packages = with pkgs;
     [
+      # river
+      river
       # dmenu replacement
       bemenu
       j4-dmenu-desktop
@@ -31,6 +33,7 @@
       grim
       slurp
       swappy
+      # drawing
       # tray
       libappindicator
       # xdotool replacement

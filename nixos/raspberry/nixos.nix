@@ -12,6 +12,8 @@
       "console=tty1"
       # A lot GUI programs need this, nearly all wayland applications
       "cma=128M"
+      "cgroup_memory=1"
+      "cgroup_enable=memory"
     ];
     loader = {
       raspberryPi = {
@@ -58,6 +60,7 @@
       interfaces.eth0.allowedTCPPorts = [ 443 ];
       trustedInterfaces = [ "tailscale0" ];
       allowedUDPPorts = [ 51820 ];
+      allowedTCPPorts = [ 6443 ];
       checkReversePath = "loose";
     };
   };
@@ -98,6 +101,15 @@
       };
     };
   };
+  services.k3s = {
+    enable = false;
+    role = "server";
+    extraFlags = "--no-deploy traefik --disable coredns --disable traefik";
+  };
+  # systemd.services.k3s = {
+  #   wants = [ "containerd.service" ];
+  #   after = [ "containerd.service" ];
+  # };
   # add gpio group
   users.groups.gpio = { };
 
@@ -156,6 +168,7 @@
     libraspberrypi
     libgpiod
     borgbackup
+    kubectl
   ];
   virtualisation = {
     docker = {
@@ -167,29 +180,6 @@
   programs.bash = {
     enableCompletion = true;
     enableLsColors = true;
-  };
-
-  # i3
-  services.xserver = {
-    enable = true;
-
-    desktopManager = {
-      xterm.enable = false;
-    };
-
-    displayManager = {
-      startx.enable = false;
-      defaultSession = "none+i3";
-    };
-
-    windowManager.i3 = {
-      enable = true;
-      extraPackages = with pkgs; [
-        dmenu #application launcher most people use
-        i3status # gives you the default i3 status bar
-        i3lock #default i3 screen locker
-      ];
-    };
   };
 
   # SECURITY

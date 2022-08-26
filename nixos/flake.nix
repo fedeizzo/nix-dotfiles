@@ -85,20 +85,20 @@
           ./raspberry/hardware-configuration.nix
         ];
       };
-      deploy.nodes.rasp-nixos = {
-        hostname = "home-lab";
-        sshUser = "rasp";
-        sudo = "doas -u";
-        sshOpts = [ ];
-        magicRollback = true;
-        autoRollback = true;
-        fastConnection = false;
-        profiles.system = {
-          user = "root";
-          path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.rasp-nixos;
-        };
-      };
-      checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) deploy-rs.lib;
+      # deploy.nodes.rasp-nixos = {
+      #   hostname = "home-lab";
+      #   sshUser = "rasp";
+      #   sudo = "doas -u";
+      #   sshOpts = [ ];
+      #   magicRollback = true;
+      #   autoRollback = true;
+      #   fastConnection = false;
+      #   profiles.system = {
+      #     user = "root";
+      #     path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.rasp-nixos;
+      #   };
+      # };
+      # checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) deploy-rs.lib;
     };
 }
 

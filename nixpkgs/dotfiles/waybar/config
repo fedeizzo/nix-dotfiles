@@ -1,7 +1,7 @@
 {
     "position": "top", 
     "height": 14,
-    "modules-left": ["sway/workspaces", "wlr/workspaces"],
+    "modules-left": ["sway/workspaces", "wlr/workspaces", "river/mode", "river/tags", "river/window"],
     "modules-right": ["cpu", "temperature", "memory", "pulseaudio", "network", "battery", "clock", "tray"],
     // Modules configuration
     "sway/workspaces": {

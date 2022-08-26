@@ -91,6 +91,19 @@
           cd $dir
         '';
       };
+      encrypt = {
+        argumentNames = "file";
+        body = ''
+          gpg --encrypt --armor -r 506A41A0BF594872 -o $file.enc $file
+        '';
+      };
+      decrypt = {
+        argumentNames = "file";
+        body = ''
+          set output (echo $file | rev | cut -c5- | rev)
+          gpg --output $output --decrypt $file
+        '';
+      };
       vterm_printf = {
         body = ''
           if begin; [  -n "$TMUX" ]  ; and  string match -q -r "screen|tmux" "$TERM"; end 

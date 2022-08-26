@@ -48,6 +48,9 @@
     # to fix xournal problem
     pkgs.gnome.adwaita-icon-theme
     pkgs.shared-mime-info
+    # river
+    # elogind
+    seatd
   ];
   programs.sway = {
     enable = true;

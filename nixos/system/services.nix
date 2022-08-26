@@ -72,6 +72,18 @@ in
     pkgs.xorg.xrandr
   ];
   services.tailscale.enable = true;
+  systemd.services.seatd = {
+    enable = true;
+    description = "Seat management daemon";
+    script = "${pkgs.seatd}/bin/seatd -g wheel";
+    serviceConfig = {
+      Type = "simple";
+      Restart = "always";
+      RestartSec = "1";
+    };
+    wantedBy = [ "multi-user.target" ];
+  };
+  services.pcscd.enable = true;
   # services.emacs = {
   #   package = pkgs.emacsPgtkGcc;
   #   enable = true;

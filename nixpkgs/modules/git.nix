@@ -6,7 +6,7 @@
     userName = "Federico Izzo";
     userEmail = "federico.izzo99@gmail.com";
     signing = {
-      key = "federico.izzo99@gmail.com";
+      key = "7F857F72";
       signByDefault = true;
     };
     lfs.enable = true;

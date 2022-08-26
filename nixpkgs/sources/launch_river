@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+export SDL_VIDEODRIVER=wayland
+export _JAVA_AWT_WM_NONREPARENTING=1
+export QT_QPA_PLATFORM=wayland
+export XDG_CURRENT_DESKTOP=river
+export XDG_SESSION_DESKTOP=river
+export XDG_CURRENT_DESKTOP=Unity
+export XDG_SESSION_TYPE="wayland"
+export GTK_USE_PORTAL=0
+test -f $HOME/.profile && source $HOME/.profile
+export MOZ_ENABLE_WAYLAND=1
+export XKB_DEFAULT_LAYOUT="us"
+export XKB_DEFAULT_VARIANT="altgr-intl"
+export XKB_DEFAULT_OPTIONS="ctrl:swapcaps"
+river -log-level debug 2> /home/fedeizzo/river.log
