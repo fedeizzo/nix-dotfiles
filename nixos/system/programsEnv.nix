@@ -51,6 +51,7 @@
     # river
     # elogind
     seatd
+    nixpkgs-unstable.keyd # keyboard mapper
   ];
   programs.sway = {
     enable = true;
