@@ -39,6 +39,39 @@ window#waybar {
 	border-radius: 5px;
 }
 
+#tags {
+	background-color: #4c566a;
+	margin: 5px;
+	margin-left: 10px;
+	border-radius: 5px;
+}
+#tags button {
+    padding: 0 10px;
+    color: #eceff4;
+}
+
+#tags button.focused {
+    color: #2e3440;
+    background-color: #88c0d0;
+    border-radius: 5px;
+}
+
+#tags button.active {
+    color: #2e3440;
+    background-color: #88c0d0;
+    border-radius: 5px;
+}
+
+#tags button.occupied {
+    color: #d08770;
+    border-radius: 5px;
+}
+
+#tags button:hover {
+	background-color: #5e81ac;
+	border-radius: 5px;
+}
+
 #custom-date, #clock, #battery, #pulseaudio, #network, #memory, #cpu, #temperature {
 	background-color: #4c566a;
 	padding: 0px 10px;

@@ -13,7 +13,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     emacs-overlay = {
-      url = "github:nix-community/emacs-overlay/10d42a1d9e6032992ac047153a9bffd4444bd6ed";
+      url = "github:nix-community/emacs-overlay/6b4445aa659fa26b4f36d9975b34632312699a85";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     hyprland = {
@@ -44,6 +44,8 @@
         (final: prev: {
           swayhide = final.callPackage ./pkgs/swayhide.nix { };
           swaync = final.callPackage ./pkgs/swaync.nix { };
+          lswt = final.callPackage ./pkgs/lswt.nix { };
+          river-tag-overlay = final.callPackage ./pkgs/river-tag-overlay.nix { };
         })
         (self: super: {
           waybar = super.waybar.overrideAttrs (oldAttrs: {

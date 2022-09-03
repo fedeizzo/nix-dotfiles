@@ -1,0 +1,69 @@
+#!/usr/bin/env python
+import subprocess
+import json
+
+from typing import List
+
+
+# class View:
+#     def __init__(
+#         self,
+#         title: str,
+#         app_id: str,
+#         maximized: bool,
+#         minimized: bool,
+#         activated: bool,
+#         fullscreen: bool,
+#         outputs: List[str],
+#     ):
+#         self.title = title
+#         self.app_id = app_id
+#         self.maximized = maximized
+#         self.minimized = minimized
+#         self.activated = activated
+#         self.outputs = outputs
+
+#     @staticmethod
+#     def parse_state():
+#         state = json.loads(subprocess.check_output(["lswt", "-j"]).decode("utf-8"))
+#         return [View(**s) for s in state]
+
+
+# views = View.parse_state()
+# print(views)
+tags = r"ftag\netag\nktag\nwtag\nntag\nltag\nctag\nfview\neview\nkview\nwview\nnview\nlview\ncview\nffocus\nefocus\nkfocus\nwfocus\nnfocus\nlfocus\ncfocus"
+str_tag_to_num = {
+    "f": "1",
+    "e": "2",
+    "k": "4",
+    "w": "8",
+    "n": "16",
+    "l": "32",
+    "c": "64",
+}
+
+echo_cmd = ["echo", "-e", tags]
+
+wofi_cmd = ["wofi", "--show", "dmenu"]
+echo_output = subprocess.Popen(echo_cmd, stdout=subprocess.PIPE)
+selected_tag = subprocess.check_output(wofi_cmd, stdin=echo_output.stdout).decode(
+    "utf-8"
+)[:-1]
+if "tag" in selected_tag:
+    selected_tag = selected_tag[:-3]
+    subprocess.run(
+        ["riverctl", "toggle-view-tags", str_tag_to_num[selected_tag]],
+        stdout=subprocess.DEVNULL,
+    )
+elif "view" in selected_tag:
+    selected_tag = selected_tag[:-4]
+    subprocess.run(
+        ["riverctl", "toggle-focused-tags", str_tag_to_num[selected_tag]],
+        stdout=subprocess.DEVNULL,
+    )
+elif "focus" in selected_tag:
+    selected_tag = selected_tag[:-5]
+    subprocess.run(
+        ["riverctl", "set-focused-tags", str_tag_to_num[selected_tag]],
+        stdout=subprocess.DEVNULL,
+    )

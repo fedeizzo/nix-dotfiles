@@ -14,7 +14,8 @@ backup() {
         --exclude "**/node_modules" \
         --exclude "**/.venv" \
         --exclude "**/data" \
-        --exclude "/home/fedeizzo/fbk/pei/postgres_data" \
+        --exclude "**/db_data" \
+        --exclude "**/postgres_data" \
         --compression zstd,3 \
         ::'{hostname}-{now}' \
         $HOME/.gnupg \

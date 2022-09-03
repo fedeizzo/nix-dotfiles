@@ -1,6 +1,5 @@
 set $mod Mod4
-set $menu bemenu-run --tf '#a3be8c' --tb '#2e3440' --nb '#2e3440' --fb '#2e3440' --hb '#2e3440' --hf '#d08770' | xargs swaymsg exec --
-# set $menu j4-dmenu-desktop --dmenu='bemenu --tf "#a3be8c" --tb "#2e3440" --nb "#2e3440" --fb "#2e3440" --hb "#2e3440" --hf "#d08770"' --use-xdg-de --term=kitty
+set $menu rofi -show drun
 
 xwayland enable
 
@@ -88,6 +87,10 @@ mode "resize" {
     # Return to default mode
     bindsym $mod+r mode "default"
 }
+# passthrough mode
+mode "passthrough" {
+     bindsym Shift+Escape mode "default"
+}
 
 # containters keybinds
 bindsym {
@@ -124,12 +127,13 @@ bindsym {
     $mod+d exec $menu
     $mod+b exec /home/fedeizzo/.sources/fillBwPassword
     $mod+r mode "resize"
+    $mod+F11 mode "passthrough"
     $mod+p exec grim -g "$(slurp)" - | swappy -f -
     # $mod+p exec grim -g "$(slurp)" - | wl-copy -t "image/png" && drawing -c
     $mod+Shift+p exec grim -g "$(swaymsg -t get_tree | jq -r '.. | select(.pid? and .visible?) | .rect | "\(.x),\(.y) \(.width)x\(.height)"' | slurp)" - | swappy -f -
     $mod+w exec "kitty /home/fedeizzo/.sources/lfrun"
     $mod+e exec "emacsclient -c"
-    $mod+c exec clipman pick -t bemenu --tool-args="--tf '#a3be8c' --tb '#2e3440' --nb '#2e3440' --fb '#2e3440' --hb '#2e3440' --hf '#d08770'"
+    $mod+c exec clipman pick -t rofi
     $mod+Ctrl+c exec clipman clear --all
     XF86AudioRaiseVolume exec pamixer --increase 5
     XF86AudioLowerVolume exec pamixer --decrease 5

@@ -1,19 +1,22 @@
 { pkgs, inputs, system, ... }:
 
 {
-
   wayland.windowManager.hyprland = {
     enable = true;
-    xwayland = true;
+    xwayland.enable = true;
     extraConfig = builtins.readFile ../dotfiles/hyprland.conf;
   };
   home.packages = with pkgs;
     [
       # river
       river
+      glib
+      lswt
+      river-tag-overlay
+      xdg-utils
       # dmenu replacement
-      bemenu
       j4-dmenu-desktop
+      wofi
       # status bar
       waybar
       # xrandr replacement
@@ -44,7 +47,27 @@
       autotiling
       # notification center
       swaync
+      # gamma adapter
+      wlsunset
+      eww-wayland
     ];
+  # programs.eww = {
+  #   enable = true;
+  #   package = pkgs.eww-wayland;
+  # };
+  programs.rofi = {
+    enable = true;
+    package = pkgs.rofi-wayland;
+    plugins = with pkgs; [
+      pkgs.rofi-power-menu
+      rofi-file-browser
+    ];
+    theme = ../dotfiles/rofi/nord.rasi;
+    terminal = "${pkgs.kitty}/bin/kitty";
+    extraConfig = {
+      modi = "drun,file-browser-extended";
+    };
+  };
   xdg.configFile."waybar/config" = {
     source = ../dotfiles/waybar/config;
   };
@@ -56,6 +79,9 @@
   };
   xdg.configFile."sway" = {
     source = ../dotfiles/sway;
+  };
+  xdg.configFile."river" = {
+    source = ../dotfiles/river;
   };
   xdg.configFile."environment.d/envvars.conf" = {
     text = ''

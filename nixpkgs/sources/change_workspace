@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 swaymsg -t get_tree &> /dev/null
 if [[ $? == 0 ]]; then
-    selected_workspace=$(swaymsg -t get_workspaces -r | jq -M '.[] | select(.focused==false and .visible==false) | .name' | tr -d '"' | bemenu -p 'change' --tf '#a3be8c' --tb '#2e3440' --nb '#2e3440' --fb '#2e3440' --hb '#2e3440' --hf '#d08770')
+    selected_workspace=$(swaymsg -t get_workspaces -r | jq -M '.[] | select(.focused==false and .visible==false) | .name' | tr -d '"' | rofi -dmenu)
     current_output=$(swaymsg -t get_outputs --raw | jq '. | map(select(.focused == true)) | .[0].name' -r)
     if [[ $? != 0 ]]; then
 	exit 1
@@ -13,7 +13,7 @@ else
     set -e
     monitors=$(hyprctl monitors -j )
     workspaces=$(hyprctl workspaces -j)
-    selected_workspace=$(echo $workspaces | jq -r '.[] | select(.name != "special") |.name' | bemenu -p 'change' --tf '#a3be8c' --tb '#2e3440' --nb '#2e3440' --fb '#2e3440' --hb '#2e3440' --hf '#d08770')
+    selected_workspace=$(echo $workspaces | jq -r '.[] | select(.name != "special") |.name' | rofi -dmenu)
     is_selected_worksapce_active_in_other_monitor=$(hyprctl monitors -j | jq -r '.[] | .activeWorkspace | select(.name == "'"$selected_workspace"'") | .id')
     monitors_number=$(echo $monitors | jq -r 'length')
     active_monitor=$(echo $monitors | jq -r '.[] | select(.active == "yes") | .name')

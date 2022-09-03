@@ -32,9 +32,9 @@ Usage:
 
 *** Navigation
 #+NAME: lily58-navigation-layer
-| NO | NO | NO | NO | NO | NO |    |   | NO   | NO   | NO   | NO   | NO | NO |
-| NO | NO | NO | NO | NO | NO |    |   | MPRV | VOLD | VOLU | MNXT | NO | NO |
-| NO | NO | NO | NO | NO | NO |    |   | LEFT | DOWN | UP   | RGHT | NO | NO |
+| NO | NO | NO | NO | NO | NO |    |    | NO   | NO   | NO   | NO   | NO | NO |
+| NO | NO | NO | NO | NO | NO |    |    | MPRV | VOLD | VOLU | MNXT | NO | NO |
+| NO | NO | NO | NO | NO | NO |    |    | LEFT | DOWN | UP   | RGHT | NO | NO |
 | NO | NO | NO | NO | NO | NO | NO | NO | HOME | END  | MPLY | MUTE | NO | NO |
 
 #+NAME: lily58-navigation-layer-thumb

@@ -770,17 +770,19 @@ Enforce that ~DONE~ can be set only if all children have ~DONE~ set:
   tags:
   - ~emacs~
   - ~linux~
+  - ~notes~
   - ~work~
   - ~uni~
   - ~ML~
 
 #+begin_src emacs-lisp
-    (setq org-tag-alist
-          '(("emacs" . ?e)
-            ("linux" . ?x)
-            ("work" . ?w)
-            ("uni" . ?u)
-            ("ml" . ?m)))
+  (setq org-tag-alist
+        '(("emacs" . ?e)
+          ("linux" . ?x)
+          ("notes" . ?n)
+          ("work" . ?w)
+          ("uni" . ?u)
+          ("ml" . ?m)))
 #+end_src
 
 Agenda:
@@ -799,7 +801,11 @@ Clockin:
    org-agenda-files fi/agenda-files
    org-agenda-breadcrumbs-separator " ❱ "
    org-agenda-block-separator "──────────"
-   org-agenda-prefix-format " %i "
+   ;; org-agenda-prefix-format " %i "
+   org-agenda-include-inactive-timestamps t
+   org-agenda-log-mode-items '(closed clock state)
+   org-agenda-start-with-log-mode '(closed clock state)
+   org-agenda-tags-column 0
    )
   (setq org-agenda-custom-commands
         '(
@@ -816,11 +822,14 @@ Clockin:
                    (org-agenda-files (list fi/tasks-to-process-file fi/things-to-read-file))))
             (todo "NEXT"
                   ((org-agenda-overriding-header " NEXT")))
+            (todo "HOLD"
+                  ((org-agenda-overriding-header " HOLD")))
             (todo "TODO"
                   ((org-agenda-overriding-header " TODO")
                    (org-agenda-files (list fi/tasks-file))))
             (todo "TODO"
                   ((org-agenda-overriding-header " Readings")
+                   (org-agenda-prefix-format "%t")
                    (org-agenda-files (list fi/readings-file)))))
            )
           ))
@@ -837,7 +846,7 @@ Clockin:
   (defun fi/refile-reading ()
     (interactive)
     ;; (org-agenda-set-tags)
-    (setq org-refile-targets '((fi/readings-file :maxlevel . 2)))
+    (setq org-refile-targets '((fi/readings-file :maxlevel . 1)))
     (org-agenda-refile)
     (setq org-refile-targets nil)
     (org-agenda-redo-all))
@@ -862,6 +871,20 @@ Clockin:
   (fi/leader "a" #'fi/switch-to-agenda)
 #+end_src
 
+**** Org-super-agenda
+#+begin_src emacs-lisp
+  (use-package org-super-agenda
+    :config
+    (setq org-super-agenda-groups
+          '(
+            (:name "University"
+                   :time-grid t
+                   :tag "uni")
+            (:name "Emacs"
+                   :tag "emacs")
+            )))
+#+end_src
+
 *** Capture
 #+begin_src emacs-lisp
   (setq org-default-notes-file fi/tasks-to-process-file)
@@ -874,7 +897,7 @@ Clockin:
           ("t" "To-do task to process" entry (file fi/tasks-to-process-file) "* TODO%?\n" :empty-lines 1)
           ("r" "Thing to read" entry (file+headline fi/things-to-read-file "Manual") "* TODO %(org-cliplink-capture)\n" :empty-lines 1 :immediate-finish t)
           ("p" "Protocol text" entry (file+headline fi/things-to-read-file "Protocol") "* TODO %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?" :empty-lines 1 :immediate-finish t)
-          ("L" "Protocol link" entry (file+headline fi/things-to-read-file "Protocol") "* TODO [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n" :empty-lines 1 :immediate-finish t)
+          ("L" "Protocol link" entry (file+headline fi/things-to-read-file "Protocol") "* TODO [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n#+CREATED: [%<%Y-%m-%d %a %H:%M:%S>]\n" :empty-lines 1 :immediate-finish t)
           ))
   (global-set-key (kbd "C-c c") #'org-capture)
 #+end_src
@@ -1458,7 +1481,9 @@ Rename attached images with caption:
           (rename-file old-path new-path)
           (beginning-of-buffer)
           (while (re-search-forward old-path nil t)
-            (replace-match new-path)))
+            (replace-match new-path)
+            (org-toggle-inline-images)
+            (org-toggle-inline-images)))
         )))
 #+end_src
 Hydra config
@@ -1508,6 +1533,7 @@ Hydra config
   (global-display-line-numbers-mode t)
   ;; add hook to disable line numbers in org-mode
   (dolist (mode '(org-mode-hook
+                  org-agenda-mode-hook
                   shell-mode-hook
                   vterm-mode-hook))
     (add-hook mode (lambda () (display-line-numbers-mode 0))))
