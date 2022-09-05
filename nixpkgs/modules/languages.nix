@@ -9,7 +9,8 @@
 
     # python
     black
-    python39
+    # see emacx.nix for further information
+    # python39
     python39Packages.debugpy
     python39Packages.ipython
     python39Packages.pylint

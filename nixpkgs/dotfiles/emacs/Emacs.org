@@ -696,6 +696,28 @@ Vterm cannot be installed easily using nixos, for this reason the package manage
     (zoom-mode 1))
 #+end_src
 
+* Emacs application framework
+#+begin_src emacs-lisp
+  ;; (use-package eaf
+  ;;   :straight (eaf
+  ;;              :type git
+  ;;              :host github
+  ;;              :repo "emacs-eaf/emacs-application-framework"
+  ;;              :files ("*.el" "*.py" "core" "app" "*.json")
+  ;;              :includes (eaf-pdf-viewer eaf-browser) ; Straight won't try to search for these packages when we make further use-package invocations for them
+  ;;              :pre-build (("python" "install-eaf.py" "--install" "pdf-viewer" "browser" "--ignore-sys-deps"))
+  ;;              )
+  ;;   :init (evil-set-initial-state 'eaf-mode 'emacs))
+#+end_src
+
+** Browser
+#+begin_src emacs-lisp
+  ;; (use-package eaf-browser
+  ;;    :custom
+  ;;    (eaf-browser-continue-where-left-off t)
+  ;;    (eaf-browser-enable-adblocker t))
+#+end_src
+
 * Org mode
 Tasks are classified with these 5 elements:
 1. priority
