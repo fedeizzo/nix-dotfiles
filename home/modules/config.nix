@@ -22,7 +22,6 @@
         type = "indirect";
       };
       to = {
-        dir = "nixpkgs/flaketemplates";
         owner = "fedeizzo";
         repo = "nix-dotfiles";
         type = "github";

@@ -2,5 +2,12 @@
 SUPER_CMD="doas"
 mkdir -p $HOME/.config
 [ -f $HOME/.config/emacs/straight/versions/default.el ] || ln -s $(pwd)/dotfiles/emacs/default.el $HOME/.config/emacs/straight/versions/default.el
-$SUPER_CMD ln -s /home/fedeizzo/nix-dotfiles/* /etc/nixos/
+current_dir=$(pwd)
+for f in $(ls); do
+    if ! [[ -f /etc/nixos/${f} ]]; then
+	if ! [[ -d /etc/nixos/${f} ]]; then
+	    $SUPER_CMD ln -s ${current_dir}/${f} /etc/nixos/
+	fi
+    fi
+done
 $SUPER_CMD nixos-rebuild switch 
