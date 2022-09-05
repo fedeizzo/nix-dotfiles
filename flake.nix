@@ -31,6 +31,7 @@
       config = {
         username = "fedeizzo";
         hostname = "fedeizzo-nixos";
+        fs = "etx4";
       };
     in
     {
@@ -73,6 +74,10 @@
                 hostname = mkOption {
                   type = types.str;
                   description = "The hostname of the machine";
+                };
+                fs = mkOption {
+                  type = types.str;
+                  description = "Filesystem of the main disk";
                 };
               };
               inherit config;

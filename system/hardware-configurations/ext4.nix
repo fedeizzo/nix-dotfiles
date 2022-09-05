@@ -1,24 +1,9 @@
-{ config, lib, pkgs, modulesPath, ... }:
+{ lib, pkgs, modulesPath, ... }:
 
 {
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
   ];
-
-  boot.initrd.availableKernelModules = [ "thunderbolt" "vmd" "xhci_pci" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod" "sr_mod" "rtsx_pci_sdmmc" ];
-  boot.initrd.kernelModules = [ "i915" ];
-  boot.kernelModules = [ "kvm-intel" ];
-  boot.extraModulePackages = [ ];
-  boot.kernelParams = [
-    "i915.enable_fbc=1"
-    "i915.enable_psr=2"
-    "i915.edp_vswing=2"
-    # dell
-    "acpi_rev_override"
-    "mem_sleep_default=deep"
-    "nvidia-drm.modeset=1"
-  ];
-
   fileSystems."/" = {
     device = "/dev/disk/by-label/root";
     fsType = "ext4";

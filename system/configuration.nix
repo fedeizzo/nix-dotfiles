@@ -4,6 +4,7 @@
   imports = [
     ./boot.nix
     ./hardware.nix
+    # (./hardware-configurations + "/${config.fs}.nix")
     ./hardware-configurations/ext4.nix
     ./keymapTimeFont.nix
     ./pipewire.nix
