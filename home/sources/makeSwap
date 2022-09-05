@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+cmd=$1
+amount=$2
+
+[ -z $cmd ] && echo "Command needed" && exit
+
+case $cmd in
+    "make")
+        [ -z $amount ] && echo "Amount needed" && exit 1
+        doas fallocate -l $amount"G" /swap/tmp_swap
+        doas chmod 600 /swap/tmp_swap
+        doas mkswap /swap/tmp_swap
+        doas swapon /swap/tmp_swap
+        ;;
+    "delete")
+        doas swapoff /swap/tmp_swap
+        doas rm /swap/tmp_swap
+        ;;
+    *)
+        echo "No command $cmd"
+esac
+exit 0

@@ -1,0 +1,120 @@
+#!/usr/bin/env bash
+mod="Super"
+riverctl attach-mode bottom
+
+# BORDER
+riverctl border-width 2
+riverctl border-color-focused 0xB48EAD55
+riverctl border-color-unfocused 0x2E3440FF
+riverctl border-color-urgent 0xA3BE8C55
+
+# FOCUS
+riverctl focus-follows-cursor normal
+riverctl set-cursor-warp on-output-change
+
+# RIVER
+riverctl default-layout rivertile
+riverctl map normal $mod+Shift Z exit
+riverctl map normal $mod+Shift C spawn '/home/fedeizzo/.config/river/init'
+riverctl map normal $mod       X spawn 'swaylock --indicator-radius 0 -i $HOME/.config/river/lock-screen.jpg'
+## Float and client side decorations
+riverctl float-filter-add app-id float
+riverctl float-filter-add title "popup title with spaces"
+riverctl float-filter-add app-id "telegramdesktop"
+riverctl float-filter-add app-id "floatingkitty"
+riverctl float-filter-add app-id "firefox"
+riverctl float-filter-add app-id "anki"
+riverctl float-filter-add app-id "org.inkscape.Inkscape"
+riverctl float-filter-add app-id "com.github.maoschanz.drawing"
+riverctl float-filter-remove app-id "firefox"
+riverctl csd-filter-remove title "*"
+## Window
+riverctl map normal $mod       Q     close
+riverctl map normal $mod       Space toggle-fullscreen
+riverctl map normal $mod       F     toggle-float
+riverctl map normal $mod       U     zoom
+riverctl map normal $mod       L     focus-view next
+riverctl map normal $mod       H     focus-view previous
+riverctl map normal $mod+Shift L     swap next
+riverctl map normal $mod+Shift H     swap previous
+riverctl map normal $mod       Tab   focus-output next
+riverctl map normal $mod+Shift Tab   send-to-output next
+## Tag
+all_tags=$(((1 << 32) - 1))
+riverctl map normal $mod S spawn '/home/fedeizzo/.sources/river_tag_manager'
+riverctl map normal $mod 0 set-focused-tags $all_tags
+## Scratchpad
+scratch_tag=128
+riverctl map normal $mod       I toggle-focused-tags ${scratch_tag}
+riverctl map normal $mod+Shift I set-view-tags       ${scratch_tag}
+all_but_scratch_tag=$(( ((1 << 32) - 1) ^ $scratch_tag ))
+riverctl spawn-tagmask ${all_but_scratch_tag}
+## Resize
+riverctl declare-mode resize
+riverctl map         normal $mod R         enter-mode   resize
+riverctl map         resize None Escape    enter-mode   normal
+riverctl map -repeat resize $mod H         resize       horizontal -10
+riverctl map -repeat resize $mod J         resize       vertical    10
+riverctl map -repeat resize $mod K         resize       vertical   -10
+riverctl map -repeat resize $mod L         resize       horizontal  10
+riverctl map-pointer normal $mod BTN_LEFT  move-view
+riverctl map-pointer resize $mod BTN_LEFT  resize-view
+## Passthrough
+riverctl declare-mode passthrough
+riverctl map normal Super F11 enter-mode passthrough
+riverctl map passthrough Super F11 enter-mode normal
+## Media
+riverctl map normal None XF86AudioRaiseVolume  spawn 'pamixer --increase 5'
+riverctl map normal None XF86AudioLowerVolume  spawn 'pamixer --decrease 5'
+riverctl map normal None XF86AudioMute         spawn 'pamixer -t'
+riverctl map normal None XF86AudioMicMute      spawn 'pactl set-source-mute @DEFAULT_SOURCE@ toggle'
+riverctl map normal None XF86MonBrightnessDown spawn 'brightnessctl set 10%-'
+riverctl map normal None XF86MonBrightnessUp   spawn 'brightnessctl set +10%'
+riverctl map normal None XF86AudioPlay         spawn 'playerctl play-pause'
+riverctl map normal None XF86AudioNext         spawn 'playerctl next'
+riverctl map normal None XF86AudioPrev         spawn 'playerctl previous'
+
+# KEYBINDS
+riverctl map normal $mod       Return spawn 'kitty'
+riverctl map normal $mod       E      spawn 'emacsclient -c'
+riverctl map normal $mod       W      spawn 'firefox'
+riverctl map normal $mod+Shift N      spawn 'swaync-client -t -sw'
+riverctl map normal $mod       D      spawn 'wofi --show drun,dmenu'
+riverctl map normal $mod       B      spawn '/home/fedeizzo/.sources/fillBwPassword'
+riverctl map normal $mod       P      spawn 'grim -g $(slurp) - | swappy -f -'
+riverctl map normal $mod       A      spawn 'kitty /home/fedeizzo/.sources/lfrun'
+riverctl map normal $mod       O      spawn 'pkill -SIGUSR1 "waybar*"'
+riverctl map normal $mod       C      spawn 'clipman pick -t wofi'
+
+# INPUT
+## Trackpad
+for pad in $(riverctl list-inputs | grep -i 'touchpad'); do
+    riverctl input $pad accel-profile none
+    riverctl input $pad click-method clickfinger
+    riverctl input $pad drag enabled
+    riverctl input $pad drag-lock enabled
+    riverctl input $pad disable-while-typing enabled
+    riverctl input $pad natural-scroll enabled
+    riverctl input $pad tap enabled
+    riverctl input $pad scroll-method two-finger
+done
+
+
+riverctl spawn 'systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP'
+riverctl spawn 'dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP'
+
+config="${XDG_CONFIG_HOME:-$HOME/.config}/gtk-3.0/settings.ini"
+if [ ! -f "$config" ]; then exit 1; fi
+
+gnome_schema="org.gnome.desktop.interface"
+gtk_theme="$(grep 'gtk-theme-name' "$config" | sed 's/.*\s*=\s*//')"
+icon_theme="$(grep 'gtk-icon-theme-name' "$config" | sed 's/.*\s*=\s*//')"
+cursor_theme="$(grep 'gtk-cursor-theme-name' "$config" | sed 's/.*\s*=\s*//')"
+font_name="$(grep 'gtk-font-name' "$config" | sed 's/.*\s*=\s*//')"
+gsettings set "$gnome_schema" gtk-theme "$gtk_theme"
+gsettings set "$gnome_schema" icon-theme "$icon_theme"
+gsettings set "$gnome_schema" cursor-theme "$cursor_theme"
+gsettings set "$gnome_schema" font-name "$font_name"
+gsettings set org.gnome.desktop.wm.preferences button-layout ""
+
+bash ~/.config/river/process.sh

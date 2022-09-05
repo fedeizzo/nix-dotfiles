@@ -1,0 +1,47 @@
+xsetroot -cursor-name left_ptr &
+
+# Configure NTP
+timedatectl set-ntp true
+
+# Start notification daemon
+dunst &
+
+# Start flameshot
+flameshot &
+
+# Start clipboardManager
+xcmenu -d
+xcmenu -C
+
+# Configure display
+autorandr --change
+
+# Set wallpaper
+feh --bg-scale --no-fehbg /home/fedeizzo/.xmonad/wallpaper.png
+
+# Update lockscreen images
+betterlockscreen -u /home/fedeizzo/.xmonad/wallpaper.png &
+
+# Launch lockscreen manager
+xss-lock -l -- betterlockscreen -l blur --off 60 --blur 0.5 &
+
+# Update spotlight cache
+/home/fedeizzo/.sources/updateSpotlightCache.sh &
+
+# run bitwarden agent
+/home/fedeizzo/.nix-profile/bin/rbw-agent
+
+# Run emanote
+# cd /home/fedeizzo/zettelkasten && /home/fedeizzo/.nix-profile/bin/emanote &
+
+# run trayer system
+/home/fedeizzo/.nix-profile/bin/trayer \
+    --monitor "primary" \
+    --edge "top" \
+    --align "right" \
+    --widthtype "request" \
+    --transparent true \
+    --alpha 255 \
+    --height 14 \
+    --distance 2 \
+    --distancefrom "top" &

@@ -1,0 +1,71 @@
+{
+    "position": "top", 
+    "height": 14,
+    "modules-left": ["sway/workspaces", "wlr/workspaces", "river/tags"],
+    "modules-right": ["cpu", "temperature", "memory", "pulseaudio", "network", "battery", "clock", "tray"],
+    // Modules configuration
+    "sway/workspaces": {
+       "disable-scroll": true,
+       "all-outputs": false,
+       "format": "{name}",
+    },
+    "wlr/workspaces": {
+       "disable-scroll": true,
+       "all-outputs": true,
+       "format": "{name}",
+    },
+    "river/tags": {
+       "num-tags": 8,
+       "tag-labels": ["F: ", "E: ", "K: ", "W:", "N: ", "L: ", "C: ", ""],
+       "disable-click": false,
+    },
+    "temperature": {
+        "thermal-zone": 7,
+        "critical-threshold": 80,
+    },
+    "cpu": {
+        "format": " {usage}%"
+    },
+    "memory": {
+        "format": " {percentage}%",
+        "interval": 10
+    },
+	"clock": {
+		"format": " {:%H:%M}",
+        	"tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+        	"format-alt": "{:%Y-%m-%d}"
+	},
+	"battery": {
+        	"states": {
+            		"warning": 30,
+            		"critical": 15
+        	},
+        	"format": "{icon} {capacity}%",
+        	"format-charging": " {capacity}%",
+        	"format-plugged": " {capacity}%",
+        	"format-alt": "{time} {icon}",
+        	"format-full": " {capacity}%",
+        	"format-icons": ["", "", ""]
+	},
+	"network": {
+        	"format-wifi": "  {essid}",
+        	"format-ethernet": "{ifname}: {ipaddr}/{cidr} ",
+        	"format-linked": "{ifname} (No IP) ",
+        	"format-disconnected": "󰤮 Disconnected",
+        	"format-alt": "{ifname}: {ipaddr}/{cidr}"
+	},
+	"pulseaudio": {
+		"format": "{icon}  {volume}%",
+        	"format-muted": " Muted",
+        "format-icons": {
+            "headphone": "",
+            "hands-free": "",
+            "headset": "",
+            "phone": "",
+            "portable": "",
+            "car": "",
+            "default": ["", "", ""]
+        },
+        "on-click": "pavucontrol"
+    }
+}

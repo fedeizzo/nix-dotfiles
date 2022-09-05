@@ -7,3 +7,4 @@ nixpkgs/config.nix
 *~
 .build
 .envrc
+\#*

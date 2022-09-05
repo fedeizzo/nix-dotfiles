@@ -1,0 +1,18 @@
+profile work {
+    output "Sharp Corporation 0x14D1 0x00000000" enable mode 1920x1200@59.950Hz
+    output "Sharp Corporation 0x14D1 0x00000000" position 0,1080
+    output "Dell Inc. DELL P2411H NRPP509R1TCU" enable mode 1920x1080@60.000Hz
+    output "Dell Inc. DELL P2411H NRPP509R1TCU" position 0,0
+}
+
+profile home {
+    output eDP-1 mode 1920x1200@59.950Hz
+    output eDP-1 position 0,0
+    output DP-6 mode 1920x1080@60.000Hz
+    output DP-6 position 1200,0
+}
+
+profile laptop {
+    output "Sharp Corporation 0x14D1 0x00000000" mode 1920x1200@59.950Hz
+}
+

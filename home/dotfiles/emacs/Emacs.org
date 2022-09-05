@@ -1,0 +1,1594 @@
+#+title: Emacs configuration
+#+PROPERTY: header-args:emacs-lisp :tangle ~/.config/emacs/init.el
+
+* init
+~use-package~ keywords:
+- ~:init~ code exectued before package is loaded;
+- ~:config~ code exectued after package is loaded, this code is executed lazily;
+- ~:commands~ creates an autoload for commands for lazy loading. This allow to define keybind without the ~'~ 
+- ~:bind~ new keybinds after package is loaded. Defined  in this way ~:bind (("M-o l" . my-command))~;
+- ~:bind-keymap~ is the similar to ~:bind~ and allows to specify keybind command instead of commands;
+- ~:custom~ defines customizable variable of package (for very particular cases, most of the time is better to use ~setq~ in the ~:init~ or ~:config~ section);
+- ~:load-path~ allows to laod a package from a directory inside the filesystem or another source;
+- ~:hook~ add functions into package hookds.
+
+~straight~:
+- ~straight-normalize-all~ updates packages to what is written inside the config file;
+- ~straight-fetch-all~ self-explainatory;
+- ~straight-merge-all~ self-explainatory;
+- ~straight-freeze-versions~ dumps all versions in the lockfile.
+
+#+begin_src emacs-lisp
+  (defvar bootstrap-version)
+  (let ((bootstrap-file
+         (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+        (bootstrap-version 5))
+    (unless (file-exists-p bootstrap-file)
+      (with-current-buffer
+          (url-retrieve-synchronously
+           "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+           'silent 'inhibit-cookies)
+        (goto-char (point-max))
+        (eval-print-last-sexp)))
+    (load bootstrap-file nil 'nomessage))
+  (setq package-enable-at-startup nil)
+  (straight-use-package 'use-package)
+  (use-package straight
+    :custom (straight-use-package-by-default t))
+  ;; (setq package-archives '(("melpa" . "https://melpa.org/packages/")
+  ;;                          ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+  ;;                          ("elpa" . "https://elpa.gnu.org/packages/")))
+
+  (setq warning-minimum-level :error)
+  (defun dw/org-mode-setup ()
+    (org-indent-mode)
+    (variable-pitch-mode 1)
+    (auto-fill-mode 0)
+    (visual-line-mode 1)
+    (setq evil-auto-indent nil))
+
+  (use-package org
+    :straight '(org :type built-in)
+    :hook (org-mode . dw/org-mode-setup)
+    :config
+    (setq org-ellipsis " ▾"
+          org-hide-emphasis-markers t
+          org-return-follows-link t
+          org-confirm-babel-evaluate nil
+          org-catch-invisible-edits 'show
+          org-src-window-setup 'current-window))
+  (use-package org-contrib)
+#+end_src
+
+* UI
+** Hiding elements
+#+begin_src emacs-lisp
+  (setq
+   inhibit-startup-message t
+   use-file-dialog nil
+   visible-bell nil)
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1)
+  (menu-bar-mode -1)
+  (tooltip-mode -1)
+#+end_src
+** Font
+#+begin_src emacs-lisp
+  (defun fi/font-config (frame)
+    (set-face-attribute 'default nil :font "JetBrains Mono" :weight 'normal :height 105)
+    (set-face-attribute 'fixed-pitch nil :font "JetBrains Mono" :weight 'normal :height 105)
+    (set-face-attribute 'variable-pitch nil :font "JetBrains Mono" :height 105 :weight 'normal))
+  (add-hook 'after-make-frame-functions #'fi/font-config)
+  (use-package ligature
+    :straight nil
+    :load-path "~/.config/emacs/ligature.el"
+    :config
+    ;; Enable all JetBrains Mono ligatures in programming modes
+    (ligature-set-ligatures 'prog-mode '("-|" "-~" "---" "-<<" "-<" "--" "->" "->>" "-->" "///" "/=" "/=="
+                                         "/>" "//" "/*" "*>" "***" "*/" "<-" "<<-" "<=>" "<=" "<|" "<||"
+                                         "<|||" "<|>" "<:" "<>" "<-<" "<<<" "<==" "<<=" "<=<" "<==>" "<-|"
+                                         "<<" "<~>" "<=|" "<~~" "<~" "<$>" "<$" "<+>" "<+" "</>" "</" "<*"
+                                         "<*>" "<->" "<!--" ":>" ":<" ":::" "::" ":?" ":?>" ":=" "::=" "=>>"
+                                         "==>" "=/=" "=!=" "=>" "===" "=:=" "==" "!==" "!!" "!=" ">]" ">:"
+                                         ">>-" ">>=" ">=>" ">>>" ">-" ">=" "&&&" "&&" "|||>" "||>" "|>" "|]"
+                                         "|}" "|=>" "|->" "|=" "||-" "|-" "||=" "||" ".." ".?" ".=" ".-" "..<"
+                                         "..." "+++" "+>" "++" "[||]" "[<" "[|" "{|" "??" "?." "?=" "?:" "##"
+                                         "###" "####" "#[" "#{" "#=" "#!" "#:" "#_(" "#_" "#?" "#(" ";;" "_|_"
+                                         "__" "~~" "~~>" "~>" "~-" "~@" "$>" "^=" "]#"))
+    ;; Enables ligature checks globally in all buffers. You can also do it
+    ;; per mode with `ligature-mode'.
+    (global-ligature-mode t))
+#+end_src
+
+** Theme
+#+begin_src emacs-lisp
+  (use-package doom-themes
+    :config
+    (setq doom-themes-enable-bold t)
+    (setq doom-themes-enable-italic t)
+    (load-theme 'doom-nord t)
+    (doom-themes-visual-bell-config)
+    (doom-themes-org-config))
+
+  ;; modeline
+  (use-package doom-modeline
+    :init (doom-modeline-mode 1)
+    (setq doom-modeline-height 15))
+
+  ;; icons
+  (use-package all-the-icons
+    :if (display-graphic-p))
+#+end_src
+
+* Performance
+#+begin_src emacs-lisp
+  ;; The default is 800 kilobytes.  Measured in bytes.
+  (setq gc-cons-threshold (* 50 1000 1000))
+  (setq read-process-output-max (* 1024 1024))
+  ;; enable compilation of packages
+  (setq package-native-compile t)
+
+
+  ;; Profile emacs startup
+  (add-hook 'emacs-startup-hook
+            (lambda ()
+              (message "*** Emacs loaded in %s seconds with %d garbage collections."
+                       (emacs-init-time "%.2f")
+                       gcs-done)))  ;; speed up startup time
+  (setq frame-inhibit-implied-resize t)
+  ;; disable package manager check on startup
+  (setq package-enable-at-startup nil)
+  (setq package-quickstart nil)
+#+end_src
+* Clean emacs directory
+#+begin_src emacs-lisp
+  ;; Change the user-emacs-directory to keep unwanted things out of ~/.emacs.d
+  (setq user-emacs-directory (expand-file-name "~/.cache/emacs/")
+        url-history-file (expand-file-name "url/history" user-emacs-directory))
+
+  ;; Keep customization settings in a temporary file (thanks Ambrevar!)
+  (setq custom-file
+        (if (boundp 'server-socket-dir)
+            (expand-file-name "custom.el" server-socket-dir)
+          (expand-file-name (format "emacs-custom-%s.el" (user-uid)) temporary-file-directory)))
+  (load custom-file t)
+#+end_src
+* General config
+#+begin_src emacs-lisp
+  (setq large-file-warning-threshold nil)
+  (setq vc-follow-symlinks t)
+  (setq ad-redefinition-action 'accept)
+  (setq create-lockfiles nil)
+#+end_src
+* Keymaps
+** Global
+#+begin_src emacs-lisp
+  ;; use esc to esc from command mode, find files, etc
+  (global-set-key (kbd "<escape>") 'keyboard-escape-quit)
+  ;; global-set-key sets the keymap for all modes
+  ;; define-key assicoates the keymap only to a specific mode (emacs-lisp-mode-map variable to add maps)
+  (global-set-key (kbd "M-o") 'bufler-switch-buffer)
+#+end_src
+
+* Packages
+** Better command - amx
+#+begin_src emacs-lisp
+    (use-package amx
+      :config
+      (amx-mode 1))
+#+end_src
+
+** Completion - ivy counsel helpful company
+*** Minibuffer
+#+begin_src emacs-lisp
+  (use-package ivy
+    :diminish ; diminish prevent to show the mode in the mode list in the mode line
+    :bind (("C-s" . swiper)
+           :map ivy-minibuffer-map
+           ("TAB" . ivy-alt-done)
+           ("C-l" . ivy-alt-done)
+           ("C-n" . ivy-net-line)
+           ("C-p" . ivy-previous-line)
+           :map ivy-switch-buffer-map
+           ("C-l" . ivy-done)
+           ("C-p" . ivy-previous-line)
+           ("C-d" . ivy-switch-buffer-kill)
+           :map ivy-reverse-i-search-map
+           ("C-p" . ivy-previous-line)
+           ("C-d" . ivy-reverse-i-search-kill))
+    :config
+    (ivy-mode 1))
+  ;; better minibuffer command
+  (use-package counsel
+    :bind (("M-x" . counsel-M-x)
+           ("C-x b" . counsel-ibuffer)
+           ("C-x C-f" . counsel-find-file)
+           :map minibuffer-local-map
+           ("C-r" . 'counsel-minibuffer-history)
+           )
+    :config
+    (setq ivy-initial-inputs-alist nil))
+  (use-package ivy-rich
+    :init (ivy-rich-mode 1))
+
+  ;; better help message
+  (use-package helpful
+    :custom
+    (counsel-describe-function #'helpful-callable)
+    (counsel-describe-function #'helpful-variable)
+    :bind
+    ([remap describle-function] . counsel-describe-function)
+    ([remap describle-command] . helpful-command)
+    ([remap describle-variable] . counsel-describe-variable)
+    ([remap describle-key] . helpful-key))
+#+end_src
+*** Anything
+#+begin_src emacs-lisp
+  (use-package company
+    :config
+    (add-hook 'after-init-hook 'global-company-mode)
+    (setq company-tooltip-align-annotations t)
+    (setq company-dabbrev-minimum-length 4)
+    (setq company-files-exclusions '(".git/" ".DS_Store"))
+    (setq company-idle-delay 0.1)
+    (setq company-backends '((
+                              company-yasnippet
+                              company-capf
+                              company-files
+                              ;; company-dabbrev-code
+                              ;; company-dabbrev
+                              ))))
+  (use-package company-box
+    :hook (company-mode . company-box-mode))
+#+end_src
+** Deft for fast plain text files searching - disabled
+#+begin_src emacs-lisp
+  ;; (use-package deft
+  ;;   :commands (deft)
+  ;;   :config
+  ;;   (setq deft-extensions '("org")
+  ;;         deft-directory "~/zettelkasten/"
+  ;;         deft-recursive t
+  ;;         deft-use-filename-as-title t))
+#+end_src
+
+** TODO Dired
+#+begin_src emacs-lisp
+  (setq dired-listing-switches "-aBhl --group-directories-first")
+#+end_src
+
+** Direnv and lorri integration
+#+begin_src emacs-lisp
+  (use-package direnv
+    :config
+    (setq direnv-always-show-summary nil)
+    (direnv-mode))
+#+end_src
+
+** Elfeed
+#+begin_src emacs-lisp
+  ;; (use-package elfeed
+  ;;   :config
+  ;;   (setq elfeed-feeds
+  ;; 	'("http://nullprogram.com/feed/"
+  ;;           "https://planet.emacslife.com/atom.xml"))
+  ;;   )
+#+end_src
+
+** Evil mode
+#+begin_src emacs-lisp
+  (use-package evil
+    :init
+    (setq evil-want-integration t
+          evil-want-keybinding nil
+          evil-want-C-u-scroll t
+          evil-want-C-i-jump nil
+          evil-respect-visual-line-mode t
+          evil-undo-system 'undo-tree)
+    :config
+    (evil-mode 1)
+
+    (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
+    (define-key evil-insert-state-map (kbd "C-h") 'evil-delete-backward-char-and-join)
+
+    ;; Use visual line motions even outside of visual-line-mode buffers
+    (evil-global-set-key 'motion (kbd "<down>") 'evil-next-visual-line)
+    (evil-global-set-key 'motion (kbd "<up>") 'evil-previous-visual-line)
+    (evil-global-set-key 'motion "j" 'evil-next-visual-line)
+    (evil-global-set-key 'motion "k" 'evil-previous-visual-line))
+
+  (use-package evil-collection
+    :after evil
+    :config
+    (evil-collection-init)
+    (evil-collection-define-key 'normal 'dired-mode-map
+      "h" 'dired-up-directory
+      "l" 'dired-find-file)
+    )
+  (use-package evil-commentary
+    :after evil
+    :config
+    (evil-commentary-mode 1))
+#+end_src
+
+** Buffer manager - bufler
+#+begin_src emacs-lisp
+  (use-package bufler
+    :config
+    (bufler-mode 1)
+    (evil-collection-define-key 'normal 'bufler-list-mode-map
+      (kbd "RET") 'bufler-list-buffer-switch
+      (kbd "M-RET") 'bufler-list-buffer-peek
+      "D" 'bufler-list-buffer-kill))
+#+end_src
+
+** Folding - origami
+#+begin_src emacs-lisp
+  (use-package s)
+  (use-package dash)
+  (use-package origami
+    :config
+    (origami-mode))
+#+end_src
+
+** Format - format-all
+#+begin_src emacs-lisp
+  (use-package format-all
+    :config
+    (add-hook 'prog-mode-hook 'format-all-mode)
+    (add-hook 'format-all-mode-hook 'format-all-ensure-formatter))
+#+end_src
+
+** Hydra
+Installation
+#+begin_src emacs-lisp
+  (use-package hydra)
+  ;; (use-package hydra-postframe)
+  (use-package major-mode-hydra
+    :bind
+    ("M-SPC" . major-mode-hydra))
+  (require 'hydra)
+#+end_src
+Hydra for elisp major mode
+#+begin_src emacs-lisp
+  (major-mode-hydra-define emacs-lisp-mode nil
+    ("Eval"
+     (("b" eval-buffer "buffer")
+      ("e" eval-defun "defun")
+      ("r" eval-region "region"))
+     "REPL"
+     (("I" ielm "ielm"))
+     "Test"
+     (("t" ert "prompt")
+      ("T" (ert t) "all")
+      ("F" (ert :failed) "failed"))
+     "Doc"
+     (("d" describe-foo-at-point "thing-at-pt")
+      ("f" describe-function "function")
+      ("v" describe-variable "variable")
+      ("i" info-lookup-symbol "info lookup"))))
+#+end_src
+Hydra for org-roam mode
+** Keybind manager using leader
+This section must be the last one because it should stay after any function declaration
+
+#+begin_src emacs-lisp
+    (use-package general
+          :config
+          (general-evil-setup t)
+          (general-override-mode 1)
+
+
+          (general-create-definer fi/leader
+            :states 'normal
+            :keymaps '(override)
+            :prefix "SPC")
+
+          (fi/leader
+            "s" 'save-buffer
+            ;; origami
+            "zc" 'origami-close-node
+            "zC" 'origami-close-all-nodes
+            "zo" 'origami-open-node
+            "zO" 'origami-open-all-nodes
+            "zr" 'origami-close-node-recursively
+            "zR" 'origami-open-node-recursively))
+#+end_src
+
+** hledger
+#+begin_src emacs-lisp
+  (use-package hledger-mode
+    :config
+    (setq
+     hledger-jfile "~/docs/finance/finance.journal"
+     hledger-currency-string "€"
+     hledger-top-income-account "revenue"
+     hledger-ratios-income-accounts "revenue"
+     hledger-year-of-birth 1999
+     hledger-life-expectancy 80
+     ))
+
+  (add-to-list 'auto-mode-alist '("\\.journal\\'" . hledger-mode))
+  ;; (add-to-list 'align-rules-list
+  ;;              `(hledger-accounts
+  ;;                (regexp . ,(rx (+ space)
+  ;;                               (+? anything)
+  ;;                               (group-n 1 space (+ space)
+  ;;                                        (? ?-)
+  ;;                                        (+ digit)
+  ;;                                        (? ?.)
+  ;;                                        (* digit))))
+  ;;                (group . 1)
+  ;;                (spacing . 2)
+  ;;                (justify . t)
+  ;;                (separate . entire)
+  ;;                (modes . '(hledger-mode))))
+
+  (defun fi/hledger-format ()
+    "Format an hledger buffer with align"
+    (interactive)
+    (align (point-min) (point-max)))
+#+end_src
+** LSP
+#+begin_src emacs-lisp
+  (use-package lsp-mode
+    :init
+    (setq lsp-keymap-prefix nil)
+    :hook (
+           (lsp-mode . lsp-enable-which-key-integration)
+           (sh-mode . lsp))
+    :commands lsp
+    :config
+    (setq lsp-completion-provider :none)
+    (setq lsp-enable-imenu nil)
+    (setq lsp-headerline-breadcrumb-enable nil)
+    (setq lsp-modeline-code-actions-enable nil)
+    (setq lsp-modeline-diagnostics-enable nil)
+    (setq lsp-modeline-workspace-status-enable nil)
+    (setq lsp-lens-enable nil)
+    (setq lsp-signature-auto-activate nil)
+    (lsp-modeline-code-actions-mode nil)
+    (lsp-modeline-diagnostics-mode nil)
+    (lsp-headerline-breadcrumb-mode nil)
+    (advice-add 'lsp :before #'direnv-update-environment)
+    )
+  (use-package lsp-ui
+    :after lsp-mode
+    :config
+    (setq lsp-ui-sildeline-show-diagnostics t
+          lsp-ui-sideline-show-hover nil
+          lsp-ui-sideline-show-code-actions nil
+          lsp-ui-sideline-show-update-mode "line"
+          lsp-ui-sideline-delay 0.2)
+    (setq lsp-ui-peek-enable t)
+    (setq lsp-ui-doc-enable t
+          lsp-ui-doc-position 'at-point
+          lsp-ui-doc-show-with-mouse nil 
+          lsp-ui-doc-show-with-cursor nil
+          lsp-ui-doc-include-signature t
+          lsp-ui-doc-max-height 40
+          lsp-ui-doc-use-webkit nil)
+    (setq lsp-ui-imenu-enable nil)
+    (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
+    (define-key lsp-ui-mode-map [remap xref-find-references] #'lsp-ui-peek-find-references))
+  (use-package flycheck
+    :after lsp-mode)
+  (use-package flycheck-hledger
+    :after (flycheck ledger-mode)
+    :demand t)
+  (use-package lsp-ivy
+    :after lsp-mode)
+#+end_src
+
+#+begin_src emacs-lisp
+  (pretty-hydra-define lsp-hydra-main (:color blue :title "LspMode" :quit-key "q")
+    ("Buffer"
+     (("f" lsp-format-buffer "format buffer")
+      ("r" lsp-rename "rename symbol")
+      ("x" lsp-execute-code-action "code action"))
+     "Documentation"
+     (("h" lsp-ui-doc-glance "doc glance")
+      ("d" lsp-ui-peek-find-definitions "definition")
+      ("n" lsp-describe-thing-at-point "doc nav")
+      ("c" lsp-rust-analyzer-open-external-docs "rust open external docs"))
+     "Rust"
+     (("c" lsp-rust-analyzer-open-external-docs "rust open external docs")))
+    )
+  (fi/leader "l" 'lsp-hydra-main/body)
+#+end_src
+
+*** python
+#+begin_src emacs-lisp
+  (use-package lsp-pyright
+    :ensure t
+    :hook (python-mode . (lambda ()
+                           (require 'lsp-pyright)
+                           (lsp))))
+#+end_src
+*** nix
+#+begin_src emacs-lisp
+  (use-package nix-mode
+    :mode "\\.nix\\'")
+  (setq lsp-nix-server-path "rnix-lsp")
+  (lsp-register-client
+   (make-lsp-client :new-connection (lsp-stdio-connection '("rnix-lsp"))
+                    :major-modes '(nix-mode)
+                    :server-id 'nix))
+#+end_src
+*** bash
+#+begin_src emacs-lisp
+
+#+end_src
+
+*** rust
+#+begin_src emacs-lisp
+  (use-package rustic)
+#+end_src
+
+*** yaml
+#+begin_src emacs-lisp
+  (use-package yaml-mode
+    :config
+    (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
+    (add-to-list 'auto-mode-alist '("\\.yaml\\'" . yaml-mode)))
+#+end_src
+
+** TODO Magit
+#+begin_src emacs-lisp
+  (use-package magit)
+#+end_src
+
+** Pairs - rainbow-delimiters
+#+begin_src emacs-lisp
+  (use-package rainbow-delimiters
+    :hook (prog-mode . rainbow-delimiters-mode))
+  (electric-pair-mode 1)
+#+end_src
+
+** Pdf tools
+#+begin_src emacs-lisp
+  (use-package tablist)
+  (use-package pdf-tools)
+  (pdf-tools-install)
+#+end_src
+
+** Autoclose help buffers - popwin
+#+begin_src emacs-lisp
+  (use-package popwin
+    :config
+    (popwin-mode 1))
+#+end_src
+
+** Project manager - projectile
+#+begin_src emacs-lisp
+  (use-package projectile
+    :diminish projectile-mode
+    :config (projectile-mode)
+    :custom (projectile-completion-system 'ivy)
+    :init
+    (setq projectile-project-search-path '("~/fbk" "~/personalProject" "~/uni")
+          projectile-switch-project-action #'project-dired
+          projectile-indexing-methond 'alien
+          projectile-sort-order 'modification-time
+          projectile-completion-system 'ivy)
+    )
+#+end_src
+Hydra
+#+begin_src emacs-lisp
+  (pretty-hydra-define projectile-hydra-main (:color blue :title "Projectile" :quit-key "q")
+    ("Global"
+     (("p" projectile-switch-project "switch project"))
+     "Current"
+     (("f" projectile-find-file "find file")
+      ("g" fi/ripgrep-regexp "search all")
+      ("t" projectile-run-vterm "open terminal")
+      ("k" projectile-kill-buffers "close project")))
+    )
+  (fi/leader "p" 'projectile-hydra-main/body)
+#+end_src
+
+** Search in all files - ripgrep
+#+begin_src emacs-lisp
+  (defun fi/ripgrep-regexp (regex)
+    "Custom ripgrep-regexp that adds directory with projectile"
+    (interactive "sRipgrep search for: ")
+    (ripgrep-regexp regex (projectile-acquire-root)))
+  (use-package ripgrep)
+#+end_src
+
+** Search - swiper
+#+begin_src emacs-lisp
+  (use-package swiper)
+#+end_src
+
+** Snippets - yasnippet
+#+begin_src emacs-lisp
+  (use-package yasnippet
+    :config
+    (yas-global-mode 1))
+  (use-package yasnippet-snippets)
+  (defun fi/my-org-latex-yas ()
+    "Activate org and LaTeX yas expansion in org-mode buffers."
+    (yas-minor-mode)
+    (yas-activate-extra-mode 'latex-mode))
+
+  (add-hook 'org-mode-hook #'fi/my-org-latex-yas)
+#+end_src
+
+** Save on events - super-save
+#+begin_src emacs-lisp
+  (use-package super-save
+    :config
+    (super-save-mode 1))
+#+end_src
+
+** Spell
+#+begin_src emacs-lisp
+  (setq-default ispell-program-name "aspell")
+  (defun fi/org-ispell ()
+    "Configure `ispell-skip-region-alist' for `org-mode'."
+    (make-local-variable 'ispell-skip-region-alist)
+    (add-to-list 'ispell-skip-region-alist '(org-property-drawer-re))
+    (add-to-list 'ispell-skip-region-alist '("~" "~"))
+    (add-to-list 'ispell-skip-region-alist '("=" "="))
+    (add-to-list 'ispell-skip-region-alist '("^#\\+BEGIN_SRC" . "^#\\+END_SRC")))
+  (add-hook 'org-mode-hook #'fi/org-ispell)
+  (add-hook 'org-mode-hook 'flyspell-mode)
+  (use-package flyspell-correct
+    :after flyspell)
+#+end_src
+
+** Telegram - disabled
+#+begin_src emacs-lisp
+  ;; (setq telega-directory "/home/fedeizzo/.local/share/telega")
+#+end_src
+
+** Terminal - vterm
+Vterm cannot be installed easily using nixos, for this reason the package management is leaved to nixos. Please refer to ~emacs.nix~ module.
+
+#+begin_src emacs-lisp
+  ;; (use-package vterm)
+  (setq vterm-kill-buffer-on-exit t)
+#+end_src
+
+** Text jumping - avy
+#+begin_src emacs-lisp
+  (use-package avy
+    :config
+    (fi/leader
+      "f" 'avy-goto-char-2))
+#+end_src
+
+** Treesitter
+#+begin_src emacs-lisp
+  (use-package tree-sitter
+    :config
+    (global-tree-sitter-mode)
+    (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
+  (use-package tree-sitter-langs)
+#+end_src
+
+** Undotree
+#+begin_src emacs-lisp
+  (use-package undo-tree
+    :config
+    (global-undo-tree-mode)
+    (setq undo-tree-auto-save-history nil
+          undo-tree-visualizer-diff t
+          undo-tree-visualizer-relative-timestamps t
+          undo-tree-visualizer-timestamps t))
+#+end_src
+
+** Which key
+#+begin_src emacs-lisp
+  (use-package which-key
+    :init (which-key-mode)
+    :diminish which-key-mode
+    :config
+    (setq which-key-idle-delay 0.3))
+
+#+end_src
+
+** Window balancing
+#+begin_src emacs-lisp
+  (use-package zoom
+    :config
+    (zoom-mode 1))
+#+end_src
+
+* Emacs application framework
+#+begin_src emacs-lisp
+  ;; (use-package eaf
+  ;;   :straight (eaf
+  ;;              :type git
+  ;;              :host github
+  ;;              :repo "emacs-eaf/emacs-application-framework"
+  ;;              :files ("*.el" "*.py" "core" "app" "*.json")
+  ;;              :includes (eaf-pdf-viewer eaf-browser) ; Straight won't try to search for these packages when we make further use-package invocations for them
+  ;;              :pre-build (("python" "install-eaf.py" "--install" "pdf-viewer" "browser" "--ignore-sys-deps"))
+  ;;              )
+  ;;   :init (evil-set-initial-state 'eaf-mode 'emacs))
+#+end_src
+
+** Browser
+#+begin_src emacs-lisp
+  ;; (use-package eaf-browser
+  ;;    :custom
+  ;;    (eaf-browser-continue-where-left-off t)
+  ;;    (eaf-browser-enable-adblocker t))
+#+end_src
+
+* Org mode
+Tasks are classified with these 5 elements:
+1. priority
+2. location
+3. effort estimate
+4. project (or in general the belonging field of the task)
+5. date (due date, to this is could be useful the usage of org-gcal)
+
+A spaced repetition mechanism to pair with org-roam notes.
+
+#+begin_src emacs-lisp
+
+  (defun fi/dummy-org-download-annotate-function (link)
+    ""
+    "#+ATTR_ORG: :width 250px\n#+ATTR_LATEX: :width 250px :placement [H] \n#+CAPTION: \n"
+
+    )
+
+  (use-package org-download
+    :after org
+    :config
+    (setq org-downlaod-screenshot-method "grim -g \"$(slurp)\" - | swappy -f -")
+    (setq org-download-annotate-function
+          #'fi/dummy-org-download-annotate-function)
+    (setq org-downlaod-image-dir "./img"))
+#+end_src
+
+Open other notes in the same window
+#+begin_src emacs-lisp
+  (setq org-link-frame-setup '((file . find-file)))
+#+end_src
+
+** Agenda
+#+begin_src emacs-lisp
+  (setq org-directory "~/org")
+  (setq fi/tasks-to-process-file (concat org-directory "/to_process/tasks.org"))
+  (setq fi/tasks-file (concat org-directory "/tasks.org"))
+  (setq fi/readings-file (concat org-directory "/readings.org"))
+  (setq fi/things-to-read-file (concat org-directory "/to_process/readings.org"))
+  (setq fi/habits-file (concat org-directory "/habits.org"))
+  (setq fi/agenda-files
+        (list fi/tasks-to-process-file
+              fi/things-to-read-file
+              fi/habits-file
+              fi/tasks-file
+              fi/readings-file))
+#+end_src
+
+Required dependencies:
+#+begin_src emacs-lisp
+  (require 'org-habit)
+  (require 'org-protocol)
+  (use-package org-cliplink)
+#+end_src
+
+todo keywords:
+- ~TODO~: things to do;
+- ~NEXT~: next thing to do in a project, so one next task per project;
+- ~HOLD~: paused task for some reason;
+- ~DONE~: finished task.
+
+#+begin_src emacs-lisp
+  (setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "HOLD(h)" "|" "DONE(d)")))
+#+end_src
+
+Enforce that ~DONE~ can be set only if all children have ~DONE~ set:
+
+#+begin_src emacs-lisp
+  (setq-default org-enforce-todo-dependencies t)
+#+end_src
+
+  tags:
+  - ~emacs~
+  - ~linux~
+  - ~notes~
+  - ~work~
+  - ~uni~
+  - ~ML~
+
+#+begin_src emacs-lisp
+  (setq org-tag-alist
+        '(("emacs" . ?e)
+          ("linux" . ?x)
+          ("notes" . ?n)
+          ("work" . ?w)
+          ("uni" . ?u)
+          ("ml" . ?m)))
+#+end_src
+
+Agenda:
+- a keybind to add/change deadline of a task;
+- a keybind to note down an appointment (this is different from scheduled, for note down it is sufficient to write the date)
+- a keybind to add/change scheduled of a task (In Org mode, scheduling means setting a date when you want to start working on an action item);
+
+Clockin:
+- estiamate keybind;
+- clockin dynamic based on project? when i move to a project (hook of projectile) asks for which task should be clocked in;
+- setup automatic asking for how much time to remove from the count after idle time
+  
+*** Agenda
+#+begin_src emacs-lisp
+  (setq
+   org-agenda-files fi/agenda-files
+   org-agenda-breadcrumbs-separator " ❱ "
+   org-agenda-block-separator "──────────"
+   ;; org-agenda-prefix-format " %i "
+   org-agenda-include-inactive-timestamps t
+   org-agenda-log-mode-items '(closed clock state)
+   org-agenda-start-with-log-mode '(closed clock state)
+   org-agenda-tags-column 0
+   )
+  (setq org-agenda-custom-commands
+        '(
+          (" " "Agenda"
+           ((agenda ""
+                    ((org-agenda-overriding-header  " This week")
+                     (org-agenda-files fi/agenda-files)))
+            ;; (agenda ""
+            ;;         ((org-agenda-overriding-header  " Today")
+            ;;          (org-agenda-span 1)
+            ;;          (org-agenda-files fi/agenda-files)))
+            (todo "TODO"
+                  ((org-agenda-overriding-header " To process")
+                   (org-agenda-files (list fi/tasks-to-process-file fi/things-to-read-file))))
+            (todo "NEXT"
+                  ((org-agenda-overriding-header " NEXT")))
+            (todo "HOLD"
+                  ((org-agenda-overriding-header " HOLD")))
+            (todo "TODO"
+                  ((org-agenda-overriding-header " TODO")
+                   (org-agenda-files (list fi/tasks-file))))
+            (todo "TODO"
+                  ((org-agenda-overriding-header " Readings")
+                   (org-agenda-prefix-format "%t")
+                   (org-agenda-files (list fi/readings-file)))))
+           )
+          ))
+
+  ;; (setq org-agenda-category-icon-alist
+  ;;       `(
+  ;;         ("readings" ,(list (all-the-icons-faicon "book")) nil nil :ascent center :mask heuristic)
+  ;;         ("tasks" ,(list (all-the-icons-material "list")) nil nil :ascent center :mask heuristic)
+  ;;         ("work" ,(list (all-the-icons-material "work")) nil nil :ascent center :mask heuristic)
+  ;;         ("uni" ,(list (all-the-icons-faicon "university")) nil nil :ascent center :mask heuristic)
+  ;;         ("emacs" ,(list (all-the-icons-fileicon "emacs")) nil nil :ascent center :mask heuristic)
+  ;;         ("linux" ,(list (all-the-icons-faicon "linux")) nil nil :ascent center :mask heuristic)))
+
+  (defun fi/refile-reading ()
+    (interactive)
+    ;; (org-agenda-set-tags)
+    (setq org-refile-targets '((fi/readings-file :maxlevel . 1)))
+    (org-agenda-refile)
+    (setq org-refile-targets nil)
+    (org-agenda-redo-all))
+
+  (defun fi/refile-task ()
+    (interactive)
+    ;; (org-agenda-set-tags)
+    (setq org-refile-targets '((fi/tasks-file :maxlevel . 2)))
+    (org-agenda-priority)
+    (org-agenda-set-effort)
+    (org-agenda-refile)
+    (setq org-refile-targets nil)
+    (org-agenda-redo-all))
+
+  (setq org-agenda-window-setup 'current-window)
+
+
+  (defun fi/switch-to-agenda ()
+    (interactive)
+    (org-agenda nil " "))
+
+  (fi/leader "a" #'fi/switch-to-agenda)
+#+end_src
+
+**** Org-super-agenda
+#+begin_src emacs-lisp
+  (use-package org-super-agenda
+    :config
+    (setq org-super-agenda-groups
+          '(
+            (:name "University"
+                   :time-grid t
+                   :tag "uni")
+            (:name "Emacs"
+                   :tag "emacs")
+            )))
+#+end_src
+
+*** Capture
+#+begin_src emacs-lisp
+  (setq org-default-notes-file fi/tasks-to-process-file)
+  (defun transform-square-brackets-to-round-ones(string-to-transform)
+    "Transforms [ into ( and ] into ), other chars left unchanged."
+    (concat
+     (mapcar (lambda (c) (if (equal c ?\[) ?\( (if (equal c ?\]) ?\) c))) string-to-transform)))
+  (setq org-capture-templates
+        '(
+          ("t" "To-do task to process" entry (file fi/tasks-to-process-file) "* TODO%?\n" :empty-lines 1)
+          ("r" "Thing to read" entry (file+headline fi/things-to-read-file "Manual") "* TODO %(org-cliplink-capture)\n" :empty-lines 1 :immediate-finish t)
+          ("p" "Protocol text" entry (file+headline fi/things-to-read-file "Protocol") "* TODO %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?" :empty-lines 1 :immediate-finish t)
+          ("L" "Protocol link" entry (file+headline fi/things-to-read-file "Protocol") "* TODO [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n#+CREATED: [%<%Y-%m-%d %a %H:%M:%S>]\n" :empty-lines 1 :immediate-finish t)
+          ))
+  (global-set-key (kbd "C-c c") #'org-capture)
+#+end_src
+
+*** Habits
+Refer to ~/org/habits.org
+
+** Annotation of files
+Annotations are block of texts associated with a file. The main advantage of this feature for me is the possibility to annotate part of code while reading a codebase not written by me.
+#+begin_src emacs-lisp
+  ;; (require 'org-annotate-file)
+  ;; (setq org-annotate-file-storage-file "~/org/annotations.org")
+#+end_src
+** Async
+#+begin_src emacs-lisp
+  (use-package async)
+#+end_src
+
+** Babel
+#+begin_src emacs-lisp
+  (require 'org-tempo)
+  (require 'ob-python)
+  (require 'ob-hledger)
+  (use-package ein)
+  (require 'ein)
+  (require 'ein-notebook)
+  (add-to-list 'org-structure-template-alist '("sh" . "src sh"))
+  (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
+  (add-to-list 'org-structure-template-alist '("li" . "src lisp"))
+  (add-to-list 'org-structure-template-alist '("sc" . "src scheme"))
+  (add-to-list 'org-structure-template-alist '("ts" . "src typescript"))
+  (add-to-list 'org-structure-template-alist '("py" . "src python"))
+  (add-to-list 'org-structure-template-alist '("ein" . "src ein-python :session localhost :results raw drawer"))
+  (add-to-list 'org-structure-template-alist '("go" . "src go"))
+  (add-to-list 'org-structure-template-alist '("yaml" . "src yaml"))
+  (add-to-list 'org-structure-template-alist '("json" . "src json"))
+
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((ein . t)
+     (hledger . t)
+     (gnuplot .t)
+     (dot . t)
+     (shell . t)
+     ;; other languages..
+     ))
+#+end_src
+
+** Export
+#+begin_src emacs-lisp
+  (use-package ox-epub)
+  (use-package ox-hugo
+    :after ox
+    :config
+    (setq org-hugo-base-dir "~/personalProject/hugo-website"))
+#+end_src
+
+** Face
+#+begin_src emacs-lisp
+  (use-package org-modern
+    :config
+    (setq
+     org-modern-block t
+     org-pretty-entities nil
+     org-modern-table nil
+     org-modern-hide-stars nil))
+  (add-hook 'org-mode-hook #'org-modern-mode)
+  (add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
+  (with-eval-after-load 'org-faces
+    ;; Make sure org-indent face is available
+    (require 'org-indent)
+    ;; Ensure that anything that should be fixed-pitch in Org files appears that way
+    (defun fi/font-config-org (frame)
+      (dolist (face '((org-level-1 . 1.2)
+                      (org-level-2 . 1.1)
+                      (org-level-3 . 1.05)
+                      (org-level-4 . 1.0)
+                      (org-level-5 . 1.1)
+                      (org-level-6 . 1.1)
+                      (org-level-7 . 1.1)
+                      (org-level-8 . 1.1)))
+        (set-face-attribute (car face) nil :font "JetBrains Mono" :weight 'regular :height (cdr face)))
+      (set-face-attribute 'org-block nil :foreground nil :inherit 'fixed-pitch)
+      (set-face-attribute 'org-code nil   :inherit '(shadow fixed-pitch))
+      (set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch))
+      (set-face-attribute 'org-verbatim nil :inherit '(shadow fixed-pitch))
+      (set-face-attribute 'org-special-keyword nil :inherit '(font-lock-comment-face fixed-pitch))
+      (set-face-attribute 'org-meta-line nil :inherit '(font-lock-comment-face fixed-pitch))
+      (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch))
+    (remove-hook 'after-make-frame-functions #'fi/font-config-org)
+    (add-hook 'after-make-frame-functions #'fi/font-config-org))
+#+end_src
+** Gnu plot
+#+begin_src emacs-lisp
+  (use-package gnuplot)
+#+end_src
+
+** Image
+#+begin_src emacs-lisp
+  (setq org-startup-with-latex-preview t)
+  (setq org-image-actual-width nil)
+#+end_src
+
+** Svg inkscape manipulation
+#+begin_src emacs-lisp
+  (defun fi/get-sway-inkscape-location ()
+    (json-parse-string
+     (shell-command-to-string "swaymsg -t get_tree | jq '.. | select(.type?) | select(.app_id==\"org.inkscape.Inkscape\") | .rect'")))
+
+  (defun fi/get-windows-location ()
+    (json-parse-string
+     (shell-command-to-string "swaymsg -t get_tree | jq ' .rect'")))
+
+  (defun fi/set-tablet-location (x y width height)
+    (if (< y 0)
+        (shell-command (format "swaymsg input 1386:890:Wacom_One_by_Wacom_S_Pen map_to_region %d %d %d %d" x 0 width height) nil nil)
+      (shell-command (format "swaymsg input 1386:890:Wacom_One_by_Wacom_S_Pen map_to_region %d %d %d %d" x y width height) nil nil)
+      ))
+
+  (defun fi/set-inkscape ()
+    (let*
+        ((sway-tree (fi/get-sway-inkscape-location))
+         (x (gethash "x" sway-tree))
+         (y (gethash "y" sway-tree))
+         (width (gethash "width" sway-tree))
+         (height (gethash "height" sway-tree)))
+      (fi/set-tablet-location x y width height)
+      ))
+
+  (defun fi/reset-tablet-to-windows ()
+    (let*
+        ((sway-tree (fi/get-windows-location))
+         (x (gethash "x" sway-tree))
+         (y (gethash "y" sway-tree))
+         (width (gethash "width" sway-tree))
+         (height (gethash "height" sway-tree)))
+      (fi/set-tablet-location x y width height)
+      ))
+
+  (defun fi/reset-images-inkscape-diagrame-mode (process event)
+    (org-display-inline-images)
+    (org-display-inline-images)
+    (fi/reset-tablet-to-windows))
+
+  (defun fi/org-roam-inkscape-diagram ()
+    "Create or edit an svg file with inkscape and add link to current org document"
+    (interactive)
+    (let* '(filename (format "./figures/%s" (completing-read "SVG file: "
+                                                             (directory-files "./figures" nil ".*svg$" nil nil))))
+      (when (not (file-exists-p filename))
+        (copy-file "/home/fedeizzo/zettelkasten/template.svg" filename)
+        (insert (format "
+  ,#+ATTR_ORG: :width 450px
+  ,#+ATTR_LATEX: :width 450px :placement [H]
+  ,#+CAPTION: 
+  [[file:%s]]
+  " filename)))
+      (setq proc (start-process "ink" nil "inkscape" (format "%s" (expand-file-name filename))))
+      (sleep-for 0.5)
+      (fi/set-inkscape)
+      (set-process-sentinel proc 'fi/reset-images-inkscape-diagrame-mode)
+      ))
+#+end_src
+
+** Latex
+*** Acutex
+#+begin_src emacs-lisp
+  (use-package tex-site
+    :straight auctex
+    :config
+    (setq TeX-parse-self t
+          TeX-auto-save t))
+#+end_src
+*** Export
+- memoir class is used for mathematical books
+- textcomp add fonts support
+- 
+#+begin_src emacs-lisp
+  (with-eval-after-load 'ox-latex
+    (setq org-latex-classes nil)
+    (add-to-list 'org-latex-classes
+                 '("personal"
+                   "\\documentclass[a4paper,11pt,notitlepage,margin=2.5cm]{article}
+                        \\usepackage[utf8]{inputenc}
+                        \\usepackage[T1]{fontenc}
+                        \\usepackage{textcomp}
+                        \\usepackage{url}
+                        \\usepackage{graphicx}
+                        \\usepackage{hyperref}
+                        \\usepackage{float}
+                        \\usepackage{parskip}
+                        \\usepackage{xcolor}
+                        \\usepackage{amsmath, amsfonts, mathtools, amsthm, amssymb}
+                        \\usepackage{enumitem}
+                        \\setlist[itemize]{noitemsep}
+                        \\usepackage{geometry}
+                        \\geometry{
+                            a4paper,
+                            total={170mm,257mm},
+                            left=20mm,
+                            top=20mm,
+                        }
+                        % for svg images from tex files
+                        \\usepackage{import}
+                        \\usepackage{xifthen}
+                        \\usepackage{pdfpages}
+                        \\usepackage{transparent}
+                        \\newcommand{\\incfig}[1]{%
+                            \\def\\svgwidth{\\columnwidth}
+                            \\import{.}{#1.pdf_tex}
+                        }
+
+                        % Polar Night
+                        \\definecolor{NordDarkBlack}{HTML}{2E3440}     % nord0
+                        \\definecolor{NordBlack}{HTML}{3B4252}         % nord1
+                        \\definecolor{NordMediumBlack}{HTML}{434C5e}   % nord2
+                        \\definecolor{NordBrightBlack}{HTML}{4C566A}   % nord3
+                        % Snow Storm
+                        \\definecolor{NordWhite}{HTML}{D8DEE9}         % nord4
+                        \\definecolor{NordBrighterWhite}{HTML}{E5E9F0}         % nord5
+                        \\definecolor{NordBrightestWhite}{HTML}{ECEFF4}   % nord6
+                        % Frost
+                        \\definecolor{NordCyan}{HTML}{8FBCBB}          % nord7
+                        \\definecolor{NordBrightCyan}{HTML}{88C0D0}    % nord8
+                        \\definecolor{NordBlue}{HTML}{81A1C1}          % nord9
+                        \\definecolor{NordBrightBlue}{HTML}{5E81AC}    % nord10
+                        % Aurora
+                        \\definecolor{NordRed}{HTML}{BF616A}           % nord11
+                        \\definecolor{NordOrange}{HTML}{D08770}        % nord12
+                        \\definecolor{NordYellow}{HTML}{EBCB8B}        % nord13
+                        \\definecolor{NordGreen}{HTML}{A3BE8C}         % nord14
+                        \\definecolor{NordMagenta}{HTML}{B48EAD}       % nord15
+
+                        \\hypersetup{
+                            colorlinks=true,
+                            linkcolor=black,
+                            filecolor=NordBrightBlack,
+                            urlcolor=NordBrightBlack,
+                            citecolor=NordBrightBlack,
+                        }
+                        \\urlstyle{same}
+                        \\renewcommand\\contentsname{
+                          ~\\hfill {\\LARGE Table of contents}\\\\
+                          \\rule{\\textwidth}{0.4pt}
+                        }
+                        "
+                   ("\\section{%s}" . "\\section*{%s}")
+                   ("\\subsection{%s}" . "\\subsection*{%s}")
+                   ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                   ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                   ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+
+    (setq org-latex-default-class "personal"))
+  (setq org-format-latex-options '(
+                                   :foreground default
+                                   :background default
+                                   :scale 1.0
+                                   :html-foreground "Black"
+                                   :html-background "Transparent"
+                                   :html-scale 1.0
+                                   :matchers ("begin" "$1" "$" "$$" "\\(" "\\[")))
+
+  (setq org-latex-title-command "
+      \\begin{titlepage}
+              \\raggedleft
+              \\vspace*{\\baselineskip}
+              {\\Large %a}\\\\
+              \\vspace*{0.167\\textheight}
+              \\textbf{\\LARGE Personal notes of}\\\\[\\baselineskip]
+              {{\\color{NordMediumBlack}{\\Huge %t}}\\\\[\\baselineskip]}
+              {\\Large \\textit{%s}}
+              \\vfill
+              {\\large $\\mathcal{FI}$}
+              \\vspace*{3\\baselineskip}
+      \\end{titlepage}
+      ")
+  (setq org-latex-toc-command "\\tableofcontents \\clearpage")
+  (setq org-export-headline-levels 5)
+#+end_src
+*** Math
+#+begin_src emacs-lisp
+  (setq org-startup-with-latex-preview t)
+  (use-package org-fragtog
+    :config
+    (add-hook 'org-mode-hook 'org-fragtog-mode))
+  (add-to-list 'org-structure-template-alist '("al" . "src latex\n \\begin{align*}\n\\end{align*}\n"))
+#+end_src
+
+*** Build command
+This function changes the build command adding some option in order to support external package and other things
+#+begin_src emacs-lisp
+  (setq org-latex-pdf-process
+        (let
+            ((cmd (concat "pdflatex -shell-escape -interaction nonstopmode"
+                          " --synctex=1"
+                          " -output-directory %o %f")))
+          (list cmd
+                "cd %o; if test -r %b.idx; then makeindex %b.idx; fi"
+                "cd %o; bibtex %b"
+                cmd
+                cmd)))
+#+end_src
+
+*** Pseudocode
+Use an external package for the pseudocode, the deafault one is verbatim
+#+begin_src emacs-lisp
+  (require 'ox-latex)
+  (setq org-latex-listings 't)
+  (add-to-list 'org-latex-packages-alist '("" "listings"))
+  (add-to-list 'org-latex-packages-alist '("" "color"))
+  (add-to-list 'org-latex-packages-alist '("" "svg"))
+#+end_src
+** Last modified
+#+begin_src emacs-lisp
+  (add-hook 'org-mode-hook (lambda ()
+                             (setq-local time-stamp-active t
+                                         time-stamp-line-limit 18
+                                         time-stamp-start "^#\\+LAST_MODIFIED: [ \t]*"
+                                         time-stamp-end "$"
+                                         time-stamp-format "\[%Y-%m-%d %a %H:%M:%S\]")
+                             (add-hook 'before-save-hook 'time-stamp nil 'local)))
+#+end_src
+** Margin
+#+begin_src emacs-lisp
+  (defun dw/org-mode-visual-fill ()
+    (setq visual-fill-column-width 110
+          visual-fill-column-center-text t)
+    (visual-fill-column-mode 1))
+
+  (use-package visual-fill-column
+    :defer t
+    :hook (org-mode . dw/org-mode-visual-fill))
+#+end_src
+** Markdown syntax
+Make subscription only working with curly brackets
+#+begin_src emacs-lisp
+  (setq org-use-sub-superscripts "{}")
+  (setq org-startup-with-inline-images t)
+#+end_src
+** Org noter
+#+begin_src emacs-lisp
+  (use-package org-noter
+    :config
+    (setq org-noter-auto-save-last-location t)
+    (setq org-noter-notes-search-path '("~/zettelkasten/noter"))
+    (setq org-noter-notes-window-behavior '(start scroll))
+    )
+#+end_src
+
+** Org roam
+Maybe it is better to run the db manually and not automatically at startup
+#+begin_src emacs-lisp
+  (use-package org-roam
+    ;; :straight (org-roam :type git :host github :repo "org-roam/org-roam" :branch "v2.2.2")
+    :after org)
+  (require 'org-roam)
+  (setq org-roam-directory (file-truename "~/zettelkasten"))
+  (org-roam-db-autosync-mode)
+  (setq org-roam-mode-section-functions
+        (list #'org-roam-backlinks-section
+              #'org-roam-reflinks-section))
+  (add-to-list 'display-buffer-alist
+               '("\\*org-roam\\*"
+                 (display-buffer-in-side-window)
+                 (side . right)
+                 (slot . 0)
+                 (window-width . 0.33)
+                 (window-parameters . ((no-other-window . t)
+                                       (no-delete-other-windows . t)))))
+#+end_src
+The following setting allows to export a file following the roam links contained inside it
+#+begin_src emacs-lisp
+  (setq org-id-track-globally t)
+#+end_src
+Function to fix the reload the cache of org mode and org roam [[https://dev.to/devteam/resolving-an-unable-to-resolve-link-error-for-org-mode-in-emacs-2n1f][source]]
+#+begin_src emacs-lisp
+  ;; I encountered the following message when attempting
+  ;; to export data:
+  ;;
+  ;; "org-export-data: Unable to resolve link: FILE-ID"
+  (defun fi/force-org-rebuild-cache ()
+    "Rebuild the `org-mode' and `org-roam' cache."
+    (interactive)
+    (org-id-update-id-locations)
+    ;; Note: you may need `org-roam-db-clear-all'
+    ;; followed by `org-roam-db-sync'
+    (org-roam-db-sync)
+    (org-roam-update-org-id-locations))
+#+end_src
+Function for custom creation of node inside a directory representing a topic
+#+begin_src emacs-lisp
+  (defun fi/org-roam-extract-topic ()
+    (let* (
+           ;; (cwd (file-name-directory (other-buffer)))
+           (cwd (file-name-directory (buffer-file-name (nth 1 (buffer-list)))))
+           (current-topic (string-replace (concat org-roam-directory "/") "" cwd)))
+      (if (string= current-topic "")
+          ""
+        current-topic
+        )))
+  (setq org-roam-capture-templates
+        '(("d" "default" plain "%?"
+           :target (file+head "%(fi/org-roam-extract-topic)${slug}.org" "#+title: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M:%S>]\n#+LAST_MODIFIED: [%<%Y-%m-%d %a %H:%M:%S>]")
+           :unnarrowed t)))
+#+end_src
+hydra
+#+begin_src emacs-lisp
+  (pretty-hydra-define org-roam-hydra-main (:color blue :title "Org roam" :quit-key "q")
+    ("Node"
+     (("i" org-roam-node-insert "inesert node")
+      ("f" org-roam-node-find "find node")
+      ("h" org-id-get-create "add id current node"))
+     "Clipboard"
+     (("c" org-download-clipboard "paste clipboard"))
+     "Inkscape"
+     (("s" fi/org-roam-inkscape-diagram "open/edit svg file"))
+     "Custom functions"
+     (("r" fi/rename-images-in-file-with-caption "sync filename with caption")
+      ("e" fi/zetteldesk-insert-all-nodes-contents-current-buffer-list "export roam cluster"))))
+  (fi/leader "n" 'org-roam-hydra-main/body)
+#+end_src
+
+*** Zetteldesk
+There are two ways to insert a node in the desk:
+- ~zetteldesk-add-to-desktop~
+- ~zetteldesk-add-node-to-desktop~
+
+Backlinks can be addede with a filter ~zetteldesk-add-poi-or-moc-backlink-to-desktop~.
+Same can be done with ~remove~ keyword.
+
+Once a desktop is created the navigation through it is made with:
+- ~zetteldesk-switch-to-buffer~
+- ~zetteldesk-node-find~
+- ~zetteldesk-node-insert~
+
+To insert content inside the scratch buffer there are two functions:
+- ~zetteldesk-insert-node-contents~
+- ~zetteldesk-insert-node-contents-without-links~
+
+#+begin_src emacs-lisp
+  (use-package zetteldesk
+    :after org-roam
+    :straight nil
+    :load-path "~/.config/emacs/zetteldesk.el"
+    :config
+    (zetteldesk-mode))
+  (require 'zetteldesk)
+#+end_src
+Custom function for content insert
+#+begin_src emacs-lisp
+  (defun fi/get-all-org-roam-ids-current-buffer ()
+    (org-element-map (org-element-parse-buffer) 'link
+      (lambda (link)
+        (when (string= (org-element-property :type link) "id")
+          (org-element-property :path link)))))
+
+  (defun fi/get-all-relative-files-current-buffer ()
+    (org-element-map (org-element-parse-buffer) 'link
+      (lambda (link)
+        (when (string= (org-element-property :type link) "file")
+          (org-element-property :path link)))))
+
+  (defun fi/get-org-level-from-list (regex-item)
+    "Return the org heading level giving list in the buffer"
+    (search-forward regex-item)
+    (/ (current-indentation) 2))
+
+
+  (defun fi/demote-org-roam-node (level text)
+    "Demote an org tree given its level and regex"
+    (let ((match-str (concat "LEVEL=" (number-to-string level) "+ITEM={" text "}")))
+      (org-map-entries (lambda () (org-demote-subtree)) match-str))
+    )
+
+  (defun fi/delete-properties-drawer ()
+    "Delete properties drawers and its content"
+    (kill-matching-lines "^#\\+title.*")
+    (kill-matching-lines "^:PROPERTIES.*")
+    (kill-matching-lines "^:ID.*")
+    (kill-matching-lines "^:END.*")
+    (kill-matching-lines "^:ROAM.*"))
+
+  (defun fi/zetteldesk-insert-all-nodes-contents-current-buffer-list ()
+    (interactive)
+    ;; (fi/force-org-rebuild-cache)
+    (beginning-of-buffer)
+    (setq new-headings '())
+    (setq absolute-file-links '())
+    (setq org-startup-with-latex-preview nil)
+    (dolist (id (fi/get-all-org-roam-ids-current-buffer))
+      (let* ((node (org-roam-node-from-id id))
+             (filename (org-roam-node-file node))
+             (org-level (fi/get-org-level-from-list id))
+             (node-buffer (find-file-noselect filename))
+             (location (zetteldesk-insert-location)))
+        (with-current-buffer node-buffer
+          (setq heading-texts (org-map-entries (lambda () (fifth (org-heading-components))) "LEVEL=1"))
+          (dolist (heading-text heading-texts)
+            (when (not (= org-level 0))
+              (push (list org-level heading-text) new-headings)
+              ))
+          (dolist (link (fi/get-all-relative-files-current-buffer))
+            (push (list link (file-truename link)) absolute-file-links))
+          )
+        (kill-buffer node-buffer)
+        (with-current-buffer location
+          (goto-char (point-max))
+          (newline)
+          (insert-file-contents filename)
+          (fi/delete-properties-drawer))
+        ))
+    (setq new-headings (reverse new-headings))
+    (let ((location (zetteldesk-insert-location)))
+      (with-current-buffer location
+        (org-mode)
+        (beginning-of-buffer)
+        (insert "
+  ,#+TITLE:
+  ,#+SUBTITLE:
+  ,#+UID:
+  ,#+AUTHOR:
+  ,#+DATE:
+  ,#+OPTIONS: tex:dvipng")
+        (dolist (new-heading new-headings)
+          (dotimes (level (first new-heading))
+            (fi/demote-org-roam-node (+ level 1) (second new-heading))))
+        (dolist (link-pair absolute-file-links)
+          (let ((relative-link (first link-pair))
+                (absolute-link (second link-pair)))
+            (beginning-of-buffer)
+            (while (re-search-forward relative-link nil t)
+              (replace-match absolute-link))
+            )
+          )
+        ))
+    (switch-to-buffer-other-window "*zetteldesk-scratch*")
+    (setq org-startup-with-latex-preview t)
+    )
+#+end_src
+Rename attached images with caption:
+#+begin_src emacs-lisp
+  (defun fi/get-all-images (&optional element)
+    (org-element-map (or element (org-element-parse-buffer)) 'link
+      (lambda (link)
+        (when (string= (org-element-property :type link) "file")
+          (org-element-property :path link)))))
+
+  (defun fi/get-all-paragraphs ()
+    (org-element-map (org-element-parse-buffer) 'paragraph
+      (lambda (paragraph)
+        paragraph)))
+
+  (defun fi/extract-caption-from-paragraph (paragraph)
+    (if-let (caption (org-element-property :caption paragraph))
+        (substring-no-properties (first (first (first caption))))
+      ))
+
+  (defun fi/caption-as-filename (caption)
+    (concat (replace-regexp-in-string "[\(\)\.]" ""
+                                      (replace-regexp-in-string " " "_" caption)) ".png")
+    )
+
+  (defun fi/obtain-filename-pairs ()
+    (let ((filename-pairs '()))
+      (dolist (paragraph (fi/get-all-paragraphs))
+        (let ((caption (fi/extract-caption-from-paragraph paragraph)))
+          (when caption
+            (let* ((image-path (first (fi/get-all-images paragraph)))
+                   (image-dir (file-name-directory image-path))
+                   (new-image-name (fi/caption-as-filename caption))
+                   (new-image-path (concat image-dir new-image-name)))
+              (push (list image-path new-image-path) filename-pairs)))))
+      filename-pairs))
+
+  (defun fi/rename-images-in-file-with-caption ()
+    (interactive)
+    (dolist (filenames-pair (fi/obtain-filename-pairs))
+      (let ((old-path (first filenames-pair))
+            (new-path (second filenames-pair)))
+        (when (not (string= old-path new-path))
+          (rename-file old-path new-path)
+          (beginning-of-buffer)
+          (while (re-search-forward old-path nil t)
+            (replace-match new-path)
+            (org-toggle-inline-images)
+            (org-toggle-inline-images)))
+        )))
+#+end_src
+Hydra config
+#+begin_src emacs-lisp
+  (pretty-hydra-define zetteldesk-add-hydra (:color blue :title "Add to Zetteldesk" :quit-key "q")
+    ("Org-Roam"
+     (("n" zetteldesk-add-node-to-desktop "Add Node")
+      ("b" zetteldesk-add-backlinks-to-desktop "Add Node + All its backlinks"))
+      "Other"
+      (("a" zetteldesk-add-to-desktop "Add Buffer"))))
+
+  (pretty-hydra-define zetteldesk-remove-hydra (:color blue :title "Remove from Zetteldesk" :quit-key "q")
+    ("Org-Roam"
+     (("n" zetteldesk-remove-node-from-desktop "Remove Node")
+      ("b" zetteldesk-remove-backlinks-from-desktop "Remove Node + All its backlinks"))
+     "Other"
+     (("r" zetteldesk-remove-from-desktop "Remove Buffer"))))
+
+  (pretty-hydra-define zetteldesk-insert-hydra (:color blue :title "Insert from the Zetteldesk" :quit-key "q")
+    ("Org-Roam"
+     (("n" zetteldesk-insert-node-contents-without-link "Node Contents in *zetteldesk-scratch")
+      ("a" fi/zetteldesk-insert-all-nodes-contents-without-link  "All nodes Contents in *zetteldesk-scratch*")
+      ("B" fi/zetteldesk-insert-all-nodes-contents-current-buffer  "All nodes Contents in current buffer in *zetteldesk-scratch*"))
+     "Supplementary Material to *zetteldesk-scratch*"
+     (("p" zetteldesk-insert-link-to-pdf "Link to PDF"))))
+
+  (pretty-hydra-define zetteldesk-main-hydra (:color blue :title "Zetteldesk Hydra" :quit-key "q")
+    ("Filter Functions"
+     (("n" zetteldesk-node-find "Find Zetteldesk Node"))
+
+     "Add/Remove Hydras"
+     (("r" zetteldesk-remove-hydra/body "Run the Removing Hydra")
+      ("a" zetteldesk-add-hydra/body "Run the Adding Hydra"))
+
+     "Inserting Things and *zetteldesk-scratch*"
+     (("s" zetteldesk-switch-to-scratch-buffer "Switch to *zetteldesk-scratch*")
+      ("i" zetteldesk-insert-hydra/body "Run the Insert Hydra"))))
+
+  (fi/leader "u" 'zetteldesk-main-hydra/body)
+#+end_src
+
+** Property
+* Line number
+#+begin_src emacs-lisp
+  ;; line number
+  (column-number-mode)
+  (global-display-line-numbers-mode t)
+  ;; add hook to disable line numbers in org-mode
+  (dolist (mode '(org-mode-hook
+                  org-agenda-mode-hook
+                  shell-mode-hook
+                  vterm-mode-hook))
+    (add-hook mode (lambda () (display-line-numbers-mode 0))))
+  (set-default-coding-systems 'utf-8)
+#+end_src
+
+* Mouse keybinds
+#+begin_src emacs-lisp
+  (defun fi/switch-last-buffer (arg)
+    "Switch to last visited buffer.
+
+      Use prefix arg to specify the order of the buffer, most to least
+      recent. Does not update buffer list, so, for example, after moving to the
+      nth most recent buffer, use unprefixed command to get back to original
+      buffer."
+    (interactive "P")
+    (switch-to-buffer (if arg
+                          (elt (buffer-list) arg)
+                        (other-buffer))
+                      t))
+
+  (defun fi/zetteldesk-add-current-buffer-to-desktop ()
+    "Add current buffer to zetteldek desktop"
+    (interactive)
+    (zetteldesk-add-to-desktop (current-buffer)))
+
+  (defun fi/open-file-new-split ()
+    "Open at mouse in other window"
+    (interactive)
+    (let ((org-link-frame-setup '((file . find-file-other-window))))
+      (org-open-at-point)))
+
+  (global-set-key [C-down-mouse-1] 'fi/open-file-new-split)
+  (global-set-key [mouse-8] 'fi/switch-last-buffer)
+  (global-set-key [mouse-9] 'fi/zetteldesk-add-current-buffer-to-desktop)
+#+end_src
