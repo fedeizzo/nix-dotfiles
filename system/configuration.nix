@@ -15,5 +15,6 @@
     ./security.nix
     ./services.nix
     ./user.nix
+    if config.fs == "btrfs" then ./persistent.nix else null
   ];
 }

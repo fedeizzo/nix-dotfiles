@@ -7,6 +7,7 @@
     users.${config.username} = {
       imports = [
         inputs.hyprland.homeManagerModules.default
+        inputs.impermanence.nixosModules.home-manager.impermanence
         ./modules/bottom.nix
         ./modules/cli.nix
         ./modules/config.nix

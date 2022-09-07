@@ -16,6 +16,10 @@
       url = "github:nix-community/emacs-overlay/6b4445aa659fa26b4f36d9975b34632312699a85";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    impermanence = {
+      url = "github:nix-community/impermanence";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     hyprland = {
       url = "github:hyprwm/Hyprland";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
@@ -26,12 +30,12 @@
     };
   };
 
-  outputs = { self, nixpkgs, nixos-hardware, deploy-rs, home-manager, ... }@inputs:
+  outputs = { self, nixpkgs, nixos-hardware, deploy-rs, home-manager, impermanence, ... }@inputs:
     let
       config = {
         username = "fedeizzo";
         hostname = "fedeizzo-nixos";
-        fs = "etx4";
+        fs = "ext4";
       };
     in
     {
@@ -84,6 +88,7 @@
             }
             ./system/configuration.nix
             home-manager.nixosModules.home-manager
+            impermanence.nixosModules.impermanence
             ./home/configuration.nix
           ]);
       };
