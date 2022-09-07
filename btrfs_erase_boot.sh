@@ -123,9 +123,21 @@ mkdir /mnt/boot
 mount "$boot" /mnt/boot
 
 colorPrint "Installing configuration under system and home folders"
-mkdir /mnt/etc/nixos
+mkdir -p /mnt/etc/nixos
 ./install.sh -f
-nixos-install --no-root-passwd
+nixos-install --no-root-passwd --flake /mnt/etc/nixos#fedeizzo
+installationReturnValue=$?
 
+if [ $installationReturnValue -ne 0 ]; then
+  echo "----------Unsuccessful installation----------"
+  echo "Exiting"
+  exit 1
+fi
+
+colorPrint "System installed. Do you want to umount the drive and exit?"
+if ! prompt_confirm; then
+  colorPrint "Remember to run umount -R /mnt and cryptsetu close nixenc before rebooting"
+  exit 0
+fi
 umount -R /mnt
 cryptsetup close nixenc
