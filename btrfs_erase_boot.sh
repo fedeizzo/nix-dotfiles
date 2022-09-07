@@ -86,6 +86,7 @@ colorPrint "Configuring luks2"
 # crypt root partition
 cryptsetup --type luks2 luksFormat "$root"
 cryptsetup open "$root" nixenc
+colorPrint "Luks2 correctly configured"
 cryptsetup config "$root" --label nixenc
 
 colorPrint "Formatting"
@@ -97,7 +98,7 @@ root="/dev/mapper/nixenc"
 colorPrint "Creating btrfs subvolumes"
 mntopt="noautodefrag,space_cache=v2,noatime,ssd,compress=zstd:3,discard"
 mount -o "$mntopt" -t btrfs "$root" /mnt
-subvolumes="@root @home @nix @persist @log"
+subvolumes="root home nix persist log"
 for sv in $subvolumes; do
     btrfs subvolume create "/mnt/$sv"
 done
