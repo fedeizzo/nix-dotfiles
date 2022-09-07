@@ -125,7 +125,7 @@ mount "$boot" /mnt/boot
 colorPrint "Installing configuration under system and home folders"
 mkdir -p /mnt/etc/nixos
 ./install.sh -f
-nixos-install --no-root-passwd --flake /mnt/etc/nixos#fedeizzo
+nixos-install --no-root-passwd --flake /mnt/etc/nixos#fedeizzo-nixos
 installationReturnValue=$?
 
 if [ $installationReturnValue -ne 0 ]; then
