@@ -136,6 +136,7 @@ lib.mkIf (config.fs == "btrfs") {
       "ssd"
       "discard"
     ];
+    neededForBoot = true;
   };
   fileSystems."/boot" =
     {

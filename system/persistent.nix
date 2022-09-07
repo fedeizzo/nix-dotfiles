@@ -13,7 +13,7 @@ lib.mkIf (config.fs == "btrfs") {
       "/var/lib/docker"
       "/var/lib/fprint"
       "/var/lib/tailscale"
-      "/var/log"
+      # "/var/log"
     ];
     files = [
       "/etc/adjtime"
