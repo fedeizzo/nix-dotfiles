@@ -123,6 +123,7 @@ mkdir /mnt/boot
 mount "$boot" /mnt/boot
 
 colorPrint "Installing configuration under system and home folders"
+mkdir /mnt/etc/nixos
 ./install.sh -f
 nixos-install --no-root-passwd
 
