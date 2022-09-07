@@ -1,9 +1,6 @@
-{ lib, pkgs, modulesPath, ... }:
+{ lib, config, ... }:
 
-{
-  imports = [
-    (modulesPath + "/installer/scan/not-detected.nix")
-  ];
+lib.mkIf (config.fs == "ext4") {
   fileSystems."/" = {
     device = "/dev/disk/by-label/root";
     fsType = "ext4";

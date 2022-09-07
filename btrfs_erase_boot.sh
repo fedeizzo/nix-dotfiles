@@ -86,6 +86,7 @@ colorPrint "Configuring luks2"
 # crypt root partition
 cryptsetup --type luks2 luksFormat "$root"
 cryptsetup open "$root" nixenc
+cryptsetup config "$root" --label nixenc
 
 colorPrint "Formatting"
 # formatting filesystems
@@ -121,8 +122,8 @@ mkdir /mnt/boot
 mount "$boot" /mnt/boot
 
 colorPrint "Installing configuration under system and home folders"
-./install.sh
-nixos-install
+./install.sh -f
+nixos-install --no-root-passwd
 
 umount -R /mnt
 cryptsetup close nixenc

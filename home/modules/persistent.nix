@@ -1,9 +1,8 @@
-{ config, pkgs, ... }:
+{ lib, config, home, ... }:
 
 {
   # required to allow root to see bind of directories
-  programs.fuse.userAllowOther = true;
-  home.pesistance."/persist/home/fedeizzo" = {
+  home.pesistance."/persist/home/${config.username}" = {
     allowOther = true;
     directories = [
       # Personal files
@@ -34,8 +33,6 @@
       ".config/rbw"
       ".config/rclone"
       ".config/spotify"
-      ".config/user-dirs.dirs"
-      ".config/user-dirs.locale"
 
       # Cache
       ".cargo"
@@ -53,10 +50,6 @@
       ".cache/org-persist"
       ".cache/rbw"
       ".cache/spotify"
-      ".cache/rofi-2.sshcache"
-      ".cache/rofi-3.runcache"
-      ".cache/rofi3.druncache"
-      ".cache/rofi3.filebrowsercache"
 
       # I need to understand if following folders are required
       # ".dbus"
@@ -72,6 +65,16 @@
       ".aspell.en.pws"
       ".local/share/fish/fish_history"
       ".local/share/z/data"
+
+      # Config
+      ".config/user-dirs.dirs"
+      ".config/user-dirs.locale"
+
+      # Cache
+      ".cache/rofi-2.sshcache"
+      ".cache/rofi-3.runcache"
+      ".cache/rofi3.druncache"
+      ".cache/rofi3.filebrowsercache"
     ];
   };
 }

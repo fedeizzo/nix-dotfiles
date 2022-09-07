@@ -4,6 +4,7 @@ let
 in
 {
   users.mutableUsers = if config.fs == "ext4" then true else false;
+  programs.fuse.userAllowOther = if config.fs == "btrfs" then true else false;
   users.users = {
     ${config.username} = {
       name = config.username;

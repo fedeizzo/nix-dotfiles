@@ -1,7 +1,11 @@
 #!/usr/bin/env bash
 SUPER_CMD="doas"
-mkdir -p $HOME/.config
-[ -f $HOME/.config/emacs/straight/versions/default.el ] || ln -s $(pwd)/dotfiles/emacs/default.el $HOME/.config/emacs/straight/versions/default.el
+if [[ $1 == "-f" ]]; then
+    SUPER_CMD=""
+else
+    mkdir -p $HOME/.config
+    [ -f $HOME/.config/emacs/straight/versions/default.el ] || ln -s $(pwd)/dotfiles/emacs/default.el $HOME/.config/emacs/straight/versions/default.el
+fi
 current_dir=$(pwd)
 for f in $(ls); do
     if ! [[ -f /etc/nixos/${f} ]]; then
@@ -10,4 +14,4 @@ for f in $(ls); do
 	fi
     fi
 done
-$SUPER_CMD nixos-rebuild switch 
+[[ $1 != "-f" ]] && $SUPER_CMD nixos-rebuild switch 

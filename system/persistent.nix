@@ -1,7 +1,7 @@
-{ pkgs, config, ... }:
+{ lib, config, ... }:
 
-{
-  environment.persistence."/persis" = {
+lib.mkIf (config.fs == "btrfs") {
+  environment.persistence."/persist" = {
     hideMounts = true;
     directories = [
       "/etc/NetworkManager/system-connections"

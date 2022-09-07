@@ -1,7 +1,6 @@
-{ config, lib, pkgs, modulesPath, ... }:
+{ lib, pkgs, config, ... }:
 
 let
-
   fs-diff = pkgs.writeShellScriptBin "fs-diff" ''
     #!/usr/bin/env bash
     # fs-diff.sh
@@ -27,10 +26,7 @@ let
     done
   '';
 in
-{
-  imports = [
-    (modulesPath + "/installer/scan/not-detected.nix")
-  ];
+lib.mkIf (config.fs == "btrfs") {
   environment.systemPackages = [ fs-diff ];
   boot.initrd.postDeviceCommands = pkgs.lib.mkBefore ''
     mkdir -p /mnt
@@ -84,7 +80,9 @@ in
     ];
   };
 
-  boot.initrd.luks.devices."nixenc".device = "/dev/disk/by-uuid/642c4b0c-fa7c-4410-8d38-aa6e8e1ccae4";
+  boot.initrd.luks.devices."nixenc" = {
+    device = "/dev/disk/by-label/nixenc";
+  };
 
   fileSystems."/home" = {
     device = "/dev/disk/by-label/root";
@@ -150,4 +148,3 @@ in
   nix.maxJobs = lib.mkDefault 4;
   powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
 }
-

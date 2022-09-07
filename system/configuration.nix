@@ -1,11 +1,9 @@
-{ config, pkgs, ... }:
+{ config, modulesPath, ... }:
 
 {
   imports = [
     ./boot.nix
     ./hardware.nix
-    # (./hardware-configurations + "/${config.fs}.nix")
-    ./hardware-configurations/ext4.nix
     ./keymapTimeFont.nix
     ./pipewire.nix
     ./networking.nix
@@ -15,6 +13,11 @@
     ./security.nix
     ./services.nix
     ./user.nix
-    if config.fs == "btrfs" then ./persistent.nix else null
+
+    ./hardware-configurations/ext4.nix
+    # erase on boot imported only with fs = "btrfs"
+    ./hardware-configurations/btrfs.nix
+    ./persistent.nix
+    (modulesPath + "/installer/scan/not-detected.nix")
   ];
 }

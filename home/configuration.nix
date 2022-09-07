@@ -1,9 +1,11 @@
-{ pkgs, config, inputs, nixpkgs-unstable, ... }:
+{ pkgs, config, inputs, nixpkgs-unstable, lib, ... }:
 
 {
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
+    # this can be used to forward args
+    # extraSpecialArgs = { inherit config; };
     users.${config.username} = {
       imports = [
         inputs.hyprland.homeManagerModules.default
@@ -38,8 +40,10 @@
           nixpkgs-unstable.tdesktop
           nixpkgs-unstable.xournalpp
         ];
+        # persistence = lib.mkIf (config.fs == "btrfs") (import ./modules/persistent.nix);
       };
-      nixpkgs.config = import ./config.nix;
+      nixpkgs.config = import
+        ./config.nix;
       xdg.configFile."nixpkgs/config.nix".source = ./config.nix;
       xdg.mimeApps = {
         enable = true;
