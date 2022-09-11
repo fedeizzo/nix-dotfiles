@@ -1,10 +1,14 @@
-{ config, pkgs, ... }:
-let
-  hashedPassword = "$6$TrvwACA2N3ypzst2$yjczB2TKbWqLWgkQcdoRMjgm09KV5fNVDbm3j.fbFR9g/7l9W.Awpfvqp5P2NFop4L3vj4UCBV1.34cQnOiKt.";
-in
+{ config, pkgs, sops, ... }:
+
 {
   users.mutableUsers = if config.fs == "ext4" then true else false;
   programs.fuse.userAllowOther = if config.fs == "btrfs" then true else false;
+  sops.secrets.fedeizzo-path = {
+    neededForUsers = true;
+  };
+  sops.secrets.root-path = {
+    neededForUsers = true;
+  };
   users.users = {
     ${config.username} = {
       name = config.username;
@@ -24,10 +28,10 @@ in
         "adbusers" # for adb android
       ];
       shell = pkgs.fish;
-      hashedPassword = if config.fs == "ext4" then null else hashedPassword;
+      passwordFile = if config.fs == "ext4" then null else config.sops.secrets.fedeizzo-path.path;
     };
     root = {
-      hashedPassword = if config.fs == "ext4" then null else "!";
+      passwordFile = if config.fs == "ext4" then null else config.sops.secrets.root-path.path;
     };
   };
 }

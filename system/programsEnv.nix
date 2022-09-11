@@ -27,8 +27,6 @@
     neofetch
     wget
     acpi
-    # docker
-    # docker-compose
     podman
     podman-compose
     nvidia-podman
@@ -43,6 +41,7 @@
     pkgs.shared-mime-info
     seatd
     nixpkgs-unstable.keyd # keyboard mapper
+    pinentry-qt
   ];
   programs.sway = {
     enable = true;
@@ -71,11 +70,6 @@
     gtkUsePortal = true;
   };
   virtualisation = {
-    # docker = {
-    #   enable = true;
-    #   enableOnBoot = true;
-    #   enableNvidia = false;
-    # };
     podman = {
       enable = true;
       enableNvidia = true;

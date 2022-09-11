@@ -27,4 +27,5 @@
     steamps4 = { };
   };
   services.pcscd.enable = true;
+  services.fwupd.enable = true;
 }

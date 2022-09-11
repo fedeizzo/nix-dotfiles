@@ -17,4 +17,14 @@
       { groups = [ "wheel" ]; keepEnv = true; persist = true; }
     ];
   };
+
+  # secrets management
+  environment.systemPackages = with pkgs; [ sops age ];
+  sops = {
+    defaultSopsFile = ../secrets.yaml;
+    defaultSopsFormat = "yaml";
+    age.keyFile = "/var/lib/sops/keys.txt";
+    age.generateKey = false;
+    age.sshKeyPaths = [ ];
+  };
 }

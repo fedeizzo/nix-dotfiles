@@ -5,7 +5,6 @@
     keyutils
     qgis
     universal-ctags
-    pinentry-qt
     onlyoffice-bin
     # fonts
     joypixels

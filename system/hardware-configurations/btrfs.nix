@@ -4,12 +4,14 @@ let
   fs-diff = pkgs.writeShellScriptBin "fs-diff" ''
     #!/usr/bin/env bash
     # fs-diff.sh
+    doas mkdir -p /mnt
+    doas mount -o subvol=/ /dev/mapper/nixenc /mnt
     set -euo pipefail
 
-    OLD_TRANSID=$(sudo btrfs subvolume find-new /mnt/root-blank 9999999)
-    OLD_TRANSID=$${OLD_TRANSID#transid marker was }
+    OLD_TRANSID=$(doas btrfs subvolume find-new /mnt/root-blank 9999999)
+    OLD_TRANSID=$(echo $OLD_TRANSID | awk -F' ' '{print $4}')
 
-    sudo btrfs subvolume find-new "/mnt/root" "$OLD_TRANSID" |
+    doas btrfs subvolume find-new "/mnt/root" "$OLD_TRANSID" |
     sed '$d' |
     cut -f17- -d' ' |
     sort |
@@ -24,16 +26,17 @@ let
         echo "$path"
       fi
     done
+    doas umount -R /mnt
   '';
 in
 lib.mkIf (config.fs == "btrfs") {
   environment.systemPackages = [ fs-diff ];
-  boot.initrd.postDeviceCommands = pkgs.lib.mkBefore ''
+  boot.initrd.postDeviceCommands = (pkgs.lib.mkBefore ''
     mkdir -p /mnt
 
     # We first mount the btrfs root to /mnt
     # so we can manipulate btrfs subvolumes.
-    mount -o subvol=/ /dev/mapper/enc /mnt
+    mount -o subvol=/ /dev/mapper/nixenc /mnt
 
     # While we're tempted to just delete /root and create
     # a new snapshot from /root-blank, /root is already
@@ -65,84 +68,84 @@ lib.mkIf (config.fs == "btrfs") {
     # Once we're done rolling back to a blank snapshot,
     # we can unmount /mnt and continue on the boot process.
     umount /mnt
-  '';
-  fileSystems."/" = {
-    device = "/dev/disk/by-label/root";
-    fsType = "btrfs";
-    options = [
-      "subvol=root"
-      "noautodefrag"
-      "space_cache=v2"
-      "noatime"
-      "compress=zstd:3"
-      "ssd"
-      "discard"
-    ];
-  };
-
-  boot.initrd.luks.devices."nixenc" = {
-    device = "/dev/disk/by-label/nixenc";
-  };
-
-  fileSystems."/home" = {
-    device = "/dev/disk/by-label/root";
-    fsType = "btrfs";
-    options = [
-      "subvol=home"
-      "noautodefrag"
-      "space_cache=v2"
-      "noatime"
-      "compress=zstd:3"
-      "ssd"
-      "discard"
-    ];
-  };
-  fileSystems."/nix" = {
-    device = "/dev/disk/by-label/root";
-    fsType = "btrfs";
-    options = [
-      "subvol=nix"
-      "noautodefrag"
-      "space_cache=v2"
-      "noatime"
-      "compress=zstd:3"
-      "ssd"
-      "discard"
-    ];
-  };
-  fileSystems."/var/log" = {
-    device = "/dev/disk/by-label/root";
-    fsType = "btrfs";
-    options = [
-      "subvol=log"
-      "noautodefrag"
-      "space_cache=v2"
-      "noatime"
-      "compress=zstd:3"
-      "ssd"
-      "discard"
-    ];
-    neededForBoot = true;
-  };
-  fileSystems."/persist" = {
-    device = "/dev/disk/by-label/root";
-    fsType = "btrfs";
-    options = [
-      "subvol=persist"
-      "noautodefrag"
-      "space_cache=v2"
-      "noatime"
-      "compress=zstd:3"
-      "ssd"
-      "discard"
-    ];
-    neededForBoot = true;
-  };
-  fileSystems."/boot" =
-    {
-      device = "/dev/disk/by-label/boot";
-      fsType = "vfat";
+  '');
+  fileSystems = {
+    "/" = {
+      device = "/dev/disk/by-label/root";
+      fsType = "btrfs";
+      options = [
+        "subvol=root"
+        "noautodefrag"
+        "space_cache=v2"
+        "noatime"
+        "compress=zstd:3"
+        "ssd"
+        "discard" # trim ssd
+      ];
     };
+    "/nix" = {
+      device = "/dev/disk/by-label/root";
+      fsType = "btrfs";
+      options = [
+        "subvol=nix"
+        "noautodefrag"
+        "space_cache=v2"
+        "noatime"
+        "compress=zstd:3"
+        "ssd"
+        "discard"
+      ];
+    };
+    "/var/log" = {
+      device = "/dev/disk/by-label/root";
+      fsType = "btrfs";
+      options = [
+        "subvol=log"
+        "noautodefrag"
+        "space_cache=v2"
+        "noatime"
+        "compress=zstd:3"
+        "ssd"
+        "discard"
+      ];
+      neededForBoot = true;
+    };
+    "/var/lib/sops" = {
+      device = "/dev/disk/by-label/root";
+      fsType = "btrfs";
+      options = [
+        "subvol=sops"
+        "noautodefrag"
+        "space_cache=v2"
+        "noatime"
+        "compress=zstd:3"
+        "ssd"
+        "discard"
+      ];
+      neededForBoot = true;
+    };
+    "/persist" = {
+      device = "/dev/disk/by-label/root";
+      fsType = "btrfs";
+      options = [
+        "subvol=persist"
+        "noautodefrag"
+        "space_cache=v2"
+        "noatime"
+        "compress=zstd:3"
+        "ssd"
+        "discard"
+      ];
+      neededForBoot = true;
+    };
+    "/boot" =
+      {
+        device = "/dev/disk/by-label/boot";
+        fsType = "vfat";
+      };
+  };
+
+  boot.initrd.luks.devices."nixenc".device = "/dev/disk/by-label/nixenc";
 
   swapDevices = [ ];
 

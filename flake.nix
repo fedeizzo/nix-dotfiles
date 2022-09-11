@@ -28,14 +28,27 @@
       url = "github:hyprwm/contrib";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, nixos-hardware, deploy-rs, home-manager, impermanence, ... }@inputs:
+  outputs =
+    { self
+    , nixpkgs
+    , nixos-hardware
+    , deploy-rs
+    , home-manager
+    , impermanence
+    , sops-nix
+    , ...
+    }@inputs:
     let
       config = {
         username = "fedeizzo";
         hostname = "fedeizzo-nixos";
-        fs = "ext4";
+        fs = "btrfs";
       };
     in
     {
@@ -86,9 +99,10 @@
               };
               inherit config;
             }
+            impermanence.nixosModules.impermanence
+            sops-nix.nixosModules.sops
             ./system/configuration.nix
             home-manager.nixosModules.home-manager
-            impermanence.nixosModules.impermanence
             ./home/configuration.nix
           ]);
       };

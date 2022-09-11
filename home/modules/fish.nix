@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, sops, ... }:
 
 {
   programs.starship = {
@@ -149,7 +149,7 @@
     shellInit = ''
       set PATH $PATH ( find $HOME/.sources/ -type d -printf ":%p" )
       set PATH $PATH /home/fedeizzo/.nimble/bin
-      set EDITOR "nvim"
+      set EDITOR "vim"
       set TERMINAL "kitty"
       set PIPENV_CACHE_DIR "$XDG_CACHE_HOME"/pipenv
       set WPM_COUNTER 0
