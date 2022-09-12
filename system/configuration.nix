@@ -3,6 +3,7 @@
 {
   imports = [
     ./boot.nix
+    ./borg.nix
     ./hardware.nix
     ./keymapTimeFont.nix
     ./pipewire.nix

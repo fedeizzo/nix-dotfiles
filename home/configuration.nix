@@ -75,7 +75,6 @@
             ".mozilla"
             ".cache/borg"
             ".cache/chromium"
-            ".cache/containers"
             ".cache/emacs"
             ".cache/google-chrome"
             ".cache/lf"

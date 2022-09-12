@@ -14,6 +14,7 @@ lib.mkIf (config.fs == "btrfs") {
       "/var/lib/docker"
       "/var/lib/fprint"
       "/var/lib/tailscale"
+      "/root/.ssh"
     ];
     files = [
       "/etc/adjtime"

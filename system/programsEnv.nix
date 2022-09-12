@@ -3,21 +3,6 @@
 {
   nixpkgs.overlays = [
     (import ../pkgs)
-    (self: super: {
-      podman-compose = super.podman-compose.overrideAttrs (old: {
-        version = "1.0.2";
-        src = super.fetchFromGitHub {
-          repo = "podman-compose";
-          owner = "containers";
-          rev = "v1.0.2";
-          sha256 = "sha256-VTy9sE5lUny4ruzyr8M3DVvv6F4ZgpIXiVOhn+sjV78=";
-        };
-        propagatedBuildInputs = [
-          super.python3Packages.pyyaml
-          super.python3Packages.python-dotenv
-        ];
-      });
-    })
   ];
   environment.systemPackages = with pkgs; [
     bc
@@ -27,9 +12,6 @@
     neofetch
     wget
     acpi
-    podman
-    podman-compose
-    nvidia-podman
     git
     highlight
     lm_sensors
@@ -70,9 +52,10 @@
     gtkUsePortal = true;
   };
   virtualisation = {
-    podman = {
+    docker = {
       enable = true;
       enableNvidia = true;
+      enableOnBoot = true;
     };
     libvirtd.enable = true;
   };
