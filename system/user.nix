@@ -31,7 +31,8 @@
       passwordFile = if config.fs == "ext4" then null else config.sops.secrets.fedeizzo-path.path;
     };
     root = {
-      passwordFile = if config.fs == "ext4" then null else config.sops.secrets.root-path.path;
+      hashedPassword = "!"; # to enable root login remode this line
+      # passwordFile = if config.fs == "ext4" then null else config.sops.secrets.root-path.path;
     };
   };
 }
