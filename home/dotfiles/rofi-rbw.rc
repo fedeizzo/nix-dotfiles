@@ -1,0 +1,5 @@
+action type-password
+prompt pass
+selector rofi
+clipboarder wl-copy
+typer wtype

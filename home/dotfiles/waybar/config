@@ -2,8 +2,8 @@
     "position": "top", 
     "height": 14,
     "modules-left": ["sway/workspaces", "wlr/workspaces", "river/tags"],
+    "modules-center": ["custom/backup-home", "custom/backup-root"],
     "modules-right": ["cpu", "temperature", "memory", "pulseaudio", "network", "battery", "clock", "tray"],
-    // Modules configuration
     "sway/workspaces": {
        "disable-scroll": true,
        "all-outputs": false,
@@ -30,42 +30,54 @@
         "format": " {percentage}%",
         "interval": 10
     },
-	"clock": {
-		"format": " {:%H:%M}",
-        	"tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
-        	"format-alt": "{:%Y-%m-%d}"
+    "clock": {
+	    "format": " {:%H:%M}",
+	    "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+	    "format-alt": "{:%Y-%m-%d}"
+    },
+    "battery": {
+	    "states": {
+		    "warning": 30,
+		    "critical": 15
+	    },
+	    "format": "{icon} {capacity}%",
+	    "format-charging": " {capacity}%",
+	    "format-plugged": " {capacity}%",
+	    "format-alt": "{time} {icon}",
+	    "format-full": " {capacity}%",
+	    "format-icons": ["", "", ""]
+    },
+    "network": {
+	    "format-wifi": "  {essid}",
+	    "format-ethernet": "{ifname}: {ipaddr}/{cidr} ",
+	    "format-linked": "{ifname} (No IP) ",
+	    "format-disconnected": "󰤮 Disconnected",
+	    "format-alt": "{ifname}: {ipaddr}/{cidr}"
+    },
+    "pulseaudio": {
+	"format": "{icon}  {volume}%",
+	"format-muted": " Muted",
+	"format-icons": {
+	    "headphone": "",
+	    "hands-free": "",
+	    "headset": "",
+	    "phone": "",
+	    "portable": "",
+	    "car": "",
+	    "default": ["", "", ""]
 	},
-	"battery": {
-        	"states": {
-            		"warning": 30,
-            		"critical": 15
-        	},
-        	"format": "{icon} {capacity}%",
-        	"format-charging": " {capacity}%",
-        	"format-plugged": " {capacity}%",
-        	"format-alt": "{time} {icon}",
-        	"format-full": " {capacity}%",
-        	"format-icons": ["", "", ""]
-	},
-	"network": {
-        	"format-wifi": "  {essid}",
-        	"format-ethernet": "{ifname}: {ipaddr}/{cidr} ",
-        	"format-linked": "{ifname} (No IP) ",
-        	"format-disconnected": "󰤮 Disconnected",
-        	"format-alt": "{ifname}: {ipaddr}/{cidr}"
-	},
-	"pulseaudio": {
-		"format": "{icon}  {volume}%",
-        	"format-muted": " Muted",
-        "format-icons": {
-            "headphone": "",
-            "hands-free": "",
-            "headset": "",
-            "phone": "",
-            "portable": "",
-            "car": "",
-            "default": ["", "", ""]
-        },
-        "on-click": "pavucontrol"
+	"on-click": "pavucontrol"
+    },
+    "custom/backup-home": {
+        "format": "  {} ",
+	"return-type": "json",
+	"exec": "~/.sources/backup_notifier home",
+	"interval": 5
+    },
+    "custom/backup-root": {
+        "format": "  {} ",
+	"return-type": "json",
+	"exec": "~/.sources/backup_notifier root",
+	"interval": 5
     }
 }

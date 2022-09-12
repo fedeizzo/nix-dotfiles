@@ -21,6 +21,7 @@
     ripgrep
     openssl
     rbw
+    rofi-rbw
     nix-index
     rsync
     brightnessctl
@@ -45,4 +46,7 @@
     home-manager
     zip
   ];
+  xdg.configFile."rofi-rbw.rc" = {
+    source = ../dotfiles/rofi-rbw.rc;
+  };
 }

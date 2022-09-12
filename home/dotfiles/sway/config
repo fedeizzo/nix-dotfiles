@@ -62,6 +62,7 @@ for_window [app_id="firefox"] inhibit_idle fullscreen
 for_window [app_id="anki"] floating enable
 for_window [app_id="org.inkscape.Inkscape"] floating enable
 for_window [app_id="com.github.maoschanz.drawing"] floating enable, resize set 1400 900
+for_window [app_id="pinentry-qt"] floating enable
 
 # inkscape vim
 for_window [app_id="inkscapevim"] floating enable
@@ -125,7 +126,7 @@ bindsym {
 bindsym {
     $mod+Return exec kitty
     $mod+d exec $menu
-    $mod+b exec /home/fedeizzo/.sources/fillBwPassword
+    $mod+b exec rofi-rbw
     $mod+r mode "resize"
     $mod+F11 mode "passthrough"
     $mod+p exec grim -g "$(slurp)" - | swappy -f -
@@ -165,7 +166,7 @@ exec wl-paste -t text --watch clipman store
 exec swaybg -i $HOME/.config/sway/wallpaper.png
 exec waybar
 exec autotiling
-exec QT_QPA_PLATFORM=wayland-egl telegram-desktop
+# exec QT_QPA_PLATFORM=wayland-egl telegram-desktop
 exec nm-applet --indicator
 # fix: gtk+ applications take 20 seconds to start
 exec systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP

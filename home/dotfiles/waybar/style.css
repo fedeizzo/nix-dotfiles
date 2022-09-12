@@ -149,3 +149,11 @@ window#waybar {
 	color: #b48ead;
 	border-radius: 5px 0px 0px 5px;
 }
+
+#custom-backup-home.borg-backup-doing {
+    color: #d08770;
+}
+
+#custom-backup-root.borg-backup-doing {
+    color: #d08770;
+}
