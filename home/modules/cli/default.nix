@@ -47,6 +47,6 @@
     zip
   ];
   xdg.configFile."rofi-rbw.rc" = {
-    source = ../dotfiles/rofi-rbw.rc;
+    source = ./rofi-rbw.rc;
   };
 }

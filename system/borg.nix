@@ -36,8 +36,8 @@ in
       postCreate = ''
         echo "PostCreate done"
       '';
-      startAt = [ "hourly" ];
-      persistentTimer = false;
+      startAt = [ "daily" ];
+      persistentTimer = true;
       postPrune = "${pkgs.borgbackup}/bin/borg --progress compact ${borgRootRepo}";
       encryption = {
         passCommand = "cat ${config.sops.secrets.borg-root-password.path}";
@@ -83,8 +83,8 @@ in
       postCreate = ''
         echo "PostCreate done"
       '';
-      startAt = [ "hourly" ];
-      persistentTimer = false;
+      startAt = [ "daily" ];
+      persistentTimer = true;
       postPrune = "${pkgs.borgbackup}/bin/borg --progress compact ${borgHomeRepo}";
       encryption = {
         passCommand = "cat ${config.sops.secrets.borg-home-password.path}";

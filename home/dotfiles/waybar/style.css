@@ -151,9 +151,17 @@ window#waybar {
 }
 
 #custom-backup-home.borg-backup-doing {
-    color: #d08770;
+    color: #ebcb8b;
 }
 
 #custom-backup-root.borg-backup-doing {
+    color: #ebcb8b;
+}
+
+#custom-backup-home.borg-backup-error {
+    color: #d08770;
+}
+
+#custom-backup-root.borg-backup-error {
     color: #d08770;
 }

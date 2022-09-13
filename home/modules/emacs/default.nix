@@ -65,7 +65,7 @@ in
     aria
     python-with-my-packages
   ];
-  xdg.configFile."emacs/Emacs.org".source = ../dotfiles/emacs/Emacs.org;
+  xdg.configFile."emacs/Emacs.org".source = ./Emacs.org;
   xdg.configFile."emacs/early-init.el".text = ''
     ;; Disable package.el in favor of straight.el
     (setq package-enable-at-startup nil)

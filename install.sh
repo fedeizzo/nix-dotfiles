@@ -4,7 +4,7 @@ if [[ $1 == "-f" ]]; then
     SUPER_CMD=""
 else
     mkdir -p $HOME/.config
-    [ -f $HOME/.config/emacs/straight/versions/default.el ] || ln -s $(pwd)/dotfiles/emacs/default.el $HOME/.config/emacs/straight/versions/default.el
+    [ -f $HOME/.config/emacs/straight/versions/default.el ] || ln -s $(pwd)/home/modules/emacs/default.el $HOME/.config/emacs/straight/versions/default.el
 fi
 current_dir=$(pwd)
 for f in $(ls); do

@@ -19,9 +19,9 @@
     '';
   };
   xdg.configFile."kitty/nord.conf" = {
-    source = ../dotfiles/kitty/nord.conf;
+    source = ./nord.conf;
   };
   xdg.configFile."kitty/open-actions.conf" = {
-    source = ../dotfiles/kitty/open-actions.conf;
+    source = ./open-actions.conf;
   };
 }

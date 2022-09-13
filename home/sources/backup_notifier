@@ -5,8 +5,19 @@ function backup_info {
 	status=""
 	echo '{"text":"'$status'","class":"borg-backup-doing"}'
     else
-	status=""
-	echo '{"text":"'$status'","class":"borg-backup"}'
+	last_backup=$(systemctl list-timers | grep borgbackup-job-$1-persistent.service | awk -F' ' '{print $8" "$9}' | date +%s -f -)
+	error_retriving_last_backup=$?
+	now=$(date '+%s')
+	diff=$((now-last_home_backup))
+
+        # 86400 seconds are 24 hours
+	if [[ $diff > 86400 || $error_retriving_last_backup != 0 ]]; then
+	    status=""
+	    echo '{"text":"'$status'","class":"borg-backup-error"}'
+	else
+	    status=""
+	    echo '{"text":"'$status'","class":"borg-backup"}'
+	fi
     fi
 }
 

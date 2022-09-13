@@ -8,19 +8,17 @@
       imports = [
         inputs.hyprland.homeManagerModules.default
         inputs.impermanence.nixosModules.home-manager.impermanence
-        ./modules/bottom.nix
-        ./modules/cli.nix
+        ./modules/bottom
+        ./modules/cli
         ./modules/config.nix
-        ./modules/emacs.nix
-        ./modules/fish.nix
+        ./modules/emacs
+        ./modules/fish
         ./modules/git.nix
         ./modules/gtk-qt.nix
-        ./modules/kitty.nix
+        ./modules/kitty
         ./modules/languages.nix
         ./modules/lf.nix
-        ./modules/neovim.nix
         ./modules/packages.nix
-        # ./modules/qutebrowser.nix
         ./modules/services.nix
         ./modules/wayland.nix
         ./modules/zathura.nix

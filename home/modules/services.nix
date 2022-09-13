@@ -7,7 +7,6 @@
   programs.direnv = {
     enable = true;
     nix-direnv.enable = true;
-    # nix-direnv.enableFlakes = true;
   };
   services.lorri.enable = false;
   systemd.user.services = {
