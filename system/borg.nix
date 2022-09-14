@@ -5,10 +5,6 @@ let
   borgRootRepo = "rasp@home-lab:~/backup/root-persistent-laptop";
 in
 {
-  sops.secrets = {
-    borg-home-password = { };
-    borg-root-password = { };
-  };
   services.borgbackup.jobs = {
     root-persistent = {
       user = "root";
@@ -29,6 +25,13 @@ in
       archiveBaseName = "${config.networking.hostName}";
       doInit = true;
       preHook = ''
+        echo "Check internet connection"
+        is_network_down=1
+        while [[ $is_network_down == 1 ]]; do
+            ${pkgs.unixtools.ping}/bin/ping -c1 -q 8.8.8.8 > /dev/null
+            is_network_down=$?
+            sleep 10
+        done
         echo "Start tailscale VPN"
         ${pkgs.tailscale}/bin/tailscale up
         echo "PreHook done"
@@ -76,6 +79,13 @@ in
       archiveBaseName = "${config.networking.hostName}";
       doInit = true;
       preHook = ''
+        echo "Check internet connection"
+        is_network_down=1
+        while [[ $is_network_down == 1 ]]; do
+            ${pkgs.unixtools.ping}/bin/ping -c1 -q 8.8.8.8 > /dev/null
+            is_network_down=$?
+            sleep 10
+        done
         echo "Start tailscale VPN"
         ${pkgs.tailscale}/bin/tailscale up
         echo "PreHook done"

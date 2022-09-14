@@ -27,4 +27,18 @@
     age.generateKey = false;
     age.sshKeyPaths = [ ];
   };
+  sops.secrets = {
+    rasp-authkey = {
+      owner = config.users.users.${config.username}.name;
+      group = config.users.users.${config.username}.group;
+    };
+    borg-home-password = { };
+    borg-root-password = { };
+    fedeizzo-path = {
+      neededForUsers = true;
+    };
+    root-path = {
+      neededForUsers = true;
+    };
+  };
 }
