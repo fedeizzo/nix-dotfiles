@@ -3,8 +3,10 @@ SUPER_CMD="doas"
 if [[ $1 == "-f" ]]; then
     SUPER_CMD=""
 else
-    mkdir -p $HOME/.config
-    [ -f $HOME/.config/emacs/straight/versions/default.el ] || ln -s $(pwd)/home/modules/emacs/default.el $HOME/.config/emacs/straight/versions/default.el
+    if [[ $HOSTNAME == "fedeizzo-nixos" ]]; then
+	mkdir -p $HOME/.config/emacs/straight/version
+	[ -f $HOME/.config/emacs/straight/versions/default.el ] || ln -s $(pwd)/home/modules/emacs/default.el $HOME/.config/emacs/straight/versions/default.el
+    fi
 fi
 current_dir=$(pwd)
 for f in $(ls); do

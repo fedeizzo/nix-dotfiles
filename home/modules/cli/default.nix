@@ -2,6 +2,20 @@
 
 {
   home.packages = with pkgs; [
+    (makeDesktopItem {
+      name = "reboot";
+      exec = "reboot";
+      comment = "Reboot the system";
+      desktopName = "reboot";
+      type = "Application";
+    })
+    (makeDesktopItem {
+      name = "shutdown";
+      exec = "shutdown";
+      comment = "Shutdown the system";
+      desktopName = "shutdown";
+      type = "Application";
+    })
     coreutils
     xdragon
     exa
