@@ -11,7 +11,7 @@
     })
     (makeDesktopItem {
       name = "shutdown";
-      exec = "shutdown";
+      exec = "shutdown now";
       comment = "Shutdown the system";
       desktopName = "shutdown";
       type = "Application";
