@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, sops, ... }:
 
 {
   boot = {
@@ -72,7 +72,7 @@
     kbdInteractiveAuthentication = false;
     openFirewall = false;
     forwardX11 = false;
-    permitRootLogin = "no";
+    permitRootLogin = "yes";
   };
   services.fail2ban.enable = true;
   # tailscale up
@@ -119,28 +119,48 @@
     SUBSYSTEM=="gpio", KERNEL=="gpiochip*", ACTION=="add", RUN+="${pkgs.bash}/bin/bash -c 'chown root:gpio  /sys/class/gpio/export /sys/class/gpio/unexport ; chmod 220 /sys/class/gpio/export /sys/class/gpio/unexport'"
     SUBSYSTEM=="gpio", KERNEL=="gpio*", ACTION=="add",RUN+="${pkgs.bash}/bin/bash -c 'chown root:gpio /sys%p/active_low /sys%p/direction /sys%p/edge /sys%p/value ; chmod 660 /sys%p/active_low /sys%p/direction /sys%p/edge /sys%p/value'"
   '';
-  systemd.services.fan-control = {
-    enable = true;
-    script = ''
-      while true; do
-        ontemp=55
-        temp=$(${pkgs.libraspberrypi}/bin/vcgencmd measure_temp | egrep -o '[0-9]*\.[0-9]*')
-        temp0=$${temp%.*}
+  systemd.services = {
+    fan-control = {
+      enable = true;
+      script = ''
+        while true; do
+          ontemp=55
+          temp=$(${pkgs.libraspberrypi}/bin/vcgencmd measure_temp | egrep -o '[0-9]*\.[0-9]*')
+          temp0=$${temp%.*}
 
-        if [[ $temp > $ontemp ]]; then
-            ${pkgs.libgpiod}/bin/gpioset gpiochip0 14=1
-        else
-            ${pkgs.libgpiod}/bin/gpioset gpiochip0 14=0
+          if [[ $temp > $ontemp ]]; then
+              ${pkgs.libgpiod}/bin/gpioset gpiochip0 14=1
+          else
+              ${pkgs.libgpiod}/bin/gpioset gpiochip0 14=0
 
-        fi
-        sleep 10
-      done
-    '';
-    unitConfig = {
-      Type = "simple";
+          fi
+          sleep 10
+        done
+      '';
+      unitConfig = {
+        Type = "simple";
+      };
+      wantedBy = [ "multi-user.target" ];
     };
-    wantedBy = [ "multi-user.target" ];
+    # tailscale-nginx-auth = {
+    #   description = "Tailscale NGINX Authentication socket";
+    #   after = [ "nginx.service" ];
+    #   wants = [ "nginx.service" ];
+    #   serviceConfig = {
+    #     ExecStart = "${pkgs.tailscalewithnginx}/bin/tailscale.nginx-auth";
+    #     DynamicUser = "yes";
+    #   };
+    #   wantedBy = [ "default.target" ];
+    # };
   };
+  # systemd.sockets = {
+  #   tailscale-nginx-auth = {
+  #     description = "Tailscale NGINX Authentication socket";
+  #     partOf = [ "tailscale-nginx-auth.service" ];
+  #     wantedBy = [ "sockets.target" ];
+  #     listenStreams = [ "/var/run/tailscale/tailscale.nginx-auth.sock" ];
+  #   };
+  # };
 
   # KEYMAP AND TIME
   i18n.defaultLocale = "en_US.UTF-8";
@@ -169,6 +189,7 @@
     libgpiod
     borgbackup
     kubectl
+    htop
   ];
   virtualisation = {
     docker = {
@@ -196,21 +217,39 @@
   security.audit.rules = [
     "-a exit,always -F arch=b64 -S execve"
   ];
+  sops = {
+    defaultSopsFile = ../secrets.yaml;
+    defaultSopsFormat = "yaml";
+    age.keyFile = "/var/lib/sops/keys.txt";
+    age.generateKey = false;
+    age.sshKeyPaths = [ ];
+  };
 
   # USER
-  users.users.rasp = {
-    name = "rasp";
-    isNormalUser = true;
-    createHome = true;
-    extraGroups = [
-      "wheel"
-      "docker"
-      "autologin"
-      "users"
-      "networkmanager"
-      "gpio"
-    ];
-    shell = pkgs.bash;
+  sops.secrets.rasp-authkey.sopsFile = ../secrets.yaml;
+  users.users = {
+    root = {
+      openssh.authorizedKeys.keyFiles = [
+        config.sops.secrets.rasp-authkey.path
+      ];
+    };
+    rasp = {
+      name = "rasp";
+      isNormalUser = true;
+      createHome = true;
+      extraGroups = [
+        "wheel"
+        "docker"
+        "autologin"
+        "users"
+        "networkmanager"
+        "gpio"
+      ];
+      shell = pkgs.bash;
+      openssh.authorizedKeys.keyFiles = [
+        config.sops.secrets.rasp-authkey.path
+      ];
+    };
   };
 
   # NIX STUFF
@@ -218,6 +257,7 @@
     allowUnfree = true;
   };
   nix = {
+    settings.trusted-users = [ "root" ];
     autoOptimiseStore = true;
     package = pkgs.nixFlakes;
     gc = {

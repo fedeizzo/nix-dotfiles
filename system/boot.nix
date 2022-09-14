@@ -69,6 +69,8 @@ in
       "nvidia-drm.modeset=1"
     ];
     consoleLogLevel = 0;
+    # required for build raspberry configuration
+    binfmt.emulatedSystems = [ "aarch64-linux" ];
   };
   system.activationScripts.copyGrubTheme = ''
     mkdir -p /boot/themes

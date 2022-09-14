@@ -104,6 +104,7 @@
             ./system/configuration.nix
             home-manager.nixosModules.home-manager
             ./home/configuration.nix
+            { environment.systemPackages = [ deploy-rs.defaultPackage.x86_64-linux ]; }
           ]);
       };
 
@@ -123,34 +124,31 @@
                     wrapProgram $out/bin/tailscale --suffix PATH : ${pkgs.lib.makeBinPath [ pkgs.procps ]}
                     wrapProgram $out/bin/nginx-auth --suffix PATH : ${pkgs.lib.makeBinPath [ pkgs.procps ]}
                     sed -i -e "s#/usr/sbin#$out/bin#" -e "/^EnvironmentFile/d" ./cmd/tailscaled/tailscaled.service
-                    sed -i -e "s#/usr/sbin/tailscale.nginx-auth#$out/bin/nginx-auth#" ./cmd/nginx-auth/tailscale.nginx-auth.service
-                    sed -i -e "s#/var/run#/run#" ./cmd/nginx-auth/tailscale.nginx-auth.socket
                     install -D -m0444 -t $out/lib/systemd/system ./cmd/tailscaled/tailscaled.service
-                    install -D -m0444 -t $out/lib/systemd/system ./cmd/nginx-auth/tailscale.nginx-auth.service
-                    install -D -m0444 -t $out/lib/systemd/system ./cmd/nginx-auth/tailscale.nginx-auth.socket
                   '';
                 });
               })
             ];
           })
           ./raspberry/nixos.nix
+          sops-nix.nixosModules.sops
           ./raspberry/hardware-configuration.nix
         ];
       };
-      # deploy.nodes.rasp-nixos = {
-      #   hostname = "home-lab";
-      #   sshUser = "rasp";
-      #   sudo = "doas -u";
-      #   sshOpts = [ ];
-      #   magicRollback = true;
-      #   autoRollback = true;
-      #   fastConnection = false;
-      #   profiles.system = {
-      #     user = "root";
-      #     path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.rasp-nixos;
-      #   };
-      # };
-      # checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) deploy-rs.lib;
+      deploy.nodes.rasp-nixos = {
+        hostname = "home-lab";
+        sshUser = "root";
+        sudo = "doas -u";
+        sshOpts = [ ];
+        magicRollback = true;
+        autoRollback = true;
+        fastConnection = false;
+        profiles.system = {
+          user = "root";
+          path = deploy-rs.lib.aarch64-linux.activate.nixos self.nixosConfigurations.rasp-nixos;
+        };
+      };
+      checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) deploy-rs.lib;
       templates = {
         python = {
           path = ./templates/python-mach-nix;
