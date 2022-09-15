@@ -143,11 +143,11 @@
       wantedBy = [ "multi-user.target" ];
     };
     # tailscale-nginx-auth = {
-    #   description = "Tailscale NGINX Authentication socket";
+    #   description = "Tailscale NGINX Authentication service";
     #   after = [ "nginx.service" ];
     #   wants = [ "nginx.service" ];
     #   serviceConfig = {
-    #     ExecStart = "${pkgs.tailscalewithnginx}/bin/tailscale.nginx-auth";
+    #     ExecStart = "${pkgs.tailscalewithnginx}/bin/nginx-auth";
     #     DynamicUser = "yes";
     #   };
     #   wantedBy = [ "default.target" ];

@@ -124,7 +124,10 @@
                     wrapProgram $out/bin/tailscale --suffix PATH : ${pkgs.lib.makeBinPath [ pkgs.procps ]}
                     wrapProgram $out/bin/nginx-auth --suffix PATH : ${pkgs.lib.makeBinPath [ pkgs.procps ]}
                     sed -i -e "s#/usr/sbin#$out/bin#" -e "/^EnvironmentFile/d" ./cmd/tailscaled/tailscaled.service
+                    sed -i -e "s#/usr/sbin/tailscale.nginx-auth#$out/bin/nginx-auth#" -e "/^EnvironmentFile/d" ./cmd/nginx-auth/tailscale.nginx-auth.service
                     install -D -m0444 -t $out/lib/systemd/system ./cmd/tailscaled/tailscaled.service
+                    install -D -m0444 -t $out/lib/systemd/system ./cmd/nginx-auth/tailscale.nginx-auth.service
+                    install -D -m0444 -t $out/lib/systemd/system ./cmd/nginx-auth/tailscale.nginx-auth.socket
                   '';
                 });
               })
