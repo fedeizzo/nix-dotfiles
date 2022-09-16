@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, username, ... }:
 
 {
   security.pam.services.lightdm.enableGnomeKeyring = false;
@@ -21,7 +21,7 @@
   # secrets management
   environment.systemPackages = with pkgs; [ sops age ];
   sops = {
-    defaultSopsFile = ../secrets.yaml;
+    defaultSopsFile = ../../secrets.yaml;
     defaultSopsFormat = "yaml";
     age.keyFile = "/var/lib/sops/keys.txt";
     age.generateKey = false;
@@ -29,8 +29,8 @@
   };
   sops.secrets = {
     rasp-authkey = {
-      owner = config.users.users.${config.username}.name;
-      group = config.users.users.${config.username}.group;
+      owner = config.users.users.${username}.name;
+      group = config.users.users.${username}.group;
     };
     borg-home-password = { };
     borg-root-password = { };

@@ -13,7 +13,7 @@
     };
     flake-utils.url = "github:numtide/flake-utils";
     emacs-overlay = {
-      url = "github:nix-community/emacs-overlay/6b4445aa659fa26b4f36d9975b34632312699a85";
+      url = "github:nix-community/emacs-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     impermanence = {
@@ -45,99 +45,41 @@
     , ...
     }@inputs:
     let
-      config = {
-        username = "fedeizzo";
-        hostname = "fedeizzo-nixos";
-        fs = "btrfs";
-      };
+      lib = import ./lib { inherit inputs; };
+      inherit (lib) mkHost forAllSystems;
     in
-    {
-      # by default the configuration used for nixos-rebuild switch
-      # is matched with the current hostname
-      nixosConfigurations.${config.hostname} = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-
-        specialArgs = { inherit inputs; };
-
-        modules =
-          let
-            defaults = { pkgs, ... }: {
-              _module.args.nixpkgs-unstable = import inputs.nixpkgs-unstable {
-                inherit (pkgs.stdenv.targetPlatform) system;
-              };
-              _module.args.nixpkgs-old = import inputs.nixpkgs-old {
-                inherit (pkgs.stdenv.targetPlatform) system;
-              };
-            };
-          in
-          ([
-            defaults
-            ({ pkgs, ... }: {
-              nixpkgs.overlays = [
-                inputs.emacs-overlay.overlay
-                (self: super: {
-                  waybar = super.waybar.overrideAttrs (oldAttrs: {
-                    mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ];
-                  });
-                })
-              ];
-            })
-            {
-              options = with nixpkgs.lib; {
-                username = mkOption {
-                  type = types.str;
-                  description = "The username to use";
-                };
-                hostname = mkOption {
-                  type = types.str;
-                  description = "The hostname of the machine";
-                };
-                fs = mkOption {
-                  type = types.str;
-                  description = "Filesystem of the main disk";
-                };
-              };
-              inherit config;
-            }
-            impermanence.nixosModules.impermanence
-            sops-nix.nixosModules.sops
-            ./system/configuration.nix
-            home-manager.nixosModules.home-manager
-            ./home/configuration.nix
-            { environment.systemPackages = [ deploy-rs.defaultPackage.x86_64-linux ]; }
-          ]);
+    rec {
+      overlays = {
+        emacs = inputs.emacs-overlay.overlay;
+        default = import ./overlays { inherit inputs; };
+      };
+      legacyPackages = forAllSystems (system:
+        import inputs.nixpkgs {
+          inherit system;
+          overlays = builtins.attrValues overlays;
+          config.allowUnfree = true;
+          config.joypixels.acceptLicense = true;
+        }
+      );
+      nixosConfigurations = {
+        fedeizzo-nixos = mkHost {
+          username = "fedeizzo";
+          hostname = "fedeizzo-nixos";
+          fs = "btrfs";
+          system = "x86_64-linux";
+          machine = "xps-9510";
+          pkgs = legacyPackages."x86_64-linux";
+        };
+        rasp-nixos = mkHost {
+          username = "rasp";
+          hostname = "rasp-nixos";
+          fs = "ext4";
+          system = "aarch64-linux";
+          machine = "raspberry";
+          pkgs = legacyPackages."aarch64-linux";
+        };
       };
 
-      nixosConfigurations.rasp-nixos = nixpkgs.lib.nixosSystem {
-        system = "aarch64-linux";
-
-        specialArgs = { inherit inputs; };
-        modules = [
-          nixos-hardware.nixosModules.raspberry-pi-4
-          ({ pkgs, ... }: {
-            nixpkgs.overlays = [
-              (self: super: {
-                tailscalewithnginx = super.tailscale.overrideAttrs (oldAttrs: {
-                  subPackages = oldAttrs.subPackages ++ [ "cmd/nginx-auth" ];
-                  postInstall = ''
-                    wrapProgram $out/bin/tailscaled --prefix PATH : ${pkgs.lib.makeBinPath [ pkgs.iproute2 pkgs.iptables ]}
-                    wrapProgram $out/bin/tailscale --suffix PATH : ${pkgs.lib.makeBinPath [ pkgs.procps ]}
-                    wrapProgram $out/bin/nginx-auth --suffix PATH : ${pkgs.lib.makeBinPath [ pkgs.procps ]}
-                    sed -i -e "s#/usr/sbin#$out/bin#" -e "/^EnvironmentFile/d" ./cmd/tailscaled/tailscaled.service
-                    sed -i -e "s#/usr/sbin/tailscale.nginx-auth#$out/bin/nginx-auth#" -e "/^EnvironmentFile/d" ./cmd/nginx-auth/tailscale.nginx-auth.service
-                    install -D -m0444 -t $out/lib/systemd/system ./cmd/tailscaled/tailscaled.service
-                    install -D -m0444 -t $out/lib/systemd/system ./cmd/nginx-auth/tailscale.nginx-auth.service
-                    install -D -m0444 -t $out/lib/systemd/system ./cmd/nginx-auth/tailscale.nginx-auth.socket
-                  '';
-                });
-              })
-            ];
-          })
-          ./raspberry/nixos.nix
-          sops-nix.nixosModules.sops
-          ./raspberry/hardware-configuration.nix
-        ];
-      };
       deploy.nodes.rasp-nixos = {
         hostname = "home-lab";
         sshUser = "root";

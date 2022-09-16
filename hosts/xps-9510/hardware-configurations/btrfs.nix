@@ -1,4 +1,4 @@
-{ lib, pkgs, config, ... }:
+{ lib, pkgs, fs, ... }:
 
 let
   fs-diff = pkgs.writeShellScriptBin "fs-diff" ''
@@ -29,7 +29,7 @@ let
     doas umount -R /mnt
   '';
 in
-lib.mkIf (config.fs == "btrfs") {
+lib.mkIf (fs == "btrfs") {
   environment.systemPackages = [ fs-diff ];
   boot.initrd.postDeviceCommands = (pkgs.lib.mkBefore ''
     mkdir -p /mnt

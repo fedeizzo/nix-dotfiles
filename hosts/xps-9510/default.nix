@@ -1,7 +1,10 @@
-{ config, modulesPath, ... }:
+{ config, modulesPath, inputs, ... }:
 
 {
   imports = [
+    inputs.impermanence.nixosModules.impermanence
+    inputs.home-manager.nixosModules.home-manager
+    inputs.sops-nix.nixosModules.sops
     ./boot.nix
     ./borg.nix
     ./hardware.nix

@@ -752,18 +752,17 @@ Open other notes in the same window
 
 ** Agenda
 #+begin_src emacs-lisp
-  (setq org-directory "~/org")
-  (setq fi/tasks-to-process-file (concat org-directory "/to_process/tasks.org"))
-  (setq fi/tasks-file (concat org-directory "/tasks.org"))
-  (setq fi/readings-file (concat org-directory "/readings.org"))
-  (setq fi/things-to-read-file (concat org-directory "/to_process/readings.org"))
-  (setq fi/habits-file (concat org-directory "/habits.org"))
-  (setq fi/agenda-files
-        (list fi/tasks-to-process-file
-              fi/things-to-read-file
-              fi/habits-file
-              fi/tasks-file
-              fi/readings-file))
+  (setq
+   org-directory "~/org"
+   fi/org-agenda-inbox-file (concat org-directory "/inbox.org")
+   fi/org-agenda-work-file (concat org-directory "/work.org")
+   fi/org-agenda-uni-file (concat org-directory "/uni.org")
+   fi/org-agenda-personal-file (concat org-directory "/personal.org")
+   fi/org-agenda-habits-file (concat org-directory "/habits.org")
+   fi/org-agenda-files (list
+                        fi/org-agenda-work-file
+                        fi/org-agenda-uni-file
+                        fi/org-agenda-personal-file))
 #+end_src
 
 Required dependencies:
@@ -780,7 +779,10 @@ todo keywords:
 - ~DONE~: finished task.
 
 #+begin_src emacs-lisp
-  (setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "HOLD(h)" "|" "DONE(d)")))
+  (setq org-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "DOING(c)" "HOLD(h)" "|" "DONE(d)")))
+  (setq org-todo-keywords-for-agenda '((sequence "TODO(t)" "NEXT(n)" "DOING(c)" "HOLD(h)" "|" "DONE(d)")))
+  (setq org-todo-state-tags-triggers '((sequence "TODO(t)" "NEXT(n)" "DOING(c)" "HOLD(h)" "|" "DONE(d)")))
+  (setq org-agenda-todo-keywords '((sequence "TODO(t)" "NEXT(n)" "DOING(c)" "HOLD(h)" "|" "DONE(d)")))
 #+end_src
 
 Enforce that ~DONE~ can be set only if all children have ~DONE~ set:
@@ -789,22 +791,11 @@ Enforce that ~DONE~ can be set only if all children have ~DONE~ set:
   (setq-default org-enforce-todo-dependencies t)
 #+end_src
 
-  tags:
-  - ~emacs~
-  - ~linux~
-  - ~notes~
-  - ~work~
-  - ~uni~
-  - ~ML~
-
 #+begin_src emacs-lisp
   (setq org-tag-alist
-        '(("emacs" . ?e)
-          ("linux" . ?x)
-          ("notes" . ?n)
-          ("work" . ?w)
-          ("uni" . ?u)
-          ("ml" . ?m)))
+        '(("@work" . ?w)
+          ("@uni" . ?u)
+          ("@home" . ?h)))
 #+end_src
 
 Agenda:
@@ -820,10 +811,9 @@ Clockin:
 *** Agenda
 #+begin_src emacs-lisp
   (setq
-   org-agenda-files fi/agenda-files
+   org-agenda-files (list org-directory)
    org-agenda-breadcrumbs-separator " ❱ "
    org-agenda-block-separator "──────────"
-   ;; org-agenda-prefix-format " %i "
    org-agenda-include-inactive-timestamps t
    org-agenda-log-mode-items '(closed clock state)
    org-agenda-start-with-log-mode '(closed clock state)
@@ -832,51 +822,42 @@ Clockin:
   (setq org-agenda-custom-commands
         '(
           (" " "Agenda"
-           ((agenda ""
-                    ((org-agenda-overriding-header  " This week")
-                     (org-agenda-files fi/agenda-files)))
-            ;; (agenda ""
-            ;;         ((org-agenda-overriding-header  " Today")
-            ;;          (org-agenda-span 1)
-            ;;          (org-agenda-files fi/agenda-files)))
+           (
+            (agenda ""
+                    ((org-agenda-overriding-header  " This week")))
             (todo "TODO"
-                  ((org-agenda-overriding-header " To process")
-                   (org-agenda-files (list fi/tasks-to-process-file fi/things-to-read-file))))
-            (todo "NEXT"
-                  ((org-agenda-overriding-header " NEXT")))
-            (todo "HOLD"
-                  ((org-agenda-overriding-header " HOLD")))
+                  ((org-agenda-overriding-header " To process / Inbox")
+                   (org-agenda-prefix-format "%b")
+                   (org-super-agenda-groups nil)
+                   (org-agenda-files (list fi/org-agenda-inbox-file))))
             (todo "TODO"
                   ((org-agenda-overriding-header " TODO")
-                   (org-agenda-files (list fi/tasks-file))))
-            (todo "TODO"
-                  ((org-agenda-overriding-header " Readings")
-                   (org-agenda-prefix-format "%t")
-                   (org-agenda-files (list fi/readings-file)))))
+                   (org-agenda-prefix-format "")
+                   (org-agenda-files fi/org-agenda-files)
+                   (org-super-agenda-groups '((
+                                               :auto-category t
+                                               :auto-priority t
+                                               )))))
+            (todo "NEXT"
+                  ((org-agenda-overriding-header " NEXT")
+                   (org-agenda-prefix-format "")
+                   (org-super-agenda-groups '((:auto-category t)))))
+            (todo "DOING"
+                  ((org-agenda-overriding-header " DOING")
+                   (org-agenda-prefix-format "")
+                   (org-super-agenda-groups '((:auto-category t)))))
+            (todo "HOLD"
+                  ((org-agenda-overriding-header " HOLD")
+                   (org-agenda-prefix-format "")
+                   (org-super-agenda-groups '((:auto-category t)))))
+            )
            )
           ))
 
-  ;; (setq org-agenda-category-icon-alist
-  ;;       `(
-  ;;         ("readings" ,(list (all-the-icons-faicon "book")) nil nil :ascent center :mask heuristic)
-  ;;         ("tasks" ,(list (all-the-icons-material "list")) nil nil :ascent center :mask heuristic)
-  ;;         ("work" ,(list (all-the-icons-material "work")) nil nil :ascent center :mask heuristic)
-  ;;         ("uni" ,(list (all-the-icons-faicon "university")) nil nil :ascent center :mask heuristic)
-  ;;         ("emacs" ,(list (all-the-icons-fileicon "emacs")) nil nil :ascent center :mask heuristic)
-  ;;         ("linux" ,(list (all-the-icons-faicon "linux")) nil nil :ascent center :mask heuristic)))
-
-  (defun fi/refile-reading ()
-    (interactive)
-    ;; (org-agenda-set-tags)
-    (setq org-refile-targets '((fi/readings-file :maxlevel . 1)))
-    (org-agenda-refile)
-    (setq org-refile-targets nil)
-    (org-agenda-redo-all))
-
   (defun fi/refile-task ()
     (interactive)
-    ;; (org-agenda-set-tags)
-    (setq org-refile-targets '((fi/tasks-file :maxlevel . 2)))
+    (setq org-refile-targets '((fi/org-agenda-files :maxlevel . 1)))
+    (org-agenda-set-tags)
     (org-agenda-priority)
     (org-agenda-set-effort)
     (org-agenda-refile)
@@ -885,41 +866,42 @@ Clockin:
 
   (setq org-agenda-window-setup 'current-window)
 
-
+  (pretty-hydra-define agenda-hydra-main (:color blue :title "Agenda" :quit-key "q")
+    ("Task"
+     (("r" fi/refile-task "refile")
+      ("t" org-agenda-todo "todo status")
+      ("i" org-agenda-clock-in "clock in")
+      ("o" org-agenda-clock-out "clock out")
+      ))
+    )
   (defun fi/switch-to-agenda ()
     (interactive)
     (org-agenda nil " "))
 
   (fi/leader "a" #'fi/switch-to-agenda)
+  (define-key org-agenda-mode-map (kbd "SPC") 'agenda-hydra-main/body)
 #+end_src
 
 **** Org-super-agenda
 #+begin_src emacs-lisp
   (use-package org-super-agenda
     :config
-    (setq org-super-agenda-groups
-          '(
-            (:name "University"
-                   :time-grid t
-                   :tag "uni")
-            (:name "Emacs"
-                   :tag "emacs")
-            )))
+    (add-hook 'org-agenda-mode-hook #'org-super-agenda-mode))
 #+end_src
 
 *** Capture
 #+begin_src emacs-lisp
-  (setq org-default-notes-file fi/tasks-to-process-file)
+  (setq org-default-notes-file fi/org-agenda-inbox-file)
   (defun transform-square-brackets-to-round-ones(string-to-transform)
     "Transforms [ into ( and ] into ), other chars left unchanged."
     (concat
      (mapcar (lambda (c) (if (equal c ?\[) ?\( (if (equal c ?\]) ?\) c))) string-to-transform)))
   (setq org-capture-templates
         '(
-          ("t" "To-do task to process" entry (file fi/tasks-to-process-file) "* TODO%?\n" :empty-lines 1)
-          ("r" "Thing to read" entry (file+headline fi/things-to-read-file "Manual") "* TODO %(org-cliplink-capture)\n" :empty-lines 1 :immediate-finish t)
-          ("p" "Protocol text" entry (file+headline fi/things-to-read-file "Protocol") "* TODO %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?" :empty-lines 1 :immediate-finish t)
-          ("L" "Protocol link" entry (file+headline fi/things-to-read-file "Protocol") "* TODO [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n#+CREATED: [%<%Y-%m-%d %a %H:%M:%S>]\n" :empty-lines 1 :immediate-finish t)
+          ("t" "To-do task to process" entry (file+headline fi/org-agenda-inbox-file "Task") "* TODO%?\n" :empty-lines 1)
+          ("r" "Thing to read" entry (file+headline fi/org-agenda-inbox-file "Manual") "* TODO %(org-cliplink-capture)\n" :empty-lines 1 :immediate-finish t)
+          ("p" "Protocol text" entry (file+headline fi/org-agenda-inbox-file "Protocol") "* TODO %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?" :empty-lines 1 :immediate-finish t)
+          ("L" "Protocol link" entry (file+headline fi/org-agenda-inbox-file "Protocol") "* TODO [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n#+CREATED: [%<%Y-%m-%d %a %H:%M:%S>]\n" :empty-lines 1 :immediate-finish t)
           ))
   (global-set-key (kbd "C-c c") #'org-capture)
 #+end_src

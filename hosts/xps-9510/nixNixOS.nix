@@ -1,8 +1,11 @@
-{ config, pkgs, ... }:
+{ config, pkgs, inputs, ... }:
 
 {
-  nixpkgs.config = {
-    allowUnfree = true;
+  nixpkgs = {
+    config = {
+      allowUnfree = true;
+      joypixels.acceptLicense = true;
+    };
   };
   system.stateVersion = "22.05";
   nix = {

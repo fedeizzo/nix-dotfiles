@@ -1,6 +1,6 @@
-{ lib, config, ... }:
+{ lib, fs, ... }:
 
-lib.mkIf (config.fs == "ext4") {
+lib.mkIf (fs == "ext4") {
   fileSystems."/" = {
     device = "/dev/disk/by-label/root";
     fsType = "ext4";

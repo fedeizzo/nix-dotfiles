@@ -1,11 +1,11 @@
-{ config, pkgs, sops, ... }:
+{ username, config, fs, pkgs, sops, ... }:
 
 {
-  users.mutableUsers = if config.fs == "ext4" then true else false;
-  programs.fuse.userAllowOther = if config.fs == "btrfs" then true else false;
+  users.mutableUsers = if fs == "ext4" then true else false;
+  programs.fuse.userAllowOther = if fs == "btrfs" then true else false;
   users.users = {
-    ${config.username} = {
-      name = config.username;
+    ${username} = {
+      name = username;
       isNormalUser = true;
       createHome = true;
       extraGroups = [
@@ -22,7 +22,7 @@
         "adbusers" # for adb android
       ];
       shell = pkgs.fish;
-      passwordFile = if config.fs == "ext4" then null else config.sops.secrets.fedeizzo-path.path;
+      passwordFile = if fs == "ext4" then null else config.sops.secrets.fedeizzo-path.path;
     };
     root = {
       hashedPassword = "!"; # to enable root login remode this line

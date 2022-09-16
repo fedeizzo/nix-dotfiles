@@ -1,7 +1,7 @@
-{ config, pkgs, ... }:
+{ hostname, pkgs, inputs, ... }:
 
 {
-  networking.hostName = config.hostname;
+  networking.hostName = hostname;
   networking.networkmanager.enable = true;
   networking.useDHCP = false;
   networking.firewall = {
@@ -9,4 +9,5 @@
     checkReversePath = "loose";
   };
   services.tailscale.enable = true;
+  environment.systemPackages = [ inputs.deploy-rs.defaultPackage.x86_64-linux ];
 }

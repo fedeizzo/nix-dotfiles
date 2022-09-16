@@ -1,9 +1,6 @@
 { config, pkgs, nixpkgs-unstable, ... }:
 
 {
-  nixpkgs.overlays = [
-    (import ../pkgs)
-  ];
   environment.systemPackages = with pkgs; [
     bc
     curl

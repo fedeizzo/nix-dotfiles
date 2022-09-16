@@ -1,10 +1,10 @@
-{ pkgs, config, inputs, nixpkgs-unstable, lib, ... }:
+{ pkgs, username, inputs, nixpkgs-unstable, lib, ... }:
 
 {
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
-    users.${config.username} = {
+    users.${username} = {
       imports = [
         inputs.hyprland.homeManagerModules.default
         inputs.impermanence.nixosModules.home-manager.impermanence
@@ -26,8 +26,8 @@
       programs.home-manager.enable = true;
       home = {
         stateVersion = "22.05";
-        homeDirectory = "/home/${config.username}";
-        username = "${config.username}";
+        homeDirectory = "/home/${username}";
+        username = "${username}";
         packages = with pkgs; [
           nixpkgs-unstable.nodePackages.pyright
           nixpkgs-unstable.bitwarden-cli
@@ -36,7 +36,7 @@
           nixpkgs-unstable.tdesktop
           nixpkgs-unstable.xournalpp
         ];
-        persistence."/persist/home/${config.username}" = {
+        persistence."/persist/home/${username}" = {
           allowOther = true;
           directories = [
             # Personal files

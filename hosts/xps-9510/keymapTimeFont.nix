@@ -7,7 +7,6 @@
   };
   time.timeZone = "Europe/Rome";
   time.hardwareClockInLocalTime = true;
-  nixpkgs.config.joypixels.acceptLicense = true;
 
   fonts = {
     fonts = [

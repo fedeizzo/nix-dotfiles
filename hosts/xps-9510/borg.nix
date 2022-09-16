@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, username, ... }:
 
 let
   borgHomeRepo = "rasp@home-lab:~/backup/home-persistent-laptop";
@@ -11,7 +11,7 @@ in
       group = "root";
       repo = "${borgRootRepo}";
       environment = {
-        BORG_RSH = "ssh -i /home/${config.username}/.ssh/id_rsa";
+        BORG_RSH = "ssh -i /home/${username}/.ssh/id_rsa";
       };
       paths = [
         "/persist/etc"
@@ -62,7 +62,7 @@ in
       group = "root";
       repo = "${borgHomeRepo}";
       environment = {
-        BORG_RSH = "ssh -i /home/${config.username}/.ssh/id_rsa";
+        BORG_RSH = "ssh -i /home/${username}/.ssh/id_rsa";
       };
       paths = [ "/persist/home/fedeizzo" ];
       exclude = [
