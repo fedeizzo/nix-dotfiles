@@ -5,4 +5,5 @@ self: super:
   river-tag-overlay = super.callPackage ./river-tag-overlay { };
   swayhide = super.callPackage ./swayhide { };
   swaync = super.callPackage ./swaync { };
+  swhkd = super.callPackage ./swhkd { };
 }

@@ -124,11 +124,13 @@ bindsym {
 
 # keybinds
 bindsym {
+    $mod+r mode "resize"
+    $mod+F11 mode "passthrough"
+
     $mod+Return exec kitty
     $mod+d exec $menu
     $mod+b exec rofi-rbw
-    $mod+r mode "resize"
-    $mod+F11 mode "passthrough"
+    $mod+F9 exec input '1267:12572:DLL0945:00_04F3:311C_Touchpad' events toggle
     $mod+p exec grim -g "$(slurp)" - | swappy -f -
     # $mod+p exec grim -g "$(slurp)" - | wl-copy -t "image/png" && drawing -c
     $mod+Shift+p exec grim -g "$(swaymsg -t get_tree | jq -r '.. | select(.pid? and .visible?) | .rect | "\(.x),\(.y) \(.width)x\(.height)"' | slurp)" - | swappy -f -
@@ -172,3 +174,6 @@ exec nm-applet --indicator
 exec systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP
 exec hash dbus-update-activation-environment 2>/dev/null && \
      dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK 
+
+exec swhks &
+exec pkexec swhkd

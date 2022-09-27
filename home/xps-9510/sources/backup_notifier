@@ -10,8 +10,8 @@ function backup_info {
 	now=$(date '+%s')
 	diff=$((now-last_home_backup))
 
-        # 86400 seconds are 24 hours
-	if [[ $diff > 86400 || $error_retriving_last_backup != 0 ]]; then
+        # 7200 seconds are 2 hours
+	if [[ $diff > 7200 || $error_retriving_last_backup != 0 ]]; then
 	    status=""
 	    echo '{"text":"'$status'","class":"borg-backup-error"}'
 	else

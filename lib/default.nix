@@ -15,6 +15,14 @@ rec {
   ];
   forAllSystems = genAttrs systems;
 
+  kubernetesOrderString = { intOrder }:
+    let
+      requirePadding = if intOrder < 10 then true else false;
+      strOrder = (toString intOrder);
+      order = if requirePadding then "0" + strOrder else strOrder;
+    in
+    order;
+
   mkHost =
     { username
     , hostname
@@ -38,9 +46,10 @@ rec {
     in
     nixosSystem {
       inherit pkgs system;
-      specialArgs = { inherit inputs username hostname fs; };
+      specialArgs = { inherit inputs username hostname fs kubernetesOrderString; };
       modules = [
         defaults
+        # (inputs.nix-bubblewrap.lib { inherit system pkgs; })
         ../hosts/${machine}
         ../home/${machine}
       ];

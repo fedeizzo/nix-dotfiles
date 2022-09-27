@@ -818,6 +818,7 @@ Clockin:
    org-agenda-log-mode-items '(closed clock state)
    org-agenda-start-with-log-mode '(closed clock state)
    org-agenda-tags-column 0
+   org-columns-default-format "%60ITEM(Task) %TODO %6Effort(Estim){:}  %6CLOCKSUM(Clock) %TAGS"
    )
   (setq org-agenda-custom-commands
         '(
@@ -830,14 +831,6 @@ Clockin:
                    (org-agenda-prefix-format "%b")
                    (org-super-agenda-groups nil)
                    (org-agenda-files (list fi/org-agenda-inbox-file))))
-            (todo "TODO"
-                  ((org-agenda-overriding-header " TODO")
-                   (org-agenda-prefix-format "")
-                   (org-agenda-files fi/org-agenda-files)
-                   (org-super-agenda-groups '((
-                                               :auto-category t
-                                               :auto-priority t
-                                               )))))
             (todo "NEXT"
                   ((org-agenda-overriding-header " NEXT")
                    (org-agenda-prefix-format "")
@@ -850,6 +843,14 @@ Clockin:
                   ((org-agenda-overriding-header " HOLD")
                    (org-agenda-prefix-format "")
                    (org-super-agenda-groups '((:auto-category t)))))
+            (todo "TODO"
+                  ((org-agenda-overriding-header " TODO")
+                   (org-agenda-prefix-format "")
+                   (org-agenda-files fi/org-agenda-files)
+                   (org-super-agenda-groups '((
+                                               :auto-category t
+                                               :auto-priority t
+                                               )))))
             )
            )
           ))

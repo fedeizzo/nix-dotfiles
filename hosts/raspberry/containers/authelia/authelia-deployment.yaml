@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: authelia
+  labels:
+    app: authelia
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: authelia
+  template:
+    metadata:
+      labels:
+        app: authelia
+    spec:
+      volumes:
+      - name: authelia-config
+        hostPath:
+          path: /var/volumes/authelia-config
+      containers:
+      - name: authelia
+        image: authelia/authelia:4.36
+        volumeMounts
+        - name: authelia-config
+          mountPath: /config
+        env:
+        - name: TZ
+          value: Europe/Rome
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: authelia-service
+spec:
+  selector:
+    app: authelia

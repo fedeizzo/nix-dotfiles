@@ -39,8 +39,7 @@ in
       postCreate = ''
         echo "PostCreate done"
       '';
-      startAt = [ "daily" ];
-      persistentTimer = true;
+      startAt = [ "hourly" ];
       postPrune = "${pkgs.borgbackup}/bin/borg --progress compact ${borgRootRepo}";
       encryption = {
         passCommand = "cat ${config.sops.secrets.borg-root-password.path}";
@@ -49,7 +48,7 @@ in
       prune = {
         prefix = "${config.networking.hostName}";
         keep = {
-          daily = 5;
+          hourly = 5;
           weekly = 15;
           monthly = 45;
         };
@@ -93,8 +92,7 @@ in
       postCreate = ''
         echo "PostCreate done"
       '';
-      startAt = [ "daily" ];
-      persistentTimer = true;
+      startAt = [ "hourly" ];
       postPrune = "${pkgs.borgbackup}/bin/borg --progress compact ${borgHomeRepo}";
       encryption = {
         passCommand = "cat ${config.sops.secrets.borg-home-password.path}";
@@ -103,7 +101,7 @@ in
       prune = {
         prefix = "${config.networking.hostName}";
         keep = {
-          daily = 5;
+          hourly = 5;
           weekly = 15;
           monthly = 45;
         };

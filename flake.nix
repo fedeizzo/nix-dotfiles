@@ -32,6 +32,10 @@
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nix-bubblewrap = {
+      url = "sourcehut:~fgaz/nix-bubblewrap";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =

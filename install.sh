@@ -9,9 +9,11 @@ else
     fi
 fi
 current_dir=$(pwd)
+$SUPER_CMD find /etc/nixos -xtype l -exec rm {} \;
 for f in $(ls); do
     if ! [[ -f /etc/nixos/${f} ]]; then
 	if ! [[ -d /etc/nixos/${f} ]]; then
+	    ecoh /etc/nixos/${f}
 	    if [[ $1 == "-f" ]]; then
 		$SUPER_CMD cp -r ${current_dir}/${f} /mnt/etc/nixos/
 	    else

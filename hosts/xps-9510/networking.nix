@@ -9,5 +9,8 @@
     checkReversePath = "loose";
   };
   services.tailscale.enable = true;
-  environment.systemPackages = [ inputs.deploy-rs.defaultPackage.x86_64-linux ];
+  environment.systemPackages = [ inputs.deploy-rs.defaultPackage.x86_64-linux ]
+    # VPN for university
+    ++ [ pkgs.globalprotect-openconnect ];
+  services.globalprotect.enable = true;
 }

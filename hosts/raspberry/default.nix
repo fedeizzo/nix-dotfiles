@@ -5,7 +5,20 @@
     inputs.nixos-hardware.nixosModules.raspberry-pi-4
     inputs.sops-nix.nixosModules.sops
     ./hardware-configuration.nix
+    ./containers
   ];
+  fiCluster.services = {
+    # to delete container use a prefix written when enable == false
+    traefik.enable = true;
+    traefik.applicationOrder = 1;
+    authelia.enable = false;
+    authelia.applicationOrder = 2;
+    cloudflare-ddns.enable = false;
+    cloudflare-ddns.applicationOrder = 3;
+    homer.enable = true;
+    homer.applicationOrder = 4;
+  };
+
   boot = {
     kernelPackages = pkgs.linuxPackages_rpi4;
     tmpOnTmpfs = true;
@@ -107,14 +120,14 @@
     };
   };
   services.k3s = {
-    enable = false;
+    enable = true;
     role = "server";
-    extraFlags = "--no-deploy traefik --disable coredns --disable traefik";
+    # extraFlags = "--no-deploy traefik --disable coredns --disable traefik";
   };
-  # systemd.services.k3s = {
-  #   wants = [ "containerd.service" ];
-  #   after = [ "containerd.service" ];
-  # };
+  systemd.services.k3s = {
+    wants = [ "containerd.service" ];
+    after = [ "containerd.service" ];
+  };
   # add gpio group
   users.groups.gpio = { };
 
@@ -206,6 +219,16 @@
   programs.bash = {
     enableCompletion = true;
     enableLsColors = true;
+  };
+
+  environment = {
+    shellAliases = {
+      "k3sapply" = "find /etc/homelab-kubernetes -type l | sort | xargs -I sub k3s kubectl apply -f sub";
+      "k3sdelete" = "find /etc/homelab-kubernetes -type l | sort -r | xargs -I sub k3s kubectl delete -f sub";
+    };
+    shellInit = ''
+      export KUBECONFIG=/etc/rancher/k3s/k3s.yaml
+    '';
   };
 
   # SECURITY

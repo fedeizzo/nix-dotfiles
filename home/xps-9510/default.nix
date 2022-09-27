@@ -1,13 +1,16 @@
 { pkgs, username, inputs, nixpkgs-unstable, lib, ... }:
 
+
 {
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
+    extraSpecialArgs = { nix-bubblewrap = inputs.nix-bubblewrap; };
     users.${username} = {
       imports = [
         inputs.hyprland.homeManagerModules.default
         inputs.impermanence.nixosModules.home-manager.impermanence
+        # inputs.nix-bubblewrap.nix-bubblewrap.x86_64-linux
         ./modules/bottom
         ./modules/cli
         ./modules/config.nix

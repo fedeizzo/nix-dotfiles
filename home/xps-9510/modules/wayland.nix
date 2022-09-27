@@ -50,6 +50,8 @@
       # gamma adapter
       wlsunset
       eww-wayland
+      # keyboard manager
+      swhkd
     ];
   # programs.eww = {
   #   enable = true;
@@ -82,6 +84,9 @@
   };
   xdg.configFile."river" = {
     source = ../dotfiles/river;
+  };
+  xdg.configFile."swhkd/swhkdrc" = {
+    source = ../dotfiles/swhkd/swhkdrc;
   };
   xdg.configFile."environment.d/envvars.conf" = {
     text = ''

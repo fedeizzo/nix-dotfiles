@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: homer-config
+data:
+  INIT_ASSETS: "0"
+  SUBFOLDER: "/homer"

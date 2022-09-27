@@ -1,0 +1,57 @@
+# WORKSPACE
+super + f
+      ~/.sources/change_worwspace
+super + shift + f
+      ~/.sources/rename_worwspace
+super + s
+      ~/.sources/move_to_worspace
+super + shift + s
+      ~/.sources/move_to_worspace -m
+super + tab
+      ~/.sources/swap_output
+
+# PROGRAMS
+super + Return
+      kitty
+super + d
+      $menu
+super + b
+      rofi-rbw
+super + p
+      grim -g "$(slurp)" - | swappy -f -
+super + Shift+p
+      grim -g "$(swaymsg -t get_tree | jq -r '.. | select(.pid? and .visible?) | .rect | "\(.x),\(.y) \(.width)x\(.height)"' | slurp)" - | swappy -f -
+super + w
+      "kitty /home/fedeizzo/.sources/lfrun"
+super + e
+      "emacsclient -c"
+super + c
+      clipman pick -t rofi
+super + ctrl + c
+      clipman clear --all
+super + x
+      swaylock --indicator-radius 0 -i $HOME/.config/sway/lock-screen.jpg
+      
+# MEDIA
+XF86AudioRaiseVolume
+	pamixer --increase 5
+XF86AudioLowerVolume
+	pamixer --decrease 5
+XF86AudioMute
+	pamixer -t
+XF86AudioMicMute
+	pactl set-source-mute @DEFAULT_SOURCE@ toggle
+XF86MonBrightnessDown
+	brightnessctl set 10%-
+XF86MonBrightnessUp
+	brightnessctl set +10%
+XF86AudioPlay
+	playerctl play-pause
+XF86AudioNext
+	playerctl next
+XF86AudioPrev
+	playerctl previous
+
+# OTHERS
+super + F9
+      input '1267:12572:DLL0945:00_04F3:311C_Touchpad' events toggle

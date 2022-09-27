@@ -13,26 +13,8 @@ else
     set -e
     monitors=$(hyprctl monitors -j )
     workspaces=$(hyprctl workspaces -j)
+    focused_monitor=$(echo $monitors | hyprctl -j monitors | jq -r 'map(.focused == true) | index(true)')
     selected_workspace=$(echo $workspaces | jq -r '.[] | select(.name != "special") |.name' | rofi -dmenu)
-    is_selected_worksapce_active_in_other_monitor=$(hyprctl monitors -j | jq -r '.[] | .activeWorkspace | select(.name == "'"$selected_workspace"'") | .id')
-    monitors_number=$(echo $monitors | jq -r 'length')
-    active_monitor=$(echo $monitors | jq -r '.[] | select(.active == "yes") | .name')
-    monitor_of_selected_workspace=$(echo $workspaces | jq -r '.[] | select(.name == "'"$selected_workspace"'") | .monitor')
-    if [[ $monitors_number > 1 ]]; then
-	if [[ $monitor_of_selected_workspace != $active_monitor ]]; then
-	    # if ! [ -z $is_selected_worksapce_active_in_other_monitor ]; then
-	    # echo "active monitor "$active_monitor
-	    # echo "selected workspace "$selected_workspace
-	    # echo "workspace active in other monitor "$is_selected_worksapce_active_in_other_monitor
-	    # echo "current monitor of workapce "$monitor_of_selected_workspace
-	    # 	# hyprctl dispatch movecurrentworkspacetomonitor $monitor_of_selected_workspace
-	    # fi
-	    hyprctl dispatch workspace name:$selected_workspace
-	    hyprctl dispatch movecurrentworkspacetomonitor $active_monitor
-	else
-	    hyprctl dispatch workspace name:$selected_workspace
-	fi
-    else
-	hyprctl dispatch workspace name:$selected_workspace
-    fi
+    hyprctl dispatch moveworkspacetomonitor name:$selected_workspace $focused_monitor
+    hyprctl dispatch workspace name:$selected_workspace
 fi

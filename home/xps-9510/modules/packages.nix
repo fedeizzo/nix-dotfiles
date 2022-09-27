@@ -1,5 +1,8 @@
-{ config, pkgs, libs, ... }:
+{ config, pkgs, libs, nix-bubblewrap, ... }:
 
+let
+  inherit (nix-bubblewrap.lib.x86_64-linux) wrapPackage;
+in
 {
   home.packages = with pkgs; [
     keyutils
@@ -49,5 +52,13 @@
     yubikey-manager
     yubikey-manager-qt
     networkmanagerapplet
+    # (wrapPackage {
+    #   package = pkgs.firefox;
+    #   options = [
+    #     "-gpu"
+    #     "-net"
+    #     "-pulse"
+    #   ];
+    # })
   ];
 }
