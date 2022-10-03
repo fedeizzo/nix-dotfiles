@@ -15,25 +15,61 @@ spec:
         app: traefik
     spec:
       serviceAccountName: traefik-account
+      volumes:
+      - name: traefik-acme
+        hostPath:
+          path: /var/volumes/traefik/acme.json
+      - name: traefik-email-file
+        hostPath:
+          path: /var/volumes/traefik/cp-api-email
+      - name: traefik-key-file
+        hostPath:
+          path: /var/volumes/traefik/cp-api-key
       containers:
         - name: traefik
           image: traefik:v2.8
+          volumeMounts:
+          - name: traefik-acme
+            mountPath: /acme.json
+          - name: traefik-email-file
+            mountPath: /run/secrets/traefik_cp-api-email
+          - name: traefik-key-file
+            mountPath: /run/secrets/traefik_cp-api-key
+          env:
+          - name: CF_API_EMAIL
+            valueFrom:
+              secretKeyRef:
+                name: traefik-secrets
+                key: CF_API_EMAIL
+          - name: CF_API_KEY
+            valueFrom:
+              secretKeyRef:
+                name: traefik-secrets
+                key: CF_API_KEY
           args:
             - --api.insecure # disable this in production
             - --providers.kubernetesingress
+            # MISC
+            - --global.sendAnonymousUsage=false
+            - --global.checknewversion=false
+            - --log.level=DEBUG
+            - --serversTransport.insecureSkipVerify=true
             # HTTPS
-            # - --entrypoints.web.http.redirections.entryPoint.to=websecure
-            # - --entryPoints.websecure.address=:443
-            # - --entrypoints.websecure.http.tls
+            - --entrypoints.web.address=:80
+            - --entryPoints.websecure.address=:443
+            - --entrypoints.web.http.redirections.entryPoint.to=websecure
+            - --entrypoints.websecure.http.tls
             # CERTIFICATES
-            # - --certificatesresolvers.myresolver.acme.email=federico.izzo99@gmail.com # indirizzo a caso su mio dominio
-            # - --certificatesresolvers.myresolver.acme.storage=/acme.json
-            # - --certificatesresolvers.myresolver.acme.dnschallenge=true
-            # - --certificatesresolvers.myresolver.acme.dnschallenge.provider=cloudflare
-            # - --certificatesresolvers.myresolver.acme.dnschallenge.delaybeforecheck=0
+            - --certificatesresolvers.le.acme.email=placeholder@fedeizzo.dev # here a use a fake email address that will be displayed within the certificate
+            - --certificatesresolvers.le.acme.storage=/acme.json
+            - --certificatesresolvers.le.acme.dnschallenge=true
+            - --certificatesresolvers.le.acme.dnschallenge.provider=cloudflare
+            - --certificatesresolvers.le.acme.dnschallenge.delaybeforecheck=0
           ports:
-            - name: web
-              containerPort: 80
+            # - name: web
+            #   containerPort: 80
+            - name: websecure
+              containerPort: 443
             - name: dashboard
               containerPort: 8080
 ---
@@ -41,7 +77,6 @@ apiVersion: v1
 kind: Service
 metadata:
   name: traefik-dashboard-service
-
 spec:
   type: LoadBalancer
   ports:
@@ -49,16 +84,27 @@ spec:
       targetPort: dashboard
   selector:
     app: traefik
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: traefik-web-service
+# spec:
+#   type: LoadBalancer
+#   ports:
+#     - targetPort: web
+#       port: 80
+#   selector:
+#     app: traefik
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: traefik-web-service
-
+  name: traefik-websecure-service
 spec:
   type: LoadBalancer
   ports:
-    - targetPort: web
-      port: 80
+    - targetPort: websecure
+      port: 443
   selector:
     app: traefik

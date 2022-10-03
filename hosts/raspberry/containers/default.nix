@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }:
+{ pkgs, lib, kubernetesSuffixFile, ... }:
 
 with lib;
 let
@@ -14,7 +14,7 @@ let
   };
 in
 {
-  imports = [ ./traefik ./homer ./authelia ./cloudflare-ddns ];
+  imports = [ ./traefik ./homer ./authelia ./cloudflare-ddns ./fedeizzo.dev ];
 
   options = {
     fiCluster.services = {
@@ -26,6 +26,8 @@ in
       cloudflare-ddns.applicationOrder = appOrderOption;
       homer.enable = enableOption;
       homer.applicationOrder = appOrderOption;
+      fedeizzodev.enable = enableOption;
+      fedeizzodev.applicationOrder = appOrderOption;
     };
   };
 
@@ -33,7 +35,10 @@ in
     environment.etc.global-configmap = {
       enable = true;
       source = ./global-configmap.yaml;
-      target = "homelab-kubernetes/00-global-configmap.yaml";
+      target = "homelab-kubernetes/00-global-configmap-${(kubernetesSuffixFile { isEnable = true; })}.yaml";
     };
+    environment.systemPackages = [
+      pkgs.k3shomelab-manager
+    ];
   };
 }

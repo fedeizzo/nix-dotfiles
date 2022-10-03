@@ -23,6 +23,20 @@ rec {
     in
     order;
 
+  kubernetesSuffixFile =
+    { isEnable
+    , isSops ? false
+    }:
+    let
+      suffix =
+        if isEnable
+        then
+          (if isSops then "sops-app" else "apply")
+        else
+          (if isSops then "sops-del" else "delete");
+    in
+    suffix;
+
   mkHost =
     { username
     , hostname
@@ -46,7 +60,7 @@ rec {
     in
     nixosSystem {
       inherit pkgs system;
-      specialArgs = { inherit inputs username hostname fs kubernetesOrderString; };
+      specialArgs = { inherit inputs username hostname fs kubernetesOrderString kubernetesSuffixFile; };
       modules = [
         defaults
         # (inputs.nix-bubblewrap.lib { inherit system pkgs; })

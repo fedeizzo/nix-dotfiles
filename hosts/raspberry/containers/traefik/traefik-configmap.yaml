@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: traefik-config
+data:
+  CF_API_EMAIL_FILE: "/run/secrets/traefik_cp-api-email"
+  CF_API_KEY_FILE: "/run/secrets/traefik_cp-api-key"

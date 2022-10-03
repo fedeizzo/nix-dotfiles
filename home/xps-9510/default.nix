@@ -121,7 +121,7 @@
         defaultApplications = {
           "application/pdf" = "org.pwmt.zathura.desktop";
           "inode/directory" = "lf.desktop";
-          "text/plain" = "nvim.desktop";
+          "text/plain" = "vim.desktop";
           "text/html" = "firefox";
           "x-scheme-handler/http" = "firefox";
           "x-scheme-handler/https" = "firefox";

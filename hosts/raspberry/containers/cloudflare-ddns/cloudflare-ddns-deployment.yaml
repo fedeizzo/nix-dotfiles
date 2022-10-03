@@ -21,21 +21,27 @@ spec:
       containers:
       - name: cloudflare-ddns
         image: timothyjmiller/cloudflare-ddns:latest
-        volumeMounts
+        volumeMounts:
         - name: cloudflare-ddns-config
           mountPath: /config.json
         securityContext:
           allowPrivilegeEscalation: false
         env:
         - name: PUID
-          value: 1000
+          valueFrom:
+            configMapKeyRef:
+              name: global-config
+              key: PUID
         - name: PGID
-          value: 1000
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: cloudflare-ddns-service
-spec:
-  selector:
-    app: cloudflare-ddns
+          valueFrom:
+            configMapKeyRef:
+              name: global-config
+              key: PGID
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: cloudflare-ddns-service
+# spec:
+#   selector:
+#     app: cloudflare-ddns

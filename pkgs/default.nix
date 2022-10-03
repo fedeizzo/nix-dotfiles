@@ -6,4 +6,5 @@ self: super:
   swayhide = super.callPackage ./swayhide { };
   swaync = super.callPackage ./swaync { };
   swhkd = super.callPackage ./swhkd { };
+  k3shomelab-manager = super.callPackage ./k3shomelab-manager { };
 }

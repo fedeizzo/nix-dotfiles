@@ -13,10 +13,12 @@
     traefik.applicationOrder = 1;
     authelia.enable = false;
     authelia.applicationOrder = 2;
-    cloudflare-ddns.enable = false;
+    cloudflare-ddns.enable = true;
     cloudflare-ddns.applicationOrder = 3;
-    homer.enable = true;
+    homer.enable = false;
     homer.applicationOrder = 4;
+    fedeizzodev.enable = true;
+    fedeizzodev.applicationOrder = 5;
   };
 
   boot = {
@@ -122,7 +124,7 @@
   services.k3s = {
     enable = true;
     role = "server";
-    # extraFlags = "--no-deploy traefik --disable coredns --disable traefik";
+    extraFlags = "--no-deploy traefik --disable traefik";
   };
   systemd.services.k3s = {
     wants = [ "containerd.service" ];
@@ -223,8 +225,8 @@
 
   environment = {
     shellAliases = {
-      "k3sapply" = "find /etc/homelab-kubernetes -type l | sort | xargs -I sub k3s kubectl apply -f sub";
-      "k3sdelete" = "find /etc/homelab-kubernetes -type l | sort -r | xargs -I sub k3s kubectl delete -f sub";
+      "k3sapply" = "find /etc/homelab-kubernetes -type l -name '*apply*' | sort | xargs -I sub k3s kubectl apply -f sub";
+      "k3sdelete" = "find /etc/homelab-kubernetes -type l -name '*delete*' | sort -r | xargs -I sub k3s kubectl delete -f sub";
     };
     shellInit = ''
       export KUBECONFIG=/etc/rancher/k3s/k3s.yaml

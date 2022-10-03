@@ -27,7 +27,7 @@
       lll = "exa -l --icons --sort=type | less";
       lla = "exa -la --icons --sort=type";
       llt = "exa -T --icons --sort=type";
-      vi = "nvim";
+      vi = "vim";
       SS = "systemctl";
       it = "setxkbmap it && xmodmap $HOME/.Xmodmap.back";
       us = "setxkbmap -layout us -variant altgr-intl && xmodmap $HOME/.Xmodmap.back";
@@ -36,7 +36,7 @@
       zathura = "swayhide zathura";
       llpp = "swayhide llpp";
       imv = "swayhide imv";
-      v = "nvim";
+      v = "vim";
       open = "xdg-open";
       cat = "bat";
       gs = "git status";

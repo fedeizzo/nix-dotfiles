@@ -26,6 +26,24 @@ let
     markdown
   ];
   python-with-my-packages = pkgs.python39.withPackages my-python-packages;
+  org-cv = pkgs.fetchFromGitLab {
+    owner = "fedeizzo";
+    repo = "org-cv";
+    rev = "master";
+    sha256 = "sha256-OQ0WuMXHPusxLPpuVqkq7t1IDZx4ZvPyKdc4h+8QDAs=";
+  };
+  ligature = pkgs.fetchFromGitHub {
+    owner = "mickeynp";
+    repo = "ligature.el";
+    rev = "master";
+    sha256 = "sha256-o6iL4mwTzfD7JOlWP4Mv27+nRGplcseGjam7WIlHZTc=";
+  };
+  zetteldesk = pkgs.fetchFromGitHub {
+    owner = "Vidianos-Giannitsis";
+    repo = "zetteldesk.el";
+    rev = "master";
+    sha256 = "sha256-sH2AQHLIKjM5HOrs04vw4s/a+7MsL7h7S6ERvNGy508=";
+  };
 in
 {
   programs.emacs = {
@@ -70,4 +88,7 @@ in
     ;; Disable package.el in favor of straight.el
     (setq package-enable-at-startup nil)
   '';
+  xdg.configFile."emacs/org-cv".source = org-cv;
+  xdg.configFile."emacs/ligature.el".source = ligature;
+  xdg.configFile."emacs/zetteldesk.el".source = zetteldesk;
 }

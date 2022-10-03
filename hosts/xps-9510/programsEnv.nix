@@ -64,12 +64,12 @@
     "/share/mime"
   ];
   environment.variables = {
-    "EDITOR" = "nvim";
+    "EDITOR" = "vim";
     "READER" = "zathura";
-    "VISUAL" = "nvim";
-    "CODEEDITOR" = "nvim";
+    "VISUAL" = "vim";
+    "CODEEDITOR" = "vim";
     "TERMINAL" = "alacritty";
-    "BROWSER" = "qutebrowser";
+    "BROWSER" = "firefox";
     "COLORTERM" = "truecolor";
   };
   environment.shellAliases = {
@@ -82,7 +82,7 @@
     "mv" = "mv -i";
     "open" = "xdg-open";
     # editor aliases
-    "v" = "nvim";
+    "v" = "vim";
     "SS" = "systemctl";
   };
   programs.bash = {

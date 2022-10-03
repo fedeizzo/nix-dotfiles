@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+export SOPS_AGE_KEY_FILE=/var/lib/sops/keys.txt
+
+helpMessage="\nusage $0: <command>\n\ncommand:\n\tall: apply and delete everything\n\tapply: apply\n\tdelete: delete"
+[ -z $1 ] && echo -e $helpMessage && exit 1
+
+execute_step () {
+   echo "$2 operation on file matching regex $1"
+   find /etc/homelab-kubernetes -type l -name "*${1}*" | sort | xargs -I sub k3s kubectl $2 -f sub
+}
+
+execute_secrets_step () {
+   echo "$2 operation on file matching regex $1"
+   for file in $(find /etc/homelab-kubernetes -type l -name "*${1}*" | sort); do
+       @sops@ --decrypt $file | kubectl $2 -f -
+   done
+}
+
+case $1 in
+    "all")
+	execute_secrets_step "sops-app" "apply"
+	execute_step "apply" "apply"
+	execute_secrets_step "sops-del" "delete"
+	execute_step "delete" "delete"
+	shift
+	;;
+    "apply")
+	execute_secrets_step "sops-app" "apply"
+	execute_step "apply" "apply"
+	shift
+	;;
+    "delete")
+	execute_secrets_step "sops-del" "delete"
+	execute_step "delete" "delete"
+	shift
+	;;
+    "down")
+	execute_step "" "delete"
+	shift
+	;;
+    *)
+	echo -e "\ncommand $1 not implemented\n"
+	echo -e $helpMessage
+	;;
+esac

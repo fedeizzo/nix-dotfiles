@@ -957,7 +957,10 @@ Annotations are block of texts associated with a file. The main advantage of thi
   (use-package ox-hugo
     :after ox
     :config
-    (setq org-hugo-base-dir "~/personalProject/hugo-website"))
+    (setq
+     org-hugo-base-dir "~/personalProject/hugo-website"
+     org-hugo-section "notes"
+     org-hugo-front-matter-format "yaml"))
 #+end_src
 
 ** Face
@@ -1215,6 +1218,33 @@ Use an external package for the pseudocode, the deafault one is verbatim
   (add-to-list 'org-latex-packages-alist '("" "color"))
   (add-to-list 'org-latex-packages-alist '("" "svg"))
 #+end_src
+** CV
+#+begin_src emacs-lisp
+  (use-package ox-awesomecv
+    :straight nil
+    :load-path "~/.config/emacs/org-cv"
+    :init (require 'ox-awesomecv))
+
+  (use-package ox-hugocv
+    :straight nil
+    :load-path "~/.config/emacs/org-cv"
+    :init (require 'ox-hugocv))
+  (defun fi/pdf-resume ()
+    (interactive)
+    (let ((old-pdf-value org-latex-pdf-process)
+          (old-compiler org-latex-compiler))
+      (setq org-latex-pdf-process '("latexmk -f -pdf -%latex -interaction=nonstopmode -output-directory=%o %f"))
+      (setq org-latex-compiler "xelatex")
+      (org-export-to-file 'awesomecv "cv.tex")
+      (org-latex-compile "cv.tex")
+      (setq org-latex-pdf-process old-pdf-value)
+      (setq org-latex-compiler old-compiler)))
+
+  (defun fi/hugo-resume ()
+    (interactive)
+    (org-export-to-file 'hugocv "resume.md"))
+#+end_src
+
 ** Last modified
 #+begin_src emacs-lisp
   (add-hook 'org-mode-hook (lambda ()

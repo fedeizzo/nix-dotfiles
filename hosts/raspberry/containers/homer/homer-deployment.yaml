@@ -33,11 +33,11 @@ spec:
             configMapKeyRef:
               name: homer-config
               key: INIT_ASSETS
-        - name: SUBFOLDER
-          valueFrom:
-            configMapKeyRef:
-              name: homer-config
-              key: SUBFOLDER
+        # - name: SUBFOLDER
+        #   valueFrom:
+        #     configMapKeyRef:
+        #       name: homer-config
+        #       key: SUBFOLDER
         - name: PUID
           valueFrom:
             configMapKeyRef:
@@ -75,11 +75,14 @@ metadata:
   #   traefik.ingress.kubernetes.io/router.entrypoints: websecure # to use https globally
   #   traefik.ingress.kubernetes.io/router.tls: "true" # to use htpss when tls is not set globally
   # traefik.ingress.kubernetes.io/service.serversscheme: https # to use https in the comunication between traefik and the service
+    # traefik.http.routers.cal.rule: Host(`homer.home-lab`)
+    # "traefik.http.routers.cal.entrypoints=web"
 spec:
   rules:
-  - http:
+  - host: "homer.home-lab"
+    http:
       paths:
-      - path: /homer
+      - path: "/"
         pathType: Prefix
         backend:
           service:
