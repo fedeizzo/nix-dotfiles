@@ -15,6 +15,7 @@ if [ $(id -u) -ne 0 ]; then
   exit 1
 fi
 
+export EDITOR=nano
 export SOPS_AGE_KEY_FILE=/var/lib/sops/keys.txt
 
 encrypt_kubernetes_secrets () {
