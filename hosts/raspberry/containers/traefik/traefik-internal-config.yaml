@@ -1,0 +1,43 @@
+global:
+  checkNewVersion: false
+  sendAnonymousUsage: false
+serversTransport:
+  insecureSkipVerify: true
+api:
+  insecure: true
+  dashboard: true
+  debug: false
+log:
+  level: "INFO"
+
+entryPoints:
+  web:
+    address: ":80"
+    http:
+      redirections:
+        entrypoint:
+          to: websecure
+  websecure:
+    address: ":443"
+    http:
+      tls: {}
+
+providers:
+  kubernetesIngress:
+    namespaces:
+      - "default"
+    # labelSelector: "app=traefik"
+
+# certificatesResolvers:
+#   leresolver:
+#     acme: 
+#       email: "placeholder@fedeizzo.dev"
+#       caServer: https://acme-staging-v02.api.letsencrypt.org/directory
+#       storage: "/acme.json"
+#       dnsChallenge:
+#         provider: "cloudflare"
+#         delaybeforecheck: "0s"
+#         resolvers:
+#           - "1.1.1.1:53"
+#           - "8.8.8.8:53"
+

@@ -12,6 +12,11 @@ let
 in
 {
   config = {
+    environment.etc.traefik-internal-config = {
+      enable = true;
+      source = ./traefik-internal-config.yaml;
+      target = "homelab-kubernetes/internal-configs/traefik.yml";
+    };
     environment.etc.traefik-role = {
       enable = true;
       source = ./traefik-role.yaml;
@@ -22,20 +27,10 @@ in
       source = ./traefik-account.yaml;
       target = "homelab-kubernetes/${order}-02-traefik-account-${suffix}.yaml";
     };
-    environment.etc.traefik-configmap = {
-      enable = true;
-      source = ./traefik-configmap.yaml;
-      target = "homelab-kubernetes/${order}-03-traefik-configmap-${suffix}.yaml";
-    };
-    environment.etc.traefik-secrets = {
-      enable = true;
-      source = ./traefik-secrets.yaml;
-      target = "homelab-kubernetes/${order}-04-traefik-secrets-${secretSuffix}.yaml";
-    };
     environment.etc.traefik-deployment = {
       enable = true;
       source = ./traefik-deployment.yaml;
-      target = "homelab-kubernetes/${order}-05-traefik-deployment-${suffix}.yaml";
+      target = "homelab-kubernetes/${order}-03-traefik-deployment-${suffix}.yaml";
     };
   };
 }

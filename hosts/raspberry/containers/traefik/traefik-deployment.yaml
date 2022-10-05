@@ -19,52 +19,17 @@ spec:
       - name: traefik-acme
         hostPath:
           path: /var/volumes/traefik/acme.json
-      - name: traefik-email-file
+      - name: traefik-internal-config
         hostPath:
-          path: /var/volumes/traefik/cp-api-email
-      - name: traefik-key-file
-        hostPath:
-          path: /var/volumes/traefik/cp-api-key
+          path: /etc/homelab-kubernetes/internal-configs/traefik.yml
       containers:
         - name: traefik
           image: traefik:v2.8
           volumeMounts:
           - name: traefik-acme
             mountPath: /acme.json
-          - name: traefik-email-file
-            mountPath: /run/secrets/traefik_cp-api-email
-          - name: traefik-key-file
-            mountPath: /run/secrets/traefik_cp-api-key
-          env:
-          - name: CF_API_EMAIL
-            valueFrom:
-              secretKeyRef:
-                name: traefik-secrets
-                key: CF_API_EMAIL
-          - name: CF_API_KEY
-            valueFrom:
-              secretKeyRef:
-                name: traefik-secrets
-                key: CF_API_KEY
-          args:
-            - --api.insecure # disable this in production
-            - --providers.kubernetesingress
-            # MISC
-            - --global.sendAnonymousUsage=false
-            - --global.checknewversion=false
-            - --log.level=DEBUG
-            - --serversTransport.insecureSkipVerify=true
-            # HTTPS
-            - --entrypoints.web.address=:80
-            - --entryPoints.websecure.address=:443
-            - --entrypoints.web.http.redirections.entryPoint.to=websecure
-            - --entrypoints.websecure.http.tls
-            # CERTIFICATES
-            - --certificatesresolvers.le.acme.email=placeholder@fedeizzo.dev # here a use a fake email address that will be displayed within the certificate
-            - --certificatesresolvers.le.acme.storage=/acme.json
-            - --certificatesresolvers.le.acme.dnschallenge=true
-            - --certificatesresolvers.le.acme.dnschallenge.provider=cloudflare
-            - --certificatesresolvers.le.acme.dnschallenge.delaybeforecheck=0
+          - name: traefik-internal-config
+            mountPath: /etc/traefik/traefik.yml
           ports:
             # - name: web
             #   containerPort: 80
