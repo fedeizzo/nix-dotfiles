@@ -1,0 +1,20 @@
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: placeholder@fedeizzo.dev
+    privateKeySecretRef:
+      name: letsencrypt
+    solvers:
+    - dns01:
+        cloudflare:
+          email: federico.izzo99@gmail.com
+          apiTokenSecretRef:
+            name: cert-manager-secrets
+            key: api-token
+      selector:
+        dnsZones:
+          - "fedeizzo.dev"

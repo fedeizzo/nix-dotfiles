@@ -8,17 +8,18 @@
     ./containers
   ];
   fiCluster.services = {
-    # to delete container use a prefix written when enable == false
+    cert-manager.enable = true;
+    cert-manager.applicationOrder = 1;
     traefik.enable = true;
-    traefik.applicationOrder = 1;
+    traefik.applicationOrder = 2;
     authelia.enable = false;
-    authelia.applicationOrder = 2;
+    authelia.applicationOrder = 3;
     cloudflare-ddns.enable = true;
-    cloudflare-ddns.applicationOrder = 3;
+    cloudflare-ddns.applicationOrder = 4;
     homer.enable = false;
-    homer.applicationOrder = 4;
+    homer.applicationOrder = 5;
     fedeizzodev.enable = true;
-    fedeizzodev.applicationOrder = 5;
+    fedeizzodev.applicationOrder = 6;
   };
 
   boot = {
@@ -209,6 +210,7 @@
     libgpiod
     borgbackup
     kubectl
+    kubernetes-helm
     htop
   ];
   virtualisation = {

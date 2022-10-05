@@ -41,10 +41,9 @@ kind: Ingress
 metadata:
   name: fedeizzodev-ingress
   annotations:
-    traefik.ingress.kubernetes.io/router.entrypoints: "websecure" # to use https globally
-    traefik.ingress.kubernetes.io/router.tls: "true" # to use htpss when tls is not set globally
-    traefik.ingress.kubernetes.io/router.tls.resolver: "le" # to use htpss when tls is not set globally
-  # traefik.ingress.kubernetes.io/service.serversscheme: https # to use https in the comunication between traefik and the service
+    traefik.ingress.kubernetes.io/router.entrypoints: "websecure"
+    # traefik.ingress.kubernetes.io/router.tls: "true"
+    # traefik.ingress.kubernetes.io/router.tls.resolver: "le"
 spec:
   rules:
   - host: "fedeizzo.dev"
@@ -57,3 +56,5 @@ spec:
             name: fedeizzodev-service
             port:
               name: website-port
+  tls:
+    - secretName: fedeizzo-dev-tls

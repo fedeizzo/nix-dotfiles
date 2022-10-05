@@ -14,12 +14,21 @@ let
   };
 in
 {
-  imports = [ ./traefik ./homer ./authelia ./cloudflare-ddns ./fedeizzo.dev ];
+  imports = [
+    ./traefik
+    ./cert-manager
+    ./homer
+    ./authelia
+    ./cloudflare-ddns
+    ./fedeizzo.dev
+  ];
 
   options = {
     fiCluster.services = {
       traefik.enable = enableOption;
       traefik.applicationOrder = appOrderOption;
+      cert-manager.enable = enableOption;
+      cert-manager.applicationOrder = appOrderOption;
       authelia.enable = enableOption;
       authelia.applicationOrder = appOrderOption;
       cloudflare-ddns.enable = enableOption;

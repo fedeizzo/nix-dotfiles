@@ -3,7 +3,7 @@
 with lib;
 with builtins;
 let
-  suffix = (kubernetesSuffixFile { isEnable = config.fiCluster.services.traefik.enable; });
+  suffix = (kubernetesSuffixFile { isEnable = config.fiCluster.services.fedeizzodev.enable; });
   order = (kubernetesOrderString { intOrder = config.fiCluster.services.fedeizzodev.applicationOrder; });
 in
 {
