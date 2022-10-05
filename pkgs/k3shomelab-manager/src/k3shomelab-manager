@@ -1,8 +1,26 @@
 #!/usr/bin/env bash
 export SOPS_AGE_KEY_FILE=/var/lib/sops/keys.txt
 
-helpMessage="\nusage $0: <command>\n\ncommand:\n\tall: apply and delete everything\n\tapply: apply\n\tdelete: delete"
+helpMessage="\nusage $0: <command>\n\ncommand:\n\tall: apply and delete everything\n\tapply: apply\n\tdelete: delete\n\tsetup: first setup"
 [ -z $1 ] && echo -e $helpMessage && exit 1
+
+first_setup() {
+    # kubectl apply -f https://raw.githubusercontent.com/traefik/traefik/v2.8/docs/content/reference/dynamic-configuration/kubernetes-crd-definition-v1.yml
+    # kubectl apply -f https://raw.githubusercontent.com/traefik/traefik/v2.8/docs/content/reference/dynamic-configuration/kubernetes-crd-rbac.yml
+    echo "First setup..."
+    helm repo add jetstack https://charts.jetstack.io
+    helm repo update
+
+    kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.9.1/cert-manager.crds.yaml
+    helm install cert-manager jetstack/cert-manager \
+	 --namespace cert-manager \
+	 --version v1.9.1 \
+	 --create-namespace \
+	 --set installCRDs=true \
+	 --set podDnsPolicy=None \
+	 --set 'podDnsConfig.nameservers={1.1.1.1,9.9.9.9}' \
+         --set 'extraArgs={--dns01-recursive-nameservers-only,--dns01-recursive-nameservers=1.1.1.1:53\,9.9.9.9:53}'
+}
 
 execute_step () {
    echo "$2 operation on file matching regex $1"
@@ -36,6 +54,10 @@ case $1 in
 	;;
     "down")
 	execute_step "" "delete"
+	shift
+	;;
+    "setup")
+	first_setup
 	shift
 	;;
     *)
