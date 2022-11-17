@@ -25,6 +25,12 @@ encrypt_kubernetes_secrets () {
     mv $1.encoded $1
 }
 
+encrypt () {
+    sops --encrypt $1 > $1.encoded
+    rm $1
+    mv $1.encoded $1
+}
+
 edit_secretes () {
     colorPrint "Edit secrtes on file $1"
     sops $1
@@ -47,6 +53,10 @@ case $1 in
 	;;
     "edit")
 	edit_secretes $selectedFile
+	shift
+	;;
+    "encrypt")
+	encrypt $selectedFile
 	shift
 	;;
 esac

@@ -15,7 +15,7 @@
     };
     bluetooth = {
       enable = true;
-      powerOnBoot = true;
+      powerOnBoot = false;
       disabledPlugins = [ "sap" ];
     };
     cpu.intel.updateMicrocode = true;
@@ -97,8 +97,14 @@
         [ids]
         0001:0001
         [main]
-        capslock = overload(control, esc)
+        capslock = overload(control, leftcontrol)
+        leftcontrol = capslock
       '';
     };
+  };
+  location.latitude = 41.0;
+  location.longitude = 12.0;
+  services.clight = {
+    enable = true;
   };
 }

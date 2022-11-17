@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+swayidle -w \
+	 timeout 300 'swaylock --indicator-radius 0 -i $HOME/.config/images/lock-screen.jpg' \
+	 timeout 600 'systemctl --user stop clight.service; swaymsg "output * dpms off"' \
+	 resume 'systemctl --user start clight.service; swaymsg "output * dpms on"' \
+	 before-sleep 'swaylock --indicator-radius 0 -i $HOME/.config/images/lock-screen.jpg'

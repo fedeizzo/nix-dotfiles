@@ -21,6 +21,8 @@ entryPoints:
     address: ":443"
     http:
       tls: {}
+  vpn:
+    address: ":51820/udp"
 
 providers:
   kubernetesIngress:

@@ -1,31 +1,25 @@
-{ config, pkgs, libs, ... }:
+{ config, pkgs, pkgs-unstable, libs, ... }:
 let
   myEmacs = with pkgs; ((emacsPackagesFor emacsPgtkNativeComp).emacsWithPackages (epkgs: [
     epkgs.vterm
     epkgs.org-roam-ui
   ]));
-  my-python-packages = python3Packages: with python3Packages; [
-    # for eaf
-    pyqt5
+  my-python-packages = python-packages: with python-packages; [
+    pyqt6
     sip
-    pyqtwebengine
+    qtpy
+    pyqt6-webengine
     epc
-    lxml
-    # eaf-file-browser
-    qrcode
-    # eaf-browser
-    pysocks
-    # eaf-pdf-viewer
-    pymupdf
-    # eaf-file-manager
-    pypinyin
-    # eaf-system-monitor
-    psutil
-    # eaf-markdown-previewer
-    retry
+    lxml # for eaf
+    qrcode # eaf-file-browser
+    pysocks # eaf-browser
+    pymupdf # eaf-pdf-viewer
+    pypinyin # eaf-file-manager
+    psutil # eaf-system-monitor
+    retry # eaf-markdown-previewer
     markdown
   ];
-  python-with-my-packages = pkgs.python39.withPackages my-python-packages;
+  python-with-my-packages = pkgs-unstable.python3.withPackages my-python-packages;
   org-cv = pkgs.fetchFromGitLab {
     owner = "fedeizzo";
     repo = "org-cv";
@@ -43,6 +37,12 @@ let
     repo = "zetteldesk.el";
     rev = "master";
     sha256 = "sha256-sH2AQHLIKjM5HOrs04vw4s/a+7MsL7h7S6ERvNGy508=";
+  };
+  gendoxy = pkgs.fetchFromGitHub {
+    owner = "mp81ss";
+    repo = "gendoxy";
+    rev = "master";
+    sha256 = "sha256-z3L5VScaQ7LssIvCXjRsKbR7yHdlaamGhTkClSE/MJo=";
   };
 in
 {
@@ -78,10 +78,18 @@ in
     aspellDicts.en-science
     aspellDicts.en-computers
     aspellDicts.it
-    # emacs-application-framework
+    # telega
+    tdlib
+    # EAF
+    # python-with-my-packages
+    # qt6.qtwebengine
+    git
     nodejs
+    wmctrl
+    # eaf-browser
     aria
-    python-with-my-packages
+    # eaf-file-manager
+    fd
   ];
   xdg.configFile."emacs/Emacs.org".source = ./Emacs.org;
   xdg.configFile."emacs/early-init.el".text = ''
@@ -91,4 +99,5 @@ in
   xdg.configFile."emacs/org-cv".source = org-cv;
   xdg.configFile."emacs/ligature.el".source = ligature;
   xdg.configFile."emacs/zetteldesk.el".source = zetteldesk;
+  xdg.configFile."emacs/gendoxy".source = gendoxy;
 }

@@ -1,4 +1,4 @@
-{ config, pkgs, libs, ... }:
+{ pkgs, pkgs-unstable, ... }:
 
 {
   home.packages = with pkgs; [
@@ -10,10 +10,10 @@
     # python
     black
     # see emacx.nix for further information
-    # python39
-    python39Packages.debugpy
-    python39Packages.ipython
-    python39Packages.pylint
+    python3Packages.debugpy
+    python3Packages.ipython
+    python3Packages.pylint
+    pkgs-unstable.nodePackages.pyright
 
     # bash
     nodePackages.bash-language-server

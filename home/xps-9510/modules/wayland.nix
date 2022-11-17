@@ -1,62 +1,67 @@
-{ pkgs, system, ... }:
+{ pkgs, pkgs-unstable, ... }:
 
 {
   wayland.windowManager.hyprland = {
     enable = true;
     xwayland.enable = true;
-    extraConfig = builtins.readFile ../dotfiles/hyprland.conf;
+    recommendedEnvironment = true;
+    extraConfig = ''
+      source=~/.config/hypr/config.conf
+    '';
+    systemdIntegration = false;
   };
-  home.packages = with pkgs;
-    [
-      # river
-      river
-      glib
-      lswt
-      river-tag-overlay
-      xdg-utils
-      # dmenu replacement
-      j4-dmenu-desktop
-      wofi
-      # status bar
-      waybar
-      # xrandr replacement
-      wlr-randr
-      # autorandr replacement
-      kanshi
-      # arandr replacement
-      wdisplays
-      # feh replacement
-      swaybg
-      # clipboard
-      wl-clipboard
-      clipman
-      # image viewer
-      imv
-      # screenshot for flameshoot
-      grim
-      slurp
-      swappy
-      # drawing
-      # tray
-      libappindicator
-      # xdotool replacement
-      wtype
-      # devour replacement
-      swayhide
-      # autotiling
-      autotiling
-      # notification center
-      swaync
-      # gamma adapter
-      wlsunset
-      eww-wayland
-      # keyboard manager
-      swhkd
-    ];
-  # programs.eww = {
-  #   enable = true;
-  #   package = pkgs.eww-wayland;
-  # };
+  home.packages = with pkgs; [
+    # river
+    river
+    glib
+    lswt
+    river-tag-overlay
+    xdg-utils
+    # dmenu replacement
+    j4-dmenu-desktop
+    wofi
+    # status bar
+    waybar
+    # xrandr replacement
+    wlr-randr
+    # autorandr replacement
+    kanshi
+    # arandr replacement
+    wdisplays
+    # feh replacement
+    swaybg
+    # clipboard
+    wl-clipboard
+    clipman
+    # image viewer
+    imv
+    # screenshot for flameshoot
+    swappy
+    grimblast
+    # drawing
+    # tray
+    libappindicator
+    # xdotool replacement
+    wtype
+    # devour replacement
+    swayhide
+    # autotiling
+    autotiling
+    # notification center
+    swaync
+    # gamma adapter
+    wlsunset
+    # keyboard manager
+    swhkd
+    # socket reader
+    socat
+    libinput-gestures
+  ];
+  programs.eww = {
+    enable = true;
+    package = pkgs-unstable.eww-wayland;
+    configDir = ../dotfiles/eww;
+  };
   programs.rofi = {
     enable = true;
     package = pkgs.rofi-wayland;
@@ -82,11 +87,28 @@
   xdg.configFile."sway" = {
     source = ../dotfiles/sway;
   };
+  xdg.configFile."images/wallpaper.png" = {
+    source = ../dotfiles/images/wallpaper.png;
+  };
+  xdg.configFile."images/lock-screen.jpg" = {
+    source = ../dotfiles/images/lock-screen.jpg;
+  };
   xdg.configFile."river" = {
     source = ../dotfiles/river;
   };
   xdg.configFile."swhkd/swhkdrc" = {
     source = ../dotfiles/swhkd/swhkdrc;
+  };
+  xdg.configFile."clight.conf" = {
+    source = ../dotfiles/clight.conf;
+  };
+
+  xdg.configFile."libinput-gestures.conf" = {
+    text = ''
+      gesture swipe right 3 wtype -d 10 -M alt -k left -m alt
+      gesture swipe left 3 wtype -d 10 -M alt -k right -m alt
+      gesture swipe up 4 hyprctl dispatch togglespecialworkspace " "
+    '';
   };
   xdg.configFile."environment.d/envvars.conf" = {
     text = ''

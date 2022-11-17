@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
-hyprctl keyword unbind SUPER,I
-kitty --class floatingkitty &
-disown
-sleep 1
-hyprctl dispatch movetoworkspacesilent special
-hyprctl keyword bind SUPER,I,togglespecialworkspace
+hyprctl clients | grep "specialkitty" &> /dev/null
+if [[ $? != 0 ]]; then
+    hyprctl keyword windowrulev2 "workspace special silent,class:^(specialkitty)$"
+    hyprctl dispatch exec "kitty --class specialkitty"
+fi

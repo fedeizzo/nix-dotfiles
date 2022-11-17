@@ -22,11 +22,11 @@
   (defvar bootstrap-version)
   (let ((bootstrap-file
          (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-        (bootstrap-version 5))
+        (bootstrap-version 6))
     (unless (file-exists-p bootstrap-file)
       (with-current-buffer
           (url-retrieve-synchronously
-           "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+           "https://raw.githubusercontent.com/radian-software/straight.el/develop/install.el"
            'silent 'inhibit-cookies)
         (goto-char (point-max))
         (eval-print-last-sexp)))
@@ -397,7 +397,70 @@ This section must be the last one because it should stay after any function decl
 
 ** hledger
 #+begin_src emacs-lisp
+  (defun fi/open-ledger ()
+    (interactive)
+    (find-file "~/docs/finance/finance.journal"))
+  (defun hledger/custom-run-command (command)
+    "Run a custom hledger COMMAND."
+    (interactive (list (completing-read "jdo> "
+                                        hledger/hledger-custom-jcompletions)))
+    (pcase command
+      ("is-years" (hledger-run-command "--pretty=yes -s is -Y"))
+      ("expenses-years" (hledger-run-command "--pretty=yes -s bal -t expenses --sort-amount -Y -2 -A"))
+      ("expenses-years%" (hledger-run-command "--pretty=yes -s bal -t expenses -% --sort-amount -Y -2 -A"))
+      ("total" (hledger-run-command "--pretty=yes -s balancesheetequity \'not:opening\'"))
+      ("budget" (hledger-run-command "--pretty=yes -s bal --auto budget -t"))
+      ("budget-year" (hledger-run-command "--pretty=yes -s bal --auto budget -t -p \'this year\' -M"))
+      ("is-year" (hledger-run-command "--pretty=yes -s is -t -p \'this year\' -M"))
+      ("is-month" (hledger-run-command "--pretty=yes -s is -t -p \'this month\'"))
+      ("is-months" (hledger-run-command "--pretty=yes -s is -t -M -b 'in -3 months' -e 'this month' -A"))
+      )
+    )
+  (general-nmap "C-c j" 'fi/open-ledger)
   (use-package hledger-mode
+    :mode ("\\.journal\\'" "\\.hledger\\'")
+    :preface
+    (defun hledger/next-entry ()
+      "Move to next entry and pulse."
+      (interactive)
+      (hledger-next-or-new-entry)
+      (hledger-pulse-momentary-current-entry))
+
+    (defface hledger-warning-face
+      '((((background dark))
+         :background "Red" :foreground "White")
+        (((background light))
+         :background "Red" :foreground "White")
+        (t :inverse-video t))
+      "Face for warning"
+      :group 'hledger)
+
+    (defun hledger/prev-entry ()
+      "Move to last entry and pulse."
+      (interactive)
+      (hledger-backward-entry)
+      (hledger-pulse-momentary-current-entry))
+
+    (defun hledger/format ()
+      "Format an hledger buffer with align"
+      (interactive)
+      (align (point-min) (point-max)))
+
+    (require 'align)
+    (add-to-list 'align-rules-list
+                 `(hledger-accounts
+                   (regexp . ,(rx (+ space)
+                                  (+? anything)
+                                  (group-n 1 space (+ space)
+                                           (? ?-)
+                                           (+ digit)
+                                           (? ?.)
+                                           (* digit))))
+                   (group . 1)
+                   (spacing . 2)
+                   (justify . t)
+                   (separate . entire)
+                   (modes . '(hledger-mode))))
     :config
     (setq
      hledger-jfile "~/docs/finance/finance.journal"
@@ -406,118 +469,74 @@ This section must be the last one because it should stay after any function decl
      hledger-ratios-income-accounts "revenue"
      hledger-year-of-birth 1999
      hledger-life-expectancy 80
-     ))
+     hledger-extra-args "")
+    (setq hledger/hledger-custom-jcompletions
+          '("is-years" "expenses-years"  "expenses-years%" "total" "budget" "budget-year" "is-year" "is-month" "is-months"))
+    (add-hook 'hledger-mode-hook (lambda () (add-hook 'before-save-hook 'hledger/format nil 'local)))
+    (require 'hledger-input)
+    (general-nmap "C-c j" 'hledger-run-command)
+    (general-nmap :keymaps 'hledger-mode-map "C-c e" 'hledger-jentry)
+    (general-nmap :keymaps 'hledger-mode-map "n" 'hledger/next-entry)
+    (general-nmap :keymaps 'hledger-mode-map "N" 'hledger/prev-entry)
+    (add-to-list 'company-backends 'hledger-company))
 
-  (add-to-list 'auto-mode-alist '("\\.journal\\'" . hledger-mode))
-  ;; (add-to-list 'align-rules-list
-  ;;              `(hledger-accounts
-  ;;                (regexp . ,(rx (+ space)
-  ;;                               (+? anything)
-  ;;                               (group-n 1 space (+ space)
-  ;;                                        (? ?-)
-  ;;                                        (+ digit)
-  ;;                                        (? ?.)
-  ;;                                        (* digit))))
-  ;;                (group . 1)
-  ;;                (spacing . 2)
-  ;;                (justify . t)
-  ;;                (separate . entire)
-  ;;                (modes . '(hledger-mode))))
 
-  (defun fi/hledger-format ()
-    "Format an hledger buffer with align"
-    (interactive)
-    (align (point-min) (point-max)))
+  ;; (use-package flycheck-hledger
+  ;;   :after (flycheck hledger-mode)
+  ;;   :hook hledger-mode
+  ;;   :config
+  ;;   (setq flycheck-hledger-strict t))
+#+end_src
+
+** Languagetool
+#+begin_src emacs-lisp
+  ;; (use-package languagetool
+  ;;   :commands (languagetool-check
+  ;;              languagetool-clear-suggestions
+  ;;              languagetool-correct-at-point
+  ;;              languagetool-correct-buffer
+  ;;              languagetool-set-language
+  ;;              languagetool-server-mode
+  ;;              languagetool-server-start
+  ;;              languagetool-server-stop)
+  ;;   :config
+  ;;   (setq languagetool-java-arguments '("-Dfile.encoding=UTF-8")
+  ;;         languagetool-console-command "languagetool-commandline"
+  ;;         languagetool-server-command "languagetool-server"))
 #+end_src
 ** LSP
 #+begin_src emacs-lisp
-  (use-package lsp-mode
-    :init
-    (setq lsp-keymap-prefix nil)
-    :hook (
-           (lsp-mode . lsp-enable-which-key-integration)
-           (sh-mode . lsp))
-    :commands lsp
+  (use-package eglot
     :config
-    (setq lsp-completion-provider :none)
-    (setq lsp-enable-imenu nil)
-    (setq lsp-headerline-breadcrumb-enable nil)
-    (setq lsp-modeline-code-actions-enable nil)
-    (setq lsp-modeline-diagnostics-enable nil)
-    (setq lsp-modeline-workspace-status-enable nil)
-    (setq lsp-lens-enable nil)
-    (setq lsp-signature-auto-activate nil)
-    (lsp-modeline-code-actions-mode nil)
-    (lsp-modeline-diagnostics-mode nil)
-    (lsp-headerline-breadcrumb-mode nil)
-    (advice-add 'lsp :before #'direnv-update-environment)
-    )
-  (use-package lsp-ui
-    :after lsp-mode
-    :config
-    (setq lsp-ui-sildeline-show-diagnostics t
-          lsp-ui-sideline-show-hover nil
-          lsp-ui-sideline-show-code-actions nil
-          lsp-ui-sideline-show-update-mode "line"
-          lsp-ui-sideline-delay 0.2)
-    (setq lsp-ui-peek-enable t)
-    (setq lsp-ui-doc-enable t
-          lsp-ui-doc-position 'at-point
-          lsp-ui-doc-show-with-mouse nil 
-          lsp-ui-doc-show-with-cursor nil
-          lsp-ui-doc-include-signature t
-          lsp-ui-doc-max-height 40
-          lsp-ui-doc-use-webkit nil)
-    (setq lsp-ui-imenu-enable nil)
-    (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
-    (define-key lsp-ui-mode-map [remap xref-find-references] #'lsp-ui-peek-find-references))
-  (use-package flycheck
-    :after lsp-mode)
-  (use-package flycheck-hledger
-    :after (flycheck ledger-mode)
-    :demand t)
-  (use-package lsp-ivy
-    :after lsp-mode)
-#+end_src
+    (setq
+     eglot-autoreconnect t
+     eglot-autoshutdown t)
+    (add-hook 'python-mode-hook 'eglot-ensure)
+    (add-hook 'rust-mode-hook 'eglot-ensure)
+    (add-hook 'c-mode-hook 'eglot-ensure)
+    (add-hook 'nix-mode-hook 'eglot-ensure))
 
-#+begin_src emacs-lisp
   (pretty-hydra-define lsp-hydra-main (:color blue :title "LspMode" :quit-key "q")
-    ("Buffer"
-     (("f" lsp-format-buffer "format buffer")
-      ("r" lsp-rename "rename symbol")
-      ("x" lsp-execute-code-action "code action"))
-     "Documentation"
-     (("h" lsp-ui-doc-glance "doc glance")
-      ("d" lsp-ui-peek-find-definitions "definition")
-      ("n" lsp-describe-thing-at-point "doc nav")
-      ("c" lsp-rust-analyzer-open-external-docs "rust open external docs"))
-     "Rust"
-     (("c" lsp-rust-analyzer-open-external-docs "rust open external docs")))
-    )
+    ("Project"
+     (("r" eglot-rename "rename symbol")
+      ("d" flymake-show-project-diagnostics "diagnostic"))
+     "Buffer"
+     (("f" eglot-format-buffer "format")
+      ("h" eldoc "docs"))
+     "Actions"
+     (("a" eglot-code-actions "all")
+      ("o" eglot-code-action-organize-imports "organize imports")
+      ("x" eglot-code-action-quickfix "quickfix")
+      ("e" eglot-code-action-extract "extract")
+      ("i" eglot-code-action-inline "inline")
+      ("r" eglot-code-action-rewrite "rewrite"))))
   (fi/leader "l" 'lsp-hydra-main/body)
 #+end_src
 
-*** python
-#+begin_src emacs-lisp
-  (use-package lsp-pyright
-    :ensure t
-    :hook (python-mode . (lambda ()
-                           (require 'lsp-pyright)
-                           (lsp))))
-#+end_src
 *** nix
 #+begin_src emacs-lisp
   (use-package nix-mode
     :mode "\\.nix\\'")
-  (setq lsp-nix-server-path "rnix-lsp")
-  (lsp-register-client
-   (make-lsp-client :new-connection (lsp-stdio-connection '("rnix-lsp"))
-                    :major-modes '(nix-mode)
-                    :server-id 'nix))
-#+end_src
-*** bash
-#+begin_src emacs-lisp
-
 #+end_src
 
 *** rust
@@ -532,10 +551,75 @@ This section must be the last one because it should stay after any function decl
     (add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
     (add-to-list 'auto-mode-alist '("\\.yaml\\'" . yaml-mode)))
 #+end_src
+*** C
+#+begin_src emacs-lisp
+  (use-package gendoxy
+    :straight nil
+    :load-path "~/.config/emacs/gendoxy")
+#+end_src
+*** Yuck
+#+begin_src emacs-lisp
+  (use-package yuck-mode)
+#+end_src
 
 ** TODO Magit
 #+begin_src emacs-lisp
   (use-package magit)
+#+end_src
+
+** Notmuch -email
+#+begin_src emacs-lisp
+  (defun fi/notmuch-show-delete ()
+    (interactive)
+    (notmuch-search-add-tag '("-inbox" "-unread" "-important" "+deleted"))
+    (notmuch-tree-next-message))
+
+  (use-package notmuch
+    :config
+    (general-nmap :keymaps 'notmuch-search-mode-map "d" 'fi/notmuch-show-delete)
+    (setq
+     message-required-mail-headers (remove' Message-ID message-required-mail-headers)
+     message-kill-buffer-on-exit t
+     message-send-mail-function #'message-send-mail-with-sendmail)
+    (setq sendmail-error-reporting-interactive '()
+          sendmail-error-reporting-non-interactive '()
+          sendmail-program "~/nix-dotfiles/home/xps-9510/sources/send_email")
+
+    (setq notmuch-init-file "~/.config/notmuch/default/config"
+          notmuch-search-oldest-first nil
+          notmuch-fcc-dirs nil
+          notmuch-search-result-format '(("date" . "%12s ")
+                                         ("count" . "%-7s ")
+                                         ("authors" . "%-30s ")
+                                         ("subject" . "%-72s ")
+                                         ("tags" . "(%s)"))
+          notmuch-archive-tags '("-inbox" "-unread" "+archive")
+          notmuch-saved-searches '((:name "fedeizzo" :query "to:federico.izzo99@gmail.com and tag:inbox" :key "f")
+                                   (:name "ozzi" :query "to:ozzi.ezzo@gmail.com and tag:inbox" :key "o")
+                                   (:name "uni" :query "to:federico.izzo@studenti.unitn.it and tag:inbox" :key "u")
+                                   (:name "sent" :query "tag:sent" :key "t")
+                                   (:name "drafts" :query "tag:draft" :key "d")
+                                   (:name "all mail" :query "*" :key "a"))
+          notmuch-show-empty-saved-searches t
+          notmuch-hello-sections '(notmuch-hello-insert-saved-searches notmuch-hello-insert-alltags))
+    ;; (evil-collection-define-key 'normal 'notmuch-tree-mode-map
+    ;;   "u" 'fi/notmuch-toggle-inbox-tree)
+    ;; (evil-collection-define-key 'normal 'notmuch-search-mode-map
+    ;;   "u" 'fi/notmuch-toggle-inbox-show)
+    (add-hook 'notmuch-hello-mode-hook
+              (lambda () (display-line-numbers-mode 0))))
+
+  (add-hook 'message-send-hook
+            (lambda ()
+              (cond
+               ((string= (message-fetch-field "from") "Federico Izzo <federico.izzo99@gmail.com>")
+                (setq message-sendmail-extra-arguments '("/home/fedeizzo/.mail/fedeizzo")))
+               ((string= (message-fetch-field "from") "Federico Izzo <ozzi.ezzo@gmail.com>")
+                (setq message-sendmail-extra-arguments '("/home/fedeizzo/.mail/ozzi"))))))
+
+  ;; (use-package org-mime
+  ;;   :config
+  ;;   (setq org-mime-library 'mml))
 #+end_src
 
 ** Pairs - rainbow-delimiters
@@ -568,8 +652,8 @@ This section must be the last one because it should stay after any function decl
     :init
     (setq projectile-project-search-path '("~/fbk" "~/personalProject" "~/uni")
           projectile-switch-project-action #'project-dired
-          projectile-indexing-methond 'alien
-          projectile-sort-order 'modification-time
+          projectile-indexing-method 'hybrid
+          projectile-sort-order 'recently-active
           projectile-completion-system 'ivy)
     )
 #+end_src
@@ -619,6 +703,9 @@ Hydra
 #+begin_src emacs-lisp
   (use-package super-save
     :config
+    (setq super-save-remote-files nil)
+    (setq super-save-exclude '("*unsent mail*"))
+    (setq auto-save-default nil)
     (super-save-mode 1))
 #+end_src
 
@@ -641,6 +728,12 @@ Hydra
 ** Telegram - disabled
 #+begin_src emacs-lisp
   ;; (setq telega-directory "/home/fedeizzo/.local/share/telega")
+  ;; (setq telega-use-images t)
+  ;; (use-package telega
+  ;;   :commands (telega)
+  ;;   :config
+  ;;   (setq telega-use-docker nil)
+  ;;   )
 #+end_src
 
 ** Terminal - vterm
@@ -699,16 +792,31 @@ Vterm cannot be installed easily using nixos, for this reason the package manage
 * Emacs application framework
 #+begin_src emacs-lisp
   ;; (use-package eaf
-  ;;   :straight (eaf
-  ;;              :type git
-  ;;              :host github
-  ;;              :repo "emacs-eaf/emacs-application-framework"
-  ;;              :files ("*.el" "*.py" "core" "app" "*.json")
-  ;;              :includes (eaf-pdf-viewer eaf-browser) ; Straight won't try to search for these packages when we make further use-package invocations for them
-  ;;              :pre-build (("python" "install-eaf.py" "--install" "pdf-viewer" "browser" "--ignore-sys-deps"))
-  ;;              )
-  ;;   :init (evil-set-initial-state 'eaf-mode 'emacs))
+  ;;   :straight nil
+  ;;   :load-path "~/.config/emacs/emacs-application-framework")
+  ;; :custom
+  ;;                                       ; See https://github.com/emacs-eaf/emacs-application-framework/wiki/Customization
+  ;; (eaf-browser-continue-where-left-off t)
+  ;; (eaf-browser-enable-adblocker t)
+  ;; (browse-url-browser-function 'eaf-open-browser)
+  ;; :config
+  ;; (defalias 'browse-web #'eaf-open-browser)
+  ;; (eaf-bind-key scroll_up "C-n" eaf-pdf-viewer-keybinding)
+  ;; (eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding)
+  ;; (eaf-bind-key take_photo "p" eaf-camera-keybinding)
+  ;; (eaf-bind-key nil "M-q" eaf-browser-keybinding)) ;; unbind, see more in the Wiki
+  ;; (require 'eaf-browser)
+  ;; (require 'eaf-pdf-viewer)
+  ;; (require 'eaf-video-player)
+  ;; (require 'eaf-image-viewer)
+  ;; (require 'eaf-terminal)
+  ;; (require 'eaf-markdown-previewer)
+  ;; (require 'eaf-org-previewer)
+  ;; (require 'eaf-file-manager)
+  ;; (require 'eaf-jupyter)
 #+end_src
+
+#+RESULTS:
 
 ** Browser
 #+begin_src emacs-lisp
@@ -732,7 +840,7 @@ A spaced repetition mechanism to pair with org-roam notes.
 
   (defun fi/dummy-org-download-annotate-function (link)
     ""
-    "#+ATTR_ORG: :width 250px\n#+ATTR_LATEX: :width 250px :placement [H] \n#+CAPTION: \n"
+    "#+ATTR_ORG: :width 250px\n#+ATTR_LATEX: :width 250px :placement [H] \n#+CAPTION: \n#+NAME: \n"
 
     )
 
@@ -1060,7 +1168,8 @@ Annotations are block of texts associated with a file. The main advantage of thi
         (insert (format "
   ,#+ATTR_ORG: :width 450px
   ,#+ATTR_LATEX: :width 450px :placement [H]
-  ,#+CAPTION: 
+  ,#+CAPTION:
+  ,#+NAME:
   [[file:%s]]
   " filename)))
       (setq proc (start-process "ink" nil "inkscape" (format "%s" (expand-file-name filename))))

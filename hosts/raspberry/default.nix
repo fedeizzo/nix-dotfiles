@@ -16,7 +16,7 @@
     authelia.applicationOrder = 3;
     cloudflare-ddns.enable = true;
     cloudflare-ddns.applicationOrder = 4;
-    homer.enable = false;
+    homer.enable = true;
     homer.applicationOrder = 5;
     fedeizzodev.enable = true;
     fedeizzodev.applicationOrder = 6;
@@ -74,13 +74,14 @@
     };
     nat = {
       enable = true;
-      internalInterfaces = [ "tailscale0" ];
+      internalInterfaces = [ "wg0" ];
+      externalInterface = "eth0";
     };
     firewall = {
       enable = true;
       interfaces.eth0.allowedTCPPorts = [ 443 ];
-      trustedInterfaces = [ "tailscale0" ];
-      allowedUDPPorts = [ 51820 ];
+      trustedInterfaces = [ "tailscale0" "wg0" ];
+      allowedUDPPorts = [ 51820 51821 ];
       allowedTCPPorts = [ 6443 ];
       checkReversePath = "loose";
     };
@@ -96,6 +97,23 @@
     permitRootLogin = "yes";
   };
   services.fail2ban.enable = true;
+
+  sops.secrets.homelab-wireguard-private-key.sopsFile = ../../secrets.yaml;
+  networking.wireguard.enable = true;
+  networking.wireguard.interfaces = {
+    wg0 = {
+      ips = [ "192.168.7.1/24" ];
+      listenPort = 51821;
+      privateKeyFile = "${config.sops.secrets.homelab-wireguard-private-key.path}";
+      peers = [
+        {
+          # Laptop xps 9510
+          publicKey = "3i/aGGX9iOSyQ/FLbrKyvaClHzqUq3mGHX4oneerbm0=";
+          allowedIPs = [ "192.168.7.2/32" ];
+        }
+      ];
+    };
+  };
   # tailscale up
   # ip link show tailscale0
   # jorntalctl -fu tailscale

@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+killall socat
+socat - UNIX-CONNECT:/tmp/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock | ~/.sources/hyprlandevents

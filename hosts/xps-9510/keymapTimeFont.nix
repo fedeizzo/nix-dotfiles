@@ -6,7 +6,7 @@
     keyMap = "us";
   };
   time.timeZone = "Europe/Rome";
-  time.hardwareClockInLocalTime = true;
+  time.hardwareClockInLocalTime = false;
 
   fonts = {
     fonts = [

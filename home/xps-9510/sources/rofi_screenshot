@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+active="active: Currently active window."
+screen="screen: All visible outputs."
+output="output: Currently active output."
+area="area: Manually select a region."
+window="window: Manually select a window."
+echo -en "\0prompt\x1f\n"
+if [ ! -z "$@" ]; then
+    case $@ in
+	$active) coproc ( sleep 0.5 && grimblast save active - | swappy -f - > /dev/null 2>&1 ) ; exit ;;
+	$screen) coproc ( sleep 0.5 && grimblast save screen - | swappy -f - > /dev/null 2>&1 ) ; exit ;;
+	$output) coproc ( sleep 0.5 && grimblast save output - | swappy -f - > /dev/null 2>&1 ) ; exit ;;
+	$area) coproc ( sleep 0.5 && grimblast save area - | swappy -f - > /dev/null 2>&1 ) ; exit ;;
+	$window) coproc ( sleep 0.5 && grimblast save window - | swappy -f - > /dev/null 2>&1 ) ; exit ;;
+	*) exit
+    esac
+else
+    echo $active
+    echo $screen
+    echo $output
+    echo $area
+    echo $window
+fi

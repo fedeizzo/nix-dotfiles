@@ -71,15 +71,11 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: homer-ingress
-  # annotations:
-  #   traefik.ingress.kubernetes.io/router.entrypoints: websecure # to use https globally
-  #   traefik.ingress.kubernetes.io/router.tls: "true" # to use htpss when tls is not set globally
-  # traefik.ingress.kubernetes.io/service.serversscheme: https # to use https in the comunication between traefik and the service
-    # traefik.http.routers.cal.rule: Host(`homer.home-lab`)
-    # "traefik.http.routers.cal.entrypoints=web"
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: "vpn"
 spec:
   rules:
-  - host: "homer.home-lab"
+  - host: "homelab.fedeizzo.dev"
     http:
       paths:
       - path: "/"
@@ -89,3 +85,5 @@ spec:
             name: homer-service
             port:
               name: homer-port
+  tls:
+    - secretName: fedeizzo-dev-tls

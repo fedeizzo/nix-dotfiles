@@ -2,6 +2,10 @@ keys:
   - &laptop age162fef9eha0za3r97qk7jaw7y87wlj5lgzl8laqemagqsftq7693sckrcc6
   - &raspberry age14jd2uvg5fwc2r2vgp4tsw5dy9rpksel97um2v494ws4tptult9ys50cndr
 creation_rules:
+  - path_regex: email-secrets.yaml$
+    key_groups:
+    - age:
+      - *laptop
   - path_regex: secrets.yaml$
     key_groups:
     - age:

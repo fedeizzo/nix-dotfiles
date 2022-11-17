@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-22.05";
+    nixpkgs-rasp.url = "github:nixos/nixpkgs/nixos-22.05";
     nixpkgs-old.url = "github:nixos/nixpkgs/nixos-21.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
@@ -55,10 +56,19 @@
     rec {
       overlays = {
         emacs = inputs.emacs-overlay.overlay;
+        hyperwm-contrib = inputs.hyprwm-contrib.overlays.default;
         default = import ./overlays { inherit inputs; };
       };
       legacyPackages = forAllSystems (system:
         import inputs.nixpkgs {
+          inherit system;
+          overlays = builtins.attrValues overlays;
+          config.allowUnfree = true;
+          config.joypixels.acceptLicense = true;
+        }
+      );
+      legacyPackages-rasp = forAllSystems (system:
+        import inputs.nixpkgs-rasp {
           inherit system;
           overlays = builtins.attrValues overlays;
           config.allowUnfree = true;
@@ -80,7 +90,7 @@
           fs = "ext4";
           system = "aarch64-linux";
           machine = "raspberry";
-          pkgs = legacyPackages."aarch64-linux";
+          pkgs = legacyPackages-rasp."aarch64-linux";
         };
       };
 

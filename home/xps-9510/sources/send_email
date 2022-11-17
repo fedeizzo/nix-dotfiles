@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+account=${2//;/}
+config_to_create="$HOME/.notmuch-config" 
+[ -f $config_to_create ] || ln -s $HOME/.config/notmuch/default/config $config_to_create
+gmi send --quiet -t -C $account

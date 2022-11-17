@@ -5,7 +5,10 @@
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
-    extraSpecialArgs = { nix-bubblewrap = inputs.nix-bubblewrap; };
+    extraSpecialArgs = {
+      nix-bubblewrap = inputs.nix-bubblewrap;
+      pkgs-unstable = nixpkgs-unstable;
+    };
     users.${username} = {
       imports = [
         inputs.hyprland.homeManagerModules.default
@@ -15,6 +18,8 @@
         ./modules/cli
         ./modules/config.nix
         ./modules/emacs
+        ./modules/email
+        ./modules/firefox
         ./modules/fish
         ./modules/git.nix
         ./modules/gtk-qt.nix
@@ -31,14 +36,6 @@
         stateVersion = "22.05";
         homeDirectory = "/home/${username}";
         username = "${username}";
-        packages = with pkgs; [
-          nixpkgs-unstable.nodePackages.pyright
-          nixpkgs-unstable.bitwarden-cli
-          nixpkgs-unstable.hledger
-          nixpkgs-unstable.bitwarden
-          nixpkgs-unstable.tdesktop
-          nixpkgs-unstable.xournalpp
-        ];
         persistence."/persist/home/${username}" = {
           allowOther = true;
           directories = [
@@ -52,6 +49,7 @@
             "personalProject"
             "zettelkasten"
             "org"
+            ".mail"
 
             # AppData
             ".local"
@@ -105,6 +103,7 @@
             # Config
             ".config/user-dirs.dirs"
             ".config/user-dirs.locale"
+            ".config/hypr/config.conf"
 
             # Cache
             ".cache/rofi-2.sshcache"

@@ -7,6 +7,9 @@ let
     waybar = super.waybar.overrideAttrs (oldAttrs: {
       mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ];
     });
+    # notmuch = super.notmuch.overrideAttrs (oldAttrs: {
+    #   version = "0.37";
+    # });
     tailscalewithnginx = super.tailscale.overrideAttrs (oldAttrs: {
       subPackages = oldAttrs.subPackages ++ [ "cmd/nginx-auth" ];
       postInstall = ''

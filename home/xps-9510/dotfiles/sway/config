@@ -69,6 +69,9 @@ for_window [app_id="inkscapevim"] floating enable
 for_window [app_id="inkscapevim"] resize set width 50 ppt
 for_window [app_id="inkscapevim"] resize set height 45 ppt
 
+# flameshot
+for_window [app_id="flameshot"] flaoting enable, fullscren disable, move absolute position 0 0, border pixel 0
+
 # tag keybinds
 bindsym {
     $mod+f exec /home/fedeizzo/.sources/change_workspace
@@ -131,6 +134,7 @@ bindsym {
     $mod+d exec $menu
     $mod+b exec rofi-rbw
     $mod+F9 exec input '1267:12572:DLL0945:00_04F3:311C_Touchpad' events toggle
+    # $mod+p exec flameshot gui
     $mod+p exec grim -g "$(slurp)" - | swappy -f -
     # $mod+p exec grim -g "$(slurp)" - | wl-copy -t "image/png" && drawing -c
     $mod+Shift+p exec grim -g "$(swaymsg -t get_tree | jq -r '.. | select(.pid? and .visible?) | .rect | "\(.x),\(.y) \(.width)x\(.height)"' | slurp)" - | swappy -f -
@@ -151,21 +155,22 @@ bindsym {
 
 # sway keybinds
 bindsym {
-    $mod+x exec swaylock --indicator-radius 0 -i $HOME/.config/sway/lock-screen.jpg
+    $mod+x exec swaylock --indicator-radius 0 -i $HOME/.config/images/lock-screen.jpg
     $mod+Shift+Z exit
     $mod+Shift+c reload
 }
 
+exec clight
 exec swayidle -w \
-        timeout 300 'swaylock --indicator-radius 0 -i $HOME/.config/sway/lock-screen.jpg' \
+        timeout 300 'swaylock --indicator-radius 0 -i $HOME/.config/images/lock-screen.jpg' \
         timeout 600 'swaymsg "output * dpms off"' \
         resume 'swaymsg "output * dpms on"' \
-        before-sleep 'swaylock --indicator-radius 0 -i $HOME/.config/sway/lock-screen.jpg'
+        before-sleep 'swaylock --indicator-radius 0 -i $HOME/.config/images/lock-screen.jpg'
 exec swaync
 exec kanshi
 exec kitty --class='floatingkitty'
 exec wl-paste -t text --watch clipman store
-exec swaybg -i $HOME/.config/sway/wallpaper.png
+exec swaybg -i $HOME/.config/images/wallpaper.png
 exec waybar
 exec autotiling
 # exec QT_QPA_PLATFORM=wayland-egl telegram-desktop
@@ -175,5 +180,5 @@ exec systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CU
 exec hash dbus-update-activation-environment 2>/dev/null && \
      dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK 
 
-exec swhks &
-exec pkexec swhkd
+# exec swhks &
+# exec pkexec swhkd

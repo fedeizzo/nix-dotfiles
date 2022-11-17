@@ -32,5 +32,10 @@ in
       source = ./traefik-deployment.yaml;
       target = "homelab-kubernetes/${order}-03-traefik-deployment-${suffix}.yaml";
     };
+    environment.etc.traefik-middleware = {
+      enable = true;
+      source = ./traefik-middleware.yaml;
+      target = "homelab-kubernetes/${order}-03-traefik-middleware-${suffix}.yaml";
+    };
   };
 }

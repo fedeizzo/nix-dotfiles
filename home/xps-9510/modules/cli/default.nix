@@ -1,4 +1,4 @@
-{ config, pkgs, libs, ... }:
+{ pkgs, pkgs-unstable, ... }:
 
 {
   home.packages = with pkgs; [
@@ -59,6 +59,8 @@
     moreutils
     home-manager
     zip
+    pkgs-unstable.bitwarden-cli
+    pkgs-unstable.hledger
   ];
   xdg.configFile."rofi-rbw.rc" = {
     source = ./rofi-rbw.rc;

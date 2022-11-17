@@ -27,7 +27,7 @@ in
       };
     };
     cleanTmpDir = true;
-    kernelPackages = pkgs.linuxPackages_latest;
+    kernelPackages = pkgs.linuxPackages_5_19;
     kernel.sysctl = {
       "vm.swappiness" = 10;
       "dev.i915.perf_stream_paranoid" = 0;

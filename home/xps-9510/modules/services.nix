@@ -3,6 +3,16 @@
 {
   home.packages = with pkgs; [
     networkmanager_dmenu
+    blueberry
+    (makeDesktopItem {
+      name = "bluetooth";
+      exec = "blueberry";
+      terminal = false;
+      desktopName = "bluetooth";
+      type = "Application";
+      categories = [ "GTK" "GNOME" "Settings" "HardwareSettings" "X-XFCE-SettingsDialog" "X-XFCE-HardwareSettings" ];
+      icon = "bluetooth";
+    })
   ];
   programs.direnv = {
     enable = true;

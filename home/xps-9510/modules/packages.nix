@@ -1,4 +1,4 @@
-{ config, pkgs, libs, nix-bubblewrap, ... }:
+{ pkgs, nix-bubblewrap, pkgs-unstable, ... }:
 
 let
   inherit (nix-bubblewrap.lib.x86_64-linux) wrapPackage;
@@ -20,7 +20,6 @@ in
     # audio
     pavucontrol
     # browser
-    firefox
     google-chrome
     # media
     mpv
@@ -60,5 +59,10 @@ in
     #     "-pulse"
     #   ];
     # })
+    # spellchecking
+    languagetool
+    pkgs-unstable.bitwarden
+    pkgs-unstable.tdesktop
+    pkgs-unstable.xournalpp
   ];
 }

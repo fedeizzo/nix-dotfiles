@@ -15,6 +15,7 @@ lib.mkIf (fs == "btrfs") {
       "/var/lib/fprint"
       "/var/lib/tailscale"
       "/root/.ssh"
+      "/root/.cache"
     ];
     files = [
       "/etc/adjtime"
@@ -25,3 +26,4 @@ lib.mkIf (fs == "btrfs") {
     ];
   };
 }
+

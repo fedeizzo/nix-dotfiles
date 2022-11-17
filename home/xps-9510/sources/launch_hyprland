@@ -10,4 +10,4 @@ export XDG_SESSION_TYPE="wayland"
 export GTK_USE_PORTAL=0
 export MOZ_ENABLE_WAYLAND=1
 systemctl --user import-environment
-Hyprland --config $HOME/nix-dotfiles/home/xps-9510/dotfiles/hyprland.conf
+Hyprland

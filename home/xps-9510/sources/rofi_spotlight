@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+OPERATION_FILE='/tmp/rofi_spotlight'
+if [ ! -z "$@" ]; then
+    echo -en "\0prompt\x1f\n"
+    if [[ "$@" == :* ]]; then
+	echo "$@" | awk -F" " '{ print substr($1,2); }' > $OPERATION_FILE
+        query=$(echo "$@" | sed 's/[^ ]* //')
+        fd -p -t f ".*${query// /.*}.*"
+    else
+	if [ -f "$@" ]; then
+	    case $(cat $OPERATION_FILE) in
+		"dragon") coproc ( dragon -x "$@" > /dev/null 2>&1 ) ;;
+		*) coproc ( $(cat $OPERATION_FILE) "$@" > /dev/null 2>&1 ) ;;
+	    esac
+	    exit 0
+	else
+	    echo 'xdg-open' > $OPERATION_FILE
+	    query=$@
+	    fd -p -t f ".*${query// /.*}.*"
+	fi
+    fi
+else
+    echo -en "\0prompt\x1fQuery\n"
+fi

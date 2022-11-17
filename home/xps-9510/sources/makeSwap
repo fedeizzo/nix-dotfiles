@@ -10,6 +10,7 @@ case $cmd in
         [ -z $amount ] && echo "Amount needed" && exit 1
         doas fallocate -l $amount"G" /swap/tmp_swap
         doas chmod 600 /swap/tmp_swap
+	doas chattr +C /swap/tmp_swap
         doas mkswap /swap/tmp_swap
         doas swapon /swap/tmp_swap
         ;;

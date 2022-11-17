@@ -1,23 +1,21 @@
 {
     "position": "top", 
     "height": 14,
-    "modules-left": ["sway/workspaces", "wlr/workspaces", "river/tags"],
+    "modules-left": ["sway/workspaces", "wlr/workspaces"],
     "modules-center": ["custom/backup-home", "custom/backup-root"],
     "modules-right": ["cpu", "temperature", "memory", "pulseaudio", "network", "battery", "clock", "tray"],
     "sway/workspaces": {
        "disable-scroll": true,
-       "all-outputs": false,
+       "all-outputs": true,
        "format": "{name}",
     },
     "wlr/workspaces": {
        "disable-scroll": true,
        "all-outputs": true,
+       "active-only": false,
        "format": "{name}",
-    },
-    "river/tags": {
-       "num-tags": 8,
-       "tag-labels": ["F: ", "E: ", "K: ", "W:", "N: ", "L: ", "C: ", ""],
-       "disable-click": false,
+       "on-scroll-up": "hyprctl dispatch workspace e+1",
+       "on-scroll-down": "hyprctl dispatch workspace e-1"
     },
     "temperature": {
         "thermal-zone": 7,

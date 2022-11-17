@@ -33,7 +33,6 @@
       export QT_QPA_PLATFORM=wayland
       export XDG_CURRENT_DESKTOP=sway
       export XDG_SESSION_DESKTOP=sway
-      export XDG_CURRENT_DESKTOP=Unity
       export XDG_SESSION_TYPE="wayland"
       export GTK_USE_PORTAL=0
       test -f $HOME/.profile && source $HOME/.profile

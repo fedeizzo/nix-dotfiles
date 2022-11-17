@@ -190,7 +190,7 @@
       set -x XDG_CURRENT_DESKTOP "sway"
       set -x XDG_SESSION_DESKTOP "sway"
       set -x MOZ_ENABLE_WAYLAND "1"
-      set -x XDG_CURRENT_DESKTOP "Unity"
+      set -x XDG_CURRENT_DESKTOP "sway"
       set -x XDG_SESSION_TYPE "wayland"
       set -x GTK_USE_PORTAL 0
     '';
