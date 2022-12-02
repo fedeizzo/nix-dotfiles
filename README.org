@@ -17,7 +17,7 @@ Folder description:
 
 ** Fresh install
 *** Dell xps 9510
-Partitioning is made with ~btrfs~ file system, during it a blank two read-only snapshots are taken:
+Partitioning is made with ~btrfs~ file system, during it two blank read-only snapshots are taken:
 - ~root~
 - ~home~
 
