@@ -95,6 +95,7 @@ Configuration updated to the version ~v0.17.0beta~
 | workspace_swipe            | true  |
 | workspace_swipe_fingers    | 4     |
 | workspace_swipe_create_new | false |
+| workspace_swipe_forever    | true  |
 
 ** Monitors
 #+NAME: monitors
@@ -114,6 +115,7 @@ Configuration updated to the version ~v0.17.0beta~
 | Action                  | class               | title                           |
 |-------------------------+---------------------+---------------------------------|
 | float                   | ^(pinentry-qt)$     |                                 |
+| float                   | ^(firefox)$         | ^(Picture-in-Picture)$          |
 | idleinhibit  fullscreen | ^(firefox)$         |                                 |
 | float                   |                     | ^(Firefox — Sharing Indicator)$ |
 | workspace 4 silent      | ^(telegramdesktop)$ | ^(Telegram*)$                   |
@@ -128,49 +130,50 @@ Configuration updated to the version ~v0.17.0beta~
 
 *** Workspaces
 #+name: workspaces_kb
-| Modifier  |       Key | Command                | Argument                                             | Type |
-|-----------+-----------+------------------------+------------------------------------------------------+------|
-| $mod      |         Q | killactive             |                                                      |      |
-| $mod      |         M | exit                   |                                                      |      |
-| $mod      |         T | togglefloating         |                                                      |      |
-| $mod      |     SPACE | fullscreen             |                                                      |      |
-| $modSHIFT |    ESCAPE | exit                   |                                                      |      |
-| $mod      |         S | exec                   | rofi -show "fd" -modi "fd:~/.sources/rofi_spotlight" |      |
-| $mod      |       TAB | exec                   | swap_output                                          |      |
-| $mod      |         U | layoutmsg              | swapwithmaster                                       |      |
-| $mod      |         H | resizeactive           | -10 0                                                | e    |
-| $mod      |         L | resizeactive           | 10 0                                                 | e    |
-| $mod      |         K | layoutmsg              | cycleprev                                            |      |
-| $mod      |         J | layoutmsg              | cyclenext                                            |      |
-| $modSHIFT |         K | layoutmsg              | swapprev                                             |      |
-| $modSHIFT |         J | layoutmsg              | swapnext                                             |      |
-| $mod      |         R | submap                 | resize                                               |      |
-| $modSHIFT |         I | movetoworkspacesilent  | special                                              |      |
-| $mod      |         I | exec                   | ~/.sources/create_kitty_scratchpad                   |      |
-| $mod      |         I | togglespecialworkspace |                                                      |      |
-| $mod      |         1 | moveworkspacetomonitor | 1 current                                            |      |
-| $mod      |         1 | workspace              | 1                                                    |      |
-| $mod      |         2 | moveworkspacetomonitor | 2 current                                            |      |
-| $mod      |         2 | workspace              | 2                                                    |      |
-| $mod      |         3 | moveworkspacetomonitor | 3 current                                            |      |
-| $mod      |         3 | workspace              | 3                                                    |      |
-| $mod      |         4 | moveworkspacetomonitor | 4 current                                            |      |
-| $mod      |         4 | workspace              | 4                                                    |      |
-| $mod      |         5 | moveworkspacetomonitor | 5 current                                            |      |
-| $mod      |         5 | workspace              | 5                                                    |      |
-| $mod      |         6 | moveworkspacetomonitor | 6 current                                            |      |
-| $mod      |         6 | workspace              | 6                                                    |      |
-| $mod      |         7 | moveworkspacetomonitor | 7 current                                            |      |
-| $mod      |         7 | workspace              | 7                                                    |      |
-| $modSHIFT |         1 | movetoworkspacesilent  | 1                                                    |      |
-| $modSHIFT |         2 | movetoworkspacesilent  | 2                                                    |      |
-| $modSHIFT |         3 | movetoworkspacesilent  | 3                                                    |      |
-| $modSHIFT |         4 | movetoworkspacesilent  | 4                                                    |      |
-| $modSHIFT |         5 | movetoworkspacesilent  | 5                                                    |      |
-| $modSHIFT |         6 | movetoworkspacesilent  | 6                                                    |      |
-| $modSHIFT |         7 | movetoworkspacesilent  | 7                                                    |      |
-| $mod      | mouse:272 | movewindow             |                                                      | m    |
-| $modSHIFT | mouse:272 | resizewindow           |                                                      | m    |
+| Modifier  |       Key | Command                | Argument                           | Type |
+|-----------+-----------+------------------------+------------------------------------+------|
+| $mod      |         Q | killactive             |                                    |      |
+| $mod      |         M | exit                   |                                    |      |
+| $mod      |         T | togglefloating         |                                    |      |
+| $mod      |         Y | pin                    |                                    |      |
+| $mod      |     SPACE | fullscreen             |                                    |      |
+| $modSHIFT |    ESCAPE | exit                   |                                    |      |
+| $mod      |       TAB | exec                   | swap_output                        |      |
+| $mod      |         U | layoutmsg              | swapwithmaster                     |      |
+| $mod      |         H | resizeactive           | -10 0                              | e    |
+| $mod      |         L | resizeactive           | 10 0                               | e    |
+| $mod      |         K | layoutmsg              | cycleprev                          |      |
+| $mod      |         J | layoutmsg              | cyclenext                          |      |
+| $modSHIFT |         K | layoutmsg              | swapprev                           |      |
+| $modSHIFT |         J | layoutmsg              | swapnext                           |      |
+| $mod      |         R | submap                 | resize                             |      |
+| $modSHIFT |         I | movetoworkspacesilent  | special                            |      |
+| $mod      |         I | exec                   | ~/.sources/create_kitty_scratchpad |      |
+| $mod      |         I | togglespecialworkspace |                                    |      |
+| $mod      |         1 | moveworkspacetomonitor | 1 current                          |      |
+| $mod      |         1 | workspace              | 1                                  |      |
+| $mod      |         2 | moveworkspacetomonitor | 2 current                          |      |
+| $mod      |         2 | workspace              | 2                                  |      |
+| $mod      |         3 | moveworkspacetomonitor | 3 current                          |      |
+| $mod      |         3 | workspace              | 3                                  |      |
+| $mod      |         4 | moveworkspacetomonitor | 4 current                          |      |
+| $mod      |         4 | workspace              | 4                                  |      |
+| $mod      |         5 | moveworkspacetomonitor | 5 current                          |      |
+| $mod      |         5 | workspace              | 5                                  |      |
+| $mod      |         6 | moveworkspacetomonitor | 6 current                          |      |
+| $mod      |         6 | workspace              | 6                                  |      |
+| $mod      |         7 | moveworkspacetomonitor | 7 current                          |      |
+| $mod      |         7 | workspace              | 7                                  |      |
+| $modSHIFT |         1 | movetoworkspacesilent  | 1                                  |      |
+| $modSHIFT |         2 | movetoworkspacesilent  | 2                                  |      |
+| $modSHIFT |         3 | movetoworkspacesilent  | 3                                  |      |
+| $modSHIFT |         4 | movetoworkspacesilent  | 4                                  |      |
+| $modSHIFT |         5 | movetoworkspacesilent  | 5                                  |      |
+| $modSHIFT |         6 | movetoworkspacesilent  | 6                                  |      |
+| $modSHIFT |         7 | movetoworkspacesilent  | 7                                  |      |
+| $mod      | mouse:272 | movewindow             |                                    | m    |
+| $modSHIFT | mouse:272 | resizewindow           |                                    | m    |
+| $mod | S | exec | rofi -show "fd" -modi "fd:~/.sources/rofi_spotlight" | |
 
 *** Resize
 #+name: resize_kb

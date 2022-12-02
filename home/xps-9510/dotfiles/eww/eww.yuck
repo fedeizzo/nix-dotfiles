@@ -18,11 +18,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; SYSINFO
 ;;;;;;;;;;;;;;;;;;;;;;
-(defvar cpu-reveal false)
-(defvar temperature-reveal false)
-(defvar memory-reveal false)
-(defvar battery-reveal false)
-
 (defpoll volume-percentage :interval "6s" "pamixer --get-volume")
 (defpoll mic-percentage :interval "6s" "pamixer --source 'alsa_input.pci-0000_00_1f.3.analog-stereo' --get-volume")
 
@@ -168,7 +163,7 @@
     :exclusive false
     :focusable false
     :active true
-    (box :class "workspaces" :orientation "h" :spacing 5 :space-evenly "false"
+    (box :class "${EWW_BATTERY['BAT0']['capacity'] < 30 ? "workspaces workspaces_battery_warning" : "workspaces"} " :orientation "h" :spacing 5 :space-evenly "false"
      (workspace :is-active workspace-1 :workspace-number 1 :icon www-icon)
      (workspace :is-active workspace-2 :workspace-number 2 :icon emacs-icon)
      (workspace :is-active workspace-3 :workspace-number 3 :icon docs-icon)

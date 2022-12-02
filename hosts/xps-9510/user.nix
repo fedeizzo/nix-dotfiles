@@ -20,6 +20,7 @@
         "audio"
         "dialout" # used to allow flash over serial port without root user
         "adbusers" # for adb android
+        "keys" # required to have read access to /run/secrets.d (sops-nix)
       ];
       shell = pkgs.fish;
       passwordFile = if fs == "ext4" then null else config.sops.secrets.fedeizzo-path.path;

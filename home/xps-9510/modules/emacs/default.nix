@@ -1,42 +1,100 @@
 { config, pkgs, pkgs-unstable, libs, ... }:
 let
-  myEmacs = with pkgs; ((emacsPackagesFor emacsPgtkNativeComp).emacsWithPackages (epkgs: [
-    epkgs.vterm
-    epkgs.org-roam-ui
-  ]));
-  my-python-packages = python-packages: with python-packages; [
-    pyqt6
-    sip
-    qtpy
-    pyqt6-webengine
-    epc
-    lxml # for eaf
-    qrcode # eaf-file-browser
-    pysocks # eaf-browser
-    pymupdf # eaf-pdf-viewer
-    pypinyin # eaf-file-manager
-    psutil # eaf-system-monitor
-    retry # eaf-markdown-previewer
-    markdown
-  ];
-  python-with-my-packages = pkgs-unstable.python3.withPackages my-python-packages;
+  myEmacs = (pkgs.emacsWithPackagesFromUsePackage {
+    config = "";
+    defaultInitFile = true;
+    package = pkgs.emacsPgtkNativeComp;
+    alwaysEnsure = true;
+    extraEmacsPackages = epkgs: with epkgs; [
+      use-package
+      # ORG
+      org
+      org-contrib
+      org-roam
+      org-roam-ui
+      org-download
+      org-cliplink
+      org-super-agenda
+      async
+      ox-epub
+      ox-hugo
+      org-modern
+      org-fragtog
+      org-noter
+      zetteldesk
+      # org-cv
+      # FACE
+      ligature
+      doom-themes
+      doom-modeline
+      all-the-icons
+      visual-fill-column
+      # MINIBUFFER
+      amx
+      ivy
+      ivy-rich
+      counsel
+      helpful
+      # COMPLETION
+      company
+      company-box
+      # NIX
+      direnv
+      # BENCHMARK
+      esup
+      # BUFFER
+      bufler
+      # FOLDING
+      s
+      dash
+      origami
+      # FORMAT
+      format-all
+      # KEYBIND
+      hydra
+      major-mode-hydra
+      evil
+      evil-collection
+      evil-commentary
+      general
+      # MONEY
+      hledger-mode
+      eglot
+      nix-mode
+      markdown-toc
+      rustic
+      yaml-mode
+      # gendoxy
+      # yuck-mode
+      magit
+      notmuch
+      rainbow-delimiters
+      tablist
+      pdf-tools
+      popwin
+      projectile
+      ripgrep
+      swiper
+      yasnippet
+      yasnippet-snippets
+      super-save
+      flyspell-correct
+      avy
+      tree-sitter
+      tree-sitter-langs
+      vundo
+      which-key
+      zoom
+      auctex
+      deft
+      vterm
+    ];
+  });
   org-cv = pkgs.fetchFromGitLab {
     owner = "fedeizzo";
     repo = "org-cv";
     rev = "master";
     sha256 = "sha256-OQ0WuMXHPusxLPpuVqkq7t1IDZx4ZvPyKdc4h+8QDAs=";
-  };
-  ligature = pkgs.fetchFromGitHub {
-    owner = "mickeynp";
-    repo = "ligature.el";
-    rev = "master";
-    sha256 = "sha256-o6iL4mwTzfD7JOlWP4Mv27+nRGplcseGjam7WIlHZTc=";
-  };
-  zetteldesk = pkgs.fetchFromGitHub {
-    owner = "Vidianos-Giannitsis";
-    repo = "zetteldesk.el";
-    rev = "master";
-    sha256 = "sha256-sH2AQHLIKjM5HOrs04vw4s/a+7MsL7h7S6ERvNGy508=";
   };
   gendoxy = pkgs.fetchFromGitHub {
     owner = "mp81ss";
@@ -80,24 +138,11 @@ in
     aspellDicts.it
     # telega
     tdlib
-    # EAF
-    # python-with-my-packages
-    # qt6.qtwebengine
-    git
-    nodejs
-    wmctrl
-    # eaf-browser
-    aria
-    # eaf-file-manager
-    fd
+    # borg package manager
+    gnumake
   ];
-  xdg.configFile."emacs/Emacs.org".source = ./Emacs.org;
-  xdg.configFile."emacs/early-init.el".text = ''
-    ;; Disable package.el in favor of straight.el
-    (setq package-enable-at-startup nil)
-  '';
+  xdg.configFile."emacs/init.el".source = ./init.el;
+  xdg.configFile."emacs/config".source = ./config;
   xdg.configFile."emacs/org-cv".source = org-cv;
-  xdg.configFile."emacs/ligature.el".source = ligature;
-  xdg.configFile."emacs/zetteldesk.el".source = zetteldesk;
   xdg.configFile."emacs/gendoxy".source = gendoxy;
 }

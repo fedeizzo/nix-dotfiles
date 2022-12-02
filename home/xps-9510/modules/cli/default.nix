@@ -35,7 +35,6 @@
     ripgrep
     openssl
     rbw
-    rofi-rbw
     nix-index
     rsync
     brightnessctl
@@ -62,7 +61,4 @@
     pkgs-unstable.bitwarden-cli
     pkgs-unstable.hledger
   ];
-  xdg.configFile."rofi-rbw.rc" = {
-    source = ./rofi-rbw.rc;
-  };
 }

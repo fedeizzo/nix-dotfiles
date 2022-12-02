@@ -149,6 +149,9 @@ scale trough {
     font-size: 12px;
     background-color: $nord1;
 }
+.workspaces_battery_warning {
+    border: 1px solid $nord11;
+}
 
 .workspace {
     color: $nord14;

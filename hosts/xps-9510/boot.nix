@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, nixpkgs-unstable, ... }:
 
 let
   polyDarkTheme = pkgs.fetchgit {
@@ -9,6 +9,7 @@ let
 in
 {
   boot = {
+    supportedFilesystems = [ "ext4" "btrs" "ntfs" ];
     loader = {
       efi.canTouchEfiVariables = false;
       grub = {
@@ -27,7 +28,7 @@ in
       };
     };
     cleanTmpDir = true;
-    kernelPackages = pkgs.linuxPackages_5_19;
+    kernelPackages = nixpkgs-unstable.linuxPackages_latest;
     kernel.sysctl = {
       "vm.swappiness" = 10;
       "dev.i915.perf_stream_paranoid" = 0;

@@ -1,4 +1,11 @@
-{ config, inputs, pkgs, ... }:
+{ config
+, inputs
+, username
+, hostname
+, syncthing
+, pkgs
+, ...
+}:
 
 {
   imports = [
@@ -6,6 +13,7 @@
     inputs.sops-nix.nixosModules.sops
     ./hardware-configuration.nix
     ./containers
+    ../common/syncthing.nix
   ];
   fiCluster.services = {
     cert-manager.enable = true;
@@ -59,7 +67,7 @@
 
   # NETWORKING
   networking = {
-    hostName = "rasp-nixos";
+    hostName = "${hostname}";
     networkmanager = {
       enable = true;
     };
@@ -274,17 +282,34 @@
     age.generateKey = false;
     age.sshKeyPaths = [ ];
   };
+  sops.secrets.syncthing-private-key = {
+    owner = syncthing.user;
+    sopsFile = ../../secrets/raspberry-secrets.yaml;
+    format = "yaml";
+    path = "${syncthing.dataDir}/.config/syncthing/key.pem";
+  };
+  sops.secrets.syncthing-public-key = {
+    owner = syncthing.user;
+    mode = "0644";
+    sopsFile = ../../secrets/raspberry-secrets.yaml;
+    format = "yaml";
+    path = "${syncthing.dataDir}/.config/syncthing/cert.pem";
+  };
 
   # USER
-  sops.secrets.rasp-authkey.sopsFile = ../../secrets.yaml;
+  sops.secrets.laptop-ssh-public-key = {
+    sopsFile = ../../secrets.yaml;
+    owner = config.users.users.${username}.name;
+    group = config.users.users.${username}.group;
+  };
   users.users = {
     root = {
       openssh.authorizedKeys.keyFiles = [
-        config.sops.secrets.rasp-authkey.path
+        config.sops.secrets.laptop-ssh-public-key.path
       ];
     };
     rasp = {
-      name = "rasp";
+      name = "${username}";
       isNormalUser = true;
       createHome = true;
       extraGroups = [
@@ -294,21 +319,29 @@
         "users"
         "networkmanager"
         "gpio"
+        "keys"
       ];
       shell = pkgs.bash;
       openssh.authorizedKeys.keyFiles = [
-        config.sops.secrets.rasp-authkey.path
+        config.sops.secrets.laptop-ssh-public-key.path
       ];
+    };
+    sync = {
+      name = "${syncthing.user}";
+      isNormalUser = true;
+      createHome = true;
+      extraGroups = [ "users" ];
     };
   };
 
   # NIX STUFF
+  documentation.nixos.enable = false;
   nixpkgs.config = {
     allowUnfree = true;
   };
   nix = {
     settings.trusted-users = [ "root" ];
-    autoOptimiseStore = true;
+    settings.auto-optimise-store = true;
     package = pkgs.nixFlakes;
     gc = {
       automatic = true;
@@ -317,7 +350,7 @@
     };
     # Free up to 1GiB whenever there is less than 100MiB left.
     extraOptions = ''
-        min-free = ${toString (100 * 1024 * 1024)}
+      min-free = ${toString (100 * 1024 * 1024)}
       max-free = ${toString (1024 * 1024 * 1024)}
       experimental-features = nix-command flakes
     '';

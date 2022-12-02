@@ -1,4 +1,4 @@
-{ config, pkgs, username, ... }:
+{ config, pkgs, username, syncthing, ... }:
 
 {
   security.pam.services.lightdm.enableGnomeKeyring = false;
@@ -28,10 +28,10 @@
     age.sshKeyPaths = [ ];
   };
   sops.secrets = {
-    rasp-authkey = {
-      owner = config.users.users.${username}.name;
-      group = config.users.users.${username}.group;
-    };
+    # rasp-authkey = {
+    #   owner = config.users.users.${username}.name;
+    #   group = config.users.users.${username}.group;
+    # };
     borg-home-password = { };
     borg-root-password = { };
     fedeizzo-path = {
@@ -40,5 +40,18 @@
     root-path = {
       neededForUsers = true;
     };
+  };
+  sops.secrets.syncthing-private-key = {
+    owner = username;
+    sopsFile = ../../secrets/laptop-secrets.yaml;
+    format = "yaml";
+    path = "${syncthing.dataDir}/.config/syncthing/key.pem";
+  };
+  sops.secrets.syncthing-public-key = {
+    owner = username;
+    mode = "0644";
+    sopsFile = ../../secrets/laptop-secrets.yaml;
+    format = "yaml";
+    path = "${syncthing.dataDir}/.config/syncthing/cert.pem";
   };
 }

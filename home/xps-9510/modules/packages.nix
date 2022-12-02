@@ -6,7 +6,6 @@ in
 {
   home.packages = with pkgs; [
     keyutils
-    qgis
     universal-ctags
     onlyoffice-bin
     # fonts
@@ -64,5 +63,14 @@ in
     pkgs-unstable.bitwarden
     pkgs-unstable.tdesktop
     pkgs-unstable.xournalpp
+    element-desktop-wayland
+    (makeDesktopItem {
+      name = "Element";
+      exec = "element-desktop";
+      comment = "Element matrix client";
+      desktopName = "Element";
+      type = "Application";
+      mimeTypes = [ ];
+    })
   ];
 }

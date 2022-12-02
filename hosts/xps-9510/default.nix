@@ -15,6 +15,7 @@
     ./nvidia.nix
     ./programsEnv.nix
     ./security.nix
+    ../common/syncthing.nix
     ./services.nix
     ./user.nix
 

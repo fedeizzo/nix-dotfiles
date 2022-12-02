@@ -149,6 +149,5 @@ lib.mkIf (fs == "btrfs") {
 
   swapDevices = [ ];
 
-  nix.maxJobs = lib.mkDefault 4;
   powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
 }

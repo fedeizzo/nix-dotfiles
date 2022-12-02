@@ -39,6 +39,7 @@ rec {
 
   mkHost =
     { username
+    , syncthing
     , hostname
     , fs
     , system
@@ -52,20 +53,30 @@ rec {
       defaults = { pkgs, ... }: {
         _module.args.nixpkgs-unstable = import inputs.nixpkgs-unstable {
           inherit (pkgs.stdenv.targetPlatform) system;
+          config.allowUnfree = true;
+          config.joypixels.acceptLicense = true;
         };
         _module.args.nixpkgs-old = import inputs.nixpkgs-old {
           inherit (pkgs.stdenv.targetPlatform) system;
+          config.allowUnfree = true;
+          config.joypixels.acceptLicense = true;
         };
       };
     in
-    nixosSystem {
-      inherit pkgs system;
-      specialArgs = { inherit inputs username hostname fs kubernetesOrderString kubernetesSuffixFile; };
-      modules = [
-        defaults
-        # (inputs.nix-bubblewrap.lib { inherit system pkgs; })
-        ../hosts/${machine}
-        ../home/${machine}
-      ];
-    };
+    nixosSystem
+      {
+        pkgs = if machine != "duet" then pkgs else null;
+        inherit system;
+        specialArgs = {
+          inherit inputs username hostname fs syncthing kubernetesOrderString kubernetesSuffixFile;
+          mobile-nixos = inputs.mobile-nixos;
+        };
+
+        modules = [
+          defaults
+          # (inputs.nix-bubblewrap.lib { inherit system pkgs; })
+          ../hosts/${machine}
+          ../home/${machine}
+        ];
+      };
 }

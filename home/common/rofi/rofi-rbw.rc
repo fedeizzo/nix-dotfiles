@@ -1,4 +1,4 @@
-action type-password
+action type
 prompt pass
 selector rofi
 clipboarder wl-copy

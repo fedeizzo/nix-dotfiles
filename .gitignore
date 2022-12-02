@@ -9,3 +9,5 @@ result
 .build
 .envrc
 \#*
+# syncthing
+.stfolder

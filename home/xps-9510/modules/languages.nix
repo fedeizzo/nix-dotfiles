@@ -1,5 +1,13 @@
 { pkgs, pkgs-unstable, ... }:
 
+let
+  my-python-packages = python-packages: with python-packages; [
+    debugpy
+    ipython
+    pylint
+  ];
+  python-with-my-packages = pkgs-unstable.python3.withPackages my-python-packages;
+in
 {
   home.packages = with pkgs; [
     clang
@@ -10,9 +18,7 @@
     # python
     black
     # see emacx.nix for further information
-    python3Packages.debugpy
-    python3Packages.ipython
-    python3Packages.pylint
+    python-with-my-packages
     pkgs-unstable.nodePackages.pyright
 
     # bash

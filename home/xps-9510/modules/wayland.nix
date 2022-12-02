@@ -1,6 +1,9 @@
 { pkgs, pkgs-unstable, ... }:
 
 {
+  imports = [
+    ../../common/rofi
+  ];
   wayland.windowManager.hyprland = {
     enable = true;
     xwayland.enable = true;
@@ -62,19 +65,6 @@
     package = pkgs-unstable.eww-wayland;
     configDir = ../dotfiles/eww;
   };
-  programs.rofi = {
-    enable = true;
-    package = pkgs.rofi-wayland;
-    plugins = with pkgs; [
-      pkgs.rofi-power-menu
-      rofi-file-browser
-    ];
-    theme = ../dotfiles/rofi/nord.rasi;
-    terminal = "${pkgs.kitty}/bin/kitty";
-    extraConfig = {
-      modi = "drun,file-browser-extended";
-    };
-  };
   xdg.configFile."waybar/config" = {
     source = ../dotfiles/waybar/config;
   };
@@ -88,10 +78,10 @@
     source = ../dotfiles/sway;
   };
   xdg.configFile."images/wallpaper.png" = {
-    source = ../dotfiles/images/wallpaper.png;
+    source = ../../common/images/wallpaper.png;
   };
   xdg.configFile."images/lock-screen.jpg" = {
-    source = ../dotfiles/images/lock-screen.jpg;
+    source = ../../common/images/lock-screen.jpg;
   };
   xdg.configFile."river" = {
     source = ../dotfiles/river;
@@ -112,14 +102,13 @@
   };
   xdg.configFile."environment.d/envvars.conf" = {
     text = ''
-      XDG_CURRENT_DESKTOP=sway
       XDG_RUNTIME_DIR=/run/user/$YOUR_USER_ID
       WAYLAND_DISPLAY=wayland-1
       SDL_VIDEODRIVER=wayland
       _JAVA_AWT_WM_NONREPARENTING=1
       QT_QPA_PLATFORM=wayland
-      XDG_CURRENT_DESKTOP=sway
-      XDG_SESSION_DESKTOP=sway
+      QT_QPA_PLATFORM_PLUGIN_PATH=${pkgs-unstable.qt6.qtwayland.outPath}/lib/qt-6/plugins/platforms
+      XDG_SESSION_DESKTOP=hyrpland
       MOZ_ENABLE_WAYLAND="1"
       XDG_CURRENT_DESKTOP=Unity
       XDG_SESSION_TYPE="wayland"
@@ -127,15 +116,15 @@
     '';
   };
   home.file.".pam_environmet" = {
-    text = "XDG_CURRENT_DESKTOP DEFAULT=sway";
+    text = "XDG_CURRENT_DESKTOP DEFAULT=hyrpland";
   };
   home.file.".xprofile" = {
     text = ''
       export SDL_VIDEODRIVER=wayland
       export _JAVA_AWT_WM_NONREPARENTING=1
       export QT_QPA_PLATFORM=wayland
-      export XDG_CURRENT_DESKTOP=sway
-      export XDG_SESSION_DESKTOP=sway
+      export QT_QPA_PLATFORM_PLUGIN_PATH=${pkgs-unstable.qt6.qtwayland.outPath}/lib/qt-6/plugins/platforms
+      export XDG_SESSION_DESKTOP=hyrpland
       export MOZ_ENABLE_WAYLAND="1"
       export XDG_CURRENT_DESKTOP=Unity
       export XDG_SESSION_TYPE="wayland"

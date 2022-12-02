@@ -45,7 +45,9 @@
     extraPortals = with pkgs; [
       xdg-desktop-portal-wlr
     ];
-    gtkUsePortal = true;
+  };
+  environment.sessionVariables = {
+    "GTK_USE_PORTAL" = "1";
   };
   virtualisation = {
     docker = {

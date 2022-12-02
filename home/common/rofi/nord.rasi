@@ -18,10 +18,6 @@ configuration {
     display-name: "";
   }
 
-  file-browser-extended {
-    display-name: "";
-  }
-
   timeout {
     delay: 10;
     action: "kb-cancel";
