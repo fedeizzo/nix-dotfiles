@@ -1,4 +1,4 @@
-{ pkgs, username, inputs, nixpkgs-unstable, lib, ... }:
+{ pkgs, username, inputs, config, nixpkgs-unstable, lib, ... }:
 
 
 {
@@ -8,11 +8,13 @@
     extraSpecialArgs = {
       nix-bubblewrap = inputs.nix-bubblewrap;
       pkgs-unstable = nixpkgs-unstable;
+      sops = config.sops;
     };
     users.${username} = {
       imports = [
         inputs.hyprland.homeManagerModules.default
         inputs.impermanence.nixosModules.home-manager.impermanence
+        inputs.emanote.homeManagerModule
         # inputs.nix-bubblewrap.nix-bubblewrap.x86_64-linux
         ./modules/bottom
         ./modules/cli
@@ -84,6 +86,7 @@
             ".cache/org-persist"
             ".cache/rbw"
             ".cache/spotify"
+            ".cache/mu"
 
             # I need to understand if following folders are required
             # ".dbus"

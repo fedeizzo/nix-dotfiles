@@ -151,7 +151,7 @@
   services.k3s = {
     enable = true;
     role = "server";
-    extraFlags = "--no-deploy traefik --disable traefik";
+    extraFlags = "--disable traefik";
   };
   systemd.services.k3s = {
     wants = [ "containerd.service" ];
@@ -227,7 +227,7 @@
     wget
     git
     vim
-    docker-compose
+    # docker-compose
     dnsmasq
     hostapd
     firefox
@@ -241,7 +241,7 @@
   ];
   virtualisation = {
     docker = {
-      enable = true;
+      enable = false;
       enableOnBoot = true;
       enableNvidia = false;
     };

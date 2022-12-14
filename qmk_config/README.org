@@ -151,7 +151,7 @@ Mainly used for gaming.
 #+NAME: corne-base-layer
 | G+TAB | Q | W | F | P | B | J | L | U | Y | ' | C+T   |
 | LCTL  | A | R | S | T | G | M | N | E | I | O | ;     |
-| CAPS  | Z | X | C | D | V | K | H | , | . | / | L+TAB |
+| CAPS  | Z | X | C | D | V | K | H | , | . | / | C+TAB |
 
 #+NAME: corne-base-layer-thumb
 | _NAV/ESC | G/SPC | S/TAB | C/ENT | _NUM/BSPC | LALT |
@@ -163,13 +163,13 @@ Mainly used for gaming.
 | NO | NO | NO | NO    | NO     | NO    | HOME | END  | MPLY | MUTE | NO | NO |
 
 #+NAME: corne-navigation-layer-thumb
-| _NAV/ESC | G/SPC | S/TAB | C/ENT | _NUM/BSPC | LALT |
+| _NAV/ESC | G/SPC | S/TAB | C/ENT | BSPC | LALT |
 
 *** Num
 #+NAME: corne-num-layer
-| RESET | [ | 7 | 8 | 9 | ] | {    | ( | * | & | } | NO |
-| NO    | 0 | 4 | 5 | 6 | = | +    | ^ | % | $ | ) | NO |
-| NO    | ` | 1 | 2 | 3 | \ | PIPE | # | @ | ! | ~ | NO |
+| NO | [ | 7 | 8 | 9 | ] | {    | ( | * | & | } | NO |
+| NO | 0 | 4 | 5 | 6 | = | +    | ^ | % | $ | ) | NO |
+| NO | ` | 1 | 2 | 3 | \ | PIPE | # | @ | ! | ~ | NO |
 
 #+NAME: corne-num-layer-thumb
 | _ | SPC | - | ENT | TRNS | NO |
@@ -204,9 +204,9 @@ Mainly used for gaming.
   #include "drivers/sensors/pimoroni_trackball.h"
   #include "pointing_device.h"
   bool set_scrolling = false;
-  #define TRACKBALL_PRECISION 3
-  #define TRACKBALL_PRECISION_HIGH 1
-  #define TRACKBALL_PRECISION_SCROLLING 0.7
+  #define TRACKBALL_PRECISION 27500
+  #define TRACKBALL_PRECISION_HIGH 17500
+  #define TRACKBALL_PRECISION_SCROLLING 4000
   #endif
   #ifdef OLED_ENABLE
   #    define MIN_WALK_SPEED      10
@@ -221,7 +221,7 @@ Mainly used for gaming.
 
   enum crkbd_layers {
       _BASE,
-      _NAVIGATION,
+      _NAV,
       _NUM,
       _GAMING
   };
@@ -236,7 +236,7 @@ Mainly used for gaming.
     [_BASE] = LAYOUT_split_3x6_3(
       <<layer-generator(in_layer=corne-base-layer, in_layer_thumb=corne-base-layer-thumb)>>
     ),
-    [_NAVIGATION] = LAYOUT_split_3x6_3(
+    [_NAV] = LAYOUT_split_3x6_3(
       <<layer-generator(in_layer=corne-navigation-layer, in_layer_thumb=corne-navigation-layer-thumb)>>
     ),
     [_NUM] = LAYOUT_split_3x6_3(
@@ -244,7 +244,7 @@ Mainly used for gaming.
     )
   };
 
- 
+
   bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       switch (keycode){
   #ifdef PIMORONI_TRACKBALL_ENABLE
@@ -254,17 +254,17 @@ Mainly used for gaming.
           case BALL_SCR:
               if(record->event.pressed){
                   set_scrolling = true;
-                  pimoroni_trackball_set_precision(TRACKBALL_PRECISION_SCROLLING);
+                  pimoroni_trackball_set_cpi(TRACKBALL_PRECISION_SCROLLING);
               } else{
                   set_scrolling = false;
-                  pimoroni_trackball_set_precision(TRACKBALL_PRECISION);
+                  pimoroni_trackball_set_cpi(TRACKBALL_PRECISION);
               }
           break;
           case BALL_PRC:
               if(record->event.pressed){
-                  pimoroni_trackball_set_precision(TRACKBALL_PRECISION_SCROLLING);
+                  pimoroni_trackball_set_cpi(TRACKBALL_PRECISION_SCROLLING);
               } else{
-                  pimoroni_trackball_set_precision(TRACKBALL_PRECISION);
+                  pimoroni_trackball_set_cpi(TRACKBALL_PRECISION);
               }
           break;
   #endif
@@ -287,7 +287,7 @@ Mainly used for gaming.
 
   void keyboard_post_init_user(void) {
   #ifdef PIMORONI_TRACKBALL_ENABLE
-      pimoroni_trackball_set_precision(TRACKBALL_PRECISION);
+      pimoroni_trackball_set_cpi(TRACKBALL_PRECISION);
       pimoroni_trackball_set_rgbw(0,0,0,80);
   #endif
   }
@@ -299,7 +299,7 @@ Mainly used for gaming.
       case _BASE:
           pimoroni_trackball_set_rgbw(0,0,0,80);
           break;
-      case _NAVIGATION:
+      case _NAV:
           pimoroni_trackball_set_rgbw(0,153,95,0);
           break;
       case _NUM:
@@ -491,7 +491,7 @@ Mainly used for gaming.
 
   enum crkbd_layers {
       _BASE,
-      _NAVIGATION,
+      _NAV,
       _NUM,
       _MEDIA
   };
@@ -506,7 +506,7 @@ Mainly used for gaming.
     [_BASE] = LAYOUT_split_3x6_3(
       <<layer-generator(in_layer=corne-base-layer, in_layer_thumb=corne-base-layer-thumb)>>
     ),
-    [_NAVIGATION] = LAYOUT_split_3x6_3(
+    [_NAV] = LAYOUT_split_3x6_3(
       <<layer-generator(in_layer=corne-navigation-layer, in_layer_thumb=corne-navigation-layer-thumb)>>
     ),
     [_NUM] = LAYOUT_split_3x6_3(
@@ -730,6 +730,7 @@ bool oled_task_user(void) {
       "~": "KC_TILD",
       "-": "KC_MINS",
       "_": "KC_UNDS",
+      # "LALT": "KC_LALT",
       "G+TAB": "LGUI(KC_TAB)",
       "G/SPC": "LGUI_T(KC_SPC)",
       "C+T": "LCTL(KC_T)",
@@ -738,8 +739,9 @@ bool oled_task_user(void) {
       "S/TAB": "SFT_T(KC_TAB)",
       "C/ENT": "LCTL_T(KC_ENT)",
       "_NUM/BSPC": "LT(_NUM, KC_BSPC)",
+      "WOR/ALT": "LT(LM(_NUM, MOD_LGUI), KC_LALT)",
       "TR_PR": "BALL_PRC",
-      "TR_SCR": "BALL_SRC",
+      "TR_SCR": "BALL_SCR",
       "TR_LC": "BALL_LC",
       "QWERTY": "TO(_QWERTY)",
       "BASE": "TO(_BASE)",

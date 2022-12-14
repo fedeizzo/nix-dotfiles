@@ -1,7 +1,14 @@
-{ config, pkgs, pkgs-unstable, libs, ... }:
+{ config
+, pkgs
+, pkgs-unstable
+, libs
+, ...
+}:
 let
   myEmacs = (pkgs.emacsWithPackagesFromUsePackage {
-    config = "";
+    config = ''
+      (load-file "~/.config/emacs/init.el")
+    '';
     defaultInitFile = true;
     package = pkgs.emacsPgtkNativeComp;
     alwaysEnsure = true;
@@ -67,7 +74,7 @@ let
       # gendoxy
       # yuck-mode
       magit
-      notmuch
+      pkgs.mu
       rainbow-delimiters
       tablist
       pdf-tools
@@ -88,6 +95,7 @@ let
       auctex
       deft
       vterm
+      deft
     ];
   });
   org-cv = pkgs.fetchFromGitLab {
@@ -141,6 +149,29 @@ in
     # borg package manager
     gnumake
   ];
+  services.emanote = {
+    enable = false;
+    notes = [ "${config.home.homeDirectory}/zettelkasten" ];
+    extraConfig = {
+      path = {
+        headHtml = ''|
+          <script>
+            window.MathJax = {
+              startup: {
+                ready: () => {
+                  MathJax.startup.defaultReady();
+                }
+              },
+              tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+              }
+            };
+          </script>
+          <script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+        '';
+      };
+    };
+  };
   xdg.configFile."emacs/init.el".source = ./init.el;
   xdg.configFile."emacs/config".source = ./config;
   xdg.configFile."emacs/org-cv".source = org-cv;

@@ -34,7 +34,7 @@ in
     folders = {
       "University" = {
         enable = true;
-        path = "/home/${syncthing.user}/uni";
+        path = "${syncthing.dataDir}/uni";
         watch = true;
         type = (builtins.elemAt (builtins.filter (el: el.name == "University") syncthing.folders) 0).role;
         versioning = {
@@ -45,7 +45,7 @@ in
       };
       "nix-dotfiles" = {
         enable = true;
-        path = "/home/${syncthing.user}/nix-dotfiles";
+        path = "${syncthing.dataDir}/nix-dotfiles";
         watch = true;
         type = (builtins.elemAt (builtins.filter (el: el.name == "nix-dotfiles") syncthing.folders) 0).role;
         versioning = {
@@ -56,7 +56,7 @@ in
       };
       "videoFiles" = {
         enable = true;
-        path = "/home/${syncthing.user}/docs/videoFiles";
+        path = "${syncthing.dataDir}/docs/videoFiles";
         watch = true;
         type = (builtins.elemAt (builtins.filter (el: el.name == "videoFiles") syncthing.folders) 0).role;
         versioning = {

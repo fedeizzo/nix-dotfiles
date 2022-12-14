@@ -1,57 +1,88 @@
-(defun fi/notmuch-choose-sender ()
-  (cond
-   ((string= (message-fetch-field "from") "Federico Izzo <federico.izzo99@gmail.com>")
-    (setq message-sendmail-extra-arguments '("/home/fedeizzo/.mail/fedeizzo")))
-   ((string= (message-fetch-field "from") "Federico Izzo <ozzi.ezzo@gmail.com>")
-    (setq message-sendmail-extra-arguments '("/home/fedeizzo/.mail/ozzi")))))
+(defun mu4e/custom-delete ()
+  "Custom mark function to move to deleted folder"
+  (interactive)
+  (mu4e-mark-set 'move "/deleted")
+  (mu4e-mark-execute-all t)
+  (mu4e-mark-set 'read)
+  (mu4e-mark-execute-all t)
+  (mu4e-headers-next))
 
-(use-package notmuch
-  :commands notmuch
+(use-package mu4e
   :hook
-  (message-send . fi/notmuch-choose-sender)
-  (notmuch-hello-mode . (lambda () (display-line-numbers-mode 0)))
-  (notmuch-show-mode . (lambda () (display-line-numbers-mode 0)))
+  (mu4e-main-mode . (lambda () (display-line-numbers-mode 0)))
+  (mu4e-headers-mode . (lambda () (display-line-numbers-mode 0)))
   :general
-  (fi/leader "m" 'notmuch)
+  (fi/leader "m" 'mu4e)
   :config
-  (defun evil-collection-notmuch-search-toggle-delete ()
-    (interactive)
-    (notmuch-search-add-tag '("-inbox" "-unread" "-important" "+deleted"))
-    (notmuch-tree-next-message))
+  (general-nmap mu4e-headers-mode-map "d" 'mu4e/custom-delete)
   (setq
-   message-required-mail-headers (remove' Message-ID message-required-mail-headers)
-   message-kill-buffer-on-exit t
-   message-send-mail-function #'message-send-mail-with-sendmail)
-  (setq sendmail-error-reporting-interactive '()
-        sendmail-error-reporting-non-interactive '()
-        sendmail-program "~/nix-dotfiles/home/xps-9510/sources/send_email")
+   user-full-name "Federico Izzo"
+   user-mail-address "federico@fedeizzo.dev")
+  (setq
+   mu4e-change-filenames-when-moving t
+   mu4e-get-mail-command "mbsync -a"
+   mu4e-maildir "~/.mail"
+   mu4e-drafts-folder "/Drafts"
+   mu4e-sent-folder "/Sent"
+   mu4e-refile-folder "/All Mail"
+   mu4e-trash-folder "/Trash"
 
-  (setq notmuch-init-file "~/.config/notmuch/default/config"
-        notmuch-search-oldest-first nil
-        notmuch-fcc-dirs nil
-        notmuch-search-result-format '(("date" . "%12s ")
-                                       ("count" . "%-7s ")
-                                       ("authors" . "%-30s ")
-                                       ("subject" . "%-72s ")
-                                       ("tags" . "(%s)"))
-        notmuch-archive-tags '("-inbox" "-unread" "+archive")
-        notmuch-saved-searches '((:name "inbox" :query "tag:inbox" :key "i")
-				 (:name "fedeizzo" :query "to:federico.izzo99@gmail.com and tag:inbox" :key "f")
-                                 (:name "ozzi" :query "to:ozzi.ezzo@gmail.com and tag:inbox" :key "o")
-                                 (:name "uni" :query "to:federico.izzo@studenti.unitn.it and tag:inbox" :key "u")
-                                 (:name "sent" :query "tag:sent" :key "t")
-                                 (:name "drafts" :query "tag:draft" :key "d")
-                                 (:name "all mail" :query "*" :key "a"))
-        notmuch-show-empty-saved-searches t
-        notmuch-hello-sections '(notmuch-hello-insert-saved-searches notmuch-hello-insert-alltags))
-  ;; (evil-collection-define-key 'normal 'notmuch-tree-mode-map
-  ;;   "u" 'fi/notmuch-toggle-inbox-tree)
-  ;; (evil-collection-define-key 'normal 'notmuch-search-mode-map
-  ;;   "u" 'fi/notmuch-toggle-inbox-show)
+   mu4e-maildir-shortcuts '(("/Inbox" . ?i)
+			    ("/Drafts" . ?d)
+			    ("/deleted" . ?x)))
+  ;; (setq mu4e-contexts
+  ;; 	`(,(make-mu4e-context
+  ;; 	    :name "Personal"
+  ;; 	    :enter-func (lambda () (mu4e-message "Entering personal context"))
+  ;; 	    :leave-func (lambda () (mu4e-message "Leaving personal context"))
+  ;; 	    :match-func (lambda (msg)
+  ;; 			  (when (msg)
+  ;; 			    (mu4e-message-contact-field-matches msg :to "federico@fedeizzo.dev")))
+  ;; 	    :vars '((user-mail-address . "federico@fedeizzo.dev")
+  ;; 		    (user-full-name . "Federico Izzo")
+  ;; 		    (mu4e-compose-signature .(concat "Federico Izzo\n"))))
+  ;; 	  ,(make-mu4e-context
+  ;; 	    :name "University"
+  ;; 	    :enter-func (lambda () (mu4e-message "Entering university context"))
+  ;; 	    :leave-func (lambda () (mu4e-message "Leaving university context"))
+  ;; 	    :match-func (lambda (msg)
+  ;; 			  (when (msg)
+  ;; 			    (mu4e-message-contact-field-matches msg :to "federico.izzo@studenti.unitn.it")))
+  ;; 	    :vars '((user-mail-address . "federico.izzo@studenti.unitn.it")
+  ;; 		    (user-full-name . "Federico Izzo")
+  ;; 		    (mu4e-compose-signature .(concat "Federico Izzo\n"))))
+  ;; 	  ,(make-mu4e-context
+  ;; 	    :name "FirstGmail"
+  ;; 	    :enter-func (lambda () (mu4e-message "Entering federico.izzo99 context"))
+  ;; 	    :leave-func (lambda () (mu4e-message "Leaving federico.izzo99 context"))
+  ;; 	    :match-func (lambda (msg)
+  ;; 			  (when (msg)
+  ;; 			    (mu4e-message-contact-field-matches msg :to "federico.izzo99@gmail.com")))
+  ;; 	    :vars '((user-mail-address . "federico.izzo99@gmail.com")
+  ;; 		    (user-full-name . "Federico Izzo")
+  ;; 		    (mu4e-compose-signature . (concat "Federico Izzo\n"))))
+  ;; 	  ,(make-mu4e-context
+  ;; 	    :name "SecondGmail"
+  ;; 	    :enter-func (lambda () (mu4e-message "Entering ozzi context"))
+  ;; 	    :leave-func (lambda () (mu4e-message "Leaving ozzi context"))
+  ;; 	    :match-func (lambda (msg)
+  ;; 			  (when (msg)
+  ;; 			    (mu4e-message-contact-field-matches msg :to "ozzi.ezzo@gmail.com")))
+  ;; 	    :vars '((user-mail-address . "ozzi.ezzo@gmail.com")
+  ;; 		    (user-full-name . "Federico Izzo")
+  ;; 		    (mu4e-compose-signature . (concat "Federico Izzo\n"))))
+  ;; 	  ))
+  (setq sendmail-program "/usr/bin/msmtp"
+	send-mail-function 'smtpmail-send-it
+	message-sendmail-f-is-evil t
+	message-sendmail-extra-arguments '("--read-envelope-from")
+	message-send-mail-function 'message-send-mail-with-sendmail)
+
+
   )
 
-;; (use-package org-mime
-;;   :config
-;;   (setq org-mime-library 'mml))
+;; ;; (use-package org-mime
+;; ;;   :config
+;; ;;   (setq org-mime-library 'mml))
 
 (provide 'fi-mail)

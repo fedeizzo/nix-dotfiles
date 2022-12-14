@@ -1,4 +1,4 @@
-FROM qmkfm/base_container
+FROM qmkfm/qmk_cli
 
 WORKDIR /prova
 

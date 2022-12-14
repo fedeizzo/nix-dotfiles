@@ -40,6 +40,7 @@
       url = "sourcehut:~fgaz/nix-bubblewrap";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    emanote.url = github:EmaApps/emanote;
   };
 
   outputs =

@@ -458,6 +458,23 @@
                (window-width . 0.33)
                (window-parameters . ((no-other-window . t)
                                      (no-delete-other-windows . t)))))
+
+(defun fi/org-roam-ui-browser-function (url)
+  (interactive)
+  (shell-command "hyprctl keyword windowrulev2 'float, class:firefox'")
+  (shell-command "hyprctl keyword windowrulev2 'size 75% 75%, class:firefox'")
+  (shell-command "hyprctl keyword windowrulev2 'center, class:firefox'")
+  (shell-command (concat "sleep 0.5 && firefox --new-window " url))
+  (shell-command "hyprctl keyword windowrulev2 'unset, class:firefox'"))
+
+(use-package org-roam-ui
+  :commands org-roam-ui-open
+  :config
+  (setq
+   org-roam-ui-open-on-start nil
+   org-roam-ui-follow t
+   org-roam-ui-browser-function 'fi/org-roam-ui-browser-function))
+
 (setq org-id-track-globally t)
 ;; I encountered the following message when attempting
 ;; to export data:
@@ -484,6 +501,14 @@
       '(("d" "default" plain "%?"
          :target (file+head "%(fi/org-roam-extract-topic)${slug}.org" "#+title: ${title}\n#+CREATED: [%<%Y-%m-%d %a %H:%M:%S>]\n#+LAST_MODIFIED: [%<%Y-%m-%d %a %H:%M:%S>]")
          :unnarrowed t)))
+
+(defun fi/toggle-org-roam-ui-follow ()
+  "Toggle roam ui follow mode"
+  (interactive)
+  (if (bound-and-true-p org-roam-ui-follow-mode)
+      (org-roam-ui-follow-mode -1)
+    (org-roam-ui-follow-mode t)))
+
 (pretty-hydra-define org-roam-hydra-main (:color blue :title "Org roam" :quit-key "q")
   ("Node"
    (("i" org-roam-node-insert "inesert node")
@@ -495,7 +520,13 @@
    (("s" fi/org-roam-inkscape-diagram "open/edit svg file"))
    "Custom functions"
    (("r" fi/rename-images-in-file-with-caption "sync filename with caption")
-    ("e" fi/zetteldesk-insert-all-nodes-contents-current-buffer-list "export roam cluster"))))
+    ("e" fi/zetteldesk-insert-all-nodes-contents-current-buffer-list "export roam cluster"))
+   "Roam UI"
+   (("l" org-roam-ui-node-local "open current node")
+    ("a" org-roam-ui-add-to-local-graph "add current node")
+    ("d" org-roam-ui-remove-from-local-graph "delete current node")
+    ("u" fi/toggle-org-roam-ui-follow "toggle follow mode"))))
+
 (fi/leader "n" 'org-roam-hydra-main/body)
 (use-package zetteldesk
   :after org-roam

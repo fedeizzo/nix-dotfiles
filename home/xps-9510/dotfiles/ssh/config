@@ -32,7 +32,7 @@ Host diclub
     User fizzo
     ProxyJump sshFbk
     IdentityFile ~/.ssh/fizzo@fbk.eu
-    LocalForward 65432 localhost:65432
+    LocalForward 65440 localhost:65440
 Host dicam
     Hostname brennerlec.dicam.unitn.it
     User root

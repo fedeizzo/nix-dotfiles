@@ -40,12 +40,17 @@
     root-path = {
       neededForUsers = true;
     };
-  };
-  sops.secrets.syncthing-private-key = {
-    owner = username;
-    sopsFile = ../../secrets/laptop-secrets.yaml;
-    format = "yaml";
-    path = "${syncthing.dataDir}/.config/syncthing/key.pem";
+    personal-email-pass = {
+      owner = username;
+      sopsFile = ../../secrets/laptop-secrets.yaml;
+      format = "yaml";
+    };
+    syncthing-private-key = {
+      owner = username;
+      sopsFile = ../../secrets/laptop-secrets.yaml;
+      format = "yaml";
+      path = "${syncthing.dataDir}/.config/syncthing/key.pem";
+    };
   };
   sops.secrets.syncthing-public-key = {
     owner = username;

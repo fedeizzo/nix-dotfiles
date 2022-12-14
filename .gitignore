@@ -11,3 +11,4 @@ result
 \#*
 # syncthing
 .stfolder
+.direnv

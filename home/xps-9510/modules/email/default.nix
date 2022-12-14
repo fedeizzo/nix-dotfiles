@@ -1,4 +1,4 @@
-{ pkgs, pkgs-unstable, config, ... }:
+{ pkgs, pkgs-unstable, sops, ... }:
 
 {
   home.packages = [ pkgs.mailcap ];
@@ -18,60 +18,60 @@
   };
   accounts.email.maildirBasePath = ".mail";
   accounts.email.accounts = {
-    fedeizzo = {
+    federico = {
+      address = "federico@fedeizzo.dev";
+      userName = "federico@fedeizzo.dev";
+      passwordCommand = "cat ${sops.secrets.personal-email-pass.path}";
       primary = true;
       realName = "Federico Izzo";
-      address = "federico.izzo99@gmail.com";
-      flavor = "gmail.com";
-      maildir.path = "fedeizzo";
-      lieer = {
-        enable = true;
-        notmuchSetupWarning = true;
-        # settings = { };
-        sync.enable = true;
-        sync.frequency = "*:0/5"; # every five minutes
+      imap = {
+        host = "imap.fastmail.com";
+        port = 993;
+        tls = {
+          enable = true;
+        };
       };
-      notmuch.enable = true;
-    };
-    ozzi = {
-      primary = false;
-      realName = "Federico Izzo";
-      address = "ozzi.ezzo@gmail.com";
-      flavor = "gmail.com";
-      maildir.path = "ozzi";
-      lieer = {
-        enable = true;
-        notmuchSetupWarning = true;
-        # settings = { };
-        sync.enable = true;
-        sync.frequency = "*:0/5"; # every five minutes
+      smtp = {
+        host = "smtp.fastmail.com";
+        port = 465;
+        tls = {
+          enable = true;
+        };
       };
-      notmuch.enable = true;
-    };
-    uni = {
-      primary = false;
-      realName = "Federico Izzo";
-      address = "federico.izzo@studenti.unitn.it";
-      flavor = "gmail.com";
-      maildir.path = "uni";
-      lieer = {
+      mbsync = {
         enable = true;
-        notmuchSetupWarning = true;
-        # settings = { };
-        sync.enable = true;
-        sync.frequency = "*:0/5"; # every five minutes
+        create = "both";
+        extraConfig = {
+          channel = {
+            Sync = "All";
+            CopyArrivalDate = "yes";
+          };
+        };
       };
-      notmuch.enable = true;
+      msmtp.enable = true;
+      mu.enable = true;
     };
+    # university = {
+    #   primary = false;
+    #   realName = "Federico Izzo";
+    #   address = "federico.izzo@studenti.unitn.it";
+    #   flavor = "gmail.com";
+    #   maildir.path = "university";
+    #   lieer = {
+    #     enable = true;
+    #     notmuchSetupWarning = true;
+    #     # settings = { };
+    #     sync.enable = true;
+    #     sync.frequency = "*:0/5"; # every five minutes
+    #   };
+    #   mu.enable = true;
+    # };
   };
-  programs.notmuch = {
-    enable = true;
-    hooks.preNew = ''
-      gmi sync -C ~/.mail/fedeizzo/
-      gmi sync -C ~/.mail/ozzi/
-      gmi sync -C ~/.mail/uni/
-    '';
-  };
-  programs.lieer.enable = true;
-  services.lieer.enable = true;
+  programs.mu.enable = true;
+  programs.mbsync.enable = true;
+  programs.msmtp.enable = true;
+  services.mbsync.enable = true;
+  services.mbsync.frequency = "*:0/5";
+  # programs.lieer.enable = true;
+  # services.lieer.enable = true;
 }
