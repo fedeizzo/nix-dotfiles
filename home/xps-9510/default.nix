@@ -9,12 +9,14 @@
       nix-bubblewrap = inputs.nix-bubblewrap;
       pkgs-unstable = nixpkgs-unstable;
       sops = config.sops;
+      kindletoorg = inputs.kindleToOrg;
     };
     users.${username} = {
       imports = [
         inputs.hyprland.homeManagerModules.default
         inputs.impermanence.nixosModules.home-manager.impermanence
         inputs.emanote.homeManagerModule
+        inputs.garminDB.homeManagerModule
         # inputs.nix-bubblewrap.nix-bubblewrap.x86_64-linux
         ./modules/bottom
         ./modules/cli
@@ -51,6 +53,7 @@
             "personalProject"
             "zettelkasten"
             "org"
+            "HealthData"
             ".mail"
 
             # AppData
@@ -70,6 +73,7 @@
             ".config/rbw"
             ".config/rclone"
             ".config/spotify"
+            ".config/calibre"
 
             # Cache
             ".cargo"

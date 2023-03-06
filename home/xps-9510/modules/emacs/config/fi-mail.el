@@ -1,3 +1,4 @@
+(setq user-full-name "Federico Izzo")
 (defun mu4e/custom-delete ()
   "Custom mark function to move to deleted folder"
   (interactive)

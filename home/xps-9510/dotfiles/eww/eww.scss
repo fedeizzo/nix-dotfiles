@@ -291,3 +291,11 @@ scale trough {
     color: $nord4;
     margin: 0px 0px 20px -20px;
 }
+
+/** Volume ********************************************/
+.volume_popup {
+    padding: 8px;
+    border-radius: 16px;
+    font-size: 12px;
+    background-color: $nord1;
+}

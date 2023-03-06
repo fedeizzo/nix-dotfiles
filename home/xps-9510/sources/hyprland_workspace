@@ -1,25 +1,26 @@
 #!/usr/bin/env bash
 
-monitors=/tmp/hypr/monitors_temp
-hyprctl monitors > $monitors
-
 if [[ -z $1 ]]; then
-  workspace=$(grep -B 4 "focused: no" "$monitors" | awk 'NR==1 {print $3}')
+  monitors=$(hyprctl monitors -j | jq -r '.[] | .name')
+  hyprctl dispatch swapactiveworkspaces $monitors
 else
   workspace=$1
 fi
 
 
-activemonitor=$(grep -B 7 "focused: yes" "$monitors" | awk 'NR==1 {print $2}')
-passivemonitor=$(grep  -B 3 "($workspace)" "$monitors" | awk 'NR==1 {print $2}')
-#activews=$(grep -A 2 "$activemonitor" "$monitors" | awk 'NR==3 {print $1}' RS='(' FS=')')
-passivews=$(grep -A 2 "$passivemonitor" "$monitors" | awk 'NR==4 {print $1}' RS='(' FS=')')
+focused_monitor=$(hyprctl monitors -j | jq -r '.[] | select(.focused == true) | .name')
+unfocused_montitor=$(hyprctl monitors -j | jq -r '.[] | select(.focused == false) | .activeWorkspace | .id')
+focused_workspace=$(hyprctl monitors -j | jq -r '.[] | select(.focused == true) | .activeWorkspace | .id')
+unfocused_workspace=$(hyprctl monitors -j | jq -r '.[] | select(.focused == false) | .activeWorkspace | .id')
 
-if [[ $workspace -eq $passivews ]] && [[ $activemonitor != "$passivemonitor" ]]; then
-  hyprctl dispatch swapactiveworkspaces "$activemonitor" "$passivemonitor"
-  echo $activemonitor $passivemonitor
-else
-  hyprctl dispatch moveworkspacetomonitor "$workspace $activemonitor" && hyprctl dispatch workspace "$workspace"
+if [[ $focused_workspace != $workspace ]]; then
+    if [[ $unfocused_workspace == $workspace ]]; then
+	monitors=$(hyprctl monitors -j | jq -r '.[] | .name')
+	hyprctl dispatch swapactiveworkspaces $monitors
+    else
+	hyprctl dispatch moveworkspacetomonitor $workspace $focused_monitor
+	hyprctl dispatch workspace $workspace
+	hyprctl dispatch focusmonitor $focused_monitor
+    fi
 fi
-
 exit 0

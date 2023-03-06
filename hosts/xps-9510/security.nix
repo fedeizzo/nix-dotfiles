@@ -7,7 +7,6 @@
   security.pam.services.system-local-login.fprintAuth = true;
   security.pam.services.lightdm.fprintAuth = true;
   security.pam.services.doas.fprintAuth = true;
-  services.gnome.gnome-keyring.enable = false;
   security.sudo = {
     enable = false;
   };
@@ -50,6 +49,9 @@
       sopsFile = ../../secrets/laptop-secrets.yaml;
       format = "yaml";
       path = "${syncthing.dataDir}/.config/syncthing/key.pem";
+    };
+    laptop-ssh-public-key = {
+      owner = username;
     };
   };
   sops.secrets.syncthing-public-key = {

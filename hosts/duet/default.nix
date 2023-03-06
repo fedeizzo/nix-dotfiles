@@ -9,6 +9,24 @@
 , ...
 }:
 
+let
+  firwmareAdditions = pkgs.runCommand "lenovo-krane-firmware"
+    {
+      src = pkgs.firmwareLinuxNonfree;
+    } ''
+    for firmware in \
+      ath10k/QCA6174/hw3.0 \
+      mediatek/mt8183/scp.img \
+      qca/nvm_00440302.bin \
+      qca/nvm_00440302_eu.bin \
+      qca/nvm_00440302_i2s_eu.bin \
+      qca/rampatch_00440302.bin \
+    ; do
+      mkdir -p "$(dirname $out/lib/firmware/$firmware)"
+      cp -vrf "$src/lib/firmware/$firmware" $out/lib/firmware/$firmware
+    done
+  '';
+in
 {
   imports = [
     inputs.sops-nix.nixosModules.sops
@@ -34,7 +52,7 @@
   #######################################
   # HARDWARE
   #######################################
-  hardware.firmware = [ config.mobile.device.firmware ];
+  hardware.firmware = [ config.mobile.device.firmware firwmareAdditions ];
   hardware.enableRedistributableFirmware = true;
   hardware.bluetooth = {
     enable = true;
@@ -124,9 +142,9 @@
   users.users = {
     root = {
       hashedPassword = "!";
-      # openssh.authorizedKeys.keyFiles = [
-      #   config.sops.secrets.laptop-ssh-public-key.path
-      # ];
+      openssh.authorizedKeys.keyFiles = [
+        config.sops.secrets.laptop-ssh-public-key.path
+      ];
     };
     "${username}" = {
       openssh.authorizedKeys.keyFiles = [

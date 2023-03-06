@@ -18,6 +18,7 @@
     ../common/syncthing.nix
     ./services.nix
     ./user.nix
+    # ./gnome.nix
 
     ./hardware-configurations/ext4.nix
     # erase on boot imported only with fs = "btrfs"

@@ -84,5 +84,7 @@
 (require 'fi-buffer)
 (require 'fi-editing)
 (require 'fi-org)
+(require 'fi-cluster-export)
 (require 'fi-mail)
 (require 'fi-money)
+;; (require 'fi-eaf)

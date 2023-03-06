@@ -7,7 +7,6 @@
     desktopManager.default = null;
     displayManager.lightdm.enable = false;
     displayManager.sddm.enable = false;
-    displayManager.gdm.enable = false;
     layout = "us";
     xkbVariant = "altgr-intl";
     libinput = {
@@ -22,6 +21,9 @@
       };
     };
     xkbOptions = "ctrl:swapcaps";
+  };
+  services.udisks2 = {
+    enable = true;
   };
   users.groups = {
     steamps4 = { };

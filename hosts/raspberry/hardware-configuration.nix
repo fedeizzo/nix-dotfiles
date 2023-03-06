@@ -23,6 +23,12 @@
       fsType = "vfat";
     };
 
+  fileSystems."/backup" =
+    {
+      device = "/dev/disk/by-label/backup";
+      fsType = "ext4";
+    };
+
   swapDevices = [ ];
 
   # Enables DHCP on each ethernet and wireless interface. In case of scripted networking

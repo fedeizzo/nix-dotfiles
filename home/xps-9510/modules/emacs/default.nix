@@ -2,6 +2,7 @@
 , pkgs
 , pkgs-unstable
 , libs
+, kindletoorg
 , ...
 }:
 let
@@ -22,6 +23,7 @@ let
       org-download
       org-cliplink
       org-super-agenda
+      org-ref
       async
       ox-epub
       ox-hugo
@@ -148,6 +150,15 @@ in
     tdlib
     # borg package manager
     gnumake
+    kindletoorg.packages.x86_64-linux.default
+    # EAF
+    nodejs
+    wmctrl
+    aria
+    qt6.qtwebengine
+    qt6.qtwayland
+    jq
+    gdb
   ];
   services.emanote = {
     enable = false;

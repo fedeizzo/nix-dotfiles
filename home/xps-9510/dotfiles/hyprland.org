@@ -17,7 +17,6 @@ Configuration updated to the version ~v0.17.0beta~
 |-------------------------+------------|
 | max_fps                 |         60 |
 | sensitivity             |          1 |
-| main_mod                |       $mod |
 | border_size             |          2 |
 | no_border_on_floating   |       true |
 | gaps_in                 |          5 |
@@ -121,6 +120,11 @@ Configuration updated to the version ~v0.17.0beta~
 | workspace 4 silent      | ^(telegramdesktop)$ | ^(Telegram*)$                   |
 | noanim                  | ^(kittylf)$         |                                 |
 | opacity 0.9             | ^(kittylf)$         |                                 |
+| float                   |                     | Solanum                         |
+| float                   | blueberry.py        |                                 |
+| float                   |                     | ^(Zoom*)$                       |
+| float                   | Bitwarden           |                                 |
+| float                   | anki                |                                 |
 
 ** Keymaps
 - l: locked, aka. works also when an an input inhibitor (e.g. a lockscreen) is active

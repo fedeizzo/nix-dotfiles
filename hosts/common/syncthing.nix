@@ -1,6 +1,7 @@
-{ pkgs, username, syncthing, config, ... }:
+{ pkgs, username, syncthing, config, lib, ... }:
 
 let
+  # TODO fix deviceNames
   devices = (builtins.listToAttrs
     (builtins.map (el: { name = el.name; value = el; }) syncthing.devices));
   deviceNames = (builtins.map (el: el.name) syncthing.devices);
@@ -18,7 +19,8 @@ in
     # cert = config.sops.secrets.syncthing-public-key.path;
     # key = config.sops.secrets.syncthing-public-key.path;
     user = "${syncthing.user}";
-    group = "keys"; # here the group is keys because synthing must have access to /run/secrets.d directory
+    # group = "keys"; # here the group is keys because synthing must have access to /run/secrets.d directory
+    group = "users";
     dataDir = "${syncthing.dataDir}";
     extraOptions = {
       gui = {
@@ -28,6 +30,7 @@ in
         globalAnnounceEnabled = false;
         localAnnounceEnabled = false;
         startBrowser = false;
+        relaysEnabled = false;
       };
     };
     devices = devices;
@@ -39,9 +42,9 @@ in
         type = (builtins.elemAt (builtins.filter (el: el.name == "University") syncthing.folders) 0).role;
         versioning = {
           type = "simple";
-          params.keep = "10";
+          params.keep = "3";
         };
-        devices = deviceNames;
+        devices = (lib.lists.remove "smartphone" deviceNames);
       };
       "nix-dotfiles" = {
         enable = true;
@@ -50,9 +53,9 @@ in
         type = (builtins.elemAt (builtins.filter (el: el.name == "nix-dotfiles") syncthing.folders) 0).role;
         versioning = {
           type = "simple";
-          params.keep = "10";
+          params.keep = "3";
         };
-        devices = deviceNames;
+        devices = (lib.lists.remove "smartphone" deviceNames);
       };
       "videoFiles" = {
         enable = true;
@@ -61,7 +64,18 @@ in
         type = (builtins.elemAt (builtins.filter (el: el.name == "videoFiles") syncthing.folders) 0).role;
         versioning = {
           type = "simple";
-          params.keep = "10";
+          params.keep = "3";
+        };
+        devices = (lib.lists.remove "smartphone" deviceNames);
+      };
+      "org" = {
+        enable = true;
+        path = "${syncthing.dataDir}/org";
+        watch = true;
+        type = (builtins.elemAt (builtins.filter (el: el.name == "org") syncthing.folders) 0).role;
+        versioning = {
+          type = "simple";
+          params.keep = "3";
         };
         devices = deviceNames;
       };

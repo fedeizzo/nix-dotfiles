@@ -1,10 +1,4 @@
-{ pkgs
-, lib
-, config
-, kubernetesSuffixFile
-, dockerNetworkScript
-, ...
-}:
+{ pkgs, lib, kubernetesSuffixFile, ... }:
 
 with lib;
 let
@@ -18,23 +12,16 @@ let
     default = 1;
     description = "Number used for name of the systemlink, used for kubectl apply order";
   };
-  docker = "${config.virtualisation.oci-containers.backend}";
-  dockerBin = "${pkgs.${docker}}/bin/${docker}";
 in
 {
   imports = [
     ./traefik
-    # ./cert-manager
-    # ./homer
-    # ./authelia
+    ./cert-manager
+    ./homer
+    ./authelia
     ./cloudflare-ddns
     ./fedeizzo.dev
-    ./fireflyiii
-    ./homebox
-    ./diun
-    ./grafana
-    ./openbooks
-    # ./pi-hole
+    ./pi-hole
   ];
 
   options = {
@@ -57,12 +44,6 @@ in
   };
 
   config = {
-    virtualisation.oci-containers.backend = "docker";
-    system.activationScripts.mkHomelabNetwork = (dockerNetworkScript
-      {
-        dockerBin = dockerBin;
-        networkName = "homelab";
-      });
     # environment.etc.global-configmap = {
     #   enable = true;
     #   source = ./global-configmap.yaml;

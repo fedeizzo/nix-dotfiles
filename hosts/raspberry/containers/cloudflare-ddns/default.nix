@@ -1,17 +1,11 @@
-{ lib, config, kubernetesOrderString, kubernetesSuffixFile, ... }:
+{ lib, config, ... }:
 
-with lib;
-with builtins;
-let
-  order = (kubernetesOrderString { intOrder = config.fiCluster.services.cloudflare-ddns.applicationOrder; });
-  suffix = (kubernetesSuffixFile { isEnable = config.fiCluster.services.cloudflare-ddns.enable; });
-in
 {
-  config = {
-    environment.etc.cloudflare-ddns-deployment = {
-      enable = true;
-      source = ./cloudflare-ddns-deployment.yaml;
-      target = "homelab-kubernetes/${order}-cloudflare-ddns-deployment-${suffix}.yaml";
-    };
+  virtualisation.oci-containers.containers."cloudflare-ddns" = {
+    image = "timothyjmiller/cloudflare-ddns:latest";
+    environment = { PUID = "1000"; PGID = "1000"; };
+    autoStart = true;
+    extraOptions = [ "--security-opt" "no-new-privileges" "--memory=32Mi" ];
+    volumes = [ "/var/volumes/cloudflare-ddns/config.json:/config.json" ];
   };
 }

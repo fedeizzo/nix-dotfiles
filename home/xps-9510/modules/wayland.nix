@@ -106,27 +106,27 @@
       WAYLAND_DISPLAY=wayland-1
       SDL_VIDEODRIVER=wayland
       _JAVA_AWT_WM_NONREPARENTING=1
-      QT_QPA_PLATFORM=wayland
-      QT_QPA_PLATFORM_PLUGIN_PATH=${pkgs-unstable.qt6.qtwayland.outPath}/lib/qt-6/plugins/platforms
-      XDG_SESSION_DESKTOP=hyrpland
+      QT_QPA_PLATFORM=wayland-egl
+      QT_QPA_PLATFORM_PLUGIN_PATH=${pkgs.qt6.qtwayland.outPath}/lib/qt-6/plugins/platforms
+      XDG_SESSION_DESKTOP=Hyprland
       MOZ_ENABLE_WAYLAND="1"
-      XDG_CURRENT_DESKTOP=Unity
+      XDG_CURRENT_DESKTOP=Hyprland
       XDG_SESSION_TYPE="wayland"
       GTK_USE_PORTAL=0
     '';
   };
   home.file.".pam_environmet" = {
-    text = "XDG_CURRENT_DESKTOP DEFAULT=hyrpland";
+    text = "XDG_CURRENT_DESKTOP_DEFAULT=Hyprland";
   };
   home.file.".xprofile" = {
     text = ''
       export SDL_VIDEODRIVER=wayland
       export _JAVA_AWT_WM_NONREPARENTING=1
-      export QT_QPA_PLATFORM=wayland
-      export QT_QPA_PLATFORM_PLUGIN_PATH=${pkgs-unstable.qt6.qtwayland.outPath}/lib/qt-6/plugins/platforms
-      export XDG_SESSION_DESKTOP=hyrpland
+      export QT_QPA_PLATFORM=wayland-egl
+      export QT_QPA_PLATFORM_PLUGIN_PATH=${pkgs.qt6.qtwayland.outPath}/lib/qt-6/plugins/platforms
+      export XDG_SESSION_DESKTOP=Hyprland
       export MOZ_ENABLE_WAYLAND="1"
-      export XDG_CURRENT_DESKTOP=Unity
+      export XDG_CURRENT_DESKTOP=Hyprland
       export XDG_SESSION_TYPE="wayland"
       export GTK_USE_PORTAL=0
     '';

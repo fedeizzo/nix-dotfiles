@@ -224,3 +224,43 @@
     :active true
     :monitor 0
     :geometry (geometry :x 1565 :y 20 :width 335 :height 155) (backup :icon "" :color nord13))
+
+;;;;;;;;;;;;;;;;;;;;;;
+;; Pomodoro
+;;;;;;;;;;;;;;;;;;;;;;
+(defvar pomodoro-task 25)
+(defvar pomodoro-break 5)
+(defvar pomodoro-tasks-before-long-break 4)
+
+(defwidget pomodoro [icon color]
+    (box :class "card" :orientation "h" :spacing 50 :space-evenly false :vexpand "false" :hexpand "false" 
+     (label :class "backup_icon" :valign "start" :halign "start" :text icon :style "color: ${color};")
+     (label :class "backup_date" :valign "end" :halign "end" :text root-backup)))
+
+(defwindow pomodoro
+    :stacking "fg"
+    :exclusive false
+    :focusable true
+    :active false
+    :monitor 0
+    :geometry (geometry :x 1565 :y 20 :width 335 :height 155) (pomodoro :icon "" :color nord13))
+
+;;;;;;;;;;;;;;;;;;;;;;
+;; Volume PopUp
+;;;;;;;;;;;;;;;;;;;;;;
+(defwidget volume []
+    (revealer :transition "slideup" :duration :duration "5s"))
+
+(defwindow volume
+    :monitor 0
+    :class "dashboard"
+    :hexpand false
+    :vexpand false
+    :geometry (geometry :x 743 :y 1159)
+    :stacking "fg"
+    :exclusive false
+    :focusable false
+    :active true
+    (box :class "volume_popup" :orientation "h" :spacing 5 :space-evenly "false"
+(label "lkdfj")
+    ))

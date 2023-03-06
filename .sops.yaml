@@ -3,6 +3,10 @@ keys:
   - &raspberry age14jd2uvg5fwc2r2vgp4tsw5dy9rpksel97um2v494ws4tptult9ys50cndr
   - &duet age142qy2l24887za6kgemy800tc6aj4yn77cmkezlrnnerm8yj23sgq4qep6c
 creation_rules:
+  - path_regex: hosts/raspberry/containers/*
+    key_groups:
+    - age:
+      - *raspberry
   - path_regex: laptop-secrets.yaml$
     key_groups:
     - age:

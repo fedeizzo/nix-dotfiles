@@ -131,6 +131,20 @@
           direnv allow
         '';
       };
+      compressZSTD = {
+        description = "Compress a directory";
+        argumentNames = "directory";
+        body = ''
+          tar --zstd -cf $directory.tar.zst $directory/
+        '';
+      };
+      extractZSTD = {
+        description = "Extract a zstd archive";
+        argumentNames = "archive";
+        body = ''
+          tar --zstd -xf $archive
+        '';
+      };
     };
     shellAbbrs = {
       "..." = "cd ../..";
@@ -186,11 +200,11 @@
       set diclub_user_name "fizzo"
       set -x SDL_VIDEODRIVER "wayland"
       set -x _JAVA_AWT_WM_NONREPARENTING 1
-      set -x QT_QPA_PLATFORM "wayland"
-      set -x XDG_CURRENT_DESKTOP "sway"
-      set -x XDG_SESSION_DESKTOP "sway"
+      set -x QT_QPA_PLATFORM "wayland-egl"
+      set -x XDG_CURRENT_DESKTOP "Hyprland"
+      set -x XDG_SESSION_DESKTOP "Hyprland"
       set -x MOZ_ENABLE_WAYLAND "1"
-      set -x XDG_CURRENT_DESKTOP "sway"
+      set -x XDG_CURRENT_DESKTOP "Hyprland"
       set -x XDG_SESSION_TYPE "wayland"
       set -x GTK_USE_PORTAL 0
     '';

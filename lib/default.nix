@@ -7,10 +7,10 @@ let
 in
 rec {
   systems = [
-    "aarch64-darwin"
+    # "aarch64-darwin"
     "aarch64-linux"
-    "i686-linux"
-    "x86_64-darwin"
+    # "i686-linux"
+    # "x86_64-darwin"
     "x86_64-linux"
   ];
   forAllSystems = genAttrs systems;
@@ -36,6 +36,11 @@ rec {
           (if isSops then "sops-del" else "delete");
     in
     suffix;
+
+  dockerNetworkScript = { dockerBin, networkName }:
+    ''
+      ${dockerBin} network inspect ${networkName} >/dev/null 2>&1 || ${dockerBin} network create --driver bridge ${networkName}
+    '';
 
   mkHost =
     { username
@@ -68,7 +73,7 @@ rec {
         pkgs = if machine != "duet" then pkgs else null;
         inherit system;
         specialArgs = {
-          inherit inputs username hostname fs syncthing kubernetesOrderString kubernetesSuffixFile;
+          inherit inputs username hostname fs syncthing dockerNetworkScript;
           mobile-nixos = inputs.mobile-nixos;
         };
 

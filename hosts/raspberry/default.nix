@@ -16,18 +16,20 @@
     ../common/syncthing.nix
   ];
   fiCluster.services = {
-    cert-manager.enable = true;
+    cert-manager.enable = false;
     cert-manager.applicationOrder = 1;
-    traefik.enable = true;
+    traefik.enable = false;
     traefik.applicationOrder = 2;
     authelia.enable = false;
     authelia.applicationOrder = 3;
-    cloudflare-ddns.enable = true;
+    cloudflare-ddns.enable = false;
     cloudflare-ddns.applicationOrder = 4;
-    homer.enable = true;
+    homer.enable = false;
     homer.applicationOrder = 5;
-    fedeizzodev.enable = true;
+    fedeizzodev.enable = false;
     fedeizzodev.applicationOrder = 6;
+    pihole.enable = false;
+    pihole.applicationOrder = 7;
   };
 
   boot = {
@@ -130,22 +132,25 @@
     package = pkgs.tailscalewithnginx;
     port = 51820;
   };
-  services.borgbackup.jobs = {
-    home-server-backup = {
-      paths = [ "/home/rasp/home-server" ];
-      doInit = true;
-      repo = "/home/rasp/backup/home-server";
-      encryption = {
-        mode = "repokey-blake2";
-        passCommand = "cat /run/keys/borgbackup_passphrase";
-      };
-      compression = "zstd,3";
-      startAt = "daily";
-      prune.keep = {
-        daily = 1;
-        weekly = 3;
-        monthly = 4;
-      };
+  services.restic.backups = {
+    backblaze = {
+      user = "root";
+      initialize = true;
+      environmentFile = "/root/.restic_backup_env";
+      repositoryFile = config.sops.secrets.restic-repository.path;
+      passwordFile = config.sops.secrets.restic-password.path;
+      paths = [
+        "/var/volumes"
+        "/var/container_envs"
+        "/var/lib/sops"
+        "/borgbackups"
+      ];
+      pruneOpts = [
+        "--keep-daily 1"
+        "--keep-weekly 2"
+        "--keep-monthly 2"
+        "--keep-yearly 2"
+      ];
     };
   };
   services.k3s = {
@@ -241,10 +246,11 @@
   ];
   virtualisation = {
     docker = {
-      enable = false;
+      enable = true;
       enableOnBoot = true;
       enableNvidia = false;
     };
+    podman.enable = false;
   };
   programs.bash = {
     enableCompletion = true;
@@ -295,33 +301,21 @@
     format = "yaml";
     path = "${syncthing.dataDir}/.config/syncthing/cert.pem";
   };
+  sops.secrets.restic-repository = {
+    sopsFile = ../../secrets/raspberry-secrets.yaml;
+    format = "yaml";
+  };
+  sops.secrets.restic-password = {
+    sopsFile = ../../secrets/raspberry-secrets.yaml;
+    format = "yaml";
+  };
 
   # USER
   sops.secrets.laptop-ssh-public-key = {
     sopsFile = ../../secrets.yaml;
-    owner = config.users.users.${username}.name;
-    group = config.users.users.${username}.group;
   };
   users.users = {
     root = {
-      openssh.authorizedKeys.keyFiles = [
-        config.sops.secrets.laptop-ssh-public-key.path
-      ];
-    };
-    rasp = {
-      name = "${username}";
-      isNormalUser = true;
-      createHome = true;
-      extraGroups = [
-        "wheel"
-        "docker"
-        "autologin"
-        "users"
-        "networkmanager"
-        "gpio"
-        "keys"
-      ];
-      shell = pkgs.bash;
       openssh.authorizedKeys.keyFiles = [
         config.sops.secrets.laptop-ssh-public-key.path
       ];

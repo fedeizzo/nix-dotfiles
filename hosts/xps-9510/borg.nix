@@ -1,8 +1,8 @@
 { config, pkgs, username, ... }:
 
 let
-  borgHomeRepo = "rasp@home-lab:~/backup/home-persistent-laptop";
-  borgRootRepo = "rasp@home-lab:~/backup/root-persistent-laptop";
+  borgHomeRepo = "root@home-lab:/borgbackups/home-persistent-laptop";
+  borgRootRepo = "root@home-lab:/borgbackups/root-persistent-laptop";
 in
 {
   services.borgbackup.jobs = {
@@ -21,7 +21,7 @@ in
         "/persist/var/lib/fprint"
         "/persist/var/lib/tailscale"
       ];
-      compression = "zstd,3";
+      compression = "zstd,22";
       archiveBaseName = "${config.networking.hostName}";
       doInit = true;
       preHook = ''
@@ -72,9 +72,8 @@ in
         "/persist/home/fedeizzo/**/.venv"
         "/persist/home/fedeizzo/**/pg_data"
         "/persist/home/fedeizzo/**/postgres_data"
-        "/persist/home/fedeizzo/fbk/mappiamo/data"
       ];
-      compression = "zstd,3";
+      compression = "zstd,22";
       archiveBaseName = "${config.networking.hostName}";
       doInit = true;
       preHook = ''
@@ -101,9 +100,9 @@ in
       prune = {
         prefix = "${config.networking.hostName}";
         keep = {
-          hourly = 5;
-          weekly = 15;
-          monthly = 45;
+          hourly = 2;
+          weekly = 2;
+          monthly = 3;
         };
       };
       extraPruneArgs = "--save-space --stats";

@@ -41,6 +41,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     emanote.url = github:EmaApps/emanote;
+    garminDB.url = "github:fedeizzo/GarminDB";
+    kindleToOrg.url = github:fedeizzo/KindleToOrg;
   };
 
   outputs =
@@ -95,19 +97,20 @@
             dataDir = "/persist/home/fedeizzo";
             folders = [
               { name = "University"; role = "sendreceive"; }
+              { name = "org"; role = "sendreceive"; }
               { name = "nix-dotfiles"; role = "sendonly"; }
               { name = "videoFiles"; role = "sendonly"; }
             ];
             devices = [
               {
-                name = "duet";
-                addresses = [ "tcp://duet:22000" ];
-                id = "RSFWKPR-44QQFCN-PKRD77J-2BB2SPZ-I5OLMWY-CLNSMRE-DJHPJOI-QE7JDAG";
-              }
-              {
                 name = "homelab";
                 addresses = [ "tcp://home-lab:22000" ];
                 id = "ZJCMEXW-XYDWZ2C-EXAFIXY-KW7RBHR-2Z43SZT-42ZKRY5-TJ3DS46-2JQ3ZAE";
+              }
+              {
+                name = "smartphone";
+                addresses = [ "tcp://phone:22000" ];
+                id = "3IP3HFM-N3EOJRE-5TLKYS2-ZJ6C6OA-TBB7SDT-QBZ6XZF-J45SF4O-DDG72AH";
               }
             ];
           };
@@ -125,20 +128,21 @@
             dataDir = "/home/sync";
             folders = [
               { name = "University"; role = "sendreceive"; }
+              { name = "org"; role = "sendreceive"; }
               { name = "nix-dotfiles"; role = "receiveonly"; }
               { name = "videoFiles"; role = "receiveonly"; }
             ];
             devices = [
               {
-                name = "duet";
-                addresses = [ "tcp://duet:22000" ];
-                id = "RSFWKPR-44QQFCN-PKRD77J-2BB2SPZ-I5OLMWY-CLNSMRE-DJHPJOI-QE7JDAG";
-              }
-              {
                 name = "laptop";
                 addresses = [ "tcp://laptop:22000" ];
                 id = "PUBABVB-EZQRX62-AUPAK5C-FFB5UUW-KVJDFVI-SUZ43J4-USRJTNE-WSHGQA7";
                 introducer = true;
+              }
+              {
+                name = "smartphone";
+                addresses = [ "tcp://phone:22000" ];
+                id = "3IP3HFM-N3EOJRE-5TLKYS2-ZJ6C6OA-TBB7SDT-QBZ6XZF-J45SF4O-DDG72AH";
               }
             ];
           };
@@ -156,6 +160,7 @@
             dataDir = "/home/nixtab";
             folders = [
               { name = "University"; role = "sendreceive"; }
+              { name = "org"; role = "sendreceive"; }
               { name = "nix-dotfiles"; role = "receiveonly"; }
               { name = "videoFiles"; role = "receiveonly"; }
             ];
@@ -202,7 +207,7 @@
           sudo = "doas -u";
           sshOpts = [ ];
           magicRollback = true;
-          autoRollback = true;
+          autoRollback = false;
           fastConnection = false;
           profiles.system = {
             user = "root";

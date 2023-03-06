@@ -1,17 +1,9 @@
-{ lib, config, kubernetesOrderString, kubernetesSuffixFile, ... }:
+{ pkgs, config, ... }:
 
-with lib;
-with builtins;
-let
-  suffix = (kubernetesSuffixFile { isEnable = config.fiCluster.services.fedeizzodev.enable; });
-  order = (kubernetesOrderString { intOrder = config.fiCluster.services.fedeizzodev.applicationOrder; });
-in
 {
-  config = {
-    environment.etc.fedeizzodev-deployment = {
-      enable = true;
-      source = ./fedeizzodev-deployment.yaml;
-      target = "homelab-kubernetes/${order}-fedeizzodev-deployment-${suffix}.yaml";
-    };
+  virtualisation.oci-containers.containers."fedeizzodev" = {
+    image = "fedeizzo/website:latest";
+    autoStart = true;
+    extraOptions = [ "--network=homelab" "--memory=512Mi" ];
   };
 }

@@ -1,0 +1,31 @@
+http:
+  routers:
+    fedeizzodev:
+      entryPoints:
+        - "websecure"
+      rule: "Host(`fedeizzo.dev`)"
+      service: "fedeizzodev"
+    fireflyiii:
+      entryPoints:
+        - "websecure"
+      rule: "Host(`firefly.fedeizzo.dev`)"
+      service: "fireflyiii"
+    homebox:
+      entryPoints:
+        - "websecure"
+      rule: "Host(`homebox.fedeizzo.dev`)"
+      service: "homebox"
+
+  services:
+    fedeizzodev:
+      loadBalancer:
+        servers:
+          - url: "http://fedeizzodev:80"
+    fireflyiii:
+      loadBalancer:
+        servers:
+          - url: "http://fireflyiii:8080"
+    homebox:
+      loadBalancer:
+        servers:
+          - url: "http://homebox:7745"

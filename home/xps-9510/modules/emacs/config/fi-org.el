@@ -263,11 +263,11 @@
     (when (not (file-exists-p filename))
       (copy-file "/home/fedeizzo/zettelkasten/template.svg" filename)
       (insert (format "
-  ,#+ATTR_ORG: :width 450px
-  ,#+ATTR_LATEX: :width 450px :placement [H]
-  ,#+CAPTION:
-  ,#+NAME:
-  [[file:%s]]
+#+ATTR_ORG: :width 450px
+#+ATTR_LATEX: :width 450px :placement [H]
+#+CAPTION:
+#+NAME:
+[[file:%s]]
   " filename)))
     (setq proc (start-process "ink" nil "inkscape" (format "%s" (expand-file-name filename))))
     (sleep-for 0.5)
@@ -293,6 +293,7 @@
                       \\usepackage{parskip}
                       \\usepackage{xcolor}
                       \\usepackage{amsmath, amsfonts, mathtools, amsthm, amssymb}
+		      \\usepackage{chngcntr} % for figures, table, equation numbers that follow sections
                       \\usepackage{enumitem}
                       \\setlist[itemize]{noitemsep}
                       \\usepackage{geometry}
@@ -335,22 +336,57 @@
 
                       \\hypersetup{
                           colorlinks=true,
-                          linkcolor=black,
-                          filecolor=NordBrightBlack,
-                          urlcolor=NordBrightBlack,
-                          citecolor=NordBrightBlack,
+                          linkcolor=NordBrightBlue,
+                          filecolor=NordBrightBlue,
+                          urlcolor=NordBrightBlue,
+                          citecolor=NordBrightBlue,
                       }
                       \\urlstyle{same}
                       \\renewcommand\\contentsname{
                         ~\\hfill {\\LARGE Table of contents}\\\\
                         \\rule{\\textwidth}{0.4pt}
                       }
+                      \\counterwithin{table}{section}
+                      \\counterwithin{equation}{section}
+                      \\counterwithin{table}{section}
                       "
                  ("\\section{%s}" . "\\section*{%s}")
                  ("\\subsection{%s}" . "\\subsection*{%s}")
                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+  (add-to-list 'org-latex-classes
+	       '("article"
+		 "\\documentclass[11pt,a4paper]{article}
+		  \\usepackage[utf8]{inputenc}
+		  \\usepackage[T1]{fontenc}
+		  \\usepackage{fixltx2e}
+		  \\usepackage{graphicx}
+		  \\usepackage{longtable}
+		  \\usepackage{float}
+		  \\usepackage{wrapfig}
+		  \\usepackage{rotating}
+		  \\usepackage[normalem]{ulem}
+		  \\usepackage{amsmath}
+		  \\usepackage{textcomp}
+		  \\usepackage{marvosym}
+		  \\usepackage{wasysym}
+		  \\usepackage{amssymb}
+		  \\usepackage{hyperref}
+		  \\usepackage{mathpazo}
+		  \\usepackage{color}
+		  \\usepackage{enumerate}
+		  \\definecolor{bg}{rgb}{0.95,0.95,0.95}
+		  \\tolerance=1000
+		[NO-DEFAULT-PACKAGES]
+		[PACKAGES]
+		[EXTRA]
+		  \\linespread{1.1}
+		  \\hypersetup{pdfborder=0 0 0}"
+		 ("\\section{%s}" . "\\section*{%s}")
+		 ("\\subsection{%s}" . "\\subsection*{%s}")
+		 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+		 ("\\paragraph{%s}" . "\\paragraph*{%s}")))
   (setq org-latex-default-class "personal"))
 
 (setq org-format-latex-options '(
@@ -376,7 +412,13 @@
               \\vspace*{3\\baselineskip}
       \\end{titlepage}
       ")
-(setq org-latex-toc-command "\\tableofcontents \\clearpage")
+(setq org-latex-toc-command "
+      {
+        \\hypersetup{linkcolor=black}
+        \\tableofcontents
+        \\clearpage
+      }
+      ")
 (setq org-export-headline-levels 5)
 (setq org-startup-with-latex-preview t)
 (use-package org-fragtog
@@ -409,7 +451,7 @@
   (interactive)
   (let ((old-pdf-value org-latex-pdf-process)
         (old-compiler org-latex-compiler))
-    (setq org-latex-pdf-process '("latexmk -f -pdf -%latex -interaction=nonstopmode -output-directory=%o %f"))
+    (setq org-latex-pdf-process '("latexmk -f -pdf -%latex -interaction=nonstopmode -bibtex -output-directory=%o %f"))
     (setq org-latex-compiler "xelatex")
     (org-export-to-file 'awesomecv "cv.tex")
     (org-latex-compile "cv.tex")
@@ -430,6 +472,8 @@
   (setq visual-fill-column-width 110
         visual-fill-column-center-text t)
   (visual-fill-column-mode 1))
+
+(use-package org-ref)
 
 (use-package visual-fill-column
   :defer t
@@ -520,7 +564,8 @@
    (("s" fi/org-roam-inkscape-diagram "open/edit svg file"))
    "Custom functions"
    (("r" fi/rename-images-in-file-with-caption "sync filename with caption")
-    ("e" fi/zetteldesk-insert-all-nodes-contents-current-buffer-list "export roam cluster"))
+    ;; ("e" fi/zetteldesk-insert-all-nodes-contents-current-buffer-list "export roam cluster")
+    )
    "Roam UI"
    (("l" org-roam-ui-node-local "open current node")
     ("a" org-roam-ui-add-to-local-graph "add current node")
@@ -534,94 +579,7 @@
   :config
   (zetteldesk-mode))
 (require 'zetteldesk)
-(defun fi/get-all-org-roam-ids-current-buffer ()
-  (org-element-map (org-element-parse-buffer) 'link
-    (lambda (link)
-      (when (string= (org-element-property :type link) "id")
-        (org-element-property :path link)))))
 
-(defun fi/get-all-relative-files-current-buffer ()
-  (org-element-map (org-element-parse-buffer) 'link
-    (lambda (link)
-      (when (string= (org-element-property :type link) "file")
-        (org-element-property :path link)))))
-
-(defun fi/get-org-level-from-list (regex-item)
-  "Return the org heading level giving list in the buffer"
-  (search-forward regex-item)
-  (/ (current-indentation) 2))
-
-
-(defun fi/demote-org-roam-node (level text)
-  "Demote an org tree given its level and regex"
-  (let ((match-str (concat "LEVEL=" (number-to-string level) "+ITEM={" text "}")))
-    (org-map-entries (lambda () (org-demote-subtree)) match-str))
-  )
-
-(defun fi/delete-properties-drawer ()
-  "Delete properties drawers and its content"
-  (kill-matching-lines "^#\\+title.*")
-  (kill-matching-lines "^:PROPERTIES.*")
-  (kill-matching-lines "^:ID.*")
-  (kill-matching-lines "^:END.*")
-  (kill-matching-lines "^:ROAM.*"))
-
-(defun fi/zetteldesk-insert-all-nodes-contents-current-buffer-list ()
-  (interactive)
-  ;; (fi/force-org-rebuild-cache)
-  (beginning-of-buffer)
-  (setq new-headings '())
-  (setq absolute-file-links '())
-  (setq org-startup-with-latex-preview nil)
-  (dolist (id (fi/get-all-org-roam-ids-current-buffer))
-    (let* ((node (org-roam-node-from-id id))
-           (filename (org-roam-node-file node))
-           (org-level (fi/get-org-level-from-list id))
-           (node-buffer (find-file-noselect filename))
-           (location (zetteldesk-insert-location)))
-      (with-current-buffer node-buffer
-        (setq heading-texts (org-map-entries (lambda () (fifth (org-heading-components))) "LEVEL=1"))
-        (dolist (heading-text heading-texts)
-          (when (not (= org-level 0))
-            (push (list org-level heading-text) new-headings)
-            ))
-        (dolist (link (fi/get-all-relative-files-current-buffer))
-          (push (list link (file-truename link)) absolute-file-links))
-        )
-      (kill-buffer node-buffer)
-      (with-current-buffer location
-        (goto-char (point-max))
-        (newline)
-        (insert-file-contents filename)
-        (fi/delete-properties-drawer))
-      ))
-  (setq new-headings (reverse new-headings))
-  (let ((location (zetteldesk-insert-location)))
-    (with-current-buffer location
-      (org-mode)
-      (beginning-of-buffer)
-      (insert "
-  ,#+TITLE:
-  ,#+SUBTITLE:
-  ,#+UID:
-  ,#+AUTHOR:
-  ,#+DATE:
-  ,#+OPTIONS: tex:dvipng")
-      (dolist (new-heading new-headings)
-        (dotimes (level (first new-heading))
-          (fi/demote-org-roam-node (+ level 1) (second new-heading))))
-      (dolist (link-pair absolute-file-links)
-        (let ((relative-link (first link-pair))
-              (absolute-link (second link-pair)))
-          (beginning-of-buffer)
-          (while (re-search-forward relative-link nil t)
-            (replace-match absolute-link))
-          )
-        )
-      ))
-  (switch-to-buffer-other-window "*zetteldesk-scratch*")
-  (setq org-startup-with-latex-preview t)
-  )
 (defun fi/get-all-images (&optional element)
   (org-element-map (or element (org-element-parse-buffer)) 'link
     (lambda (link)
