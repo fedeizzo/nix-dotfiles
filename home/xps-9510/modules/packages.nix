@@ -28,7 +28,6 @@ in
     pkgs-unstable.calibre
     # notes
     zotero
-    anki
     inkscape-with-extensions
     # hugo
     # (unstable.xournalpp.overrideAttrs (old: rec {

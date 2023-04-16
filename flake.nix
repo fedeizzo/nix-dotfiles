@@ -58,6 +58,14 @@
     let
       lib = import ./lib { inherit inputs; };
       inherit (lib) mkHost forAllSystems;
+      macOSPkgs = import inputs.nixpkgs {
+        system = "aarch64-darwin";
+        overlays = builtins.attrValues { emacs = inputs.emacs-overlay.overlays.default; };
+      };
+      macOSPkgs-unstable = import inputs.nixpkgs-unstable {
+        system = "aarch64-darwin";
+        overlays = builtins.attrValues { emacs = inputs.emacs-overlay.overlays.default; };
+      };
     in
     rec {
       overlays = {
@@ -186,7 +194,15 @@
           pkgs = legacyPackages-duet."aarch64-linux";
         };
       };
-
+      homeConfigurations."federico.izzo" = home-manager.lib.homeManagerConfiguration {
+        pkgs = macOSPkgs;
+        modules = [
+          ./home/macbook-pro
+        ];
+        extraSpecialArgs = {
+          pkgs-unstable = macOSPkgs-unstable;
+        };
+      };
       deploy.nodes = {
         rasp-nixos = {
           hostname = "home-lab";

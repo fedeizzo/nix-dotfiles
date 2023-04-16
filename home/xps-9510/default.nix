@@ -27,7 +27,7 @@
         ./modules/fish
         ./modules/git.nix
         ./modules/gtk-qt.nix
-        ./modules/kitty
+        ../common/kitty
         ./modules/languages.nix
         ./modules/lf.nix
         ./modules/packages.nix

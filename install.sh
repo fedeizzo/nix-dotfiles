@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 SUPER_CMD="doas"
 IMPURE=""
+if [[ $USER == "federico.izzo" ]]; then
+   home-manager switch --flake .
+   exit 0
+fi
 if [[ $USER == "root" ]]; then
     SUPER_CMD=""
 fi

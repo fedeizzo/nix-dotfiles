@@ -1,6 +1,7 @@
 { pkgs, pkgs-unstable, ... }:
 
 {
+  imports = [ ../common/cli ];
   home.packages = with pkgs; [
     (makeDesktopItem {
       name = "reboot";
@@ -18,11 +19,6 @@
     })
     coreutils
     xdragon
-    exa
-    fd
-    fzf
-    gawk
-    gnused
     gnutls
     htop
     nmap
@@ -31,8 +27,6 @@
     xsv
     zsh
     cachix
-    bat
-    ripgrep
     openssl
     rbw
     nix-index
@@ -41,7 +35,6 @@
     jq
     openssh
     pamixer
-    pandoc
     borgbackup
     ncdu
     playerctl
@@ -49,14 +42,11 @@
     w3m
     rclone
     lazygit
-    graphviz
     sshfs
-    ffmpeg
     flac
     file
     mpd-mpris
     moreutils
-    home-manager
     zip
     pkgs-unstable.bitwarden-cli
     pkgs-unstable.hledger
