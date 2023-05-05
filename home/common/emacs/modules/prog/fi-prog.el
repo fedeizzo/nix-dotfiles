@@ -6,6 +6,7 @@
 (fi/load-package-config PROG-MODULE-PATH "eglot.el")
 (fi/load-package-config PROG-MODULE-PATH "gendoxy.el")
 (fi/load-package-config PROG-MODULE-PATH "git-gutter.el")
+(fi/load-package-config PROG-MODULE-PATH "go-lang.el")
 (fi/load-package-config PROG-MODULE-PATH "magit.el")
 (fi/load-package-config PROG-MODULE-PATH "nix-mode.el")
 (fi/load-package-config PROG-MODULE-PATH "projectile.el")

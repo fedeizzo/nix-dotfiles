@@ -14,8 +14,15 @@
   (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
   (corfu-preselect 'prompt)      ;; Preselect the prompt
   (corfu-scroll-margin 5)        ;; Use scroll margin
+  (corfu-quit-no-match t)
   :init
-  (global-corfu-mode))
+  (global-corfu-mode)
+  :config
+  ;; Emacs 28: Hide commands in M-x which do not apply to the current mode.
+  ;; Corfu commands are hidden, since they are not supposed to be used via M-x.
+  (setq read-extended-command-predicate
+	#'command-completion-default-include-p)
+  )
 
 ;; memorize selection history to show the list of completion sorted
 (use-package corfu-history

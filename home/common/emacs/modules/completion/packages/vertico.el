@@ -30,10 +30,17 @@
   (setq enable-recursive-minibuffers t)
   (vertico-mode))
 
-(use-package vertico-mouse
+(use-package vertico-posframe
   :after vertico
+  :custom
+  (vertico-posframe-border-width 1)
   :config
-  (vertico-mouse-mode))
+  (vertico-posframe-mode 1))
+
+;; (use-package vertico-mouse
+;;   :after vertico
+;;   :config
+;;   (vertico-mouse-mode))
 
 ;;; Utils
 ;; Save persistently the history of vertico

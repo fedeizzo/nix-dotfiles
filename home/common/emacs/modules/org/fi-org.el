@@ -1,26 +1,63 @@
+;;; fi-org.el --- Org-mode configuration
+
+;;; Commentary:
+;;
+
+;;; Code:
 (defun fi/org-mode-setup ()
-  (org-indent-mode)
-  ;; (variable-pitch-mode 1)
+  "Org-mode setup hook."
   (auto-fill-mode 0)
   (visual-line-mode 1)
   (setq evil-auto-indent nil))
 
 (use-package org
+  :custom-face
+  (org-level-1 ((t (:height 1.05))))
+  (org-level-2 ((t (:height 1.04))))
+  (org-level-3 ((t (:height 1.03))))
+  (org-level-4 ((t (:height 1.02))))
+  (org-level-5 ((t (:height 1.01))))
+  :custom
+  (org-ellipsis " …"                         "Symbol used when a heading is closed")
+  (org-directory "~/zettelkasten"            "Org folder")
+  (org-hide-emphasis-markers t               "Italic and bold prefix/suffix hidden")
+  (org-tags-column 1                         "Tag on the right of the heading")
+  (org-cycle-separator-lines 2               "empty line between sections")
+  (org-use-tag-inheritance nil               "Tags are not inherited")
+  (org-use-property-inheritance t            "Property are inherited")
+  (org-return-follows-link t                 "Use RET to follow link")
+  (org-indirect-buffer-display 'other-window "Tab on a task expand it in a new window")
+  (org-confirm-babel-evaluate nil            "Don't ask confirmation for babel evaluation")
+  (org-src-window-setup 'current-window      "Babel code opened in same window")
+  ;; (org-latex-create-formula-image-program 'dvisvgm "https://stackoverflow.com/questions/30151338")
+  (org-image-actual-width nil)
+  (org-startup-with-latex-preview t)
   :hook
   (org-mode . fi/org-mode-setup)
-  ;; (org-mode . (lambda ()
-  ;; 		(setq-local electric-pair-inhibit-predicate
-  ;; 			    `(lambda (c)
-  ;; 			       (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c))))))
-  :config
-  (setq org-ellipsis " ▾"
-        org-hide-emphasis-markers t
-        org-return-follows-link t
-        org-confirm-babel-evaluate nil
-        org-catch-invisible-edits 'show
-        org-src-window-setup 'current-window))
+  (org-mode . org-fragtog-mode)
+  ;; (org-mode . org-num-mode)
+  ;; (org-mode . org-outer-indent-mode)
+  )
+;; (org-mode . (lambda ()
+;; 		(setq-local electric-pair-inhibit-predicate
+;; 			    `(lambda (c)
+;; 			       (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c))))))
 (use-package org-contrib)
 
+(require 'org-tempo)
+(add-to-list 'org-structure-template-alist '("sh" . "src sh"))
+(add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
+(add-to-list 'org-structure-template-alist '("li" . "src lisp"))
+(add-to-list 'org-structure-template-alist '("sc" . "src scheme"))
+(add-to-list 'org-structure-template-alist '("ts" . "src typescript"))
+(add-to-list 'org-structure-template-alist '("py" . "src python"))
+(add-to-list 'org-structure-template-alist '("go" . "src go"))
+(add-to-list 'org-structure-template-alist '("yaml" . "src yaml"))
+(add-to-list 'org-structure-template-alist '("json" . "src json"))
+
+(fi/load-package-config ORG-MODULE-PATH "agenda.el")
+(fi/load-package-config ORG-MODULE-PATH "org-modern.el")
+(fi/load-package-config ORG-MODULE-PATH "org-outer-indent.el")
 
 (defun fi/dummy-org-download-annotate-function (link)
   ""
@@ -40,7 +77,6 @@
 (setq org-link-frame-setup '((file . find-file)))
 
 
-(setq org-agenda-files '("~/zettelkasten/daily"))
 ;; (setq
 ;;  org-directory "~/org"
 ;;  fi/org-agenda-inbox-file (concat org-directory "/inbox.org")
@@ -52,8 +88,6 @@
 ;; 		      fi/org-agenda-work-file
 ;; 		      fi/org-agenda-uni-file
 ;; 		      fi/org-agenda-personal-file))
-(require 'org-habit)
-(require 'org-protocol)
 (use-package org-remark
   :after org
   :config
@@ -147,9 +181,6 @@
 ;; (fi/leader "a" #'fi/switch-to-agenda)
 ;; (define-key org-agenda-mode-map (kbd "SPC") 'agenda-hydra-main/body)
 
-;; (use-package org-super-agenda
-;;   :config
-;;   (add-hook 'org-agenda-mode-hook #'org-super-agenda-mode))
 
 ;; (setq org-default-notes-file fi/org-agenda-inbox-file)
 ;; (defun transform-square-brackets-to-round-ones(string-to-transform)
@@ -163,22 +194,10 @@
 ;;         ("p" "Protocol text" entry (file+headline fi/org-agenda-inbox-file "Protocol") "* TODO %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?" :empty-lines 1 :immediate-finish t)
 ;;         ("L" "Protocol link" entry (file+headline fi/org-agenda-inbox-file "Protocol") "* TODO [[%:link][%(transform-square-brackets-to-round-ones \"%:description\")]]\n#+CREATED: [%<%Y-%m-%d %a %H:%M:%S>]\n" :empty-lines 1 :immediate-finish t)
 ;;         ))
-(global-set-key (kbd "C-c c") #'org-capture)
 
 (use-package async)
 
-(require 'org-tempo)
 (require 'ob-python)
-(require 'ob-hledger)
-(add-to-list 'org-structure-template-alist '("sh" . "src sh"))
-(add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
-(add-to-list 'org-structure-template-alist '("li" . "src lisp"))
-(add-to-list 'org-structure-template-alist '("sc" . "src scheme"))
-(add-to-list 'org-structure-template-alist '("ts" . "src typescript"))
-(add-to-list 'org-structure-template-alist '("py" . "src python"))
-(add-to-list 'org-structure-template-alist '("go" . "src go"))
-(add-to-list 'org-structure-template-alist '("yaml" . "src yaml"))
-(add-to-list 'org-structure-template-alist '("json" . "src json"))
 
 (org-babel-do-load-languages
  'org-babel-load-languages
@@ -198,254 +217,6 @@
    org-hugo-section "notes"
    org-hugo-front-matter-format "yaml"))
 
-(use-package org-modern
-  :config
-  (setq
-   org-modern-block t
-   org-pretty-entities nil
-   org-modern-table nil
-   org-modern-hide-stars nil))
-(add-hook 'org-mode-hook #'org-modern-mode)
-(add-hook 'org-agenda-finalize-hook #'org-modern-agenda)
-(with-eval-after-load 'org-faces
-  ;; Make sure org-indent face is available
-  (require 'org-indent))
-;; (defun fi/font-config-org (&rest _)
-;;   (set-face-attribute 'org-level-1 nil :family "ETBembo" :height 1.75)
-;;   (set-face-attribute 'org-level-2 nil :family "ETBembo" :height 1.5)
-;;   (set-face-attribute 'org-level-3 nil :family "ETBembo" :height 1.25)
-;;   (set-face-attribute 'org-level-4 nil :family "ETBembo" :height 1.1)
-;;   (set-face-attribute 'org-level-5 nil :family "ETBembo" :height 1)
-;;   (set-face-attribute 'org-level-6 nil :family "ETBembo" :height 1)
-;;   (set-face-attribute 'org-level-7 nil :family "ETBembo" :height 1)
-;;   (set-face-attribute 'org-level-8 nil :family "ETBembo" :height 1)
-;;   (set-face-attribute 'variable-pitch nil :family "ETBembo" :height 1)
-;;   (set-face-attribute 'fixed-pitch nil :family "JetBrains Mono" :height 1))
-
-;; (add-hook 'move-frame-functions #'fi/font-config-org))
-
-(setq org-startup-with-latex-preview t)
-(setq org-image-actual-width nil)
-
-(defun fi/get-sway-inkscape-location ()
-  (json-parse-string
-   (shell-command-to-string "swaymsg -t get_tree | jq '.. | select(.type?) | select(.app_id==\"org.inkscape.Inkscape\") | .rect'")))
-
-(defun fi/get-windows-location ()
-  (json-parse-string
-   (shell-command-to-string "swaymsg -t get_tree | jq ' .rect'")))
-
-(defun fi/set-tablet-location (x y width height)
-  (if (< y 0)
-      (shell-command (format "swaymsg input 1386:890:Wacom_One_by_Wacom_S_Pen map_to_region %d %d %d %d" x 0 width height) nil nil)
-    (shell-command (format "swaymsg input 1386:890:Wacom_One_by_Wacom_S_Pen map_to_region %d %d %d %d" x y width height) nil nil)
-    ))
-
-(defun fi/set-inkscape ()
-  (let*
-      ((sway-tree (fi/get-sway-inkscape-location))
-       (x (gethash "x" sway-tree))
-       (y (gethash "y" sway-tree))
-       (width (gethash "width" sway-tree))
-       (height (gethash "height" sway-tree)))
-    (fi/set-tablet-location x y width height)
-    ))
-
-(defun fi/reset-tablet-to-windows ()
-  (let*
-      ((sway-tree (fi/get-windows-location))
-       (x (gethash "x" sway-tree))
-       (y (gethash "y" sway-tree))
-       (width (gethash "width" sway-tree))
-       (height (gethash "height" sway-tree)))
-    (fi/set-tablet-location x y width height)
-    ))
-
-(defun fi/reset-images-inkscape-diagrame-mode (process event)
-  (org-display-inline-images)
-  (org-display-inline-images)
-  (fi/reset-tablet-to-windows))
-
-(defun fi/org-roam-inkscape-diagram ()
-  "Create or edit an svg file with inkscape and add link to current org document"
-  (interactive)
-  (let* '(filename (format "./figures/%s" (completing-read "SVG file: "
-                                                           (directory-files "./figures" nil ".*svg$" nil nil))))
-    (when (not (file-exists-p filename))
-      (copy-file "/home/fedeizzo/zettelkasten/template.svg" filename)
-      (insert (format "
-				#+ATTR_ORG: :width 450px
-				#+ATTR_LATEX: :width 450px :placement [H]
-				#+CAPTION:
-				#+NAME:
-				[[file:%s]]
-				" filename)))
-    (setq proc (start-process "ink" nil "inkscape" (format "%s" (expand-file-name filename))))
-    (sleep-for 0.5)
-    (fi/set-inkscape)
-    (set-process-sentinel proc 'fi/reset-images-inkscape-diagrame-mode)
-    ))
-(use-package tex-site
-  :config
-  (setq TeX-parse-self t
-        TeX-auto-save t))
-(with-eval-after-load 'ox-latex
-  (setq org-latex-classes nil)
-  (add-to-list 'org-latex-classes
-	       '("personal"
-                 "\\documentclass[a4paper,11pt,notitlepage,margin=2.5cm]{article}
-				\\usepackage[utf8]{inputenc}
-				\\usepackage[T1]{fontenc}
-				\\usepackage{textcomp}
-				\\usepackage{url}
-				\\usepackage{graphicx}
-				\\usepackage{hyperref}
-				\\usepackage{float}
-				\\usepackage{parskip}
-				\\usepackage{xcolor}
-				\\usepackage{amsmath, amsfonts, mathtools, amsthm, amssymb}
-				\\usepackage{chngcntr} % for figures, table, equation numbers that follow sections
-				\\usepackage{enumitem}
-				\\setlist[itemize]{noitemsep}
-				\\usepackage{geometry}
-				\\geometry{
-				a4paper,
-				total={170mm,257mm},
-				left=20mm,
-				top=20mm,
-				}
-				% for svg images from tex files
-				\\usepackage{import}
-				\\usepackage{xifthen}
-				\\usepackage{pdfpages}
-				\\usepackage{transparent}
-				\\newcommand{\\incfig}[1]{%
-				\\def\\svgwidth{\\columnwidth}
-				\\import{.}{#1.pdf_tex}
-				}
-
-				% Polar Night
-				\\definecolor{NordDarkBlack}{HTML}{2E3440}     % nord0
-				\\definecolor{NordBlack}{HTML}{3B4252}         % nord1
-				\\definecolor{NordMediumBlack}{HTML}{434C5e}   % nord2
-				\\definecolor{NordBrightBlack}{HTML}{4C566A}   % nord3
-				% Snow Storm
-				\\definecolor{NordWhite}{HTML}{D8DEE9}         % nord4
-				\\definecolor{NordBrighterWhite}{HTML}{E5E9F0}         % nord5
-				\\definecolor{NordBrightestWhite}{HTML}{ECEFF4}   % nord6
-				% Frost
-				\\definecolor{NordCyan}{HTML}{8FBCBB}          % nord7
-				\\definecolor{NordBrightCyan}{HTML}{88C0D0}    % nord8
-				\\definecolor{NordBlue}{HTML}{81A1C1}          % nord9
-				\\definecolor{NordBrightBlue}{HTML}{5E81AC}    % nord10
-				% Aurora
-				\\definecolor{NordRed}{HTML}{BF616A}           % nord11
-				\\definecolor{NordOrange}{HTML}{D08770}        % nord12
-				\\definecolor{NordYellow}{HTML}{EBCB8B}        % nord13
-				\\definecolor{NordGreen}{HTML}{A3BE8C}         % nord14
-				\\definecolor{NordMagenta}{HTML}{B48EAD}       % nord15
-
-				\\hypersetup{
-				colorlinks=true,
-				linkcolor=NordBrightBlue,
-				filecolor=NordBrightBlue,
-				urlcolor=NordBrightBlue,
-				citecolor=NordBrightBlue,
-				}
-				\\urlstyle{same}
-				\\renewcommand\\contentsname{
-				~\\hfill {\\LARGE Table of contents}\\\\
-				\\rule{\\textwidth}{0.4pt}
-				}
-				\\counterwithin{table}{section}
-				\\counterwithin{equation}{section}
-				\\counterwithin{table}{section}
-				"
-                 ("\\section{%s}" . "\\section*{%s}")
-                 ("\\subsection{%s}" . "\\subsection*{%s}")
-                 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                 ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                 ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-  (add-to-list 'org-latex-classes
-	       '("article"
-		 "\\documentclass[11pt,a4paper]{article}
-				\\usepackage[utf8]{inputenc}
-				\\usepackage[T1]{fontenc}
-				\\usepackage{fixltx2e}
-				\\usepackage{graphicx}
-				\\usepackage{longtable}
-				\\usepackage{float}
-				\\usepackage{wrapfig}
-				\\usepackage{rotating}
-				\\usepackage[normalem]{ulem}
-				\\usepackage{amsmath}
-				\\usepackage{textcomp}
-				\\usepackage{marvosym}
-				\\usepackage{wasysym}
-				\\usepackage{amssymb}
-				\\usepackage{hyperref}
-				\\usepackage{mathpazo}
-				\\usepackage{color}
-				\\usepackage{enumerate}
-				\\definecolor{bg}{rgb}{0.95,0.95,0.95}
-				\\tolerance=1000
-				[NO-DEFAULT-PACKAGES]
-				[PACKAGES]
-				[EXTRA]
-				\\linespread{1.1}
-				\\hypersetup{pdfborder=0 0 0}"
-		 ("\\section{%s}" . "\\section*{%s}")
-		 ("\\subsection{%s}" . "\\subsection*{%s}")
-		 ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-		 ("\\paragraph{%s}" . "\\paragraph*{%s}")))
-  (setq org-latex-default-class "personal"))
-
-(setq org-format-latex-options '(
-                                 :foreground default
-                                 :background default
-                                 :scale 1.0
-                                 :html-foreground "Black"
-                                 :html-background "Transparent"
-                                 :html-scale 1.0
-                                 :matchers ("begin" "$1" "$" "$$" "\\(" "\\[")))
-
-(setq org-latex-title-command "
-									    \\begin{titlepage}
-									    \\raggedleft
-									    \\vspace*{\\baselineskip}
-									    {\\Large %a}\\\\
-									    \\vspace*{0.167\\textheight}
-									    \\textbf{\\LARGE Personal notes of}\\\\[\\baselineskip]
-									    {{\\color{NordMediumBlack}{\\Huge %t}}\\\\[\\baselineskip]}
-									    {\\Large \\textit{%s}}
-									    \\vfill
-									    {\\large $\\mathcal{FI}$}
-									    \\vspace*{3\\baselineskip}
-									    \\end{titlepage}
-									    ")
-(setq org-latex-toc-command "
-									    {
-									    \\hypersetup{linkcolor=black}
-									    \\tableofcontents
-									    \\clearpage
-									    }
-									    ")
-(setq org-export-headline-levels 5)
-(setq org-startup-with-latex-preview t)
-(use-package org-fragtog
-  :config
-  (add-hook 'org-mode-hook 'org-fragtog-mode))
-(add-to-list 'org-structure-template-alist '("al" . "src latex\n \\begin{align*}\n\\end{align*}\n"))
-(setq org-latex-pdf-process
-      (let
-          ((cmd (concat "pdflatex -shell-escape -interaction nonstopmode"
-                        " --synctex=1"
-                        " -output-directory %o %f")))
-        (list cmd
-	      "cd %o; if test -r %b.idx; then makeindex %b.idx; fi"
-	      "cd %o; bibtex %b"
-	      cmd
-	      cmd)))
 (require 'ox-latex)
 (setq org-latex-listings 't)
 (add-to-list 'org-latex-packages-alist '("" "listings"))
@@ -593,12 +364,12 @@
     ("u" fi/toggle-org-roam-ui-follow "toggle follow mode"))))
 
 (fi/leader "n" 'org-roam-hydra-main/body)
-(use-package zetteldesk
-  :after org-roam
-  :load-path "~/.config/emacs/zetteldesk.el"
-  :config
-  (zetteldesk-mode))
-(require 'zetteldesk)
+;; (use-package zetteldesk
+;;   :after org-roam
+;;   :load-path "~/.config/emacs/zetteldesk.el"
+;;   :config
+;;   (zetteldesk-mode))
+;; (require 'zetteldesk)
 
 (defun fi/get-all-images (&optional element)
   (org-element-map (or element (org-element-parse-buffer)) 'link
@@ -646,41 +417,41 @@
           (org-toggle-inline-images)
           (org-toggle-inline-images)))
       )))
-(pretty-hydra-define zetteldesk-add-hydra (:color blue :title "Add to Zetteldesk" :quit-key "q")
-  ("Org-Roam"
-   (("n" zetteldesk-add-node-to-desktop "Add Node")
-    ("b" zetteldesk-add-backlinks-to-desktop "Add Node + All its backlinks"))
-   "Other"
-   (("a" zetteldesk-add-to-desktop "Add Buffer"))))
+;; (pretty-hydra-define zetteldesk-add-hydra (:color blue :title "Add to Zetteldesk" :quit-key "q")
+;;   ("Org-Roam"
+;;    (("n" zetteldesk-add-node-to-desktop "Add Node")
+;;     ("b" zetteldesk-add-backlinks-to-desktop "Add Node + All its backlinks"))
+;;    "Other"
+;;    (("a" zetteldesk-add-to-desktop "Add Buffer"))))
 
-(pretty-hydra-define zetteldesk-remove-hydra (:color blue :title "Remove from Zetteldesk" :quit-key "q")
-  ("Org-Roam"
-   (("n" zetteldesk-remove-node-from-desktop "Remove Node")
-    ("b" zetteldesk-remove-backlinks-from-desktop "Remove Node + All its backlinks"))
-   "Other"
-   (("r" zetteldesk-remove-from-desktop "Remove Buffer"))))
+;; (pretty-hydra-define zetteldesk-remove-hydra (:color blue :title "Remove from Zetteldesk" :quit-key "q")
+;;   ("Org-Roam"
+;;    (("n" zetteldesk-remove-node-from-desktop "Remove Node")
+;;     ("b" zetteldesk-remove-backlinks-from-desktop "Remove Node + All its backlinks"))
+;;    "Other"
+;;    (("r" zetteldesk-remove-from-desktop "Remove Buffer"))))
 
-(pretty-hydra-define zetteldesk-insert-hydra (:color blue :title "Insert from the Zetteldesk" :quit-key "q")
-  ("Org-Roam"
-   (("n" zetteldesk-insert-node-contents-without-link "Node Contents in *zetteldesk-scratch")
-    ("a" fi/zetteldesk-insert-all-nodes-contents-without-link  "All nodes Contents in *zetteldesk-scratch*")
-    ("B" fi/zetteldesk-insert-all-nodes-contents-current-buffer  "All nodes Contents in current buffer in *zetteldesk-scratch*"))
-   "Supplementary Material to *zetteldesk-scratch*"
-   (("p" zetteldesk-insert-link-to-pdf "Link to PDF"))))
+;; (pretty-hydra-define zetteldesk-insert-hydra (:color blue :title "Insert from the Zetteldesk" :quit-key "q")
+;;   ("Org-Roam"
+;;    (("n" zetteldesk-insert-node-contents-without-link "Node Contents in *zetteldesk-scratch")
+;;     ("a" fi/zetteldesk-insert-all-nodes-contents-without-link  "All nodes Contents in *zetteldesk-scratch*")
+;;     ("B" fi/zetteldesk-insert-all-nodes-contents-current-buffer  "All nodes Contents in current buffer in *zetteldesk-scratch*"))
+;;    "Supplementary Material to *zetteldesk-scratch*"
+;;    (("p" zetteldesk-insert-link-to-pdf "Link to PDF"))))
 
-(pretty-hydra-define zetteldesk-main-hydra (:color blue :title "Zetteldesk Hydra" :quit-key "q")
-  ("Filter Functions"
-   (("n" zetteldesk-node-find "Find Zetteldesk Node"))
+;; (pretty-hydra-define zetteldesk-main-hydra (:color blue :title "Zetteldesk Hydra" :quit-key "q")
+;;   ("Filter Functions"
+;;    (("n" zetteldesk-node-find "Find Zetteldesk Node"))
 
-   "Add/Remove Hydras"
-   (("r" zetteldesk-remove-hydra/body "Run the Removing Hydra")
-    ("a" zetteldesk-add-hydra/body "Run the Adding Hydra"))
+;;    "Add/Remove Hydras"
+;;    (("r" zetteldesk-remove-hydra/body "Run the Removing Hydra")
+;;     ("a" zetteldesk-add-hydra/body "Run the Adding Hydra"))
 
-   "Inserting Things and *zetteldesk-scratch*"
-   (("s" zetteldesk-switch-to-scratch-buffer "Switch to *zetteldesk-scratch*")
-    ("i" zetteldesk-insert-hydra/body "Run the Insert Hydra"))))
+;;    "Inserting Things and *zetteldesk-scratch*"
+;;    (("s" zetteldesk-switch-to-scratch-buffer "Switch to *zetteldesk-scratch*")
+;;     ("i" zetteldesk-insert-hydra/body "Run the Insert Hydra"))))
 
-(fi/leader "u" 'zetteldesk-main-hydra/body)
+;; (fi/leader "u" 'zetteldesk-main-hydra/body)
 ;; line number
 (column-number-mode)
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
@@ -706,10 +477,10 @@
 		      (other-buffer))
                     t))
 
-(defun fi/zetteldesk-add-current-buffer-to-desktop ()
-  "Add current buffer to zetteldek desktop"
-  (interactive)
-  (zetteldesk-add-to-desktop (current-buffer)))
+;; (defun fi/zetteldesk-add-current-buffer-to-desktop ()
+;;   "Add current buffer to zetteldek desktop"
+;;   (interactive)
+;;   (zetteldesk-add-to-desktop (current-buffer)))
 
 (defun fi/open-file-new-split ()
   "Open at mouse in other window"
@@ -719,7 +490,7 @@
 
 (global-set-key [C-down-mouse-1] 'fi/open-file-new-split)
 (global-set-key [mouse-8] 'fi/switch-last-buffer)
-(global-set-key [mouse-9] 'fi/zetteldesk-add-current-buffer-to-desktop)
+;; (global-set-key [mouse-9] 'fi/zetteldesk-add-current-buffer-to-desktop)
 
 (defun fi/org-ispell ()
   "Configure `ispell-skip-region-alist' for `org-mode'."
@@ -731,4 +502,12 @@
 (add-hook 'org-mode-hook #'fi/org-ispell)
 (add-hook 'org-mode-hook 'flyspell-mode)
 
+;; (use-package org-fc
+;;   :load-path "~/.config/emacs/org-fc")
+;; :custom
+;; (org-fc-directories "~/zettelkasten")
+;; (org-fc-review-history-file "~/zettelkasten/org-fc-reviews.tsv"))
+
 (provide 'fi-org)
+
+;;; fi-org.el ends here

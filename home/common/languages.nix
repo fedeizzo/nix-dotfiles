@@ -40,6 +40,10 @@ in
     rustfmt
     lld
 
+    # go
+    # go # disabled becasuse on the macbook it installed with brew
+    gopls
+
     # latex
     texlive.combined.scheme-full
 

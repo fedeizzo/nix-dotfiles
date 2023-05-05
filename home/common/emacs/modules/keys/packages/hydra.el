@@ -1,5 +1,9 @@
 (use-package hydra)
-;; (use-package hydra-postframe)
+(use-package hydra-posframe
+  :load-path "~/.config/emacs/hydra-posframe"
+  :custom
+  (hydra-posframe-border-width 1)
+  :hook (after-init . hydra-posframe-mode))
 (use-package major-mode-hydra
   :bind
   ("M-SPC" . major-mode-hydra))

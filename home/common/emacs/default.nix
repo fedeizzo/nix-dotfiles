@@ -36,6 +36,7 @@ let
       marginalia # marginal informations in the minibuffer
       orderless # brain behind filtering when searching for something 
       vertico # minibuffer alternative to default
+      vertico-posframe # floating vertico in the center of the screen
       #######
       # ORG #
       #######
@@ -96,12 +97,14 @@ let
       hledger-mode
       eglot
       nix-mode
+      go-mode
       markdown-toc
       rustic
       yaml-mode
       # gendoxy
       # yuck-mode
       magit
+      magit-todos
       git-gutter
       pkgs.mu
       rainbow-delimiters
@@ -125,6 +128,10 @@ let
       tempel
       tempel-collection
       hide-mode-line
+      svg-lib
+      svg-tag-mode
+      nano-theme
+      nano-modeline
     ];
   });
   org-cv = pkgs.fetchFromGitLab {
@@ -138,6 +145,24 @@ let
     repo = "gendoxy";
     rev = "master";
     sha256 = "sha256-z3L5VScaQ7LssIvCXjRsKbR7yHdlaamGhTkClSE/MJo=";
+  };
+  org-fc = pkgs.fetchFromGitHub {
+    owner = "l3kn";
+    repo = "org-fc";
+    rev = "master";
+    sha256 = "sha256-X01yELYog1bRJb1jAk77jbjDBvJxMVLoDsw+7S4lLec=";
+  };
+  hydra-posframe = pkgs.fetchFromGitHub {
+    owner = "Ladicle";
+    repo = "hydra-posframe";
+    rev = "master";
+    sha256 = "sha256-7/HwWJfSEf3dkIM9yYzL5i9gp60es7GLb0WbIns5Ut8=";
+  };
+  org-outer-indent = pkgs.fetchFromGitHub {
+    owner = "rougier";
+    repo = "org-outer-indent";
+    rev = "master";
+    sha256 = "sha256-Lxusc3FXag4qVJjObg6EVcILFnHZXXAyrYNqqCZZF3E=";
   };
 in
 {
@@ -156,5 +181,8 @@ in
   xdg.configFile."emacs/welcome.png".source = ./welcome.png;
   xdg.configFile."emacs/modules".source = ./modules;
   xdg.configFile."emacs/org-cv".source = org-cv;
+  xdg.configFile."emacs/org-fc".source = org-fc;
   xdg.configFile."emacs/gendoxy".source = gendoxy;
+  xdg.configFile."emacs/hydra-posframe".source = hydra-posframe;
+  xdg.configFile."emacs/org-outer-indent".source = org-outer-indent;
 }

@@ -139,6 +139,13 @@
 ;; Make shebang (#!) file executable when saved
 (add-hook 'after-save-hook #'executable-make-buffer-file-executable-if-script-p)
 
+;; Encoding
+(set-default-coding-systems 'utf-8)     ; Default to utf-8 encoding
+(prefer-coding-system       'utf-8)     ; Add utf-8 at the front for automatic detection.
+(set-terminal-coding-system 'utf-8)     ; Set coding system of terminal output
+(set-keyboard-coding-system 'utf-8)     ; Set coding system for keyboard input on TERMINAL
+(set-language-environment "English")    ; Set up multilingual environment
+
 
 ;;; Load Path
 ;; add packages config
@@ -162,5 +169,7 @@
 (require 'fi-prog)
 (require 'fi-life-improvements)
 
+
+(nano-dark) ; the theme is loaded becasue in some cases some UI component does not inherit the right color
 
 ;;; init.el ends here

@@ -146,6 +146,7 @@ in
     aspellDicts.en-science
     aspellDicts.en-computers
     aspellDicts.it
+    aspellDicts.fr
     # telega
     tdlib
     # borg package manager

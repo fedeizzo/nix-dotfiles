@@ -14,7 +14,7 @@
   :config
   ;; Rerunning checks on every newline is a mote excessive.
   (delq 'new-line flycheck-check-syntax-automatically)
-  (flycheck-mode))
+  (global-flycheck-mode))
 
 (use-package flycheck-posframe
   :after flycheck

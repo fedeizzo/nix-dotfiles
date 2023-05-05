@@ -108,6 +108,15 @@ in
             sha256 = "0cagh2n5yg8m6ggzhf3kcp714gb8s7blb840kxas0z6366w3qlw4";
           };
         }
+        {
+          name = "zfz";
+          src = pkgs.fetchFromGitHub {
+            owner = "PatrickF1";
+            repo = "fzf.fish";
+            rev = "63c8f8e65761295da51029c5b6c9e601571837a1";
+            sha256 = "sha256-i9FcuQdmNlJnMWQp7myF3N0tMD/2I0CaMs/PlD8o1gw=";
+          };
+        }
       ];
     };
   };

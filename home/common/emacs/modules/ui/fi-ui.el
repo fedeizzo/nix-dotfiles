@@ -4,34 +4,51 @@
 
 
 ;;; Code:
-(fi/load-package-config UI-MODULE-PATH "doom-modeline.el")
-(fi/load-package-config UI-MODULE-PATH "doom-themes.el")
+;; (fi/load-package-config UI-MODULE-PATH "doom-modeline.el")
+;; (fi/load-package-config UI-MODULE-PATH "doom-themes.el")
+(fi/load-package-config UI-MODULE-PATH "font.el")
 (fi/load-package-config UI-MODULE-PATH "hl-todo.el")
 (fi/load-package-config UI-MODULE-PATH "idle-highlight.el")
 (fi/load-package-config UI-MODULE-PATH "ligatures.el")
 (fi/load-package-config UI-MODULE-PATH "minimap.el")
+(fi/load-package-config UI-MODULE-PATH "nano.el")
 (fi/load-package-config UI-MODULE-PATH "rainbow-delimiters.el")
+(fi/load-package-config UI-MODULE-PATH "svg-tag-mode.el")
+(fi/load-package-config UI-MODULE-PATH "window-divider.el")
 
 ;; (defun fi/font-config (frame)
 ;;   (set-face-attribute 'default nil :font "JetBrains Mono" :weight 'normal :height 130)
 ;;   (set-face-attribute 'fixed-pitch nil :font "JetBrains Mono" :weight 'normal :height 130)
 ;;   (set-face-attribute 'variable-pitch nil :font "JetBrains Mono" :weight 'normal :height 130))
 
-(defun fi/update-font--window-size-change (&rest _)
-  (let* ((attrs (frame-monitor-attributes))
-	 (width-mm (nth 1 (nth 2 attrs)))
-	 (size 12))         ;; default size for the internal laptop monitor
-    (when (eq width-mm 602) ;; office monitor
-      (setq size 13))
-    (set-frame-font (format "JetBrains Mono %s" size))))
+
+;; some ui removal
+(tooltip-mode -1)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+
+;; frame personalization
+(setq default-frame-alist '((min-height . 1)  '(height . 45)
+                            (min-width  . 1)  '(width  . 81)
+                            (vertical-scroll-bars . nil)
+                            (internal-border-width . 16)
+                            (left-fringe . 0)
+                            (right-fringe . 0)
+                            (tool-bar-lines . 0)
+                            (menu-bar-lines . 1)))
+
+;; Default frame settings
+(setq initial-frame-alist default-frame-alist)
 
 ;; Better welcome page https://xenodium.com/emacs-a-welcoming-experiment/
-(setq initial-scratch-message nil
-      inhibit-splash-screen t
-      inhibit-startup-screen t
-      startup-screen-inhibit-startup-screen t)
-(add-hook 'after-init-hook #'fi/update-font--window-size-change)
-(add-hook 'move-frame-functions #'fi/update-font--window-size-change)
+(setq-default
+ inhibit-startup-screen t
+ inhibit-startup-message t
+ inhibit-startup-echo-area-message t
+ initial-scratch-message ""
+ inhibit-splash-screen t
+ startup-screen-inhibit-startup-screen t)
+
 (defun ar/show-welcome-buffer ()
   "Show *Welcome* buffer."
   (with-current-buffer (get-buffer-create "*Welcome*")
@@ -63,6 +80,15 @@
 ;;   (add-hook 'emacs-startup-hook (lambda ()
 ;;                                   (when (display-graphic-p)
 ;;                                     (ar/show-welcome-buffer)))))
+
+;; smoother scrolling
+(setq-default scroll-conservatively 101       ; Avoid recentering when scrolling far
+              scroll-margin 2                 ; Add a margin when scrolling vertically
+              recenter-positions '(5 bottom)) ; Set re-centering positions
+
+;; Highlight current line
+;; (require 'hl-line)
+;; (global-hl-line-mode)
 
 (provide 'fi-ui)
 

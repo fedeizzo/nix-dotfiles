@@ -18,6 +18,7 @@
 (defconst UTILS-MODULE-PATH (concat MODULES-PATH "/utils"))
 (defconst PROG-MODULE-PATH (concat MODULES-PATH "/prog"))
 (defconst LIFE-IMPROVEMENTS-MODULE-PATH (concat MODULES-PATH "/life-improvements"))
+(defconst ORG-MODULE-PATH (concat MODULES-PATH "/org"))
 
 
 ;;; Variables
@@ -31,6 +32,27 @@ package as PACKAGE-NAME, module as MODULE."
   (let ((elapsed-time
 	 (benchmark-elapse (load (expand-file-name(concat module "/packages/" package-name))))))
     (add-to-list 'fi/packages-loading-time (list package-name elapsed-time) t)))
+
+(defun fi/insert-accented-e ()
+  "Insert accented e."
+  (interactive)
+  (insert "é"))
+
+(defun fi/insert-circonflex-e ()
+  "Insert accented e."
+  (interactive)
+  (insert "ê"))
+
+(defun fi/reload-fi-configs ()
+  "Reload personal config."
+  (interactive)
+  (load-file "~/.config/emacs/init.el"))
+
+(defun fi/get-project-filepath ()
+  "Return the filename wrt to the current project."
+  (interactive)
+  (kill-new (file-relative-name buffer-file-name
+				(projectile-project-root))))
 
 ;;; Hooks
 ;; Sort package loading times ascending
