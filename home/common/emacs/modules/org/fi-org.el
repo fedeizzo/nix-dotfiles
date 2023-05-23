@@ -58,6 +58,7 @@
 (fi/load-package-config ORG-MODULE-PATH "agenda.el")
 (fi/load-package-config ORG-MODULE-PATH "org-modern.el")
 (fi/load-package-config ORG-MODULE-PATH "org-outer-indent.el")
+(fi/load-package-config ORG-MODULE-PATH "latex.el")
 
 (defun fi/dummy-org-download-annotate-function (link)
   ""

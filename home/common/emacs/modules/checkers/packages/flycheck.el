@@ -13,7 +13,7 @@
   (flycheck-display-errors-delay 0.25 "Waits 0.25s before displaing errors")
   :config
   ;; Rerunning checks on every newline is a mote excessive.
-  (delq 'new-line flycheck-check-syntax-automatically)
+  ;; (delq 'new-line flycheck-check-syntax-automatically)
   (global-flycheck-mode))
 
 (use-package flycheck-posframe

@@ -170,6 +170,5 @@
 (require 'fi-life-improvements)
 
 
-(nano-dark) ; the theme is loaded becasue in some cases some UI component does not inherit the right color
-
+(load-theme 'doom-nord t)
 ;;; init.el ends here

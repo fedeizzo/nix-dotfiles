@@ -1,3 +1,6 @@
-(use-package git-gutter
+(use-package git-gutter-fringe
   :config
-  (global-git-gutter-mode t))
+  (git-gutter-mode))
+
+(fi/leader
+  "g" 'git-gutter:popup-hunk)

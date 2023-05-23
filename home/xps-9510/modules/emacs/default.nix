@@ -68,7 +68,7 @@ let
       general
       # MONEY
       hledger-mode
-      eglot
+      # eglot
       nix-mode
       markdown-toc
       rustic

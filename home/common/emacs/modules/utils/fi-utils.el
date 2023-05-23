@@ -54,6 +54,12 @@ package as PACKAGE-NAME, module as MODULE."
   (kill-new (file-relative-name buffer-file-name
 				(projectile-project-root))))
 
+(defun fi/hydra-title-factory-fileicon (icon title)
+  (s-concat (all-the-icons-fileicon icon :v-adjust -0.2 :height 1.5) " " title))
+
+(defun fi/hydra-title-factory-faicon (icon title)
+  (s-concat (all-the-icons-faicon icon :v-adjust -0.2 :height 1.5) " " title))
+
 ;;; Hooks
 ;; Sort package loading times ascending
 (add-hook 'emacs-startup-hook

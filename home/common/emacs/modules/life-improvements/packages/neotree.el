@@ -6,8 +6,9 @@
              neotree-find
              neo-global--with-buffer
              neo-global--window-exists-p)
+  :hook
+  (neo-after-create . (lambda (a) (display-line-numbers-mode -1)))
   :config
-  (add-hook 'neo-after-create-hook (lambda () (display-line-numbers-mode -1)))
   (setq
    neo-window-width 30
    neo-show-hidden-files t

@@ -14,7 +14,7 @@
    (("p" consult-projectile "consult projectile"))
    "Current"
    (("g" consult-ripgrep "search all")
-    ("t" projectile-run-vterm "open terminal")
+    ("t" projectile-run-eshell "open terminal")
     ("c" #'fi/get-project-filepath "copy relative current buffer")
     ("k" projectile-kill-buffers "close project")))
   )

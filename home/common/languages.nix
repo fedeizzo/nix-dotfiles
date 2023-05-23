@@ -9,6 +9,7 @@ let
     pyls-isort
     pyls-flake8
     # pyls-black
+    debugpy
   ];
   python-with-my-packages = pkgs.python3.withPackages my-python-packages;
 in
@@ -42,7 +43,7 @@ in
 
     # go
     # go # disabled becasuse on the macbook it installed with brew
-    gopls
+    # gopls # disabled becasuse on the macbook it installed with brew
 
     # latex
     texlive.combined.scheme-full

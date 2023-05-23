@@ -1,5 +1,5 @@
 ;;; Variables
-(setq vterm-shell "fish")
+;; (setq vterm-shell "fish")
 (setq vterm-kill-buffer-on-exit t)
 
 ;;; Function
@@ -9,8 +9,10 @@
 (fi/load-package-config LIFE-IMPROVEMENTS-MODULE-PATH "dash.el")
 (fi/load-package-config LIFE-IMPROVEMENTS-MODULE-PATH "deft.el")
 (fi/load-package-config LIFE-IMPROVEMENTS-MODULE-PATH "direnv.el")
-(fi/load-package-config LIFE-IMPROVEMENTS-MODULE-PATH "exec-path-from-shell.el")
 (fi/load-package-config LIFE-IMPROVEMENTS-MODULE-PATH "elfeed.el")
+(fi/load-package-config LIFE-IMPROVEMENTS-MODULE-PATH "eshell.el")
+(fi/load-package-config LIFE-IMPROVEMENTS-MODULE-PATH "sideline.el")
+(fi/load-package-config LIFE-IMPROVEMENTS-MODULE-PATH "exec-path-from-shell.el")
 (fi/load-package-config LIFE-IMPROVEMENTS-MODULE-PATH "format-all.el")
 (fi/load-package-config LIFE-IMPROVEMENTS-MODULE-PATH "hide-mode-line.el")
 (fi/load-package-config LIFE-IMPROVEMENTS-MODULE-PATH "neotree.el")

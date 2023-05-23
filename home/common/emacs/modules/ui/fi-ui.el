@@ -4,14 +4,14 @@
 
 
 ;;; Code:
-;; (fi/load-package-config UI-MODULE-PATH "doom-modeline.el")
-;; (fi/load-package-config UI-MODULE-PATH "doom-themes.el")
+(fi/load-package-config UI-MODULE-PATH "doom-modeline.el")
+(fi/load-package-config UI-MODULE-PATH "doom-themes.el")
 (fi/load-package-config UI-MODULE-PATH "font.el")
 (fi/load-package-config UI-MODULE-PATH "hl-todo.el")
 (fi/load-package-config UI-MODULE-PATH "idle-highlight.el")
 (fi/load-package-config UI-MODULE-PATH "ligatures.el")
 (fi/load-package-config UI-MODULE-PATH "minimap.el")
-(fi/load-package-config UI-MODULE-PATH "nano.el")
+;; (fi/load-package-config UI-MODULE-PATH "nano.el")
 (fi/load-package-config UI-MODULE-PATH "rainbow-delimiters.el")
 (fi/load-package-config UI-MODULE-PATH "svg-tag-mode.el")
 (fi/load-package-config UI-MODULE-PATH "window-divider.el")
@@ -31,7 +31,6 @@
 (setq default-frame-alist '((min-height . 1)  '(height . 45)
                             (min-width  . 1)  '(width  . 81)
                             (vertical-scroll-bars . nil)
-                            (internal-border-width . 16)
                             (left-fringe . 0)
                             (right-fringe . 0)
                             (tool-bar-lines . 0)
@@ -89,6 +88,15 @@
 ;; Highlight current line
 ;; (require 'hl-line)
 ;; (global-hl-line-mode)
+;; symbol end of line
+;; Enable visual line fringe and empty line indicator
+(setq visual-line-fringe-indicators
+      '(left-curly-arrow right-curly-arrow))
+(setq-default left-fringe-width nil
+              indicate-empty-lines nil
+              indent-tabs-mode nil)
+(fringe-mode)
+
 
 (provide 'fi-ui)
 

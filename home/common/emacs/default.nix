@@ -29,7 +29,7 @@ let
       consult # search and navigation commands based on the emacs completion function
       consult-projectile # provides a consult command that integrates very well with projectile
       consult-org-roam # provides a consult command for org roam
-      consult-eglot # provides a consult command for eglot
+      # consult-eglot # provides a consult command for eglot
       corfu # completion framework that works on top of default completion functions
       embark-consult # embark applies a command based on the nearest element
       kind-icon # icon for corfu
@@ -95,17 +95,24 @@ let
       general
       # MONEY
       hledger-mode
-      eglot
+      # eglot
       nix-mode
+      ##########
+      # GOLANG #
+      ##########
       go-mode
+      gotest # run tests inside emacs
+      go-gen-test # generates unit tests with gotests
+      pkgs.gotests # generate unit tests
       markdown-toc
       rustic
       yaml-mode
       # gendoxy
       # yuck-mode
       magit
-      magit-todos
-      git-gutter
+      magit-delta
+      # magit-todos
+      git-gutter-fringe
       pkgs.mu
       rainbow-delimiters
       tablist
@@ -130,8 +137,32 @@ let
       hide-mode-line
       svg-lib
       svg-tag-mode
-      nano-theme
-      nano-modeline
+      # nano-theme
+      # nano-modeline
+      sidecar-locals # per project variables
+      typescript-mode
+
+      ########
+      #SHELL#
+      ########
+      eshell-z
+      eshell-vterm
+      eshell-syntax-highlighting
+      eshell-git-prompt
+      ############
+      # LSP-MODE #
+      ############
+      lsp-mode
+      lsp-ui # ui tools
+      lsp-treemacs # integration with treesitter
+      lsp-origami # integration with origami for folding
+      consult-lsp # integration with consult
+      dap-mode # debugger
+      ############
+      # SIDELINE #
+      ############
+      sideline
+      sideline-blame
     ];
   });
   org-cv = pkgs.fetchFromGitLab {
