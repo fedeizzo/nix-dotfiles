@@ -30,6 +30,9 @@ in
     # typescript
     nodePackages.typescript-language-server
 
+    # json
+    nodePackages_latest.vscode-json-languageserver
+
     # dockerfile
     nodePackages.dockerfile-language-server-nodejs
 

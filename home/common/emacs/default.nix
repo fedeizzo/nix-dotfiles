@@ -104,6 +104,10 @@ let
       gotest # run tests inside emacs
       go-gen-test # generates unit tests with gotests
       pkgs.gotests # generate unit tests
+      ##########
+      # PYTHON #
+      ##########
+      python-pytest
       markdown-toc
       rustic
       yaml-mode

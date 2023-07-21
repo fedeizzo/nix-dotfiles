@@ -24,4 +24,7 @@
     ciao = "echo 'hello world'";
   };
   home.packages = with pkgs; [ pngpaste ];
+programs.zsh.initExtra = "if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
+  . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
+fi";
 }

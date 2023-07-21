@@ -15,13 +15,19 @@
 (use-package lsp-mode
   :commands lsp
   :hook
+  ;; python
   (python-mode . lsp-deferred)
   (python-ts-mode . lsp-deferred)
+  ;; nix
   (nix-mode . lsp-deferred)
+  ;; typescript, javascript, json
   (typescript-mode . lsp-deferred)
   (typescript-ts-mode . lsp-deferred)
   (typescript-ts-base-mode . lsp-deferred)
   (javascript-mode . lsp-deferred)
+  (json-ts-mode . lsp-deferred)
+  (json-mode . lsp-deferred)
+  ;; go
   (go-mode . lsp-deferred)
   (go-ts-mode . lsp-deferred)
   (lsp-mode . lsp-enable-which-key-integration)
@@ -41,6 +47,7 @@
   (lsp-ui-doc-show-with-cursor t)
   (lsp-ui-doc-show-with-mouse t)
   (lsp-ui-doc-position 'at-point)
+  (lsp-ui-doc-use-webkit t)
   (lsp-completion-provider :none) ;; we use Corfu!
   )
 

@@ -51,6 +51,10 @@ in
           min_time = 20000;
           format = "  [$duration](bold yellow)";
         };
+        kubernetes = {
+          disabled = false;
+          symbol = "󱃾";
+        };
       };
     };
     programs.fish = {

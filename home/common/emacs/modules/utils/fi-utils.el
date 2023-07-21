@@ -60,6 +60,77 @@ package as PACKAGE-NAME, module as MODULE."
 (defun fi/hydra-title-factory-faicon (icon title)
   (s-concat (all-the-icons-faicon icon :v-adjust -0.2 :height 1.5) " " title))
 
+
+;;; Update functions
+(defun fi/kill-buffer-and-window-delete ()
+  "Kill this buffer and then delete the window."
+  (interactive)
+  (kill-this-buffer)
+  (evil-window-delete))
+
+(defun fi/update-nixos ()
+  "Update nixos configuration."
+  (interactive)
+  (with-output-to-temp-buffer "*nixos-update*"
+    (shell-command "cd ~/nix-dotfiles && ./install.sh &"
+                   "*nixos-update*"
+                   "*nixos-update*")
+    (pop-to-buffer "*nixos-update*")
+    (evil-force-normal-state)
+    (evil-local-set-key 'normal (kbd "q") 'fi/kill-buffer-and-window-delete)))
+
+(defun fi/load-emacs-module ()
+  "Load emacs user defined module."
+  (interactive)
+  (load (completing-read "Select el file to load:"
+                         (directory-files-recursively
+                          "~/nix-dotfiles/home/common/emacs/modules/" ".*el$"))))
+(defun run-in-vterm (command)
+  "Execute string COMMAND in a new vterm.
+
+Interactively, prompt for COMMAND with the current buffer's file
+name supplied. When called from Dired, supply the name of the
+file at point.
+
+Like `async-shell-command`, but run in a vterm for full terminal features.
+
+The new vterm buffer is named in the form `*foo bar.baz*`, the
+command and its arguments in earmuffs.
+
+When the command terminates, the shell remains open, but when the
+shell exits, the buffer is killed."
+  (interactive
+   (list
+    (let* ((f (cond (buffer-file-name)
+                    ((eq major-mode 'dired-mode)
+                     (dired-get-filename nil t))))
+           (filename (concat " " (shell-quote-argument (and f (file-relative-name f))))))
+      (read-shell-command "Terminal command: "
+                          (cons filename 0)
+                          (cons 'shell-command-history 1)
+                          (list filename)))))
+  (with-current-buffer (vterm (concat "*" command "*"))
+    (set-process-sentinel vterm--process #'run-in-vterm-kill)
+    (vterm-send-string command)
+    (vterm-send-return)))
+
+(defun dd/workspace-background-connection()
+  "Connect to dd workspace."
+  (interactive)
+  (run-in-vterm "TERM=xterm-256color ssh workspace-federicoizzo"))
+
+(defun dd/staging-db-connection()
+  "Connect to staging PostgreSQL database."
+  (interactive)
+  (run-in-vterm "~/.scripts/s8s-db-conn"))
+
+(defun fi/clean-tilde-emacs-file()
+  "Clean temp files ending with ~."
+  (interactive)
+  (projectile-with-default-dir (projectile-acquire-root)
+    (shell-command "fd --regex '.*~$' --exec rm")))
+
+;; fd --regex '.*~$'
 ;;; Hooks
 ;; Sort package loading times ascending
 (add-hook 'emacs-startup-hook

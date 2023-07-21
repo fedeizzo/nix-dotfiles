@@ -461,8 +461,7 @@
 (dolist (mode '(org-mode-hook
                 org-agenda-mode-hook
                 shell-mode-hook
-                vterm-mode-hook
-		neo-enter-hook))
+                vterm-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 (set-default-coding-systems 'utf-8)
 (defun fi/switch-last-buffer (arg)

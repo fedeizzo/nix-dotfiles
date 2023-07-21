@@ -146,6 +146,9 @@
 (set-keyboard-coding-system 'utf-8)     ; Set coding system for keyboard input on TERMINAL
 (set-language-environment "English")    ; Set up multilingual environment
 
+;; No backup files
+(setq make-backup-files nil)
+
 
 ;;; Load Path
 ;; add packages config

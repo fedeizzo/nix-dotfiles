@@ -1,15 +1,25 @@
 ;;; go-lang.el --- Go language tools configuration
 
 ;;; Commentary:
+
+;;; Code:
 (defun lsp-go-install-save-hooks ()
   (add-hook 'before-save-hook #'lsp-format-buffer t t)
   (add-hook 'before-save-hook #'lsp-organize-imports t t))
 
-;;; Code:
+(defun fi/go-lang-enable-integration-test ()
+  "Toggle go-lang integration test."
+  (interactive)
+  (if (string= go-test-args "-tags dynamic")
+      (setq go-test-args "-tags dynamic -args integration")
+    (setq go-test-args "-tags dynamic"))
+  (print go-test-args))
+
 (use-package go-mode
   :mode "\\.go\\'"
   :hook
   (go-mode . lsp-go-install-save-hooks)
+  (before-save-hook . gofmt-before-save)
   :config
   (evil-define-key 'normal 'go-mode-map "gd" 'lsp-ui-peek-find-definitions)
   (evil-define-key 'normal 'go-mode-map "gr" 'lsp-ui-peek-find-references)
@@ -24,7 +34,8 @@
      ("gr" lsp-ui-peek-find-references "References")
      ("K" lsp-ui-doc-glance "Documentation"))
     " Test"
-    (("tf" go-test-current-file "Current file")
+    (("ti" fi/go-lang-enable-integration-test "Integration test")
+     ("tf" go-test-current-file "Current file")
      ("tt" go-test-current-test "Current test")
      ("tp" go-test-current-project "Current project")
      ("tg" go-gen-test-dwim "Generate test")))))
@@ -34,6 +45,25 @@
   (go-test-args "-tags dynamic"))
 
 (use-package go-gen-test)
+
+
+(defun fi/golang-temp-main-file ()
+  "Create a main file in the current directory."
+  (interactive)
+  (create-file-buffer "main.go")
+  (switch-to-buffer "main.go")
+  (insert "
+package main
+
+import (
+	\"fmt\"
+)
+
+func main() {
+	fmt.Println(\"hello world\")
+}
+")
+  (go-mode))
 
 
 ;;; go-lang.el ends here

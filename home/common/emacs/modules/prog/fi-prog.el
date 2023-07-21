@@ -8,6 +8,7 @@
 (fi/load-package-config PROG-MODULE-PATH "gendoxy.el")
 (fi/load-package-config PROG-MODULE-PATH "git-gutter.el")
 (fi/load-package-config PROG-MODULE-PATH "go-lang.el")
+(fi/load-package-config PROG-MODULE-PATH "python.el")
 (fi/load-package-config PROG-MODULE-PATH "typescript.el")
 (fi/load-package-config PROG-MODULE-PATH "magit.el")
 (fi/load-package-config PROG-MODULE-PATH "nix-mode.el")
@@ -17,6 +18,8 @@
 (fi/load-package-config PROG-MODULE-PATH "tempel.el")
 (fi/load-package-config PROG-MODULE-PATH "tree-sitter.el")
 (fi/load-package-config PROG-MODULE-PATH "yaml-mode.el")
+(fi/load-package-config PROG-MODULE-PATH "yaml-mode.el")
+(fi/load-package-config PROG-MODULE-PATH "string-inflection.el")
 
 (provide 'fi-prog)
 

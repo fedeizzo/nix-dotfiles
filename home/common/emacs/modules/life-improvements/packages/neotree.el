@@ -6,8 +6,6 @@
              neotree-find
              neo-global--with-buffer
              neo-global--window-exists-p)
-  :hook
-  (neo-after-create . (lambda (a) (display-line-numbers-mode -1)))
   :config
   (setq
    neo-window-width 30
@@ -27,3 +25,6 @@
      ;; temp files
      ".*~$"
      "^#.*#$")))
+
+;; :hook
+;; (neo-after-create . (lambda (a) (display-line-numbers-mode -1)))
