@@ -68,7 +68,12 @@ let
       all-the-icons
       visual-fill-column
       minimap
-      neotree
+      # neotree
+      treemacs
+      treemacs-projectile
+      treemacs-magit
+      treemacs-evil
+      treemacs-all-the-icons
       hl-todo # highlight todo and other common keyword inside the buffer
       idle-highlight-mode # highlight the word under cursor after some idle time
       # MINIBUFFER

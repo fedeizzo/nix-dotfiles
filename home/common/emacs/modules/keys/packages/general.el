@@ -16,4 +16,4 @@
     "zr" 'origami-close-node-recursively
     "zR" 'origami-open-node-recursively
     ;; neotree
-    "t" 'neotree-toggle))
+    "t" 'treemacs))

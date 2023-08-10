@@ -30,12 +30,12 @@
   (setq enable-recursive-minibuffers t)
   (vertico-mode))
 
-(use-package vertico-posframe
-  :after vertico
-  :custom
-  (vertico-posframe-border-width 1)
-  :config
-  (vertico-posframe-mode 1))
+;; (use-package vertico-posframe
+;;   :after vertico
+;;   :custom
+;;   (vertico-posframe-border-width 1)
+;;   :config
+;;   (vertico-posframe-mode 1))
 
 ;; (use-package vertico-mouse
 ;;   :after vertico
