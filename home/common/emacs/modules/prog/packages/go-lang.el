@@ -21,9 +21,9 @@
   (go-mode . lsp-go-install-save-hooks)
   (before-save-hook . gofmt-before-save)
   :config
-  (evil-define-key 'normal 'go-mode-map "gd" 'lsp-ui-peek-find-definitions)
-  (evil-define-key 'normal 'go-mode-map "gr" 'lsp-ui-peek-find-references)
-  (evil-define-key 'normal 'go-mode-map "K" 'lsp-ui-doc-glance)
+  ; (evil-define-key 'normal 'go-mode-map "gd" 'lsp-ui-peek-find-definitions)
+  ; (evil-define-key 'normal 'go-mode-map "gr" 'lsp-ui-peek-find-references)
+  ; (evil-define-key 'normal 'go-mode-map "K" 'lsp-ui-doc-glance)
   :mode-hydra
   ((list go-ts-mode go-mode)
    (:title (fi/hydra-title-factory-fileicon "go" "Commands") :quit-key "q")

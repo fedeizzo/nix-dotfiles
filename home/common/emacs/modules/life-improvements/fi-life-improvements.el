@@ -5,7 +5,7 @@
 ;;; Function
 
 ;;; Import
-(fi/load-package-config LIFE-IMPROVEMENTS-MODULE-PATH "avy.el")
+;; (fi/load-package-config LIFE-IMPROVEMENTS-MODULE-PATH "avy.el")
 (fi/load-package-config LIFE-IMPROVEMENTS-MODULE-PATH "dash.el")
 (fi/load-package-config LIFE-IMPROVEMENTS-MODULE-PATH "deft.el")
 (fi/load-package-config LIFE-IMPROVEMENTS-MODULE-PATH "direnv.el")

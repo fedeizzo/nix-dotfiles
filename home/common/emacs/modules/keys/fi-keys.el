@@ -3,9 +3,10 @@
 ;;; Commentary:
 
 ;;; Code:
-(fi/load-package-config KEYS-MODULE-PATH "evil.el")
-(fi/load-package-config KEYS-MODULE-PATH "general.el")
+;; (fi/load-package-config KEYS-MODULE-PATH "evil.el")
+;; (fi/load-package-config KEYS-MODULE-PATH "general.el")
 (fi/load-package-config KEYS-MODULE-PATH "hydra.el")
+(fi/load-package-config KEYS-MODULE-PATH "meow.el")
 (fi/load-package-config KEYS-MODULE-PATH "which-key.el")
 
 ;; Keys

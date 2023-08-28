@@ -18,9 +18,9 @@
 (use-package flycheck-posframe
   :after flycheck
   :config
-  (add-hook 'flycheck-mode-hook #'flycheck-posframe-mode)
-  (add-hook 'flycheck-posframe-inhibit-functions #'evil-insert-state-p)
-  (add-hook 'flycheck-posframe-inhibit-functions #'evil-replace-state-p))
+  (add-hook 'flycheck-mode-hook #'flycheck-posframe-mode))
+  ;; (add-hook 'flycheck-posframe-inhibit-functions #'evil-insert-state-p)
+  ;; (add-hook 'flycheck-posframe-inhibit-functions #'evil-replace-state-p))
 
 (use-package flycheck-projectile
   :after flycheck)

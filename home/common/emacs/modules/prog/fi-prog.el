@@ -13,7 +13,7 @@
 (fi/load-package-config PROG-MODULE-PATH "magit.el")
 (fi/load-package-config PROG-MODULE-PATH "nix-mode.el")
 (fi/load-package-config PROG-MODULE-PATH "projectile.el")
-(fi/load-package-config PROG-MODULE-PATH "sidecar-locals.el")
+;; (fi/load-package-config PROG-MODULE-PATH "sidecar-locals.el")
 (fi/load-package-config PROG-MODULE-PATH "rustic.el")
 (fi/load-package-config PROG-MODULE-PATH "tempel.el")
 (fi/load-package-config PROG-MODULE-PATH "tree-sitter.el")

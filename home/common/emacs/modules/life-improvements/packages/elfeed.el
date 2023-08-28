@@ -23,11 +23,11 @@
   (interactive)
   (find-file "~/zettelkasten/elfeed.org"))
 
-(fi/leader
-  "ee" #'elfeed
-  "ex" #'elfeed-db-unload
-  "es" #'elfeed-summary
-  "eu" #'elfeed-update
-  "eo" #'fi/open-elfeed-org)
+;; (fi/leader
+;;   "ee" #'elfeed
+;;   "ex" #'elfeed-db-unload
+;;   "es" #'elfeed-summary
+;;   "eu" #'elfeed-update
+;;   "eo" #'fi/open-elfeed-org)
 
 ;;; elfeed.el ends here

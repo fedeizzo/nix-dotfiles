@@ -364,7 +364,7 @@
     ("d" org-roam-ui-remove-from-local-graph "delete current node")
     ("u" fi/toggle-org-roam-ui-follow "toggle follow mode"))))
 
-(fi/leader "n" 'org-roam-hydra-main/body)
+;; (fi/leader "n" 'org-roam-hydra-main/body)
 ;; (use-package zetteldesk
 ;;   :after org-roam
 ;;   :load-path "~/.config/emacs/zetteldesk.el"

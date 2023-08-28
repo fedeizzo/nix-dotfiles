@@ -1,3 +1,9 @@
+;;; projectile.el ---
+
+;;; Commentary:
+;;
+
+;;; Code:
 (use-package projectile
   :diminish projectile-mode
   :config (projectile-mode)
@@ -9,6 +15,7 @@
    projectile-switch-project-action #'project-dired
    projectile-indexing-method 'hybrid
    projectile-sort-order 'recently-active))
+
 (pretty-hydra-define projectile-hydra-main (:color blue :title "Projectile" :quit-key "q")
   ("Global"
    (("p" consult-projectile "consult projectile"))
@@ -18,4 +25,5 @@
     ("c" #'fi/get-project-filepath "copy relative current buffer")
     ("k" projectile-kill-buffers "close project")))
   )
-(fi/leader "p" 'projectile-hydra-main/body)
+
+;;; projectile.el ends here

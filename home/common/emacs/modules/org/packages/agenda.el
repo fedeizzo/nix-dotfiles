@@ -66,11 +66,11 @@ See also `org-save-all-org-buffers'"
               (fi/save-agenda-files)))
 
 ;; Keybinds
-(evil-global-set-key 'normal (kbd "C-c c") #'org-capture)
-(evil-global-set-key 'normal (kbd "C-c a") #'org-agenda)
-(evil-global-set-key 'normal (kbd "C-c i") #'fi/open-inbox-file)
-(evil-global-set-key 'normal (kbd "C-c e") #'fi/open-agenda-file)
-(evil-global-set-key 'normal (kbd "C-c r") #'fi/refile-inbox-element)
+;; (evil-global-set-key 'normal (kbd "C-c c") #'org-capture)
+;; (evil-global-set-key 'normal (kbd "C-c a") #'org-agenda)
+;; (evil-global-set-key 'normal (kbd "C-c i") #'fi/open-inbox-file)
+;; (evil-global-set-key 'normal (kbd "C-c e") #'fi/open-agenda-file)
+;; (evil-global-set-key 'normal (kbd "C-c r") #'fi/refile-inbox-element)
 
 ;; Habits
 (require 'org-habit)

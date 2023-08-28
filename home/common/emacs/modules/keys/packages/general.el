@@ -5,7 +5,7 @@
   (general-create-definer fi/leader
     :states 'normal
     :keymaps '(override)
-    :prefix "SPC")
+    :prefix "C-P")
   (fi/leader
     "s" 'save-buffer
     ;; origami
