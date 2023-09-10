@@ -20,4 +20,5 @@
   (prog-mode . tempel-setup-capf)
   (text-mode . tempel-setup-capf))
 
+
 (use-package tempel-collection)

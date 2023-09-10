@@ -76,8 +76,7 @@ package as PACKAGE-NAME, module as MODULE."
                    "*nixos-update*"
                    "*nixos-update*")
     (pop-to-buffer "*nixos-update*")
-    (evil-force-normal-state)
-    (evil-local-set-key 'normal (kbd "q") 'fi/kill-buffer-and-window-delete)))
+    (local-set-key (kbd "q") 'fi/kill-buffer-and-window-delete)))
 
 (defun fi/load-emacs-module ()
   "Load emacs user defined module."

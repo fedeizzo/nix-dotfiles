@@ -7,6 +7,7 @@
 (use-package cape
   :init
   (add-to-list 'completion-at-point-functions #'cape-file)
-  (add-to-list 'completion-at-point-functions #'cape-symbol))
+  ;; (add-to-list 'completion-at-point-functions #'cape-symbol)
+  )
 
 ;;; cape.el ends here

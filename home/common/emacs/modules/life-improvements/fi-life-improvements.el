@@ -6,6 +6,7 @@
 
 ;;; Import
 ;; (fi/load-package-config LIFE-IMPROVEMENTS-MODULE-PATH "avy.el")
+(fi/load-package-config LIFE-IMPROVEMENTS-MODULE-PATH "ace-window.el")
 (fi/load-package-config LIFE-IMPROVEMENTS-MODULE-PATH "dash.el")
 (fi/load-package-config LIFE-IMPROVEMENTS-MODULE-PATH "deft.el")
 (fi/load-package-config LIFE-IMPROVEMENTS-MODULE-PATH "direnv.el")
@@ -21,9 +22,9 @@
 (fi/load-package-config LIFE-IMPROVEMENTS-MODULE-PATH "pdf-tools.el")
 (fi/load-package-config LIFE-IMPROVEMENTS-MODULE-PATH "popwin.el")
 (fi/load-package-config LIFE-IMPROVEMENTS-MODULE-PATH "s.el")
-(fi/load-package-config LIFE-IMPROVEMENTS-MODULE-PATH "super-save.el")
+;; (fi/load-package-config LIFE-IMPROVEMENTS-MODULE-PATH "super-save.el")
 (fi/load-package-config LIFE-IMPROVEMENTS-MODULE-PATH "vundo.el")
-(fi/load-package-config LIFE-IMPROVEMENTS-MODULE-PATH "zoom.el")
+;; (fi/load-package-config LIFE-IMPROVEMENTS-MODULE-PATH "zoom.el")
 
 ;;; Modes
 (electric-pair-mode 1)

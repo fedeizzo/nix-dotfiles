@@ -17,6 +17,10 @@ nix-mode
      "#" (s str)                       "#" n
      "#" (make-string (length str) ?#) "#" n)
 
+go-mode
+
+(tsr "t.Run(\"" p "\", func(t *testing.T) {" n> p n> "})")
+
 ;; Local Variables:
 ;; mode: lisp-data
 ;; outline-regexp: "[a-z]"

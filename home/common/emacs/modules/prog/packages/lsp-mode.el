@@ -81,8 +81,8 @@
   )
 
 ;; (fi/leader
-  ;; "d" #'dap-hydra
-  ;; "l" 'lsp-mode-toggle-hydra/body)
+;; "d" #'dap-hydra
+;; "l" 'lsp-mode-toggle-hydra/body)
 ;; (use-package lsp-origami
 ;;   :hook
 ;;   (lsp-after-open . #'lsp-origami-try-enable))

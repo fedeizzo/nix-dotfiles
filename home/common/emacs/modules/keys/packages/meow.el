@@ -25,6 +25,8 @@
    '("j" . "H-j")
    '("k" . "H-k")
    '("p" . projectile-hydra-main/body)
+   '("o" . org-roam-hydra-main/body)
+   '("w" . ace-window)
    '("t" . treemacs)
    ;; Use SPC (0-9) for digit arguments.
    '("1" . meow-digit-argument)
@@ -114,4 +116,24 @@
   (meow-thing-register 'arrow '(pair ("<") (">")) '(pair ("<") (">")))
   (add-to-list 'meow-char-thing-table '(?a . arrow)))
 
+(setq meow-paren-keymap (make-keymap))
+(meow-define-state paren
+  "meow state for interacting with smartparens"
+  :lighter " [P]"
+  :keymap meow-paren-keymap)
+
+;; meow-define-state creates the variable
+(setq meow-cursor-type-paren 'hollow)
+
+(meow-define-keys 'paren
+  '("<escape>" . meow-normal-mode)
+  '("l" . sp-forward-sexp)
+  '("h" . sp-backward-sexp)
+  '("j" . sp-down-sexp)
+  '("k" . sp-up-sexp)
+  '("n" . sp-forward-slurp-sexp)
+  '("b" . sp-forward-barf-sexp)
+  '("v" . sp-backward-barf-sexp)
+  '("c" . sp-backward-slurp-sexp)
+  '("u" . meow-undo))
 ;;; meow.el ends here

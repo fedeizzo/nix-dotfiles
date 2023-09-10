@@ -28,5 +28,6 @@
     tempel
     tempel-collection
     projectile
+    smartparens
   ];
 }

@@ -9,7 +9,7 @@
   :config
   (setq sideline-order-left 'up
         sideline-order-right 'up
-        sideline-backends-left '((sideline-blame . up))
+        sideline-backends-right '((sideline-blame . up))
         sideline-delay 1.0
         sideline-display-backend-name t
         sideline-backends-skip-current-line t)
