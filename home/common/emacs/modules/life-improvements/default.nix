@@ -37,5 +37,6 @@
     vterm
     esup
     ace-window
+    centaur-tabs
   ];
 }

@@ -7,6 +7,7 @@
 ;;; Import
 ;; (fi/load-package-config LIFE-IMPROVEMENTS-MODULE-PATH "avy.el")
 (fi/load-package-config LIFE-IMPROVEMENTS-MODULE-PATH "ace-window.el")
+(fi/load-package-config LIFE-IMPROVEMENTS-MODULE-PATH "centaur-tabs.el")
 (fi/load-package-config LIFE-IMPROVEMENTS-MODULE-PATH "dash.el")
 (fi/load-package-config LIFE-IMPROVEMENTS-MODULE-PATH "deft.el")
 (fi/load-package-config LIFE-IMPROVEMENTS-MODULE-PATH "direnv.el")

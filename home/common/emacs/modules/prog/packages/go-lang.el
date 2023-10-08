@@ -21,9 +21,9 @@
   (go-mode . lsp-go-install-save-hooks)
   (before-save-hook . gofmt-before-save)
   :config
-  ; (evil-define-key 'normal 'go-mode-map "gd" 'lsp-ui-peek-find-definitions)
-  ; (evil-define-key 'normal 'go-mode-map "gr" 'lsp-ui-peek-find-references)
-  ; (evil-define-key 'normal 'go-mode-map "K" 'lsp-ui-doc-glance)
+                                        ; (evil-define-key 'normal 'go-mode-map "gd" 'lsp-ui-peek-find-definitions)
+                                        ; (evil-define-key 'normal 'go-mode-map "gr" 'lsp-ui-peek-find-references)
+                                        ; (evil-define-key 'normal 'go-mode-map "K" 'lsp-ui-doc-glance)
   :mode-hydra
   ((list go-ts-mode go-mode)
    (:title (fi/hydra-title-factory-fileicon "go" "Commands") :quit-key "q")
@@ -38,7 +38,11 @@
      ("tf" go-test-current-file "Current file")
      ("tt" go-test-current-test "Current test")
      ("tp" go-test-current-project "Current project")
-     ("tg" go-gen-test-dwim "Generate test")))))
+     ("tg" go-gen-test-dwim "Generate test"))
+    " Tag"
+    (("sa" go-tag-add "Add tag")
+     ("sd" go-tag-remove "Remove tag")
+     ("sr" go-tag-remove "Refresh tag")))))
 
 (use-package gotest
   :custom
@@ -46,6 +50,9 @@
 
 (use-package go-gen-test)
 
+(use-package flycheck-golangci-lint
+  :ensure t
+  :hook (go-mode . flycheck-golangci-lint-setup))
 
 (defun fi/golang-temp-main-file ()
   "Create a main file in the current directory."

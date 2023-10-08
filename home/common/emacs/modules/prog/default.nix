@@ -6,6 +6,9 @@
     gotest # run tests inside emacs
     go-gen-test # generates unit tests with gotests
     pkgs.gotests # generate unit tests
+    gorepl-mode # repl mode for golang
+    go-tag # tags for structs
+    flycheck-golangci-lint
     nix-mode
     python-pytest
     markdown-toc
