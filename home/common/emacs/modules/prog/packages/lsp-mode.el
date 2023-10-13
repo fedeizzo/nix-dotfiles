@@ -52,6 +52,11 @@
   )
 
 (use-package lsp-ui
+  :custom
+  (lsp-ui-sideline-show-diagnostics t)
+  (lsp-ui-sideline-show-hover t)
+  (lsp-ui-sideline-show-code-actions t)
+  (lsp-ui-sideline-symbol t)
   :config
   (lsp-ui-peek-enable t))
 
