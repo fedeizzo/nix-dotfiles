@@ -21,7 +21,8 @@
         ./modules/bottom
         ./modules/cli
         ./modules/config.nix
-        ./modules/emacs
+        # ./modules/emacs
+        ../common/emacs
         ./modules/email
         ./modules/firefox
         ./modules/fish
