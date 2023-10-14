@@ -1,7 +1,7 @@
 { pkgs, pkgs-unstable, ... }:
 
 {
-  imports = [ ../common/cli ];
+  imports = [ ../../../common/cli ];
   home.packages = with pkgs; [
     (makeDesktopItem {
       name = "reboot";

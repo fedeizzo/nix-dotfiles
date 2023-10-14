@@ -15,7 +15,6 @@ in
       grub = {
         enable = true;
         device = "nodev";
-        version = 2;
         efiSupport = true;
         useOSProber = true;
         enableCryptodisk = true;
@@ -27,7 +26,7 @@ in
         '';
       };
     };
-    cleanTmpDir = true;
+    tmp.cleanOnBoot = true;
     kernelPackages = nixpkgs-unstable.linuxPackages_latest;
     kernel.sysctl = {
       "vm.swappiness" = 10;

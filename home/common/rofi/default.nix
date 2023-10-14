@@ -1,4 +1,4 @@
-{ pkgs, rofiPackage ? pkgs.rofi-wayland, ... }:
+{ pkgs, ... }:
 
 {
 
@@ -9,7 +9,7 @@
   ];
   programs.rofi = {
     enable = true;
-    package = rofiPackage;
+    package = pkgs.rofi-wayland;
     # plugins = with pkgs; [
     #   pkgs.rofi-power-menu
     #   rofi-file-browser

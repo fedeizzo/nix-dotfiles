@@ -24,7 +24,7 @@ let
   python-with-my-packages = pkgs-unstable.python3.withPackages my-python-packages;
 in
 {
-  import = [ ../common/languages.nix ];
+  imports = [ ../../common/languages.nix ];
   home.packages = with pkgs; [
     python-with-my-packages
     gnuplot

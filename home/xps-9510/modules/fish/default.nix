@@ -2,7 +2,7 @@
 
 {
   imports = [
-    ../common/fish
+    ../../../common/fish
   ];
   fishPerMachine.aliases = {
     SS = "systemctl";
