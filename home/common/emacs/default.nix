@@ -10,7 +10,7 @@ let
       (load-file "~/.config/emacs/init.el")
     '';
     defaultInitFile = true;
-    package = pkgs.emacsPgtk;
+    package = pkgs-unstable.emacsPgtk;
     alwaysEnsure = true;
     extraEmacsPackages = epkgs: with epkgs; [
       (import ./modules/checkers { epkgs = epkgs; }).packages
@@ -48,7 +48,7 @@ let
     owner = "Ladicle";
     repo = "hydra-posframe";
     rev = "master";
-    sha256 = "sha256-7/HwWJfSEf3dkIM9yYzL5i9gp60es7GLb0WbIns5Ut8=";
+    sha256 = "sha256-9nVBnpaWZIYNDvS2WWBED0HsIRIv4AR4as6wEe463tI=";
   };
   org-outer-indent = pkgs.fetchFromGitHub {
     owner = "rougier";

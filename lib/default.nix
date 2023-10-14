@@ -60,6 +60,7 @@ rec {
           inherit (pkgs.stdenv.targetPlatform) system;
           config.allowUnfree = true;
           config.joypixels.acceptLicense = true;
+          overlays = builtins.attrValues { emacs = inputs.emacs-overlay.overlays.default; };
         };
         _module.args.nixpkgs-old = import inputs.nixpkgs-old {
           inherit (pkgs.stdenv.targetPlatform) system;

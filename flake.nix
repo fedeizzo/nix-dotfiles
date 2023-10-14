@@ -69,7 +69,7 @@
     in
     rec {
       overlays = {
-        emacs = inputs.emacs-overlay.overlay;
+        # emacs = inputs.emacs-overlay.overlay;
         hyperwm-contrib = inputs.hyprwm-contrib.overlays.default;
         default = import ./overlays { inherit inputs; };
       };

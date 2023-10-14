@@ -26,7 +26,7 @@ in
 {
   imports = [ ../../common/languages.nix ];
   home.packages = with pkgs; [
-    python-with-my-packages
+    # python-with-my-packages
     gnuplot
   ];
 }

@@ -22,7 +22,7 @@
         ./modules/cli
         ./modules/config.nix
         # ./modules/emacs
-        ../common/emacs
+        # ../common/emacs
         ./modules/email
         ./modules/firefox
         ./modules/fish
