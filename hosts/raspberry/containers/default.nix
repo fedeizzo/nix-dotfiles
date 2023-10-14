@@ -30,10 +30,10 @@ in
     ./cloudflare-ddns
     ./fedeizzo.dev
     ./fireflyiii
-    ./homebox
+    # ./homebox
     ./diun
-    ./grafana
-    ./openbooks
+    # ./grafana
+    # ./openbooks
     # ./pi-hole
   ];
 

@@ -34,8 +34,8 @@
 
   boot = {
     kernelPackages = pkgs.linuxPackages_rpi4;
-    tmpOnTmpfs = true;
-    cleanTmpDir = true;
+    tmp.useTmpfs = true;
+    tmp.cleanOnBoot = true;
     # ttyAMA0 is the serial console broken out to the GPIO
     kernelParams = [
       "8250.nr_uarts=1"
@@ -99,12 +99,12 @@
 
   services.openssh = {
     enable = true;
-    passwordAuthentication = false;
     allowSFTP = false; # Don't set this if you need sftp
-    kbdInteractiveAuthentication = false;
     openFirewall = false;
-    forwardX11 = false;
-    permitRootLogin = "yes";
+    settings.PasswordAuthentication = false;
+    settings.KbdInteractiveAuthentication = false;
+    settings.ForwardX11 = false;
+    settings.PermitRootLogin = "yes";
   };
   services.fail2ban.enable = true;
 
@@ -349,5 +349,5 @@
       experimental-features = nix-command flakes
     '';
   };
-  system.stateVersion = "22.05";
+  system.stateVersion = "23.05";
 }
