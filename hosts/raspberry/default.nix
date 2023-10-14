@@ -103,7 +103,7 @@
     openFirewall = false;
     settings.PasswordAuthentication = false;
     settings.KbdInteractiveAuthentication = false;
-    settings.ForwardX11 = false;
+    settings.X11Forwarding = false;
     settings.PermitRootLogin = "yes";
   };
   services.fail2ban.enable = true;
