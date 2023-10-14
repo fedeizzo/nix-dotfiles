@@ -58,11 +58,11 @@ in
 
   config = {
     virtualisation.oci-containers.backend = "docker";
-    # system.activationScripts.mkHomelabNetwork = (dockerNetworkScript
-    #   {
-    #     dockerBin = dockerBin;
-    #     networkName = "homelab";
-    #   });
+    system.activationScripts.mkHomelabNetwork = (dockerNetworkScript
+      {
+        dockerBin = dockerBin;
+        networkName = "homelab";
+      });
     # environment.etc.global-configmap = {
     #   enable = true;
     #   source = ./global-configmap.yaml;
