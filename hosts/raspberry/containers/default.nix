@@ -30,6 +30,7 @@ in
     ./cloudflare-ddns
     ./fedeizzo.dev
     ./fireflyiii
+    ./actual
     # ./homebox
     ./diun
     # ./grafana

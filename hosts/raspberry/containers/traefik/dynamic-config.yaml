@@ -10,6 +10,11 @@ http:
         - "websecure"
       rule: "Host(`firefly.fedeizzo.dev`)"
       service: "fireflyiii"
+    actual:
+      entryPoints:
+        - "websecure"
+      rule: "Host(`actual.fedeizzo.dev`)"
+      service: "actual"
 
   services:
     fedeizzodev:
@@ -20,3 +25,7 @@ http:
       loadBalancer:
         servers:
           - url: "http://fireflyiii:8080"
+    actual:
+      loadBalancer:
+        servers:
+          - url: "http://actual:5006"
