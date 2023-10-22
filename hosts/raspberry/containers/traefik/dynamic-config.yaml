@@ -10,11 +10,16 @@ http:
         - "websecure"
       rule: "Host(`firefly.fedeizzo.dev`)"
       service: "fireflyiii"
-    actual:
+    grafana:
       entryPoints:
         - "websecure"
-      rule: "Host(`actual.fedeizzo.dev`)"
-      service: "actual"
+      rule: "Host(`grafana.fedeizzo.dev`)"
+      service: "grafana"
+    nocodb:
+      entryPoints:
+        - "websecure"
+      rule: "Host(`nocodb.fedeizzo.dev`)"
+      service: "nocodb"
 
   services:
     fedeizzodev:
@@ -25,7 +30,11 @@ http:
       loadBalancer:
         servers:
           - url: "http://fireflyiii:8080"
-    actual:
+    grafana:
       loadBalancer:
         servers:
-          - url: "http://actual:5006"
+          - url: "http://grafana:3000"
+    nocodb:
+      loadBalancer:
+        servers:
+          - url: "http://nocodb:8080"

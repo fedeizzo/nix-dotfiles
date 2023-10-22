@@ -20,6 +20,9 @@ nix-mode
 go-mode
 
 (tsr "t.Run(\"" p "\", func(t *testing.T) {" n> p n> "})")
+(rer "require.Error(t, " p")")
+(req "require.Equal(t, " p", " p")")
+(ril "require.Nil(t, " p")")
 
 ;; Local Variables:
 ;; mode: lisp-data
