@@ -16,8 +16,8 @@
   (treemacs-filewatch-mode)
   (treemacs-resize-icons 12))
 
-(with-eval-after-load 'treemacs
-  (define-key treemacs-mode-map [mouse-1] #'treemacs-single-click-expand-action))
+;; (with-eval-after-load 'treemacs
+;;   (define-key treemacs-mode-map [mouse-1] #'treemacs-single-click-expand-action))
 
 (use-package treemacs-magit
   :after (treemacs magit))

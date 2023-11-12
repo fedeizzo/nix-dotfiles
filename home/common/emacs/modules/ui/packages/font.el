@@ -20,7 +20,7 @@
   (let* ((attrs (frame-monitor-attributes))
 	 (width-mm (nth 1 (nth 2 attrs)))
 	 (size 12))         ;; default size for the internal laptop monitor
-    (when (eq width-mm 602) ;; office monitor
+    (when (or (eq width-mm 602) (eq width-mm 801))  ;; office and home monitor
       (setq size 13))
     (set-frame-font (format "JetBrains Mono %s" size))))
 

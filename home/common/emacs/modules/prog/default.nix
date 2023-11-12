@@ -11,6 +11,7 @@
     flycheck-golangci-lint
     nix-mode
     python-pytest
+    pyvenv
     markdown-toc
     rustic
     yaml-mode
@@ -25,8 +26,9 @@
     dap-mode # debugger
     # sidecar-locals # per project variables
     typescript-mode
-    tree-sitter
-    tree-sitter-langs
+    # tree-sitter
+    # tree-sitter-langs
+    treesit-auto
     auctex
     tempel
     tempel-collection

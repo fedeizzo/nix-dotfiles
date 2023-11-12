@@ -17,7 +17,7 @@
  org-agenda-files (list inbox-file agenda-file tasks-file)
  org-agenda-window-setup 'current-window ; open agenda in same window
  org-agenda-restore-windows-after-quit t
- org-refile-targets '(("~/zettelkasten/tasks.org" :maxlevel . 1))
+ org-refile-targets '(("~/zettelkasten/00-agenda/tasks.org" :maxlevel . 1))
  org-agenda-tags-column 1
  org-agenda-block-separator ""
  org-log-done 'time
@@ -44,10 +44,10 @@
 (defun fi/refile-inbox-element ()
   "Refile the org element under the cursor."
   (interactive)
-  (org-set-effort)
-  (org-set-tags-command)
-  (org-priority)
-  (org-refile))
+  (org-agenda-set-effort)
+  (org-agenda-set-tags)
+  (org-agenda-priority)
+  (org-agenda-refile))
 
 ;; Save the corresponding buffers
 (defun fi/save-agenda-files ()
@@ -55,9 +55,9 @@
 See also `org-save-all-org-buffers'"
   (interactive)
   (message "Saving org-agenda-files buffers...")
-  (save-some-buffers t (lambda ()
-			 (when (member (buffer-file-name) org-agenda-files)
-			   t)))
+  (dolist (buf-name (mapcar (lambda (el) (concat org-directory "/" el)) org-agenda-files))
+    (with-current-buffer (get-file-buffer buf-name)
+      (save-some-buffers t)))
   (message "Saving org-agenda-files buffers... done"))
 
 ;; Add it after refile
@@ -100,4 +100,49 @@ See also `org-save-all-org-buffers'"
 		 (org-agenda-prefix-format '((todo . " [%e] ")))
 		 (org-agenda-overriding-header "TODO\n")
 		 (org-agenda-tags-column 1)))))))
+
+(defun fi/open-agenda-in-gtd-mode ()
+  "Open agenda in gtd mode."
+  (interactive)
+  (org-agenda nil "g"))
+
+(defun fi/org-capture-inbox ()
+  "Call `org-capture` with the right key for inbox."
+  (interactive)
+  (org-capture nil "i"))
+
+(defun fi/archive-all-done ()
+  "Archive all done tasks."
+  (interactive)
+  (move-end-of-line nil)
+  (org-insert-heading nil)
+  (org-archive-all-old))
+
+(defun fi/push-agenda-files ()
+  "Push agenda files."
+  (interactive)
+  (with-output-to-temp-buffer "*push-agenda-files*"
+    (shell-command (concat "cd "org-directory " && git add *.org && git commit -m 'update org agenda' && git push")
+                   "*push-agenda-files*"
+                   "*push-agenda-files*")
+    (pop-to-buffer "*push-agenda-files*")
+    (local-set-key (kbd "q") 'fi/kill-buffer-and-window-delete)))
+
+
+
+(pretty-hydra-define fi/org-agenda-hydra (:color blue :title "  Agenda" :quit-key "q")
+  ("Outside the agenda"
+   (("o" #'fi/open-agenda-in-gtd-mode "open agenda")
+    ("c" #'fi/org-capture-inbox "org capture inbox")
+    ("s" #'fi/save-agenda-files "save agenda files")
+    ("p" #'fi/push-agenda-files "push agenda files")
+    )
+   "Inside the agenda"
+   (("r" #'fi/refile-inbox-element "refile element")
+    ("a" #'org-archive-subtree "archive done")))
+  )
+
+(bind-key "C-q" #'fi/org-agenda-hydra/body)
+
+
 ;;; agenda.el ends here

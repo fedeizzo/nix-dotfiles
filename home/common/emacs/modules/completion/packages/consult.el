@@ -37,7 +37,7 @@ DIR and GIVEN-INITIAL match the method signature of `consult-wrapper'."
   (consult-org-roam-buffer-narrow-key ?r)
   ;; Display org-roam buffers right after non-org-roam buffers
   ;; in consult-buffer (and not down at the bottom)
-  (consult-org-roam-buffer-after-buffers t))
+  (consult-org-roam-buffer-after-buffers nil))
 
 ;; eglot integratino that offers the consult-eglot-symbols command
 (use-package consult-eglot

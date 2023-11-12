@@ -56,6 +56,24 @@ let
     rev = "master";
     sha256 = "sha256-Lxusc3FXag4qVJjObg6EVcILFnHZXXAyrYNqqCZZF3E=";
   };
+  gotest-ui-mode = pkgs.fetchFromGitHub {
+    owner = "boinkor-net";
+    repo = "gotest-ui-mode";
+    rev = "master";
+    sha256 = "sha256-220Aw6adN7tDW9f8lZQnWRPEX6Pt8YNO5Lrwb30NsWg=";
+  };
+  ts-fold = pkgs.fetchFromGitHub {
+    owner = "emacs-tree-sitter";
+    repo = "ts-fold";
+    rev = "master";
+    sha256 = "sha256-RlT5iyrkYm8Lgvuts+PGDb/vNcUWKJM/Yxc7Ao1egDE=";
+  };
+  hideshowvis = pkgs.fetchFromGitHub {
+    owner = "sheijk";
+    repo = "hideshowvis";
+    rev = "master";
+    sha256 = "sha256-FSRvyj18L+Xr+9k8TBOwysP4a7NYlKYPLHeAyrgscno=";
+  };
 in
 {
   programs.emacs = {
@@ -77,4 +95,7 @@ in
   xdg.configFile."emacs/gendoxy".source = gendoxy;
   xdg.configFile."emacs/hydra-posframe".source = hydra-posframe;
   xdg.configFile."emacs/org-outer-indent".source = org-outer-indent;
+  xdg.configFile."emacs/gotest-ui-mode".source = gotest-ui-mode;
+  xdg.configFile."emacs/ts-fold".source = ts-fold;
+  xdg.configFile."emacs/hideshowvis".source = hideshowvis;
 }

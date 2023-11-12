@@ -7,4 +7,5 @@
 
 (use-package python-pytest)
 
+(use-package pyvenv)
 ;;; python.el ends here

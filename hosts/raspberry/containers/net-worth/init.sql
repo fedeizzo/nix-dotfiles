@@ -74,6 +74,13 @@ create table if not exists transfers (
     constraint fk_category foreign key (category) references transfer_categories(id)
 );
 
+create table budgets (
+    id serial primary key,
+    amount decimal(12, 2) not null,
+    category serial,
+    constraint fk_category foreign key (category) references expense_categories(id)
+);
+
 create or replace view
     net_worth
 as

@@ -19,7 +19,7 @@
   (org-level-5 ((t (:height 1.01))))
   :custom
   (org-ellipsis " …"                         "Symbol used when a heading is closed")
-  (org-directory "~/zettelkasten"            "Org folder")
+  (org-directory "~/zettelkasten/00-agenda"  "Org folder")
   (org-hide-emphasis-markers t               "Italic and bold prefix/suffix hidden")
   (org-tags-column 1                         "Tag on the right of the heading")
   (org-cycle-separator-lines 2               "empty line between sections")

@@ -17,7 +17,7 @@
     exec-path-from-shell # fix the mismatch between macos PATH and emacs PATH
     format-all
     hide-mode-line
-    origami
+    # origami
     pdf-tools
     popwin
     s

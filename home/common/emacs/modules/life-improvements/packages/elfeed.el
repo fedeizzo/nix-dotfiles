@@ -10,7 +10,7 @@
 (use-package elfeed-org
   :after elfeed
   :custom
-  (elfeed-db-directory "~/zettelkasten/.elfeed"))
+  (elfeed-db-directory (concat user-emacs-directory ".elfeed")))
 
 (use-package elfeed-summary
   :after elfeed

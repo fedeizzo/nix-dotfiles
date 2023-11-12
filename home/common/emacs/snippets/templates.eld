@@ -24,6 +24,15 @@ go-mode
 (req "require.Equal(t, " p", " p")")
 (ril "require.Nil(t, " p")")
 
+go-ts-mode
+
+(tsr "t.Run(\"" p "\", func(t *testing.T) {" n> p n> "})")
+(rer "require.Error(t, " p")")
+(req "require.Equal(t, " p", " p")")
+(ril "require.Nil(t, " p")")
+
+(ret "if err != nil {" n> (fi/golang-return) n> "}")
+
 ;; Local Variables:
 ;; mode: lisp-data
 ;; outline-regexp: "[a-z]"

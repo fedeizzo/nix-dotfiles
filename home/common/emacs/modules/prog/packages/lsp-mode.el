@@ -25,6 +25,7 @@
   (typescript-ts-mode . lsp-deferred)
   (typescript-ts-base-mode . lsp-deferred)
   (javascript-mode . lsp-deferred)
+  (javascript-ts-mode . lsp-deferred)
   (json-ts-mode . lsp-deferred)
   (json-mode . lsp-deferred)
   ;; go
@@ -49,7 +50,17 @@
   (lsp-ui-doc-position 'at-point)
   (lsp-ui-doc-use-webkit t)
   (lsp-completion-provider :none) ;; we use Corfu!
-  )
+  (lsp-signature-render-documentation nil)
+  (lsp-inlay-hint-enable t)
+  :config
+  (lsp-register-custom-settings
+   '(("gopls.hints" ((assignVariableTypes . t)
+                     (compositeLiteralFields . t)
+                     (compositeLiteralTypes . t)
+                     (constantValues . t)
+                     (functionTypeParameters . t)
+                     (parameterNames . t)
+                     (rangeVariableTypes . t))))))
 
 (use-package lsp-ui
   :custom
