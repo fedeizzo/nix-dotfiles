@@ -51,7 +51,7 @@
   (lsp-ui-doc-use-webkit t)
   (lsp-completion-provider :none) ;; we use Corfu!
   (lsp-signature-render-documentation nil)
-  (lsp-inlay-hint-enable t)
+  ;; (lsp-inlay-hint-enable t)
   :config
   (lsp-register-custom-settings
    '(("gopls.hints" ((assignVariableTypes . t)
@@ -64,10 +64,10 @@
 
 (use-package lsp-ui
   :custom
-  (lsp-ui-sideline-show-diagnostics t)
-  (lsp-ui-sideline-show-hover t)
-  (lsp-ui-sideline-show-code-actions t)
-  (lsp-ui-sideline-symbol t)
+  (lsp-ui-sideline-show-diagnostics nil)
+  (lsp-ui-sideline-show-hover nil)
+  (lsp-ui-sideline-show-code-actions nil)
+  (lsp-ui-sideline-symbol nil)
   :config
   (lsp-ui-peek-enable t))
 

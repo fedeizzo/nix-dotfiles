@@ -34,5 +34,7 @@
     tempel-collection
     projectile
     smartparens
+    terraform-mode
+    docker
   ];
 }

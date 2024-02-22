@@ -7,22 +7,32 @@
 (use-package consult
   :bind
   ("C-c h" . consult-history)
-  ("M-o" . consult-buffer)
+  ("M-o" . consult-projectile-switch-to-buffer)
   ("C-s" . consult-line)
+  ("M-y" . consult-yank-from-kill-ring)
   :config
   (consult-customize org-roam-node-find :preview-key nil)
   (consult-customize org-roam-node-insert :preview-key nil))
 
-(defun wrapper/consult-ripgrep (&optional dir given-initial)
-  "Pass the region to consult-ripgrep if available.
+(defun fi/consult-ripgrep-specific-dir ()
+  (interactive)
 
-DIR and GIVEN-INITIAL match the method signature of `consult-wrapper'."
-  (interactive "P")
-  (let ((initial
-         (or given-initial
-             (when (use-region-p)
-               (buffer-substring-no-properties (region-beginning) (region-end))))))
-    (consult-ripgrep dir initial)))
+  (consult--grep "Ripgrep" #'consult--ripgrep-make-builder dir initial)
+  (let ((dir
+         (consult--read
+          (butlast (split-string
+                    (shell-command-to-string
+                     (concat
+                      "fd . -t d --full-path "
+                      (projectile-project-root)))
+                    "\n"))
+          :prompt "Filter dir: "
+          :sort t
+          :require-match t
+          :category 'file
+          :history 'file-name-history)))
+    (consult-ripgrep dir)
+    ))
 
 (use-package consult-org-roam
   :after org-roam
@@ -42,5 +52,10 @@ DIR and GIVEN-INITIAL match the method signature of `consult-wrapper'."
 ;; eglot integratino that offers the consult-eglot-symbols command
 (use-package consult-eglot
   :commands (consult-eglot-symbols))
+
+(use-package consult-lsp
+  :commands (consult-lsp-symbols consult-lsp-file-symbols)
+  :after lsp)
+
 
 ;;; consult.el ends here

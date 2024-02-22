@@ -97,6 +97,7 @@
               indent-tabs-mode nil)
 (fringe-mode)
 
+(pixel-scroll-precision-mode)
 
 (provide 'fi-ui)
 

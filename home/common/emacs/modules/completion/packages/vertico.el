@@ -1,10 +1,11 @@
 (use-package vertico
   :config
-  (setq
-   vertico-scroll-margin 0
-   vertico-count 17
-   vertico-resize nil
-   vertico-cycle t)
+  :custom
+  (vertico-scroll-margin 0)
+  (vertico-count 17)
+  (vertico-resize nil)
+  (vertico-cycle t)
+  :config
   ;; Add prompt indicator to `completing-read-multiple'.
   ;; We display [CRM<separator>], e.g., [CRM,] if the separator is a comma.
   (defun crm-indicator (args)
