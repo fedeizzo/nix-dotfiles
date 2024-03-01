@@ -25,6 +25,7 @@
    '("j" . "H-j")
    '("k" . "H-k")
    '("p" . projectile-hydra-main/body)
+   '("d" . dap-hydra/body)
    '("o" . org-roam-hydra-main/body)
    '("w" . ace-window)
    '("t" . treemacs)

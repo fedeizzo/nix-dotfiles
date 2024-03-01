@@ -11,13 +11,14 @@
   (org-roam-database-connector 'sqlite-builtin)
   (org-roam-db-update-on-save t)
   (org-roam-file-exclude-regexp '("no_index"))
+  (org-roam-dailies-directory "00-agenda/daily/")
   :config
   (org-roam-db-autosync-mode)
   (setq org-roam-dailies-capture-templates
 	'(("d" "default" entry
            "* %?"
            :target (file+head "%<%Y-%m-%d>.org"
-                              "#+title: %<%Y-%m-%d>\n* Summary\n* Todo discovered\n")))))
+                              "#+title: %<%Y-%m-%d>\n* Summary\n\n* New todos\n\n* Work\n** Todos\n\n** Meeting notes\n\n** People\n*** Me\n")))))
 
 (setq org-roam-mode-section-functions
       (list #'org-roam-backlinks-section

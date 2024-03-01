@@ -134,6 +134,7 @@ See also `org-save-all-org-buffers'"
   ("Outside the agenda"
    (("o" #'fi/open-agenda-in-gtd-mode "open agenda")
     ("c" #'fi/org-capture-inbox "org capture inbox")
+    ("d" #'org-roam-dailies-goto-date "go/create daily note")
     ("s" #'fi/save-agenda-files "save agenda files")
     ("p" #'fi/push-agenda-files "push agenda files")
     )

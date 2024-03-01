@@ -10,7 +10,7 @@ let
       (load-file "~/.config/emacs/init.el")
     '';
     defaultInitFile = true;
-    package = pkgs-unstable.emacsPgtk;
+    package = pkgs-unstable.emacs-pgtk;
     alwaysEnsure = true;
     extraEmacsPackages = epkgs: with epkgs; [
       (import ./modules/checkers { epkgs = epkgs; }).packages
@@ -76,11 +76,8 @@ let
   };
 in
 {
-  programs.emacs = {
-    enable = true;
-    package = myEmacs;
-  };
   home.packages = with pkgs; [
+    myEmacs
     # poppler
     poppler_utils
     imagemagick

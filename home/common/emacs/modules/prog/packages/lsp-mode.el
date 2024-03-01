@@ -75,7 +75,15 @@
   :config
   (lsp-treemacs-sync-mode))
 
-(use-package dap-mode)
+(use-package dap-mode
+  :hook
+  (dap-stopped . (lambda (arg) (call-interactively #'dap-hydra)))
+  :config
+  (dap-auto-configure-mode)
+  (dap-ui-mode 1)
+  (dap-tooltip-mode 1)
+  (tooltip-mode 1)
+  (dap-ui-controls-mode 1))
 
 (use-package dap-python
   :custom
