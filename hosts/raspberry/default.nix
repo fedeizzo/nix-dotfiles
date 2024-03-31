@@ -46,6 +46,15 @@
       "cgroup_enable=memory"
     ];
     loader = {
+      raspberryPi = {
+        enable = true;
+        uboot.enable = false;
+        version = 4;
+        firmwareConfig = ''
+          dtparam=sd_poll_once=on
+          dtoverlay=gpio-fan,gpiopin=14,temp=60000
+        '';
+      };
       grub.enable = false;
       systemd-boot.enable = false;
       generic-extlinux-compatible.enable = false;
