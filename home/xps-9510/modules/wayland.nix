@@ -7,7 +7,6 @@
   wayland.windowManager.hyprland = {
     enable = true;
     xwayland.enable = true;
-    recommendedEnvironment = true;
     extraConfig = ''
       source=~/.config/hypr/config.conf
     '';
