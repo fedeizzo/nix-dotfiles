@@ -13,7 +13,6 @@
     inputs.sops-nix.nixosModules.sops
     ./hardware-configuration.nix
     ./containers
-    # ../common/syncthing.nix
   ];
   fiCluster.services = {
     cert-manager.enable = false;
@@ -289,19 +288,6 @@
     age.keyFile = "/var/lib/sops/keys.txt";
     age.generateKey = false;
     age.sshKeyPaths = [ ];
-  };
-  sops.secrets.syncthing-private-key = {
-    owner = syncthing.user;
-    sopsFile = ../../secrets/raspberry-secrets.yaml;
-    format = "yaml";
-    path = "${syncthing.dataDir}/.config/syncthing/key.pem";
-  };
-  sops.secrets.syncthing-public-key = {
-    owner = syncthing.user;
-    mode = "0644";
-    sopsFile = ../../secrets/raspberry-secrets.yaml;
-    format = "yaml";
-    path = "${syncthing.dataDir}/.config/syncthing/cert.pem";
   };
   sops.secrets.restic-repository = {
     sopsFile = ../../secrets/raspberry-secrets.yaml;
