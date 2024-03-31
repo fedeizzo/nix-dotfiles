@@ -13,7 +13,7 @@
     inputs.sops-nix.nixosModules.sops
     ./hardware-configuration.nix
     ./containers
-    ../common/syncthing.nix
+    # ../common/syncthing.nix
   ];
   fiCluster.services = {
     cert-manager.enable = false;
