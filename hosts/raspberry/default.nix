@@ -62,6 +62,7 @@
     hostName = "${hostname}";
     networkmanager = {
       enable = true;
+      unmanaged = [ "wg0" ];
     };
     useDHCP = false;
     # defaultGateway = "192.168.1.1";
@@ -86,7 +87,6 @@
       checkReversePath = "loose";
     };
   };
-  systemd.network.wait-online.enable = false;
 
   services.openssh = {
     enable = true;
