@@ -87,6 +87,12 @@
       checkReversePath = "loose";
     };
   };
+  # fix: https://github.com/NixOS/nixpkgs/issues/296953
+  systemd.services.NetworkManager-wait-online = {
+    serviceConfig = {
+      ExecStart = [ "" "${pkgs.networkmanager}/bin/nm-online -q" ];
+    };
+  };
 
   services.openssh = {
     enable = true;
