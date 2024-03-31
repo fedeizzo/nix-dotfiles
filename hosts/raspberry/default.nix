@@ -86,6 +86,7 @@
       checkReversePath = "loose";
     };
   };
+  systemd.network.wait-online.enable = false;
 
   services.openssh = {
     enable = true;
