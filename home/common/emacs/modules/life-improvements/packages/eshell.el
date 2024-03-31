@@ -29,10 +29,10 @@
   (eshell-syntax-highlighting-global-mode +1))
 
 (fi/define-eshell-aliases
- '(("ls" . "exa --icons --sort=type")
-   ("ll" . "exa -l --icons --sort=type")
-   ("lla" . "exa -la --icons --sort=type")
-   ("llt" . "exa -T --icons --sort=type")
+ '(("ls" . "eza --icons --sort=type")
+   ("ll" . "eza -l --icons --sort=type")
+   ("lla" . "eza -la --icons --sort=type")
+   ("llt" . "eza -T --icons --sort=type")
    ("cat" . "bat")
    ("find" . "fd")
    ("clear" . "clear-scrollback")

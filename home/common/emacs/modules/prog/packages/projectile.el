@@ -6,15 +6,16 @@
 ;;; Code:
 (use-package projectile
   :diminish projectile-mode
+  :custom
+  (projectile-enable-caching t)
+  (projectile-switch-project-action #'project-dired)
+  (projectile-indexing-method 'alien)
+  (projectile-sort-order 'recently-active)
   :config (projectile-mode)
   :init
   (if ON-MACBOOK
       (setq projectile-project-search-path '("~/dd/" "~/uni"))
-    (setq projectile-project-search-path '("~/personalProject" "~/uni")))
-  (setq
-   projectile-switch-project-action #'project-dired
-   projectile-indexing-method 'hybrid
-   projectile-sort-order 'recently-active))
+    (setq projectile-project-search-path '("~/personalProject" "~/uni"))))
 
 (defun fi/consult-projectile-wrap ()
   (interactive)
@@ -28,7 +29,8 @@
   ("Global"
    (("p" fi/consult-projectile-wrap "consult projectile"))
    "Current"
-   (("t" projectile-run-eshell "open terminal")
+   (("t" projectile-run-vterm "open terminal")
+    ("T" projectile-run-vterm-other-window "open terminal")
     ("c" #'fi/get-project-filepath "copy relative current buffer")
     ("k" projectile-kill-buffers "close project"))
    "Search"

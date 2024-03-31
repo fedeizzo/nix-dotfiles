@@ -7,7 +7,7 @@
 (use-package consult
   :bind
   ("C-c h" . consult-history)
-  ("M-o" . consult-projectile-switch-to-buffer)
+  ("M-o" . consult-buffer)
   ("C-s" . consult-line)
   ("M-y" . consult-yank-from-kill-ring)
   :config

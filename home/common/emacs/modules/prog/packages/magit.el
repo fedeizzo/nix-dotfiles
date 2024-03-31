@@ -1,6 +1,13 @@
 (use-package magit
   :custom
-  (magit-refresh-status-buffer nil "Performance optimization"))
+  (magit-refresh-status-buffer nil "Performance optimization")
+  :config
+  (remove-hook 'magit-status-sections-hook 'magit-insert-tags-header)
+  (remove-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-upstream-or-recent)
+  ;; (remove-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-pushremote)
+  (remove-hook 'magit-status-sections-hook 'magit-insert-unpulled-from-upstream)
+  (remove-hook 'magit-status-headers-hook 'magit-insert-tags-header)
+  )
 
 (define-key magit-status-mode-map (kbd "x") 'magit-discard)
 

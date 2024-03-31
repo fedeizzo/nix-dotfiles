@@ -12,15 +12,15 @@
   (treemacs-project-follow-cleanup t)
   :config
   (treemacs-follow-mode)
-  (treemacs-git-mode 'deferred)
+  (treemacs-git-mode -1)
   (treemacs-filewatch-mode)
   (treemacs-resize-icons 12))
 
 ;; (with-eval-after-load 'treemacs
 ;;   (define-key treemacs-mode-map [mouse-1] #'treemacs-single-click-expand-action))
 
-(use-package treemacs-magit
-  :after (treemacs magit))
+;; (use-package treemacs-magit
+;;   :after (treemacs magit))
 
 (use-package treemacs-evil
   :after (treemacs evil))

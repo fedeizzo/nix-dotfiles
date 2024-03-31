@@ -3,7 +3,7 @@
 {
   config = {
     home.packages = with pkgs; [
-      exa
+      eza
       fd
       fzf
       gawk
@@ -14,6 +14,8 @@
       graphviz
       ffmpeg
       home-manager
+      git-crypt
+      rbw
     ];
   };
 }

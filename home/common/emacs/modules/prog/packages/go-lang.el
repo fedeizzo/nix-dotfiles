@@ -40,7 +40,8 @@
      ("gr" lsp-ui-peek-find-references "References")
      ("K" lsp-ui-doc-glance "Documentation"))
     " Util"
-    (("uh" fi/toggle-hide-oneline-returning-if-statements "Hide oneline if" :toggle fi/hide-oneline-returning-if-statements) )
+    (("uh" fi/toggle-hide-oneline-returning-if-statements "Hide oneline if" :toggle fi/hide-oneline-returning-if-statements)
+     ("ui" #'fi/go-impl "implement interface"))
     " Test"
     (("ti" fi/go-lang-enable-integration-test "Integration test")
      ("tf" #'gotest-ui-current-file "Current file")
@@ -78,6 +79,14 @@
   :hook
   (go-mode . flycheck-golangci-lint-setup)
   (go-ts-mode . flycheck-golangci-lint-setup))
+
+(use-package go-impl
+  :commands go-impl)
+
+(defun fi/go-impl()
+  "Wrapper for go-impl functioin."
+  (interactive)
+  (go-impl (read-from-minibuffer "Receiver: ") (read-from-minibuffer "Interface: ")))
 
 (defun fi/golang-temp-main-file ()
   "Create a main file in the current directory."

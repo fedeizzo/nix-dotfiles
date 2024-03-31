@@ -44,6 +44,9 @@ in
     rustfmt
     lld
 
+    # java
+    # jdt-language-server
+
     # go
     # go # disabled becasuse on the macbook it installed with brew
     # gopls # disabled becasuse on the macbook it installed with brew

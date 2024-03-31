@@ -14,6 +14,7 @@
     async
     ox-epub
     ox-hugo
+    ox-clip # for copying formatted content in org mode
     org-modern
     org-fragtog
     org-noter

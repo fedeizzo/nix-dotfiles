@@ -24,6 +24,11 @@
       (setq size 13))
     (set-frame-font (format "JetBrains Mono %s" size))))
 
+(defun fi/update-font-size ()
+  "Update font size based on the screen resolution."
+  (interactive)
+  (fi/update-font--window-size-change))
+
 (add-hook 'after-init-hook #'fi/update-font--window-size-change)
 (add-hook 'move-frame-functions #'fi/update-font--window-size-change)
 

@@ -8,6 +8,7 @@
     pkgs.gotests # generate unit tests
     gorepl-mode # repl mode for golang
     go-tag # tags for structs
+    go-impl
     flycheck-golangci-lint
     nix-mode
     python-pytest
@@ -36,5 +37,8 @@
     smartparens
     terraform-mode
     docker
+    bazel
+    protobuf-mode
+    lsp-java
   ];
 }

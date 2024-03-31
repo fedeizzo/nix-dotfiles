@@ -8,17 +8,20 @@
   :after org
   :custom
   (org-roam-directory (file-truename "~/zettelkasten"))
-  (org-roam-database-connector 'sqlite-builtin)
+  ;; (org-roam-database-connector 'sqlite-builtin)
+  (org-roam-database-connector 'sqlite) ; TODO temporary fix for this bug https://github.com/org-roam/org-roam-ui/issues/289
   (org-roam-db-update-on-save t)
   (org-roam-file-exclude-regexp '("no_index"))
   (org-roam-dailies-directory "00-agenda/daily/")
+  (org-roam-node-display-template (concat "${title:*} "
+                                          (propertize "${tags:10}" 'face 'org-tag)))
   :config
   (org-roam-db-autosync-mode)
   (setq org-roam-dailies-capture-templates
 	'(("d" "default" entry
            "* %?"
            :target (file+head "%<%Y-%m-%d>.org"
-                              "#+title: %<%Y-%m-%d>\n* Summary\n\n* New todos\n\n* Work\n** Todos\n\n** Meeting notes\n\n** People\n*** Me\n")))))
+                              "#+title: %<%Y-%m-%d>\n#+CREATED: [%<%Y-%m-%d %a %H:%M:%S>]\n#+LAST_MODIFIED: [%<%Y-%m-%d %a %H:%M:%S>]\n\n* Summary\n\n* New todos\n\n* Work\n** Todos\n\n** Meeting notes\n\n** People\n*** Me\n")))))
 
 (setq org-roam-mode-section-functions
       (list #'org-roam-backlinks-section

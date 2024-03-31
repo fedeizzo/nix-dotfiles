@@ -20,8 +20,6 @@ let
       (import ./modules/prog { pkgs = pkgs; epkgs = epkgs; }).packages
       (import ./modules/keys { epkgs = epkgs; }).packages
       (import ./modules/life-improvements { epkgs = epkgs; }).packages
-      # use-package # TODO I think that use-package can be removed because since it should be inside vanilla emacs
-
       # nano-theme
       # nano-modeline
     ];

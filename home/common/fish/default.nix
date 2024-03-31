@@ -3,11 +3,11 @@
 let
   cfg = config.fishPerMachine;
   commonAliases = {
-    ls = "exa --icons --sort=type";
-    ll = "exa -l --icons --sort=type";
-    lll = "exa -l --icons --sort=type | less";
-    lla = "exa -la --icons --sort=type";
-    llt = "exa -T --icons --sort=type";
+    ls = "eza --icons --sort=type";
+    ll = "eza -l --icons --sort=type";
+    lll = "eza -l --icons --sort=type | less";
+    lla = "eza -la --icons --sort=type";
+    llt = "eza -T --icons --sort=type";
     cat = "bat";
     gs = "git status";
     ga = "git add -A";

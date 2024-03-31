@@ -19,6 +19,7 @@
     ../common/emacs
     ./modules/languages.nix
     ./modules/cli/default.nix
+    ./modules/zsh
   ];
   fishPerMachine.aliases = {
     ciao = "echo 'hello world'";

@@ -27,7 +27,7 @@
     tablist
     treemacs
     treemacs-projectile
-    treemacs-magit
+    # treemacs-magit
     treemacs-evil
     treemacs-all-the-icons
     vundo

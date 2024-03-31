@@ -14,6 +14,7 @@
 (defconst tasks-file "tasks.org" "Agenda tasks file.")
 
 (setq
+ org-todo-keywords '((sequence "TODO" "|" "DONE" "DELETED" "MOVED"))
  org-agenda-files (list inbox-file agenda-file tasks-file)
  org-agenda-window-setup 'current-window ; open agenda in same window
  org-agenda-restore-windows-after-quit t
@@ -99,7 +100,14 @@ See also `org-save-all-org-buffers'"
 		((org-agenda-files (list tasks-file))
 		 (org-agenda-prefix-format '((todo . " [%e] ")))
 		 (org-agenda-overriding-header "TODO\n")
-		 (org-agenda-tags-column 1)))))))
+		 (org-agenda-tags-column 1)))
+          (todo "TODO"
+                ((org-agenda-regexp-filter "^[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}.org$")
+                 (org-agenda-prefix-format '((todo . " [%e] ")))
+		 (org-agenda-overriding-header "Daily TODO\n")
+                 (org-agenda-tags-column 1))
+                )
+          ))))
 
 (defun fi/open-agenda-in-gtd-mode ()
   "Open agenda in gtd mode."

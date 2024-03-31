@@ -14,6 +14,9 @@
         '(flex))) ;; Configure flex
 (use-package lsp-mode
   :commands lsp
+  :custom
+  (lsp-semgrep-languages (list))
+  (lsp-enable-snippet nil)
   :hook
   ;; python
   (python-mode . lsp-deferred)
@@ -28,6 +31,9 @@
   (javascript-ts-mode . lsp-deferred)
   (json-ts-mode . lsp-deferred)
   (json-mode . lsp-deferred)
+  ;; java
+  (java-mode . lsp-deferred)
+  (java-ts-mode . lsp-deferred)
   ;; go
   (go-mode . lsp-deferred)
   (go-ts-mode . lsp-deferred)
@@ -47,11 +53,21 @@
   (lsp-ui-doc-enable t)
   (lsp-ui-doc-show-with-cursor t)
   (lsp-ui-doc-show-with-mouse t)
-  (lsp-ui-doc-position 'at-point)
+  (lsp-ui-doc-position 'top)
   (lsp-ui-doc-use-webkit t)
   (lsp-completion-provider :none) ;; we use Corfu!
   (lsp-signature-render-documentation nil)
   ;; (lsp-inlay-hint-enable t)
+  ;; go
+  (lsp-go-codelenses
+   '(
+     (gc_details . :json-false)
+     (generate . :json-false)
+     (regenerate_cgo . :json-false)
+     (tidy . :json-false)
+     (upgrade_dependency . :json-false)
+     (test . :json-false)
+     (vendor . :json-false)))
   :config
   (lsp-register-custom-settings
    '(("gopls.hints" ((assignVariableTypes . t)
@@ -103,6 +119,45 @@
     )
    )
   )
+
+(with-eval-after-load 'dap-mode
+  (setq dap-debug-template-configurations nil)
+  (dap-register-debug-template " Test Current Function"
+                               (list :type "go"
+                                     :request "launch"
+                                     :name "Test function"
+                                     :mode "test"
+                                     :program nil
+                                     :args nil
+                                     :buildFlags "-tags dynamic"
+                                     :env nil))
+  (dap-register-debug-template " Test Current Function - integration"
+                               (list :type "go"
+                                     :request "launch"
+                                     :name "Test function"
+                                     :mode "test"
+                                     :program nil
+                                     :args nil
+                                     :buildFlags "-tags dynamic -args integration"
+                                     :env nil))
+  (dap-register-debug-template " Test Current Subtest"
+                               (list :type "go"
+                                     :request "launch"
+                                     :name "Test subtest"
+                                     :mode "test"
+                                     :program nil
+                                     :args nil
+                                     :buildFlags "-tags dynamic"
+                                     :env nil))
+  (dap-register-debug-template " Test Current Subtest - integration"
+                               (list :type "go"
+                                     :request "launch"
+                                     :name "Test subtest"
+                                     :mode "test"
+                                     :program nil
+                                     :args nil
+                                     :buildFlags "-tags dynamic -args integration"
+                                     :env nil)))
 
 ;; (fi/leader
 ;; "d" #'dap-hydra
