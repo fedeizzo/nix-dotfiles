@@ -178,10 +178,9 @@
           temp0=$${temp%.*}
 
           if [[ $temp > $ontemp ]]; then
-              ${pkgs.libgpiod}/bin/gpioset gpiochip0 14=1
+              ${pkgs.libgpiod}/bin/gpioset --toggle 0 --chip gpiochip0 14=1
           else
-              ${pkgs.libgpiod}/bin/gpioset gpiochip0 14=0
-
+              ${pkgs.libgpiod}/bin/gpioset --toggle 0 --chip gpiochip0 14=0
           fi
           sleep 10
         done
