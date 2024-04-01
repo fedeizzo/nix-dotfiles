@@ -22,4 +22,5 @@
   sops.secrets.laptop-ssh-public-key = {
     sopsFile = ../../../secrets.yaml;
   };
+  sops.secrets.homelab-wireguard-private-key.sopsFile = ../../../secrets.yaml;
 }

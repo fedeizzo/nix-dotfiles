@@ -48,7 +48,6 @@
   };
   services.fail2ban.enable = true;
 
-  sops.secrets.homelab-wireguard-private-key.sopsFile = ../../secrets.yaml;
   networking.wireguard.enable = true;
   networking.wireguard.interfaces = {
     wg0 = {
