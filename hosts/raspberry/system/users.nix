@@ -5,7 +5,7 @@
     root = {
       openssh.authorizedKeys.keyFiles = [
         config.sops.secrets.laptop-ssh-public-key.path
-        config.sops.secrets.deploy-homelab-ssh-public-key.path
+        # config.sops.secrets.deploy-homelab-ssh-public-key.path
       ];
     };
   };
