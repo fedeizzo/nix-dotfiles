@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-helpMessage="\nusage $0: <command>\ncommand:\n\tk3sencrypt: encrypt kubernetes secret\n\tedit: edit secret\n"
+helpMessage=""
 [ -z $1 ] && echo -e $helpMessage && exit 1
 
 colorPrint() {
@@ -10,20 +10,7 @@ errorPrint() {
   echo -e "$(tput setaf 1)$1$(tput sgr0)"
 }
 
-if [ $(id -u) -ne 0 ]; then
-  errorPrint "Please run as root"
-  exit 1
-fi
-
 export EDITOR=nano
-export SOPS_AGE_KEY_FILE=/var/lib/sops/keys.txt
-
-encrypt_kubernetes_secrets () {
-    colorPrint "Encrypting kubernetes secrets $1"
-    sops --encrypt --encrypted-regex '^(data|stringData)$' $1 > $1.encoded
-    rm $1
-    mv $1.encoded $1
-}
 
 encrypt () {
     sops --encrypt $1 > $1.encoded
@@ -33,10 +20,17 @@ encrypt () {
 
 edit_secretes () {
     colorPrint "Edit secrtes on file $1"
-    sops $1
+
+    if [[ $1 == "./secrets/raspberry-secrets.yaml" ]]; then
+        SOPS_AGE_KEY=$(bw get item 'sops-age-keys-homelab' | jq -r ."notes") sops $1
+    elif [[ $1 == "./secrets/laptop-secrets.yaml" ]]; then
+        SOPS_AGE_KEY=$(bw get item 'sops-age-keys-laptop' | jq -r ."notes") sops $1
+    elif [[ $1 == "./secrets.yaml" ]]; then
+        SOPS_AGE_KEY=$(bw get item 'sops-age-keys-laptop' | jq -r ."notes") sops $1
+    fi
 }
 
-echo -e "List of available secret files:"
+colorPrint "List of available secret files:"
 index=1
 files=$(find . -name '*secrets*.yaml')
 for file in $files; do
@@ -47,16 +41,13 @@ read -p "Select a number: " selectedIndex
 selectedFile=$(echo $files | awk -F' ' "{print \$${selectedIndex}}")
 
 case $1 in
-    "k3sencrypt")
-	encrypt_kubernetes_secrets $selectedFile
-	shift
-	;;
     "edit")
 	edit_secretes $selectedFile
 	shift
 	;;
     "encrypt")
-	encrypt $selectedFile
+        [[ -z $2 ]] && echo "provide the key name: homelab or laptop"
+	# encrypt $selectedFile
 	shift
 	;;
 esac

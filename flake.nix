@@ -155,6 +155,7 @@
       devShells.default = pkgs.mkShell {
         packages = [
           pkgs.deploy-rs
+          pkgs.sops
         ];
         shellHook = ''
           export PATH=$PATH:$(pwd)/scripts
