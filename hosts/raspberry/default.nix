@@ -14,22 +14,6 @@
     ./hardware-configuration.nix
     ./containers
   ];
-  fiCluster.services = {
-    cert-manager.enable = false;
-    cert-manager.applicationOrder = 1;
-    traefik.enable = false;
-    traefik.applicationOrder = 2;
-    authelia.enable = false;
-    authelia.applicationOrder = 3;
-    cloudflare-ddns.enable = false;
-    cloudflare-ddns.applicationOrder = 4;
-    homer.enable = false;
-    homer.applicationOrder = 5;
-    fedeizzodev.enable = false;
-    fedeizzodev.applicationOrder = 6;
-    pihole.enable = false;
-    pihole.applicationOrder = 7;
-  };
 
   boot = {
     kernelPackages = pkgs.linuxPackages_rpi4;

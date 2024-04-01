@@ -15,28 +15,6 @@ rec {
   ];
   forAllSystems = genAttrs systems;
 
-  kubernetesOrderString = { intOrder }:
-    let
-      requirePadding = if intOrder < 10 then true else false;
-      strOrder = (toString intOrder);
-      order = if requirePadding then "0" + strOrder else strOrder;
-    in
-    order;
-
-  kubernetesSuffixFile =
-    { isEnable
-    , isSops ? false
-    }:
-    let
-      suffix =
-        if isEnable
-        then
-          (if isSops then "sops-app" else "apply")
-        else
-          (if isSops then "sops-del" else "delete");
-    in
-    suffix;
-
   dockerNetworkScript = { dockerBin, networkName }:
     ''
       ${dockerBin} network inspect ${networkName} >/dev/null 2>&1 || ${dockerBin} network create --driver bridge ${networkName}
