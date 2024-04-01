@@ -23,7 +23,7 @@
         "keys" # required to have read access to /run/secrets.d (sops-nix)
       ];
       shell = pkgs.fish;
-      passwordFile = if fs == "ext4" then null else config.sops.secrets.fedeizzo-path.path;
+      hashedPasswordFile = if fs == "ext4" then null else config.sops.secrets.fedeizzo-path.path;
     };
     root = {
       hashedPassword = "!"; # to enable root login remode this line

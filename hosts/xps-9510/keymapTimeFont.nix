@@ -9,7 +9,7 @@
   time.hardwareClockInLocalTime = false;
 
   fonts = {
-    fonts = [
+    packages = [
       pkgs.fira-code
       pkgs.font-awesome
       pkgs.joypixels

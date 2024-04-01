@@ -7,7 +7,7 @@
   #     joypixels.acceptLicense = true;
   #   };
   # };
-  system.stateVersion = "22.05";
+  system.stateVersion = "23.11";
   nix = {
     settings = {
       auto-optimise-store = true;
