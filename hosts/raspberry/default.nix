@@ -1,10 +1,4 @@
-{ config
-, inputs
-, username
-, hostname
-, pkgs
-, ...
-}:
+{ ... }:
 
 {
   imports = [

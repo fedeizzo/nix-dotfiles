@@ -148,11 +148,14 @@
         };
       };
     } // flake-utils.lib.eachDefaultSystem (system:
-    let pkgs = nixpkgs.legacyPackages.${system}; in
-    rec {
-
+    let
+      pkgs = nixpkgs.legacyPackages.${system};
+    in
+    {
       devShells.default = pkgs.mkShell {
-        packages = [ ];
+        packages = [
+          pkgs.deploy-rs
+        ];
         shellHook = ''
           export PATH=$PATH:$(pwd)/scripts
         '';
