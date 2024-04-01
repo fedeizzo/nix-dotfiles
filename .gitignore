@@ -7,7 +7,6 @@ result
 .clj-kondo
 *~
 .build
-.envrc
 \#*
 # syncthing
 .stfolder
