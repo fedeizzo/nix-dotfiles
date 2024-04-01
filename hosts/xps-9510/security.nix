@@ -39,11 +39,6 @@
     root-path = {
       neededForUsers = true;
     };
-    personal-email-pass = {
-      owner = username;
-      sopsFile = ../../secrets/laptop-secrets.yaml;
-      format = "yaml";
-    };
     laptop-ssh-public-key = {
       owner = username;
     };

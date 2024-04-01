@@ -21,7 +21,7 @@
     federico = {
       address = "federico@fedeizzo.dev";
       userName = "federico@fedeizzo.dev";
-      passwordCommand = "cat ${sops.secrets.personal-email-pass.path}";
+      passwordCommand = "cat /dev/null";
       primary = true;
       realName = "Federico Izzo";
       imap = {
