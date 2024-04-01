@@ -839,22 +839,6 @@
         "type": "github"
       }
     },
-    "nixpkgs-duet": {
-      "locked": {
-        "lastModified": 1711703276,
-        "narHash": "sha256-iMUFArF0WCatKK6RzfUJknjem0H9m4KgorO/p3Dopkk=",
-        "owner": "nixos",
-        "repo": "nixpkgs",
-        "rev": "d8fe5e6c92d0d190646fb9f1056741a229980089",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nixos",
-        "ref": "nixos-unstable",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "nixpkgs-lib": {
       "locked": {
         "dir": "lib",
@@ -1188,7 +1172,6 @@
         "nix-bubblewrap": "nix-bubblewrap",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs_7",
-        "nixpkgs-duet": "nixpkgs-duet",
         "nixpkgs-old": "nixpkgs-old",
         "nixpkgs-rasp": "nixpkgs-rasp",
         "nixpkgs-unstable": "nixpkgs-unstable",

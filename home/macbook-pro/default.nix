@@ -8,17 +8,11 @@
     homeDirectory = "/Users/federico.izzo";
   };
   imports = [
-    # (import ../common/rofi
-    #   {
-    #     pkgs = pkgs;
-    #     rofiPackage = pkgs.rofi;
-    #   }
-    # )
     ../common/kitty
     ../common/fish
     ../common/emacs
-    ./modules/languages.nix
-    ./modules/cli/default.nix
+    ./modules/languages
+    ./modules/cli
     ./modules/zsh
   ];
   fishPerMachine.aliases = {

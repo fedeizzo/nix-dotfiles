@@ -22,6 +22,15 @@ in
 
   config = {
     virtualisation.oci-containers.backend = "docker";
+    virtualisation = {
+      docker = {
+        enable = true;
+        enableOnBoot = true;
+        enableNvidia = false;
+      };
+      podman.enable = false;
+    };
+
     system.activationScripts.mkHomelabNetwork = (dockerNetworkScript
       {
         dockerBin = dockerBin;

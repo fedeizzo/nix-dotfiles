@@ -2,7 +2,6 @@
 Full nixos configuration for following devices:
 - Dell XPS 9510
 - Raspberry pi
-- Lenovo duet 2
 
 Folder description:
 - home: contains home manager configurations.
@@ -42,18 +41,13 @@ Raspberry is formatted with ext4 as filesystem.
 ./partitioning_ext4_rasperry.sh
 #+end_src
 
-*** Lenovo duet
-The installation is done using [[https://mobile.nixos.org][Mobile NixOS]]. Once the all process is finished the hardware configuration must be copied inside the [[./hosts/duet][duet folder]].
-
 ** System
 *** Dell xps 9510
 *** Raspberry
-*** Lenovo duet
 
 ** User
 *** Dell xps 9510
 *** Raspberry
-*** Lenovo duet
 
 ** Keyboards
 [[file:./qmk_config/README.org][QMK keyboard firmware]]

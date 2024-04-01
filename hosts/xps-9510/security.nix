@@ -1,4 +1,4 @@
-{ config, pkgs, username, syncthing, ... }:
+{ config, pkgs, username, ... }:
 
 {
   security.pam.services.lightdm.enableGnomeKeyring = false;
@@ -44,21 +44,8 @@
       sopsFile = ../../secrets/laptop-secrets.yaml;
       format = "yaml";
     };
-    syncthing-private-key = {
-      owner = username;
-      sopsFile = ../../secrets/laptop-secrets.yaml;
-      format = "yaml";
-      path = "${syncthing.dataDir}/.config/syncthing/key.pem";
-    };
     laptop-ssh-public-key = {
       owner = username;
     };
-  };
-  sops.secrets.syncthing-public-key = {
-    owner = username;
-    mode = "0644";
-    sopsFile = ../../secrets/laptop-secrets.yaml;
-    format = "yaml";
-    path = "${syncthing.dataDir}/.config/syncthing/cert.pem";
   };
 }

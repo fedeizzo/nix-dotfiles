@@ -22,7 +22,6 @@ rec {
 
   mkHost =
     { username
-    , syncthing
     , hostname
     , fs
     , system
@@ -49,10 +48,10 @@ rec {
     in
     nixosSystem
       {
-        pkgs = if machine != "duet" then pkgs else null;
+        pkgs = pkgs;
         inherit system;
         specialArgs = {
-          inherit inputs username hostname fs syncthing dockerNetworkScript;
+          inherit inputs username hostname fs dockerNetworkScript;
           mobile-nixos = inputs.mobile-nixos;
         };
 
