@@ -13,7 +13,6 @@
   };
 
   sops.secrets.laptop-ssh-public-key.sopsFile = ../../../secrets/ssh-public-keys-secrets.yaml;
-  sops.secrets.deploy-homelab-ssh-public-key.sopsFile = ../../../secrets/ssh-public-keys-secrets.yaml;
 
   sops.secrets.homelab-wireguard-private-key.sopsFile = ../../../secrets/raspberry-secrets.yaml;
 
