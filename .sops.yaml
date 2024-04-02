@@ -1,11 +1,13 @@
 keys:
   - &laptop age162fef9eha0za3r97qk7jaw7y87wlj5lgzl8laqemagqsftq7693sckrcc6
   - &raspberry age14jd2uvg5fwc2r2vgp4tsw5dy9rpksel97um2v494ws4tptult9ys50cndr
-  - &duet age142qy2l24887za6kgemy800tc6aj4yn77cmkezlrnnerm8yj23sgq4qep6c
+  - &mac age1pcxugka7t0awheru3nvlsylveczcyqy63dtwa8jygph39jces50sqlljw3
 creation_rules:
-  - path_regex: hosts/raspberry/containers/*
+  - path_regex: ssh-public-keys-secrets.yaml
     key_groups:
     - age:
+      - *laptop
+      - *mac
       - *raspberry
   - path_regex: laptop-secrets.yaml$
     key_groups:
@@ -15,17 +17,8 @@ creation_rules:
     key_groups:
     - age:
       - *raspberry
-  - path_regex: duet-secrets.yaml$
-    key_groups:
-    - age:
-      - *duet
-  - path_regex: email-secrets.yaml$
-    key_groups:
-    - age:
-      - *laptop
   - path_regex: secrets.yaml$
     key_groups:
     - age:
       - *laptop
       - *raspberry
-      - *duet
