@@ -1,4 +1,4 @@
-{ config, nixpkgs-unstable, inputs, ... }:
+{ config, pkgs, inputs, ... }:
 
 {
   # nixpkgs = {
@@ -19,7 +19,7 @@
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       ];
     };
-    package = nixpkgs-unstable.nixVersions.nix_2_19;
+    package = pkgs.nixFlakes;
     extraOptions = ''
       experimental-features = nix-command flakes
       keep-outputs = true

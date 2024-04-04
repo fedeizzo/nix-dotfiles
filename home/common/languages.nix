@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, pkgs-unstable, ... }:
 
 let
   my-python-packages = python-packages: with python-packages; [
@@ -53,10 +53,11 @@ in
 
     # latex
     texlive.combined.scheme-full
-
+  ] ++
+  [
     # nix
-    nixpkgs-fmt
-    nixpkgs-lint
-    rnix-lsp
+    pkgs-unstable.nixpkgs-fmt
+    pkgs-unstable.nixpkgs-lint
+    pkgs-unstable.nil
   ];
 }
