@@ -3,12 +3,6 @@ keys:
   - &raspberry age14jd2uvg5fwc2r2vgp4tsw5dy9rpksel97um2v494ws4tptult9ys50cndr
   - &mac age1pcxugka7t0awheru3nvlsylveczcyqy63dtwa8jygph39jces50sqlljw3
 creation_rules:
-  - path_regex: ssh-public-keys-secrets.yaml
-    key_groups:
-    - age:
-      - *laptop
-      - *mac
-      - *raspberry
   - path_regex: laptop-secrets.yaml$
     key_groups:
     - age:

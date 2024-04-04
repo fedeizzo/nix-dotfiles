@@ -20,17 +20,13 @@
   # secrets management
   environment.systemPackages = with pkgs; [ sops age ];
   sops = {
-    defaultSopsFile = ../../secrets.yaml;
+    defaultSopsFile = ../../secrets/laptop-secrets.yaml;
     defaultSopsFormat = "yaml";
     age.keyFile = "/var/lib/sops/keys.txt";
     age.generateKey = false;
     age.sshKeyPaths = [ ];
   };
   sops.secrets = {
-    # rasp-authkey = {
-    #   owner = config.users.users.${username}.name;
-    #   group = config.users.users.${username}.group;
-    # };
     borg-home-password = { };
     borg-root-password = { };
     fedeizzo-path = {
@@ -39,8 +35,7 @@
     root-path = {
       neededForUsers = true;
     };
-    laptop-ssh-public-key = {
-      owner = username;
-    };
+
+    xps-9510-wireguard-private-key = { };
   };
 }

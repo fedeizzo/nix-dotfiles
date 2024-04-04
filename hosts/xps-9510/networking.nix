@@ -13,7 +13,6 @@
     allowedUDPPorts = [ 51821 ];
   };
   services.tailscale.enable = true;
-  sops.secrets.xps-9510-wireguard-private-key.sopsFile = ../../secrets.yaml;
   networking.wireguard.enable = true;
   networking.wireguard.interfaces = {
     wg0 = {
