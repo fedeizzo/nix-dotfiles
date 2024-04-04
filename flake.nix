@@ -135,7 +135,7 @@
       # REMOTE DEPLOY
       deploy.nodes = {
         rasp-nixos = {
-          hostname = "home-lab";
+          hostname = "homelab";
           sshUser = "root";
           sudo = "doas -u";
           sshOpts = [ ];
