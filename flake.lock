@@ -169,6 +169,29 @@
         "type": "github"
       }
     },
+    "emacs-lsp-booster": {
+      "inputs": {
+        "flake-utils": [
+          "flake-utils"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1706256040,
+        "narHash": "sha256-b24QGfHTyUvSXxZMzq0bpnbecaRh8VwSSQjVEUTCk2w=",
+        "owner": "slotThe",
+        "repo": "emacs-lsp-booster-flake",
+        "rev": "790a74650aa64af2656b7b5ddd4fa29058741c36",
+        "type": "github"
+      },
+      "original": {
+        "owner": "slotThe",
+        "repo": "emacs-lsp-booster-flake",
+        "type": "github"
+      }
+    },
     "emacs-overlay": {
       "inputs": {
         "flake-utils": "flake-utils",
@@ -1159,6 +1182,7 @@
     "root": {
       "inputs": {
         "deploy-rs": "deploy-rs",
+        "emacs-lsp-booster": "emacs-lsp-booster",
         "emacs-overlay": "emacs-overlay",
         "emanote": "emanote",
         "flake-utils": "flake-utils_2",

@@ -76,12 +76,14 @@ in
 {
   home.packages = with pkgs; [
     myEmacs
+    emacs-lsp-booster
     # poppler
     poppler_utils
     imagemagick
     # spell
     (aspellWithDicts (dicts: with dicts; [ en en-computers en-science it ]))
   ];
+  xdg.configFile."emacs/early-init.el".source = ./early-init.el;
   xdg.configFile."emacs/init.el".source = ./init.el;
   xdg.configFile."emacs/welcome.png".source = ./welcome.png;
   xdg.configFile."emacs/modules".source = ./modules;

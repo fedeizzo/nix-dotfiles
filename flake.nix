@@ -19,6 +19,11 @@
       url = "github:nix-community/emacs-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    emacs-lsp-booster = {
+      url = "github:slotThe/emacs-lsp-booster-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-utils.follows = "flake-utils";
+    };
     impermanence = {
       url = "github:nix-community/impermanence";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -61,11 +66,17 @@
 
       macOSPkgs = import inputs.nixpkgs {
         system = "aarch64-darwin";
-        overlays = builtins.attrValues { emacs = inputs.emacs-overlay.overlays.default; };
+        overlays = builtins.attrValues {
+          emacs = inputs.emacs-overlay.overlays.default;
+          emacs-lsp-booster = inputs.emacs-lsp-booster.overlays.default;
+        };
       };
       macOSPkgs-unstable = import inputs.nixpkgs-unstable {
         system = "aarch64-darwin";
-        overlays = builtins.attrValues { emacs = inputs.emacs-overlay.overlays.default; };
+        overlays = builtins.attrValues {
+          emacs = inputs.emacs-overlay.overlays.default;
+          emacs-lsp-booster = inputs.emacs-lsp-booster.overlays.default;
+        };
       };
     in
     rec {
