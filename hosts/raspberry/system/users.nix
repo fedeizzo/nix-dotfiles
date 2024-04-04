@@ -3,8 +3,8 @@
 {
   users.users = {
     root = {
-      openssh.authorizedKeys.keyFiles = [
-        config.sops.secrets.laptop-ssh-public-key.path
+      openssh.authorizedKeys.keys = [
+        ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJAkXdVG1SxbY+xRXCR66xEnscIWdvzrp1soLQ2SnCUX federico@fedeizzo.dev
       ];
     };
   };
