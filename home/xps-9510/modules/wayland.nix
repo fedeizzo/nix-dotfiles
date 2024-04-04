@@ -10,7 +10,7 @@
     extraConfig = ''
       source=~/.config/hypr/config.conf
     '';
-    systemdIntegration = false;
+    systemd.enable = true;
   };
   home.packages = with pkgs; [
     # river
@@ -61,7 +61,6 @@
   ];
   programs.eww = {
     enable = true;
-    package = pkgs-unstable.eww-wayland;
     configDir = ../dotfiles/eww;
   };
   xdg.configFile."waybar/config" = {
