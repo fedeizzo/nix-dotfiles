@@ -4,7 +4,7 @@
   users.users = {
     root = {
       openssh.authorizedKeys.keys = [
-        ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJAkXdVG1SxbY+xRXCR66xEnscIWdvzrp1soLQ2SnCUX federico@fedeizzo.dev
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJAkXdVG1SxbY+xRXCR66xEnscIWdvzrp1soLQ2SnCUX federico@fedeizzo.dev"
       ];
     };
   };
