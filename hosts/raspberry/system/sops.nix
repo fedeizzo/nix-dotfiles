@@ -11,9 +11,11 @@
     age.generateKey = false;
     age.sshKeyPaths = [ ];
 
-    homelab-wireguard-private-key.sopsFile = { };
+    secrets = {
+      homelab-wireguard-private-key = { };
 
-    restic-repository.sopsFile = { };
-    restic-password.sopsFile = { };
+      restic-repository = { };
+      restic-password = { };
+    };
   };
 }
