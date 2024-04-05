@@ -19,17 +19,13 @@ connectIPVersion: dual
 
 blocking:
   blackLists:
-    ads:
-      - https://s3.amazonaws.com/lists.disconnect.me/simple_ad.txt
-      - https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
-      - http://sysctl.org/cameleon/hosts
-      - https://s3.amazonaws.com/lists.disconnect.me/simple_tracking.txt
-    special:
-      - https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews/hosts
+    all:
+      - https://cdn.jsdelivr.net/gh/hagezi/dns-blocklists@latest/domains/pro.txt
+      - https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/pro.txt
+      - https://gitlab.com/hagezi/mirror/-/raw/main/dns-blocklists/domains/pro.txt
   clientGroupsBlock:
     default:
-      - ads
-      - special
+      - all
   blockType: zeroIp
   blockTTL: 6h
   loading:
