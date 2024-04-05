@@ -21,13 +21,10 @@
     # docker-compose
     dnsmasq
     hostapd
-    firefox
     raspberrypi-eeprom
     libraspberrypi
     libgpiod
     borgbackup
-    kubectl
-    kubernetes-helm
     htop
   ];
 
