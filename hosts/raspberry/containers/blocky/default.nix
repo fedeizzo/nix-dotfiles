@@ -16,7 +16,7 @@
       TZ = "Europe/Paris";
     };
     volumes = [
-      "/etc/blocky/config.yaml:/app/config.yaml"
+      "/etc/blocky/config.yaml:/app/config.yml"
     ];
   };
 
