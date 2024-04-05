@@ -12,7 +12,6 @@
     checkReversePath = "loose";
     allowedUDPPorts = [ 51821 ];
   };
-  services.tailscale.enable = true;
   networking.wireguard.enable = true;
   networking.wireguard.interfaces = {
     wg0 = {
