@@ -44,9 +44,10 @@
       url = "sourcehut:~fgaz/nix-bubblewrap";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    emanote.url = github:EmaApps/emanote;
-    garminDB.url = "github:fedeizzo/GarminDB";
-    kindleToOrg.url = github:fedeizzo/KindleToOrg;
+    comin = {
+      url = "github:nlewo/comin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =

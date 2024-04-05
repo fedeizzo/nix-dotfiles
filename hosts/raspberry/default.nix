@@ -5,6 +5,7 @@
     ./containers
     ./system/backup.nix
     ./system/boot.nix
+    ./system/deployment.nix
     ./system/hardware.nix
     ./system/misc.nix
     ./system/networking.nix
