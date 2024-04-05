@@ -19,7 +19,6 @@ in
         "/persist/var/lib/NetworkManager"
         "/persist/var/lib/bluetooth"
         "/persist/var/lib/fprint"
-        "/persist/var/lib/tailscale"
       ];
       compression = "zstd,22";
       archiveBaseName = "${config.networking.hostName}";

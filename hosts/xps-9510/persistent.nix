@@ -13,7 +13,6 @@ lib.mkIf (fs == "btrfs") {
       "/var/lib/libvirt"
       "/var/lib/docker"
       "/var/lib/fprint"
-      "/var/lib/tailscale"
       "/root/.ssh"
       "/root/.cache"
     ];

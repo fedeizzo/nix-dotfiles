@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   users.users = {
@@ -10,7 +10,6 @@
   };
 
   environment.systemPackages = with pkgs; [
-    tailscale
     raspberrypifw
     bc
     curl
