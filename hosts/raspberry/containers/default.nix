@@ -1,18 +1,12 @@
-{ pkgs
-, lib
-, config
-, kubernetesSuffixFile
-, dockerNetworkScript
-, ...
-}:
+{ pkgs, config, dockerNetworkScript, ... }:
 
-with lib;
 let
   docker = "${config.virtualisation.oci-containers.backend}";
   dockerBin = "${pkgs.${docker}}/bin/${docker}";
 in
 {
   imports = [
+    ./blocky
     ./traefik
     ./fedeizzo.dev
     # ./fireflyiii

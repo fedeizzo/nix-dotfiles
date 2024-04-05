@@ -1,0 +1,67 @@
+upstreams:
+  init:
+    strategy: fast
+  groups:
+    default:
+      # example for tcp+udp IPv4 server (https://digitalcourage.de/)
+      - 5.9.164.112
+      # Cloudflare
+      - 1.1.1.1
+      # example for DNS-over-TLS server (DoT)
+      - tcp-tls:fdns1.dismail.de:853
+      # example for DNS-over-HTTPS (DoH)
+      - https://dns.digitale-gesellschaft.ch/dns-query
+  strategy: parallel_best
+  timeout: 2s
+  userAgent: "custom UA"
+
+connectIPVersion: dual
+
+blocking:
+  blackLists:
+    ads:
+      - https://s3.amazonaws.com/lists.disconnect.me/simple_ad.txt
+      - https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
+      - http://sysctl.org/cameleon/hosts
+      - https://s3.amazonaws.com/lists.disconnect.me/simple_tracking.txt
+    special:
+      - https://raw.githubusercontent.com/StevenBlack/hosts/master/alternates/fakenews/hosts
+  clientGroupsBlock:
+    default:
+      - ads
+      - special
+  blockType: zeroIp
+  blockTTL: 6h
+  loading:
+    refreshPeriod: 4h
+    downloads:
+      timeout: 60s
+      attempts: 5
+      cooldown: 10s
+    concurrency: 4
+    strategy: failOnError
+    maxErrorsPerSource: 5
+
+# optional: configuration for prometheus metrics endpoint
+# prometheus:
+#   # enabled if true
+#   enable: true
+#   # url path, optional (default '/metrics')
+#   path: /metrics
+
+# optional: ports configuration
+ports:
+  # optional: DNS listener port(s) and bind ip address(es), default 53 (UDP and TCP). Example: 53, :53, "127.0.0.1:5353,[::1]:5353"
+  dns: 53
+  # optional: Port(s) and bind ip address(es) for DoT (DNS-over-TLS) listener. Example: 853, 127.0.0.1:853
+  # tls: 853
+  # optional: Port(s) and optional bind ip address(es) to serve HTTPS used for prometheus metrics, pprof, REST API, DoH... If you wish to specify a specific IP, you can do so such as 192.168.0.1:443. Example: 443, :443, 127.0.0.1:443,[::1]:443
+  # https: 443
+  # optional: Port(s) and optional bind ip address(es) to serve HTTP used for prometheus metrics, pprof, REST API, DoH... If you wish to specify a specific IP, you can do so such as 192.168.0.1:4000. Example: 4000, :4000, 127.0.0.1:4000,[::1]:4000
+  # http: 4000
+
+log:
+  level: info
+  format: text
+  timestamp: true
+  privacy: false
