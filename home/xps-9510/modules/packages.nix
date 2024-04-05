@@ -73,35 +73,4 @@ in
     gnome-solanum
     libreoffice
   ];
-  programs.garminDB = {
-    enable = true;
-    config = {
-      credentials = {
-        user = "federico.izzo99@gmail.com";
-        secure_password = true;
-        password_command = "rbw get garmin";
-      };
-      data = {
-        weight_start_date = "12/20/2022";
-        sleep_start_date = "12/20/2022";
-        rhr_start_date = "12/20/2022";
-        monitoring_start_date = "12/20/2022";
-        download_latest_activities = 25;
-        download_all_activities = 100;
-      };
-      copy.mount_dir = "/volumes/garmin";
-      enabled_stats = {
-        monitoring = true;
-        steps = true;
-        itime = true;
-        sleep = true;
-        rhr = true;
-        weight = true;
-        activities = true;
-      };
-      course_views.steps = [ ];
-      modes = { };
-      activities.display = [ ];
-    };
-  };
 }

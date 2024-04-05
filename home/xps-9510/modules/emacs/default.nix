@@ -2,7 +2,6 @@
 , pkgs
 , pkgs-unstable
 , libs
-, kindletoorg
 , ...
 }:
 let
@@ -151,7 +150,6 @@ in
     tdlib
     # borg package manager
     gnumake
-    kindletoorg.packages.x86_64-linux.default
     # EAF
     nodejs
     wmctrl
@@ -161,29 +159,6 @@ in
     jq
     gdb
   ];
-  services.emanote = {
-    enable = false;
-    notes = [ "${config.home.homeDirectory}/zettelkasten" ];
-    extraConfig = {
-      path = {
-        headHtml = ''|
-          <script>
-            window.MathJax = {
-              startup: {
-                ready: () => {
-                  MathJax.startup.defaultReady();
-                }
-              },
-              tex: {
-                inlineMath: [['$', '$'], ['\\(', '\\)']]
-              }
-            };
-          </script>
-          <script async="" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
-        '';
-      };
-    };
-  };
   xdg.configFile."emacs/init.el".source = ./init.el;
   xdg.configFile."emacs/config".source = ./config;
   xdg.configFile."emacs/org-cv".source = org-cv;
