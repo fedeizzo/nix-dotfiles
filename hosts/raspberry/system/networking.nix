@@ -66,9 +66,9 @@
   # tailscale up
   # ip link show tailscale0
   # jorntalctl -fu tailscale
-  services.tailscale = {
-    enable = true;
-    package = pkgs.tailscalewithnginx;
-    port = 51820;
-  };
+  # services.tailscale = {
+  #   enable = true;
+  #   package = pkgs.tailscalewithnginx;
+  #   port = 51820;
+  # };
 }

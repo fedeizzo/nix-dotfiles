@@ -20,9 +20,9 @@ connectIPVersion: dual
 blocking:
   blackLists:
     all:
-      - https://cdn.jsdelivr.net/gh/hagezi/dns-blocklists@latest/domains/pro.txt
+      - https://cdn.jsdelivr.net/gh/hagezi/dns-blocklists@latest/wildcard/pro.txt
       - https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/pro.txt
-      - https://gitlab.com/hagezi/mirror/-/raw/main/dns-blocklists/domains/pro.txt
+      - https://gitlab.com/hagezi/mirror/-/raw/main/dns-blocklists/wildcard/pro.txt
   clientGroupsBlock:
     default:
       - all
