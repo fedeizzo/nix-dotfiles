@@ -1,8 +1,8 @@
 { config, pkgs, username, ... }:
 
 let
-  borgHomeRepo = "root@homelab:/borgbackups/home-persistent-laptop";
-  borgRootRepo = "root@homelab:/borgbackups/root-persistent-laptop";
+  borgHomeRepo = "homelab:/borgbackups/home-persistent-laptop";
+  borgRootRepo = "homelab:/borgbackups/root-persistent-laptop";
 in
 {
   services.borgbackup.jobs = {
