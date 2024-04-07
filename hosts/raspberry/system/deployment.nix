@@ -14,6 +14,7 @@
         branches.testing.name = ""; # No testing branch on this remote
         branches.main.name = "master";
         poller.period = 60; # 60s
+        timeout = 300; # 300s = 5m
       }
     ];
   };
