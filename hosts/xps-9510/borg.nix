@@ -31,8 +31,6 @@ in
             is_network_down=$?
             sleep 10
         done
-        echo "Start tailscale VPN"
-        ${pkgs.tailscale}/bin/tailscale up
         echo "PreHook done"
       '';
       postCreate = ''
@@ -83,8 +81,6 @@ in
             is_network_down=$?
             sleep 10
         done
-        echo "Start tailscale VPN"
-        ${pkgs.tailscale}/bin/tailscale up
         echo "PreHook done"
       '';
       postCreate = ''
