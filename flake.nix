@@ -45,7 +45,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     comin = {
-      url = "github:nlewo/comin";
+      url = "github:nlewo/comin/increase-timeout";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };

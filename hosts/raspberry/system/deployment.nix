@@ -17,4 +17,8 @@
       }
     ];
   };
+
+  system.activationScripts.restart_container.text = ''
+    systemctl restart docker-*.service
+  '';
 }
