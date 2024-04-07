@@ -12,6 +12,7 @@ in
       repo = "${borgRootRepo}";
       environment = {
         BORG_RSH = "ssh -i /home/${username}/.ssh/id_ed25519";
+        BORG_RELOCATED_REPO_ACCESS_IS_OK = "yes";
       };
       paths = [
         "/persist/etc"
@@ -59,6 +60,7 @@ in
       repo = "${borgHomeRepo}";
       environment = {
         BORG_RSH = "ssh -i /home/${username}/.ssh/id_ed25519";
+        BORG_RELOCATED_REPO_ACCESS_IS_OK = "yes";
       };
       paths = [ "/persist/home/fedeizzo" ];
       exclude = [
