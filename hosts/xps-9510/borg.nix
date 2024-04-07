@@ -1,8 +1,8 @@
 { config, pkgs, username, ... }:
 
 let
-  borgHomeRepo = "root@home-lab:/borgbackups/home-persistent-laptop";
-  borgRootRepo = "root@home-lab:/borgbackups/root-persistent-laptop";
+  borgHomeRepo = "root@homelab:/borgbackups/home-persistent-laptop";
+  borgRootRepo = "root@homelab:/borgbackups/root-persistent-laptop";
 in
 {
   services.borgbackup.jobs = {
@@ -11,7 +11,7 @@ in
       group = "root";
       repo = "${borgRootRepo}";
       environment = {
-        BORG_RSH = "ssh -i /home/${username}/.ssh/id_rsa";
+        BORG_RSH = "ssh -i /home/${username}/.ssh/id_ed25519";
       };
       paths = [
         "/persist/etc"
@@ -58,7 +58,7 @@ in
       group = "root";
       repo = "${borgHomeRepo}";
       environment = {
-        BORG_RSH = "ssh -i /home/${username}/.ssh/id_rsa";
+        BORG_RSH = "ssh -i /home/${username}/.ssh/id_ed25519";
       };
       paths = [ "/persist/home/fedeizzo" ];
       exclude = [

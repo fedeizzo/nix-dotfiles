@@ -49,10 +49,8 @@
             "fbk"
             "uni"
             "personalProject"
-            "zettelkasten"
             "org"
             "HealthData"
-            ".mail"
 
             # AppData
             ".local"
