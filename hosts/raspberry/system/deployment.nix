@@ -24,14 +24,17 @@
 
     script = ''
       currentGeneration=$(nixos-rebuild list-generations --json | jq --raw-output '.[] | select(.current == true) | .date')
-      echo "Last generation: "$currentGeneration
+      echo "Current generation: "$currentGeneration
       currentGenerationInSeconds=$(date -d $currentGeneration +"%s")
-      echo "Last generation in seconds: "$currentGenerationInSeconds
-      now=$(date -u +"%s")
+      echo "Current generation in seconds: "$currentGenerationInSeconds
+      lastRestart=$(systemctl show --property=ActiveEnterTimestamp docker-traefic.service | cut -d= -f2)
+      echo "Last restart: "$lastRestart
+      lastRestartInSeconds=$(date -d $lastRestart +"%s")
+      echo "Last restart in seconds: "$lastRestartInSeconds
 
       echo "Now: "$now
 
-      if [ $currentGenerationInSeconds -ge $now ]; then
+      if [ $currentGenerationInSeconds -ge lastRestartInSeconds ]; then
          echo "Restarting containers..."
          systemctl restart docker-*.service
          echo "Done."
