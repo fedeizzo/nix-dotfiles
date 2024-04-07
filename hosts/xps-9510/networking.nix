@@ -5,7 +5,7 @@
   networking.networkmanager.enable = true;
   networking.useDHCP = false;
   networking.extraHosts = ''
-    192.168.7.1 home-lab.wireguard
+    192.168.7.1 homelab
   '';
   networking.firewall = {
     enable = true;
