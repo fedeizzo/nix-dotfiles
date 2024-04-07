@@ -1,4 +1,4 @@
-{ inputs, ... }:
+{ inputs, pkgs, ... }:
 
 {
   imports = [
@@ -19,7 +19,39 @@
     ];
   };
 
-  system.activationScripts.restart_container.text = ''
-    systemctl restart docker-*.service
-  '';
+  systemd.services.restart-docker-containers = {
+    path = [ pkgs.nix ];
+
+    script = ''
+      currentGeneration=$(nixos-rebuild list-generations --json | ${pkgs.jq}/bin/jq --raw-output '.[] | select(.current == true) | .date')
+      echo "Last generation: "$currentGeneration
+      currentGenerationInSeconds=$(date -d $currentGeneration +"%s")
+      echo "Last generation in seconds: "$currentGenerationInSeconds
+      now=$(date -u +"%s")
+
+      echo "Now: "$now
+
+      if [ $currentGenerationInSeconds -ge $now ]; then
+         echo "Restarting containers..."
+         systemctl restart docker-*.service
+         echo "Done."
+      else
+         echo "No restart required, already the last generation."
+      fi
+    '';
+    serviceConfig = {
+      Type = "oneshot";
+      User = "root";
+    };
+  };
+
+  systemd.timers.restart-docker-containers = {
+    enable = true;
+    wantedBy = [ "timers.target" ];
+
+    timerConfig = {
+      OnCalendar = "*-*-* *:*:00";
+      Unit = "restart-docker-containers.service";
+    };
+  };
 }
