@@ -20,10 +20,10 @@
   };
 
   systemd.services.restart-docker-containers = {
-    path = [ pkgs.nix ];
+    path = with pkgs; [ nixos-rebuild jq systemd ];
 
     script = ''
-      currentGeneration=$(nixos-rebuild list-generations --json | ${pkgs.jq}/bin/jq --raw-output '.[] | select(.current == true) | .date')
+      currentGeneration=$(nixos-rebuild list-generations --json | jq --raw-output '.[] | select(.current == true) | .date')
       echo "Last generation: "$currentGeneration
       currentGenerationInSeconds=$(date -d $currentGeneration +"%s")
       echo "Last generation in seconds: "$currentGenerationInSeconds
