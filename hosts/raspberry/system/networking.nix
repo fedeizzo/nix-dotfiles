@@ -60,11 +60,6 @@
           publicKey = "3i/aGGX9iOSyQ/FLbrKyvaClHzqUq3mGHX4oneerbm0=";
           allowedIPs = [ "192.168.7.2/32" ];
         }
-        {
-          # phone
-          publicKey = "CELOFKa/qk6cRSc7EzwJVNXLfOX93QCJK52GtOaZ1Wo=";
-          allowedIPs = [ "192.168.7.3/32" ];
-        }
       ];
     };
   };
