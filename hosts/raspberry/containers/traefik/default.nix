@@ -36,7 +36,7 @@
           leresolver = {
             acme = {
               email = "letsencrypt.alert@fedeizzo.dev";
-              storage = "acme.json";
+              storage = "/var/volumes/traefik/acme/acme.json";
               dnsChallenge = {
                 provider = "cloudflare";
                 delaybeforecheck = "0s";
