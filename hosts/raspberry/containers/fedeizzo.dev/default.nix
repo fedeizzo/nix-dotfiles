@@ -1,4 +1,4 @@
-{}:
+{ ... }:
 
 {
   virtualisation.oci-containers.containers."fedeizzodev" = {
