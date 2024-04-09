@@ -5,7 +5,63 @@
     dataDir = "/var/volumes/traefik";
     group = "traefik";
     environmentFiles = [ "/var/container_envs/traefik" ];
-    staticConfigFile = ./static-config.yaml;
-    dynamicConfigFile = ./dynamic-config.yaml;
+    staticConfigOptions = {
+      global = { checkNewVersion = false; sendAnonymousUsage = false; };
+      serversTransport = { insecureSkipVerify = true; };
+      api = { insecure = true; dashboard = true; debug = false; };
+      log = { level = "INFO"; };
+      entryPoints = {
+        web = {
+          address = ":80";
+          http = {
+            redirections = {
+              entrypoint = { to = "websecure"; };
+            };
+          };
+        };
+        websecure = {
+          address = ":443";
+          http = {
+            tls = {
+              certResolver = "leresolver";
+              domains = [
+                { main = "fedeizzo.dev"; sans = [ "*.fedeizzo.dev" ]; }
+              ];
+            };
+          };
+        };
+      };
+      certificatesResolvers =
+        {
+          leresolver = {
+            acme = {
+              email = "letsencrypt.alert@fedeizzo.dev";
+              storage = "acme.json";
+              dnsChallenge = {
+                provider = "cloudflare";
+                delaybeforecheck = "0s";
+                resolvers = [ "1.1.1.1:53" "8.8.8.8:53" ];
+              };
+            };
+          };
+        };
+    };
+
+    dynamicConfigOptions = {
+      http = {
+        routers = {
+          fedeizzodev = { entryPoints = [ "websecure" ]; rule = "Host(`fedeizzo.dev`)"; service = "fedeizzodev"; };
+          fireflyiii = { entryPoints = [ "websecure" ]; rule = "Host(`firefly.fedeizzo.dev`)"; service = "fireflyiii"; };
+          grafana = { entryPoints = [ "websecure" ]; rule = "Host(`grafana.fedeizzo.dev`)"; service = "grafana"; };
+          nocodb = { entryPoints = [ "websecure" ]; rule = "Host(`nocodb.fedeizzo.dev`)"; service = "nocodb"; };
+        };
+        services = {
+          fedeizzodev = { loadBalancer = { servers = [{ url = "http://fedeizzodev:80"; }]; }; };
+          fireflyiii = { loadBalancer = { servers = [{ url = "http://fireflyiii:8080"; }]; }; };
+          grafana = { loadBalancer = { servers = [{ url = "http://grafana:3000"; }]; }; };
+          nocodb = { loadBalancer = { servers = [{ url = "http://nocodb:8080"; }]; }; };
+        };
+      };
+    };
   };
 }
