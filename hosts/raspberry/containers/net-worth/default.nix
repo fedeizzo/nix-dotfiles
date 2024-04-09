@@ -41,6 +41,6 @@
     extraOptions = [ "--network=homelab" ];
     environmentFiles = [ "/var/container_envs/net_worth_grafana" ];
     volumes = [ "/var/volumes/net_worth_grafana:/var/lib/grafana" ];
+    ports = [ "50002:3000" ];
   };
-
 }

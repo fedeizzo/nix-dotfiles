@@ -58,7 +58,7 @@
         services = {
           fedeizzodev = { loadBalancer = { servers = [{ url = "http://localhost:50001"; }]; }; };
           fireflyiii = { loadBalancer = { servers = [{ url = "http://fireflyiii:8080"; }]; }; };
-          grafana = { loadBalancer = { servers = [{ url = "http://grafana:3000"; }]; }; };
+          grafana = { loadBalancer = { servers = [{ url = "http://localhost:50002"; }]; }; };
           nocodb = { loadBalancer = { servers = [{ url = "http://nocodb:8080"; }]; }; };
         };
       };

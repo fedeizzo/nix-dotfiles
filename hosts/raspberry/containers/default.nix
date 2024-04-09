@@ -11,6 +11,7 @@ in
     ./fedeizzo.dev
     # ./fireflyiii
     ./net-worth
+    ./prometheus
     ./diun
   ];
 
