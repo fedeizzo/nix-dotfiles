@@ -1,0 +1,15 @@
+diff --git a/src/api.rs b/src/api.rs
+index ca3c43b..c30a1c3 100644
+--- a/src/api.rs
++++ b/src/api.rs
+@@ -722,7 +722,9 @@ impl Client {
+                 },
+             )?)
+         } else {
+-            Ok(reqwest::Client::new())
++            Ok(reqwest::Client::builder()
++                 .user_agent("Bitwarden/2024.3.1 (25)")
++                 .build().unwrap())
+         }
+     }
+ 

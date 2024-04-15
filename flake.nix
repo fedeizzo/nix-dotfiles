@@ -70,6 +70,7 @@
         overlays = builtins.attrValues {
           emacs = inputs.emacs-overlay.overlays.default;
           emacs-lsp-booster = inputs.emacs-lsp-booster.overlays.default;
+          default = import ./overlays { inherit inputs; };
         };
       };
       macOSPkgs-unstable = import inputs.nixpkgs-unstable {

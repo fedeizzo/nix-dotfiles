@@ -7,9 +7,9 @@ let
     waybar = super.waybar.overrideAttrs (oldAttrs: {
       mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ];
     });
-    # notmuch = super.notmuch.overrideAttrs (oldAttrs: {
-    #   version = "0.37";
-    # });
+    rbw = super.rbw.overrideAttrs (oldAttrs: {
+      patches = [ ./patches/rbw_patch.diff ];
+    });
   };
 in
 inputs.nixpkgs.lib.composeManyExtensions [ modifications additions ]
