@@ -37,6 +37,9 @@
   ;; go
   (go-mode . lsp-deferred)
   (go-ts-mode . lsp-deferred)
+  ;; dockerfile
+  (dockerfile-mode . lsp-deferred)
+  (dockerfile-ts-mode . lsp-deferred)
   (lsp-mode . lsp-enable-which-key-integration)
   (lsp-completion-mode . fi/lsp-mode-setup-completion)
   (buffer-list-update . fi/lsp-ui-imenu-update)
