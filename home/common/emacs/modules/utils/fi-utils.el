@@ -72,7 +72,7 @@ package as PACKAGE-NAME, module as MODULE."
   "Update nixos configuration."
   (interactive)
   (with-output-to-temp-buffer "*nixos-update*"
-    (shell-command "cd ~/nix-dotfiles && ./install.sh &"
+    (shell-command "cd ~/nix-dotfiles && install.sh &"
                    "*nixos-update*"
                    "*nixos-update*")
     (pop-to-buffer "*nixos-update*")

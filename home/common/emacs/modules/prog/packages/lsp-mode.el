@@ -52,7 +52,7 @@
   (lsp-eldoc-enable-hover nil)
   (lsp-eldoc-render-all t)
   (lsp-enable-suggest-server-download nil)
-  (lsp-headerline-breadcrumb-enable nil)
+  (lsp-headerline-breadcrumb-enable t)
   (lsp-ui-doc-enable t)
   (lsp-ui-doc-show-with-cursor t)
   (lsp-ui-doc-show-with-mouse t)

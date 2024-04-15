@@ -25,7 +25,7 @@
     lsp-origami # integration with origami for folding
     consult-lsp # integration with consult
     dap-mode # debugger
-    # sidecar-locals # per project variables
+    sidecar-locals # per project variables
     typescript-mode
     # tree-sitter
     # tree-sitter-langs
