@@ -23,6 +23,7 @@ go-mode
 (rer "require.Error(t, " p")")
 (req "require.Equal(t, " p", " p")")
 (ril "require.Nil(t, " p")")
+(ppr "pretty, _ := json.MarshalIndent(" p ",\"\", \"\\t\")" n> "fmt.Println(string(pretty))") ; pretty print
 
 go-ts-mode
 
@@ -30,6 +31,7 @@ go-ts-mode
 (rer "require.Error(t, " p")")
 (req "require.Equal(t, " p", " p")")
 (ril "require.Nil(t, " p")")
+(ppr "pretty, _ := json.MarshalIndent(" p ",\"\", \"\\t\")" n> "fmt.Println(string(pretty))") ; pretty print
 
 (ret "if err != nil {" n> (fi/golang-return) n> "}")
 

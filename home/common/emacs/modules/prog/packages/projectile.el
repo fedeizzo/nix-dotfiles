@@ -11,10 +11,11 @@
   (projectile-switch-project-action #'project-dired)
   (projectile-indexing-method 'alien)
   (projectile-sort-order 'recently-active)
+  (projectile-auto-discover nil)
   :config (projectile-mode)
   :init
   (if ON-MACBOOK
-      (setq projectile-project-search-path '("~/dd/" "~/uni"))
+      (setq projectile-project-search-path '("~/dd/" "~/uni" "~/personal"))
     (setq projectile-project-search-path '("~/personalProject" "~/uni"))))
 
 (defun fi/consult-projectile-wrap ()

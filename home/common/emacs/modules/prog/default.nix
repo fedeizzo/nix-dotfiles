@@ -41,5 +41,6 @@
     protobuf-mode
     lsp-java
     dockerfile-mode
+    # hurl-mode
   ];
 }

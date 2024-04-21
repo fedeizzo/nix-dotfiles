@@ -14,10 +14,10 @@
         '(flex))) ;; Configure flex
 (use-package lsp-mode
   :commands lsp
-  :custom
-  (lsp-semgrep-languages (list))
-  (lsp-enable-snippet nil)
+  :init
+  (setq lsp-keymap-prefix "C-l")
   :hook
+  (lsp-mode . lsp-enable-which-key-integration)
   ;; python
   (python-mode . lsp-deferred)
   (python-ts-mode . lsp-deferred)
@@ -44,7 +44,6 @@
   (lsp-completion-mode . fi/lsp-mode-setup-completion)
   (buffer-list-update . fi/lsp-ui-imenu-update)
   :custom
-  (lsp-keymap-prefix "C-l")
   (lsp-auto-configure t)
   (lsp-auto-guess-root t)
   (lsp-before-save-edits t)
@@ -60,6 +59,8 @@
   (lsp-ui-doc-use-webkit t)
   (lsp-completion-provider :none) ;; we use Corfu!
   (lsp-signature-render-documentation nil)
+  (lsp-semgrep-languages (list))
+  (lsp-enable-snippet nil)
   ;; (lsp-inlay-hint-enable t)
   ;; go
   (lsp-go-codelenses
@@ -72,6 +73,7 @@
      (test . :json-false)
      (vendor . :json-false)))
   :config
+  (define-key lsp-mode-map (kbd "C-l") lsp-command-map)
   (lsp-register-custom-settings
    '(("gopls.hints" ((assignVariableTypes . t)
                      (compositeLiteralFields . t)
