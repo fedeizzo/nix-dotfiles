@@ -51,15 +51,13 @@
       http = {
         routers = {
           fedeizzodev = { entryPoints = [ "websecure" ]; rule = "Host(`fedeizzo.dev`)"; service = "fedeizzodev"; };
-          fireflyiii = { entryPoints = [ "websecure" ]; rule = "Host(`firefly.fedeizzo.dev`)"; service = "fireflyiii"; };
           grafana = { entryPoints = [ "websecure" ]; rule = "Host(`grafana.fedeizzo.dev`)"; service = "grafana"; };
           nocodb = { entryPoints = [ "websecure" ]; rule = "Host(`nocodb.fedeizzo.dev`)"; service = "nocodb"; };
         };
         services = {
           fedeizzodev = { loadBalancer = { servers = [{ url = "http://localhost:50001"; }]; }; };
-          fireflyiii = { loadBalancer = { servers = [{ url = "http://fireflyiii:8080"; }]; }; };
           grafana = { loadBalancer = { servers = [{ url = "http://localhost:50002"; }]; }; };
-          nocodb = { loadBalancer = { servers = [{ url = "http://nocodb:8080"; }]; }; };
+          nocodb = { loadBalancer = { servers = [{ url = "http://localhost:50003"; }]; }; };
         };
       };
     };

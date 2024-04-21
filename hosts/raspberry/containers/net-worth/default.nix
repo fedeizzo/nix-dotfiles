@@ -29,6 +29,7 @@
     autoStart = true;
     extraOptions = [ "--network=homelab" ];
     volumes = [ "/var/volumes/net_worth_nocodb:/usr/app/data" ];
+    ports = [ "50003:8080" ];
   };
 
   ###########

@@ -9,9 +9,8 @@ in
     ./blocky
     ./traefik
     ./fedeizzo.dev
-    # ./fireflyiii
     ./net-worth
-    ./prometheus
+    # ./prometheus
     ./diun
   ];
 
