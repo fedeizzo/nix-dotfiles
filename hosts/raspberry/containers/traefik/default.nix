@@ -8,8 +8,8 @@
     staticConfigOptions = {
       global = { checkNewVersion = false; sendAnonymousUsage = false; };
       serversTransport = { insecureSkipVerify = true; };
-      api = { insecure = true; dashboard = true; debug = true; };
-      log = { level = "INFO"; };
+      api = { insecure = true; dashboard = true; debug = false; };
+      log = { level = "DEBUG"; };
       entryPoints = {
         web = {
           address = ":80";
