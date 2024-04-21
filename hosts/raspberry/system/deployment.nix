@@ -27,7 +27,7 @@
       echo "Current generation: $currentGeneration"
       currentGenerationInSeconds=$(date -d "$currentGeneration" +"%s")
       echo "Current generation in seconds: $currentGenerationInSeconds"
-      lastRestart=$(systemctl show --property=ActiveEnterTimestamp docker-traefik.service | cut -d= -f2)
+      lastRestart=$(systemctl show --property=ActiveEnterTimestamp docker-fedeizzo.service | cut -d= -f2)
       echo "Last restart: $lastRestart"
       lastRestartInSeconds=$(date -d "$lastRestart" +"%s")
       echo "Last restart in seconds: $lastRestartInSeconds"
