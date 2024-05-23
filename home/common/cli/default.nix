@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, pkgs-unstable, ... }:
 
 {
   config = {
@@ -16,6 +16,17 @@
       home-manager
       git-crypt
       rbw
+      pkgs-unstable.pet
     ];
+
+    # programs.pet = {
+    #   enable = true;
+    #   settings = {
+    #     General = {
+    #       cmd = [ "zsh" "-c" ];
+    #       sortBy = "recency";
+    #     };
+    #   };
+    # }
   };
 }

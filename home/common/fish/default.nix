@@ -71,8 +71,6 @@ in
         set -U __done_min_cmd_duration 120000
         set fish_color_command A3BE8C
         set fish_greeting
-        source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.fish
-        source ~/.dd-setup.fish
       '';
       shellInit = commonShellInit + "\n" + cfg.shellInit;
       plugins = [
