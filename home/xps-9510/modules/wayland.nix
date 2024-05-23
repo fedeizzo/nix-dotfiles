@@ -7,13 +7,15 @@
   wayland.windowManager.hyprland = {
     enable = true;
     xwayland.enable = true;
+    package = pkgs-unstable.hyprland;
+
     extraConfig = ''
       submap=resize
       binde=, right     , resizeactive , 10 0
       binde=, left      , resizeactive , -10 0
       binde=, up        , resizeactive , 0 -10
       binde=, down      , resizeactive , 0 10
-      bindm=, mouse:272 , resizewindow ,
+      bindm=, mouse:272 , resizewindow
       bind= , escape    , submap       , reset
 
       submap=reset
@@ -35,7 +37,7 @@
 
       decoration = {
         rounding = 5;
-        active_opactity = 1;
+        active_opacity = 1;
         inactive_opacity = 1;
         drop_shadow = true;
         blur = {
@@ -58,12 +60,11 @@
         kb_layout = "us";
         kb_variant = "altgr-intl";
         follow_mouse = 1;
-      };
-
-      touchpad = {
-        natural_scroll = true;
-        disable_while_typing = true;
-        tap-to-click = true;
+        touchpad = {
+          natural_scroll = true;
+          disable_while_typing = true;
+          tap-to-click = true;
+        };
       };
 
       gestures = {
@@ -76,7 +77,7 @@
       misc = {
         disable_hyprland_logo = true;
         enable_swallow = true;
-        swallow_reger = "^(kittylf)$";
+        swallow_regex = "^(kittylf)$";
       };
 
       master = {
@@ -98,7 +99,7 @@
         "float,class:,title:^(Firefox — Sharing Indicator)$"
         "workspace 4 silent,class:^(telegramdesktop)$,title:^(Telegram*)$"
         "noanim,class:^(kittylf)$,title:"
-        "opacit 0.9,class:^(kittylf)$,title:"
+        "opacity 0.9,class:^(kittylf)$,title:"
         "float,class:,title:Solanum"
         "float,class:blueberry.py,title:"
         "float,class:,title:^(Zoom*)$"

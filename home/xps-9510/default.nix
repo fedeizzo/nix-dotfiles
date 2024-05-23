@@ -12,7 +12,6 @@
     };
     users.${username} = {
       imports = [
-        inputs.hyprland.homeManagerModules.default
         inputs.impermanence.nixosModules.home-manager.impermanence
         # inputs.nix-bubblewrap.nix-bubblewrap.x86_64-linux
         ./modules/bottom
