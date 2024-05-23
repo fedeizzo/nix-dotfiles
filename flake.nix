@@ -28,14 +28,6 @@
       url = "github:nix-community/impermanence";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    hyprland = {
-      url = "github:hyprwm/Hyprland";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
-    };
-    hyprwm-contrib = {
-      url = "github:hyprwm/contrib";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
-    };
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -84,7 +76,6 @@
     rec {
       overlays = {
         # emacs = inputs.emacs-overlay.overlay;
-        hyperwm-contrib = inputs.hyprwm-contrib.overlays.default;
         default = import ./overlays { inherit inputs; };
       };
       legacyPackages = forAllSystems (system:
