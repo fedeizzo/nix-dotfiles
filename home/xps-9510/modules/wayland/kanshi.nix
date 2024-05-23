@@ -5,16 +5,17 @@
     enable = true;
     systemdTarget = "hyprland-session.target";
 
-    profiles = {
-      undocked = {
-        outputs = [
+    settings = [
+      {
+        profile.name = "undocked";
+        profile.outputs = [
           {
             criteria = "eDP-1";
             status = "enable";
             mode = "1920x1200@59.950Hz";
           }
         ];
-      };
-    };
+      }
+    ];
   };
 }

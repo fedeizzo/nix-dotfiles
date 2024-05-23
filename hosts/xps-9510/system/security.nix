@@ -12,8 +12,6 @@
     ];
   };
   programs.gnupg.agent.enable = true;
-  programs.gnupg.agent.pinentryFlavor = "qt";
+  programs.gnupg.agent.pinentryPackage = pkgs.pinentry-qt;
   programs.ssh.askPassword = "";
-
-  environment.systemPackages = with pkgs; [ pinentry-qt ];
 }
