@@ -56,7 +56,6 @@ rec {
 
         modules = [
           defaults
-          # (inputs.nix-bubblewrap.lib { inherit system pkgs; })
           ../hosts/${machine}
           ../home/${machine}
         ];

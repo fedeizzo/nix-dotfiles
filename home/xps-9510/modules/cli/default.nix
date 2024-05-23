@@ -41,7 +41,6 @@
     libsecret
     w3m
     rclone
-    lazygit
     sshfs
     flac
     file
@@ -49,6 +48,5 @@
     moreutils
     zip
     pkgs-unstable.bitwarden-cli
-    pkgs-unstable.hledger
   ];
 }

@@ -153,5 +153,5 @@
       '';
     };
   };
-  xdg.configFile."fish/conf.d/sway.fish".source = ./sway.fish;
+  xdg.configFile."fish/conf.d/hyprland.fish".source = ./hyprland.fish;
 }

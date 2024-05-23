@@ -11,7 +11,11 @@
     mobile-nixos.url = "github:NixOs/mobile-nixos/master";
     deploy-rs.url = "github:serokell/deploy-rs";
     home-manager = {
-      url = "github:nix-community/home-manager/release-23.11";
+      url = "github:nix-community/home-manager/release-24.05";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    hyprland-contrib = {
+      url = "github:hyprwm/contrib";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     flake-utils.url = "github:numtide/flake-utils";
@@ -30,10 +34,6 @@
     };
     sops-nix = {
       url = "github:Mic92/sops-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    nix-bubblewrap = {
-      url = "sourcehut:~fgaz/nix-bubblewrap";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     comin = {
