@@ -23,14 +23,13 @@ rec {
   mkHost =
     { username
     , hostname
-    , fs
     , system
     , machine
     , pkgs
     }:
     let
       config = {
-        inherit username hostname fs;
+        inherit username hostname;
       };
       defaults = { pkgs, ... }: {
         _module.args.nixpkgs-unstable = import inputs.nixpkgs-unstable {
@@ -51,7 +50,7 @@ rec {
         pkgs = pkgs;
         inherit system;
         specialArgs = {
-          inherit inputs username hostname fs dockerNetworkScript;
+          inherit inputs username hostname dockerNetworkScript;
           mobile-nixos = inputs.mobile-nixos;
         };
 

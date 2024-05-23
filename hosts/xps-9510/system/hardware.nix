@@ -1,4 +1,4 @@
-{ lib, pkgs, fs, ... }:
+{ pkgs, inputs, ... }:
 
 let
   fs-diff = pkgs.writeShellScriptBin "fs-diff" ''
@@ -29,7 +29,7 @@ let
     doas umount -R /mnt
   '';
 in
-lib.mkIf (fs == "btrfs") {
+{
   environment.systemPackages = [ fs-diff ];
   boot.initrd.postDeviceCommands = (pkgs.lib.mkBefore ''
     mkdir -p /mnt
@@ -73,69 +73,29 @@ lib.mkIf (fs == "btrfs") {
     "/" = {
       device = "/dev/disk/by-label/root";
       fsType = "btrfs";
-      options = [
-        "subvol=root"
-        "noautodefrag"
-        "space_cache=v2"
-        "noatime"
-        "compress=zstd:3"
-        "ssd"
-        "discard" # trim ssd
-      ];
+      options = [ "subvol=root" "noautodefrag" "space_cache=v2" "noatime" "compress=zstd:3" "ssd" "discard" ];
     };
     "/nix" = {
       device = "/dev/disk/by-label/root";
       fsType = "btrfs";
-      options = [
-        "subvol=nix"
-        "noautodefrag"
-        "space_cache=v2"
-        "noatime"
-        "compress=zstd:3"
-        "ssd"
-        "discard"
-      ];
+      options = [ "subvol=nix" "noautodefrag" "space_cache=v2" "noatime" "compress=zstd:3" "ssd" "discard" ];
     };
     "/var/log" = {
       device = "/dev/disk/by-label/root";
       fsType = "btrfs";
-      options = [
-        "subvol=log"
-        "noautodefrag"
-        "space_cache=v2"
-        "noatime"
-        "compress=zstd:3"
-        "ssd"
-        "discard"
-      ];
+      options = [ "subvol=log" "noautodefrag" "space_cache=v2" "noatime" "compress=zstd:3" "ssd" "discard" ];
       neededForBoot = true;
     };
     "/var/lib/sops" = {
       device = "/dev/disk/by-label/root";
       fsType = "btrfs";
-      options = [
-        "subvol=sops"
-        "noautodefrag"
-        "space_cache=v2"
-        "noatime"
-        "compress=zstd:3"
-        "ssd"
-        "discard"
-      ];
+      options = [ "subvol=sops" "noautodefrag" "space_cache=v2" "noatime" "compress=zstd:3" "ssd" "discard" ];
       neededForBoot = true;
     };
     "/persist" = {
       device = "/dev/disk/by-label/root";
       fsType = "btrfs";
-      options = [
-        "subvol=persist"
-        "noautodefrag"
-        "space_cache=v2"
-        "noatime"
-        "compress=zstd:3"
-        "ssd"
-        "discard"
-      ];
+      options = [ "subvol=persist" "noautodefrag" "space_cache=v2" "noatime" "compress=zstd:3" "ssd" "discard" ];
       neededForBoot = true;
     };
     "/boot" =
@@ -149,5 +109,11 @@ lib.mkIf (fs == "btrfs") {
 
   swapDevices = [ ];
 
-  powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
+  hardware.cpu.intel.updateMicrocode = true;
+  services.pcscd.enable = true;
+  services.fwupd.enable = true; # update firmware
+
+  imports = [
+    inputs.nixos-hardware.nixosModules.dell-xps-15-9510
+  ];
 }

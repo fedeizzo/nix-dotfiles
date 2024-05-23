@@ -1,4 +1,4 @@
-{ hostname, pkgs, inputs, config, ... }:
+{ hostname, inputs, config, ... }:
 
 {
   networking.hostName = hostname;
@@ -30,9 +30,5 @@
       ];
     };
   };
-  environment.systemPackages = [ inputs.deploy-rs.defaultPackage.x86_64-linux ]
-    # VPN for university
-    ++ [ pkgs.globalprotect-openconnect ];
-  services.globalprotect.enable = true;
-  services.globalprotect.csdWrapper = "${pkgs.openconnect}/libexec/openconnect/hipreport.sh";
+  environment.systemPackages = [ inputs.deploy-rs.defaultPackage.x86_64-linux ];
 }

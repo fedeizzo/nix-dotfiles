@@ -1,12 +1,6 @@
-{ config, pkgs, inputs, ... }:
+{ pkgs, ... }:
 
 {
-  # nixpkgs = {
-  #   config = {
-  #     allowUnfree = true;
-  #     joypixels.acceptLicense = true;
-  #   };
-  # };
   system.stateVersion = "23.11";
   nix = {
     settings = {
@@ -28,7 +22,7 @@
     gc = {
       automatic = true;
       dates = "weekly";
-      options = "--delete-older-than 30d";
+      options = "--delete-older-than 10d";
       persistent = true;
     };
   };

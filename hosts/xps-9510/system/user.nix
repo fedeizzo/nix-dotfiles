@@ -1,8 +1,8 @@
-{ username, config, fs, pkgs, sops, ... }:
+{ username, config, pkgs, ... }:
 
 {
-  users.mutableUsers = if fs == "ext4" then true else false;
-  programs.fuse.userAllowOther = if fs == "btrfs" then true else false;
+  users.mutableUsers = false;
+  programs.fuse.userAllowOther = true;
   users.users = {
     ${username} = {
       name = username;
@@ -23,11 +23,10 @@
         "keys" # required to have read access to /run/secrets.d (sops-nix)
       ];
       shell = pkgs.fish;
-      hashedPasswordFile = if fs == "ext4" then null else config.sops.secrets.fedeizzo-path.path;
+      hashedPasswordFile = config.sops.secrets.fedeizzo-path.path;
     };
     root = {
-      hashedPassword = "!"; # to enable root login remode this line
-      # passwordFile = if config.fs == "ext4" then null else config.sops.secrets.root-path.path;
+      hashedPassword = "!";
     };
   };
 }

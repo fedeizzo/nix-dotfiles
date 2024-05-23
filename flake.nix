@@ -100,7 +100,6 @@
         fedeizzo-nixos = mkHost {
           username = "fedeizzo";
           hostname = "fedeizzo-nixos";
-          fs = "btrfs";
           system = "x86_64-linux";
           machine = "xps-9510";
           pkgs = legacyPackages."x86_64-linux";
@@ -108,7 +107,6 @@
         rasp-nixos = mkHost {
           username = "rasp";
           hostname = "rasp-nixos";
-          fs = "ext4";
           system = "aarch64-linux";
           machine = "raspberry";
           pkgs = legacyPackages-rasp."aarch64-linux";

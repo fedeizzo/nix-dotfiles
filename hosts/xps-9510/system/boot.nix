@@ -1,4 +1,4 @@
-{ config, pkgs, nixpkgs-unstable, ... }:
+{ pkgs, nixpkgs-unstable, ... }:
 
 let
   polyDarkTheme = pkgs.fetchgit {

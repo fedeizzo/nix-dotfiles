@@ -1,6 +1,6 @@
-{ lib, fs, ... }:
+{ ... }:
 
-lib.mkIf (fs == "btrfs") {
+{
   # UPDATE ALSO SCRIPT INSTALL
   environment.persistence."/persist" = {
     hideMounts = true;
