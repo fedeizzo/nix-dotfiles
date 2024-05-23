@@ -103,7 +103,13 @@
         "eDP-1,1920x1200@60,0x0,1"
       ];
       workspace = [
-        "eDP-1,1"
+        "1"
+        "2"
+        "3"
+        "4"
+        "5"
+        "6"
+        "7"
       ];
 
       windowrulev2 = [
@@ -137,13 +143,13 @@
         "$modSHIFT , I      , movetoworkspacesilent  , special                                                               "
         "$mod      , I      , exec                   , ~/.sources/create_kitty_scratchpad                                    "
         "$mod      , I      , togglespecialworkspace ,                                                                       "
-        "$mod      , 1      , exec                   , ~/.sources/hyprland_workspace 1                                       "
-        "$mod      , 2      , exec                   , ~/.sources/hyprland_workspace 2                                       "
-        "$mod      , 3      , exec                   , ~/.sources/hyprland_workspace 3                                       "
-        "$mod      , 4      , exec                   , ~/.sources/hyprland_workspace 4                                       "
-        "$mod      , 5      , exec                   , ~/.sources/hyprland_workspace 5                                       "
-        "$mod      , 6      , exec                   , ~/.sources/hyprland_workspace 6                                       "
-        "$mod      , 7      , exec                   , ~/.sources/hyprland_workspace 7                                       "
+        "$mod      , 1      , workspace                   ,  1                                       "
+        "$mod      , 2      , workspace                   ,  2                                       "
+        "$mod      , 3      , workspace                   ,  3                                       "
+        "$mod      , 4      , workspace                   ,  4                                       "
+        "$mod      , 5      , workspace                   ,  5                                       "
+        "$mod      , 6      , workspace                   ,  6                                       "
+        "$mod      , 7      , workspace                   ,  7                                       "
         "$modSHIFT , 1      , movetoworkspacesilent  , 1                                                                     "
         "$modSHIFT , 2      , movetoworkspacesilent  , 2                                                                     "
         "$modSHIFT , 3      , movetoworkspacesilent  , 3                                                                     "
