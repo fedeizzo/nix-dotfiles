@@ -4,11 +4,8 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
     nixpkgs-rasp.url = "github:nixos/nixpkgs/nixos-23.11";
-    nixpkgs-old.url = "github:nixos/nixpkgs/nixos-21.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
-    mobile-nixos.flake = false;
-    mobile-nixos.url = "github:NixOs/mobile-nixos/master";
     deploy-rs.url = "github:serokell/deploy-rs";
     home-manager = {
       url = "github:nix-community/home-manager/release-24.05";

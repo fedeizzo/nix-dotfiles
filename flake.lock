@@ -194,23 +194,6 @@
         "type": "github"
       }
     },
-    "mobile-nixos": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1694727595,
-        "narHash": "sha256-mwDJFRcspcYYaz9/kWtz6/KnCc8dPgi80zHdkDFCRVU=",
-        "owner": "NixOs",
-        "repo": "mobile-nixos",
-        "rev": "92910bbba6ed6e1da81a9818c2f1f0e1b2ac1b3f",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOs",
-        "ref": "master",
-        "repo": "mobile-nixos",
-        "type": "github"
-      }
-    },
     "nixos-hardware": {
       "locked": {
         "lastModified": 1711352745,
@@ -239,22 +222,6 @@
       "original": {
         "owner": "NixOS",
         "ref": "nixpkgs-unstable",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
-    "nixpkgs-old": {
-      "locked": {
-        "lastModified": 1659446231,
-        "narHash": "sha256-hekabNdTdgR/iLsgce5TGWmfIDZ86qjPhxDg/8TlzhE=",
-        "owner": "nixos",
-        "repo": "nixpkgs",
-        "rev": "eabc38219184cc3e04a974fe31857d8e0eac098d",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nixos",
-        "ref": "nixos-21.11",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -349,10 +316,8 @@
         "home-manager": "home-manager",
         "hyprland-contrib": "hyprland-contrib",
         "impermanence": "impermanence",
-        "mobile-nixos": "mobile-nixos",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs_2",
-        "nixpkgs-old": "nixpkgs-old",
         "nixpkgs-rasp": "nixpkgs-rasp",
         "nixpkgs-unstable": "nixpkgs-unstable",
         "sops-nix": "sops-nix"

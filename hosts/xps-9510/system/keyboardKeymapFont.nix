@@ -1,4 +1,4 @@
-{ pkgs, nixpkgs-old, ... }:
+{ pkgs, ... }:
 
 {
   services.keyd = {
@@ -18,7 +18,7 @@
   services = {
     fprintd = {
       enable = true;
-      package = nixpkgs-old.fprintd;
+      package = pkgs.fprintd;
       tod = {
         enable = true;
         driver = pkgs.libfprint-2-tod1-goodix;
