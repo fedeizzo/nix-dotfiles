@@ -128,12 +128,29 @@
       ];
 
       bind = [
+        # workspaces
+        "$mod, 1, workspace, 1"
+        "$mod, 2, workspace, 2"
+        "$mod, 3, workspace, 3"
+        "$mod, 4, workspace, 4"
+        "$mod, 5, workspace, 5"
+        "$mod, 6, workspace, 6"
+        "$mod, 7, workspace, 7"
+        "$modSHIFT, 1, movetoworkspacesilent, 1"
+        "$modSHIFT, 2, movetoworkspacesilent, 2"
+        "$modSHIFT, 3, movetoworkspacesilent, 3"
+        "$modSHIFT, 4, movetoworkspacesilent, 4"
+        "$modSHIFT, 5, movetoworkspacesilent, 5"
+        "$modSHIFT, 6, movetoworkspacesilent, 6"
+        "$modSHIFT, 7, movetoworkspacesilent, 7"
+
+        "$mod&Control_L,I,exec,hdrop -f -p t kitty --class speciakitty"
+
         "$mod      , Q      , killactive             ,                                                                       "
         "$mod      , T      , togglefloating         ,                                                                       "
         "$mod      , Y      , pin                    ,                                                                       "
         "$mod      , F      , fullscreen             ,                                                                       "
         "$modSHIFT , ESCAPE , exit                   ,                                                                       "
-        "$mod      , TAB    , exec                   , ~/.sources/hyprland_workspace                                         "
         "$mod      , U      , layoutmsg              , swapwithmaster                                                        "
         "$mod      , K      , layoutmsg              , cycleprev                                                             "
         "$mod      , J      , layoutmsg              , cyclenext                                                             "
@@ -141,22 +158,6 @@
         "$modSHIFT , J      , layoutmsg              , swapnext                                                              "
         "$mod      , R      , submap                 , resize                                                                "
         "$modSHIFT , I      , movetoworkspacesilent  , special                                                               "
-        "$mod      , I      , exec                   , ~/.sources/create_kitty_scratchpad                                    "
-        "$mod      , I      , togglespecialworkspace ,                                                                       "
-        "$mod      , 1      , workspace                   ,  1                                       "
-        "$mod      , 2      , workspace                   ,  2                                       "
-        "$mod      , 3      , workspace                   ,  3                                       "
-        "$mod      , 4      , workspace                   ,  4                                       "
-        "$mod      , 5      , workspace                   ,  5                                       "
-        "$mod      , 6      , workspace                   ,  6                                       "
-        "$mod      , 7      , workspace                   ,  7                                       "
-        "$modSHIFT , 1      , movetoworkspacesilent  , 1                                                                     "
-        "$modSHIFT , 2      , movetoworkspacesilent  , 2                                                                     "
-        "$modSHIFT , 3      , movetoworkspacesilent  , 3                                                                     "
-        "$modSHIFT , 4      , movetoworkspacesilent  , 4                                                                     "
-        "$modSHIFT , 5      , movetoworkspacesilent  , 5                                                                     "
-        "$modSHIFT , 6      , movetoworkspacesilent  , 6                                                                     "
-        "$modSHIFT , 7      , movetoworkspacesilent  , 7                                                                     "
         "$mod      , S      , exec                   , rofi -show \"fd\" -modi \"fd:~/.sources/rofi_spotlight\"              "
         "$modSHIFT , N      , exec                   , swaync-client -t -sw                                                  "
         "$mod      , RETURN , exec                   , kitty                                                                 "
@@ -196,14 +197,12 @@
       bindi = [ ];
 
       exec-once = [
-        "kanshi                                                                                                                                                                               "
-        "~/.sources/create_kitty_scratchpad                                                                                                                                                   "
-        "eww daemon                                                                                                                                                                           "
-        "sleep 1 && eww open-many workspaces clock sys-info-panel backup                                                                                                                      "
-        "sleep 5 && ~/.sources/launch_hyprlandevents                                                                                                                                          "
-        "swaync                                                                                                                                                                               "
-        "nm-applet --indicator                                                                                                                                                                "
-        "wl-paste -t text --watch clipman store                                                                                                                                               "
+        "hdrop --floating --position t --background kitty --class scratchpad"
+        "eww daemon"
+        "sleep 1 && eww open-many workspaces clock sys-info-panel backup "
+        "sleep 5 && ~/.sources/launch_hyprlandevents"
+        "swaync"
+        "wl-paste -t text --watch clipman store"
       ];
     };
   };
