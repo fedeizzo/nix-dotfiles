@@ -3,11 +3,13 @@
 {
   services.kanshi = {
     enable = true;
+    systemdTarget = "hyprland-session.target";
+
     profiles = {
       undocked = {
         outputs = [
           {
-            criteria = "Sharp Corporation 0x14D1 0x00000000";
+            criteria = "eDP-1";
             status = "enable";
             mode = "1920x1200@59.950Hz";
           }
