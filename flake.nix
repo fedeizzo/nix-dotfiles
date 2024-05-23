@@ -75,7 +75,8 @@
     in
     rec {
       overlays = {
-        # emacs = inputs.emacs-overlay.overlay;
+        emacs = inputs.emacs-overlay.overlay;
+        emacs-lsp-booster = inputs.emacs-lsp-booster.overlays.default;
         default = import ./overlays { inherit inputs; };
       };
       legacyPackages = forAllSystems (system:

@@ -64,13 +64,13 @@ let
     owner = "emacs-tree-sitter";
     repo = "ts-fold";
     rev = "master";
-    sha256 = "sha256-RlT5iyrkYm8Lgvuts+PGDb/vNcUWKJM/Yxc7Ao1egDE=";
+    sha256 = "sha256-tCrtNnJXmLY6+yUxfrMHnYVY+Hwc+ODxT8fx8jBEN7M=";
   };
   hideshowvis = pkgs.fetchFromGitHub {
     owner = "sheijk";
     repo = "hideshowvis";
     rev = "master";
-    sha256 = "sha256-FSRvyj18L+Xr+9k8TBOwysP4a7NYlKYPLHeAyrgscno=";
+    sha256 = "sha256-tCrtNnJXmLY6+yUxfrMHnYVY+Hwc+ODxT8fx8jBEN7M=";
   };
 in
 {
