@@ -26,6 +26,7 @@
 (tooltip-mode -1)
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
+(menu-bar-mode -1)
 
 ;; frame personalization
 (setq default-frame-alist '((min-height . 1)  '(height . 45)

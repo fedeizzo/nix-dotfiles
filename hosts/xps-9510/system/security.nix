@@ -18,4 +18,6 @@
   programs.gnupg.agent.enable = true;
   programs.gnupg.agent.pinentryPackage = pkgs.pinentry-qt;
   programs.ssh.askPassword = "";
+
+  environment.systemPackages = [ pkgs.pinentry-qt ];
 }

@@ -1,4 +1,4 @@
-{ pkgs, username, inputs, config, nixpkgs-unstable, lib, ... }:
+{ pkgs, username, inputs, config, lib, ... }:
 
 
 {

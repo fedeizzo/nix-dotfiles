@@ -4,7 +4,6 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-24.05";
     nixpkgs-rasp.url = "github:nixos/nixpkgs/nixos-23.11";
-    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     deploy-rs.url = "github:serokell/deploy-rs";
     home-manager = {
@@ -54,19 +53,12 @@
       lib = import ./lib { inherit inputs; };
       inherit (lib) mkHost forAllSystems;
 
-      macOSPkgs = import inputs.nixpkgs {
+      macOSPkgs = import inputs.nixpkgs-unstable {
         system = "aarch64-darwin";
         overlays = builtins.attrValues {
           emacs = inputs.emacs-overlay.overlays.default;
           emacs-lsp-booster = inputs.emacs-lsp-booster.overlays.default;
           default = import ./overlays { inherit inputs; };
-        };
-      };
-      macOSPkgs-unstable = import inputs.nixpkgs-unstable {
-        system = "aarch64-darwin";
-        overlays = builtins.attrValues {
-          emacs = inputs.emacs-overlay.overlays.default;
-          emacs-lsp-booster = inputs.emacs-lsp-booster.overlays.default;
         };
       };
     in
@@ -116,7 +108,6 @@
           ./home/macbook-pro
         ];
         extraSpecialArgs = {
-          pkgs-unstable = macOSPkgs-unstable;
           inputs = inputs;
         };
       };

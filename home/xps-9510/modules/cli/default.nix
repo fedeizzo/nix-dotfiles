@@ -1,4 +1,4 @@
-{ pkgs, pkgs-unstable, ... }:
+{ pkgs, ... }:
 
 {
   imports = [ ../../../common/cli ];
@@ -47,6 +47,6 @@
     mpd-mpris
     moreutils
     zip
-    pkgs-unstable.bitwarden-cli
+    bitwarden-cli
   ];
 }

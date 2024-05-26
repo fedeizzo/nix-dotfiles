@@ -1,4 +1,4 @@
-{ pkgs, pkgs-unstable, ... }:
+{ pkgs, ... }:
 
 {
   config = {
@@ -16,7 +16,7 @@
       home-manager
       git-crypt
       rbw
-      pkgs-unstable.pet
+      pet
     ];
 
     # programs.pet = {

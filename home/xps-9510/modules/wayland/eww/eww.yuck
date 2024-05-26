@@ -18,10 +18,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; SYSINFO
 ;;;;;;;;;;;;;;;;;;;;;;
-(defpoll volume-percentage :interval "6s" "pamixer --get-volume")
-(defpoll mic-percentage :interval "6s" "pamixer --source 'alsa_input.pci-0000_00_1f.3.analog-stereo' --get-volume")
-
-(defpoll brightness-percentage :interval "6s" "echo '('$(brightnessctl g)'/'$(brightnessctl m)')*100' | bc -l")
 (defwidget sys-info-widget [value suffix class icon]
      (circular-progress :class class :value value :start-at 75 :thickness 8
       (box :orientation "v" :vexpand false :hexpand false :spacing 0
@@ -35,22 +31,6 @@
      (sys-info-widget :value "${round(EWW_TEMPS['CORETEMP_PACKAGE_ID_0'],0)}" :suffix "C" :class "sys_info temperature" :icon "")
      (sys-info-widget :value "${round(EWW_RAM['used_mem_perc'],0)}" :suffix "%" :class "sys_info memory" :icon "")))
 
-(defwidget sys-sliders [] 
-    (box :class "card" :vexpand "false" :hexpand "false" 
-     (box :orientation "v" :spacing 35 :halign "center" :valign "center" :space-evenly "false" :vexpand "false" :hexpand "false" 
-     (box :class "volume_bar" :orientation "h" :spacing 20 :space-evenly "false" :vexpand "false" :hexpand "false" 
-      (label :class "iconvolume" :text "")
-      (scale :min 0 :max 100 :value "${mute-enable == true ? 0 : volume-percentage }" :active true :onchange "pamixer --set-volume {}"))
-     (box :class "mic_bar" :orientation "h" :spacing 20 :space-evenly "false" :vexpand "false" :hexpand "false" 
-      (label :class "iconmic" :text "")
-      (scale :min 0 :max 100 :value mic-percentage :active true :onchange "pamixer --source 'alsa_input.pci-0000_00_1f.3.analog-stereo' --set-volume {}"))
-     (box :class "bright_bar" :orientation "h" :spacing 20 :space-evenly "false" :vexpand "false" :hexpand "false" 
-      (label :class "iconbright" :text "")
-      (scale :min 0 :max 100 :value brightness-percentage :active false))
-     (box :class "disk_bar" :orientation "h" :spacing 20 :space-evenly "false" :vexpand "false" :hexpand "false" 
-      (label :class "icondisk" :text "")
-      (scale :min 0 :max 100 :value "${EWW_DISK['/']['used_perc']}"  :active false)))))
-
 (defwindow sys-info-panel
     :stacking "bg"
     :focusable "false"
@@ -58,42 +38,36 @@
     :focusable false
     :active true
     :monitor 0
-    :geometry (geometry :x 1200 :y 190 :width 700 :height 155) (sys-info-panel))
+    :geometry (geometry :anchor "top right" :x 20 :y 190 :width 700 :height 155) (sys-info-panel))
 
-(defwindow sys-sliders
+(defpoll chocofi-left-battery :interval "60s"
+                          :initial "0"
+                          `~/nix-dotfiles/home/xps-9510/modules/wayland/eww/scripts/bluetooth_battery chocofi_left`)
+(defpoll chocofi-right-battery :interval "60s"
+                          :initial "0"
+                          `~/nix-dotfiles/home/xps-9510/modules/wayland/eww/scripts/bluetooth_battery chocofi_right`)
+(defpoll trackpad-battery :interval "60s"
+                          :initial "0"
+                          `~/nix-dotfiles/home/xps-9510/modules/wayland/eww/scripts/bluetooth_battery trackpad`)
+(defpoll headset-battery :interval "60s"
+                          :initial "0"
+                          `~/nix-dotfiles/home/xps-9510/modules/wayland/eww/scripts/bluetooth_battery headset`)
+                          
+(defwidget bluetooth-info-panel []
+    (box :orientation "h" :class "card" :vexpand "false" :hexpand "false" :spacing 0
+     (sys-info-widget :value "${chocofi-left-battery}" :suffix "%" :class "sys_info battery" :icon "")
+     (sys-info-widget :value "${chocofi-right-battery}" :suffix "%" :class "sys_info cpu" :icon "")
+     (sys-info-widget :value "${trackpad-battery}" :suffix "%" :class "sys_info temperature" :icon "󰟸")
+     (sys-info-widget :value "${headset-battery}" :suffix "%" :class "sys_info memory" :icon "")))
+
+(defwindow bluetooth-info-panel
     :stacking "bg"
     :focusable "false"
     :exclusive false
     :focusable false
     :active true
     :monitor 0
-    :geometry (geometry :x 635 :y 150 :width 350 :height 325) (sys-sliders))
-
-;;;;;;;;;;;;;;;;;;;;;;
-;; ONOFF BUTTONS
-;;;;;;;;;;;;;;;;;;;;;;
-(defpoll wifi-enable :interval "10s" "./scripts/wifi.sh status")
-(defpoll mute-enable :interval "10s" "./scripts/mute.sh status")
-(defpoll bluetooth-enable :interval "10s" "./scripts/bluetooth.sh status")
-
-(defwidget onOffButton [name icon command color is-enable]
-    (button
-     :class "onoff_btn"
-     :halign "center"
-     :tooltip name
-     :style "background-color: ${is-enable == true ? nord4 : nord2 }; color: ${is-enable == true ?  nord1 : color}"
-     :onclick command icon))
-
-(defwidget selectors []
-    (box :class "card" :orientation "h" :space-evenly false :vexpand false :hexpand false :halign "center" :spacing 45 
-     (box :orientation "v"
-      (onOffButton :name "Wifi" :icon "" :command "./scripts/wifi.sh toggle '${EWW_EXECUTABLE} -c ${EWW_CONFIG_DIR}'" :color nord12 :is-enable wifi-enable)
-      (onOffButton :name "Mute" :icon "" :command "./scripts/mute.sh toggle '${EWW_EXECUTABLE} -c ${EWW_CONFIG_DIR}'" :color nord13 :is-enable mute-enable)
-      (onOffButton :name "Bletooth" :icon "" :command "./scripts/bluetooth.sh toggle '${EWW_EXECUTABLE} -c ${EWW_CONFIG_DIR}'" :color nord14 :is-enable bluetooth-enable))
-     (box :orientation "v"
-      (onOffButton :name "Wifi" :icon "" :command "./scripts/wifi.sh toggle '${EWW_EXECUTABLE} -c ${EWW_CONFIG_DIR}'" :color nord12 :is-enable wifi-enable)
-      (onOffButton :name "Mute" :icon "" :command "./scripts/mute.sh toggle '${EWW_EXECUTABLE} -c ${EWW_CONFIG_DIR}'" :color nord13 :is-enable mute-enable)
-      (onOffButton :name "Mute" :icon "" :command "nmcli radio wifi off" :color nord13 :is-enable bluetooth-enable))))
+    :geometry (geometry :anchor "top right" :x 20 :y 375 :width 700 :height 155) (bluetooth-info-panel))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;
 ;; CLOCK
@@ -119,7 +93,7 @@
     :focusable false
     :active true
     :monitor 0
-    :geometry (geometry :x 1200 :y 20 :width 350 :height 155) (clock))
+    :geometry (geometry :anchor "top right" :x 20 :y 20 :width 350 :height 155) (clock))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; HYPRLAND
@@ -182,30 +156,6 @@
       (label :class "network_text" :text " ${round(EWW_NET[interface]['NET_UP'] / 1000000, 1)}")))
 
 ;;;;;;;;;;;;;;;;;;;;;;
-;; DASHBOARD
-;;;;;;;;;;;;;;;;;;;;;;
-(defwindow dashboard
-    :monitor 0
-    :class "dashboard"
-    :hexpand false
-    :vexpand false
-    :geometry (geometry :x 1375 :y 330)
-    :stacking "bg"
-    :exclusive false
-    :focusable false
-    :active true
-    (box :orientation "v" :space-evenly false :spacing 16
-     (box :orientation "h" :spacing 0
-      (sys-sliders)
-      (selectors))
-     (box :orientation "h" :spacing 0 :halign "center" :vexpand false :hexpand false
-      (network :icon "" :color nord12 :interface "wlp0s20f3")
-      (network :icon "" :color nord15 :interface "tailscale0"))
-    ))
-
-    
-
-;;;;;;;;;;;;;;;;;;;;;;
 ;; BACKUP
 ;;;;;;;;;;;;;;;;;;;;;;
 (defpoll home-backup :interval "5m" "journalctl -u borgbackup-job-home-persistent.service | grep 'Deactivated successfully.' | tail -n1 | cut -d ' ' -f -3 | rev | cut -c4- | rev")
@@ -223,44 +173,4 @@
     :focusable false
     :active true
     :monitor 0
-    :geometry (geometry :x 1565 :y 20 :width 335 :height 155) (backup :icon "" :color nord13))
-
-;;;;;;;;;;;;;;;;;;;;;;
-;; Pomodoro
-;;;;;;;;;;;;;;;;;;;;;;
-(defvar pomodoro-task 25)
-(defvar pomodoro-break 5)
-(defvar pomodoro-tasks-before-long-break 4)
-
-(defwidget pomodoro [icon color]
-    (box :class "card" :orientation "h" :spacing 50 :space-evenly false :vexpand "false" :hexpand "false" 
-     (label :class "backup_icon" :valign "start" :halign "start" :text icon :style "color: ${color};")
-     (label :class "backup_date" :valign "end" :halign "end" :text root-backup)))
-
-(defwindow pomodoro
-    :stacking "fg"
-    :exclusive false
-    :focusable true
-    :active false
-    :monitor 0
-    :geometry (geometry :x 1565 :y 20 :width 335 :height 155) (pomodoro :icon "" :color nord13))
-
-;;;;;;;;;;;;;;;;;;;;;;
-;; Volume PopUp
-;;;;;;;;;;;;;;;;;;;;;;
-(defwidget volume []
-    (revealer :transition "slideup" :duration :duration "5s"))
-
-(defwindow volume
-    :monitor 0
-    :class "dashboard"
-    :hexpand false
-    :vexpand false
-    :geometry (geometry :x 743 :y 1159)
-    :stacking "fg"
-    :exclusive false
-    :focusable false
-    :active true
-    (box :class "volume_popup" :orientation "h" :spacing 5 :space-evenly "false"
-(label "lkdfj")
-    ))
+    :geometry (geometry :anchor "top right" :x 390 :y 20 :width 335 :height 155) (backup :icon "" :color nord13))

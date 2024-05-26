@@ -15,14 +15,18 @@
 		    :weight 'semilight
 		    :slant 'italic)
 
-(defun fi/update-font--window-size-change (&rest _)
-  "Update font size based on the screen resolution."
-  (let* ((attrs (frame-monitor-attributes))
-	 (width-mm (nth 1 (nth 2 attrs)))
-	 (size 12))         ;; default size for the internal laptop monitor
-    (when (or (eq width-mm 602) (eq width-mm 801))  ;; office and home monitor
-      (setq size 13))
-    (set-frame-font (format "JetBrains Mono %s" size))))
+(if ON-MACBOOK
+    (defun fi/update-font--window-size-change (&rest _)
+      "Update font size based on the screen resolution."
+      (let* ((attrs (frame-monitor-attributes))
+	     (width-mm (nth 1 (nth 2 attrs)))
+	     (size 12))         ;; default size for the internal laptop monitor
+        (when (or (eq width-mm 602) (eq width-mm 801))  ;; office and home monitor
+          (setq size 13))
+        (set-frame-font (format "JetBrains Mono %s" size))))
+  (defun fi/update-font--window-size-change (&rest _)
+    "Update font size based on the screen resolution."
+    ))
 
 (defun fi/update-font-size ()
   "Update font size based on the screen resolution."

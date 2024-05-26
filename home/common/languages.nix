@@ -1,4 +1,4 @@
-{ pkgs, pkgs-unstable, ... }:
+{ pkgs, ... }:
 
 let
   my-python-packages = python-packages: with python-packages; [
@@ -56,8 +56,8 @@ in
   ] ++
   [
     # nix
-    pkgs-unstable.nixpkgs-fmt
-    pkgs-unstable.nixpkgs-lint
-    pkgs-unstable.nil
+    pkgs.nixpkgs-fmt
+    pkgs.nixpkgs-lint
+    pkgs.nil
   ];
 }

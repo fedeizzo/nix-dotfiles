@@ -13,7 +13,7 @@
       "uni"
       "personalProject"
       "org"
-      "HealthData"
+      "zettelkasten"
 
       # AppData
       ".local"

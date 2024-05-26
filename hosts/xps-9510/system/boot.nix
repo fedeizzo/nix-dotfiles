@@ -1,4 +1,4 @@
-{ pkgs, nixpkgs-unstable, ... }:
+{ pkgs, ... }:
 
 let
   polyDarkTheme = pkgs.fetchgit {
@@ -27,7 +27,7 @@ in
       };
     };
     tmp.cleanOnBoot = true;
-    kernelPackages = nixpkgs-unstable.linuxPackages_latest;
+    kernelPackages = pkgs.linuxPackages_latest;
     kernel.sysctl = {
       "vm.swappiness" = 10;
       "dev.i915.perf_stream_paranoid" = 0;

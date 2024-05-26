@@ -41,6 +41,13 @@
       pkgs.symbola
       pkgs.jetbrains-mono
       pkgs.emacs-all-the-icons-fonts
+      (pkgs.nerdfonts.override {
+        fonts = [
+          "Meslo"
+          "RobotoMono"
+        ];
+      })
+
     ];
     fontconfig = {
       defaultFonts = {

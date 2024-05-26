@@ -1,4 +1,4 @@
-{ pkgs, username, inputs, config, nixpkgs-unstable, lib, ... }:
+{ pkgs, username, inputs, config, lib, ... }:
 
 
 {
@@ -6,7 +6,6 @@
     useGlobalPkgs = true;
     useUserPackages = true;
     extraSpecialArgs = {
-      pkgs-unstable = nixpkgs-unstable;
       sops = config.sops;
       username = username;
       inputs = inputs;

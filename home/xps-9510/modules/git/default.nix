@@ -5,10 +5,10 @@
     enable = true;
     userName = "Federico Izzo";
     userEmail = "federico.izzo99@gmail.com";
-    signing = {
-      key = "7F857F72";
-      signByDefault = true;
-    };
+    # signing = {
+    #   key = "7F857F72";
+    #   signByDefault = true;
+    # };
     lfs.enable = true;
     extraConfig = {
       init = {

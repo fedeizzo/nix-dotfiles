@@ -1,16 +1,11 @@
-{ config
-, pkgs
-, pkgs-unstable
-, libs
-, ...
-}:
+{ config, pkgs, libs, ...}:
 let
-  myEmacs = (pkgs-unstable.emacsWithPackagesFromUsePackage {
+  myEmacs = (pkgs.emacsWithPackagesFromUsePackage {
     config = ''
       (load-file "~/.config/emacs/init.el")
     '';
     defaultInitFile = true;
-    package = pkgs-unstable.emacs-pgtk;
+    package = pkgs.emacs29;
     alwaysEnsure = true;
     extraEmacsPackages = epkgs: with epkgs; [
       (import ./modules/checkers { epkgs = epkgs; }).packages

@@ -31,14 +31,6 @@ rec {
       config = {
         inherit username hostname;
       };
-      defaults = { pkgs, ... }: {
-        _module.args.nixpkgs-unstable = import inputs.nixpkgs-unstable {
-          inherit (pkgs.stdenv.targetPlatform) system;
-          config.allowUnfree = true;
-          config.joypixels.acceptLicense = true;
-          overlays = builtins.attrValues { emacs = inputs.emacs-overlay.overlays.default; };
-        };
-      };
     in
     nixosSystem
       {
@@ -49,7 +41,6 @@ rec {
         };
 
         modules = [
-          defaults
           ../hosts/${machine}
           ../home/${machine}
         ];

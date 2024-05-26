@@ -6,6 +6,11 @@
       enable = true;
       powerOnBoot = true;
       disabledPlugins = [ "sap" ];
+      input = {
+        General = {
+          UserspaceHID = true;
+        };
+      };
     };
   };
 

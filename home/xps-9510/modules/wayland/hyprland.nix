@@ -1,10 +1,10 @@
-{ pkgs-unstable, inputs, ... }:
+{ pkgs, inputs, ... }:
 
 {
   wayland.windowManager.hyprland = {
     enable = true;
     xwayland.enable = true;
-    package = pkgs-unstable.hyprland;
+    package = pkgs.hyprland;
 
     extraConfig = ''
       submap=resize
@@ -40,13 +40,21 @@
     settings = {
       "$mod" = "SUPER";
       general = {
+        # appearance
         border_size = 2;
         no_border_on_floating = true;
         gaps_in = 5;
         gaps_out = 5;
         "col.active_border" = "0x55B48EAD";
         "col.inactive_border" = "0xFF2E3440";
+
+        # layout
         layout = "master";
+
+        # functionality
+        resize_on_border = true;
+        extend_border_grab_area = 25;
+        hover_icon_on_border = true;
       };
 
       decoration = {
@@ -78,6 +86,7 @@
           natural_scroll = true;
           disable_while_typing = true;
           tap-to-click = true;
+          scroll_factor = 0.75;
         };
       };
 
@@ -90,6 +99,7 @@
 
       misc = {
         disable_hyprland_logo = true;
+        disable_autoreload = true;
         enable_swallow = true;
         swallow_regex = "^(kittylf)$";
       };
@@ -102,15 +112,7 @@
       monitor = [
         "eDP-1,1920x1200@60,0x0,1"
       ];
-      workspace = [
-        "1"
-        "2"
-        "3"
-        "4"
-        "5"
-        "6"
-        "7"
-      ];
+      workspace = [ "1" "2" "3" "4" "5" "6" "7" ];
 
       windowrulev2 = [
         "float,class:^(pinentry-qt)$,title:"
@@ -144,70 +146,74 @@
         "$modSHIFT, 6, movetoworkspacesilent, 6"
         "$modSHIFT, 7, movetoworkspacesilent, 7"
 
-        "$mod&Control_L,I,exec,hdrop -f -p t kitty --class speciakitty"
+        # windows
+        "$mod, Y, pin," # pin window in all monitors
+        "$mod, Q, killactive,"
+        "$mod, T, togglefloating,"
+        "$mod, F, fullscreen,"
+        "$mod, R, submap, resize"
 
-        "$mod      , Q      , killactive             ,                                                                       "
-        "$mod      , T      , togglefloating         ,                                                                       "
-        "$mod      , Y      , pin                    ,                                                                       "
-        "$mod      , F      , fullscreen             ,                                                                       "
-        "$modSHIFT , ESCAPE , exit                   ,                                                                       "
-        "$mod      , U      , layoutmsg              , swapwithmaster                                                        "
-        "$mod      , K      , layoutmsg              , cycleprev                                                             "
-        "$mod      , J      , layoutmsg              , cyclenext                                                             "
-        "$modSHIFT , K      , layoutmsg              , swapprev                                                              "
-        "$modSHIFT , J      , layoutmsg              , swapnext                                                              "
-        "$mod      , R      , submap                 , resize                                                                "
-        "$modSHIFT , I      , movetoworkspacesilent  , special                                                               "
-        "$mod      , S      , exec                   , rofi -show \"fd\" -modi \"fd:~/.sources/rofi_spotlight\"              "
-        "$modSHIFT , N      , exec                   , swaync-client -t -sw                                                  "
-        "$mod      , RETURN , exec                   , kitty                                                                 "
-        "$mod      , E      , exec                   , emacsclient -c                                                        "
-        "$mod      , D      , exec                   , rofi -show drun                                                       "
-        "$mod      , B      , exec                   , rofi-rbw                                                              "
-        "$mod      , W      , exec                   , kitty --class kittylf /home/fedeizzo/.sources/lfrun                   "
-        "$mod      , C      , exec                   , clipman pick -t rofi                                                  "
-        "$mod      , X      , exec                   , swaylock --indicator-radius 0 -i $HOME/.config/images/lock-screen.jpg "
-        "$modSHIFT , Z      , exit                   ,                                                                       "
-        "$mod      , P      , exec                   , rofi -show \"sc\" -modi \"sc:~/.sources/rofi_screenshot\"             "
-        "$modSHIFT , C      , forcerendererreload    ,                                                                       "
+        # windows movement
+        "$mod, U, layoutmsg, swapwithmaster"
+        "$mod, K, layoutmsg, cycleprev"
+        "$mod, J, layoutmsg, cyclenext"
+        "$modSHIFT, K, layoutmsg, swapprev"
+        "$modSHIFT, J, layoutmsg, swapnext"
+
+        # misc system
+        "$mod, X, exec, hyprlock"
+        "$mod, N, exec, swaync-client -t -sw"
+
+        # exec programs
+        "$mod&Control_L,I,exec,hdrop -f -p t kitty --class speciakitty"
+        "$mod, RETURN, exec, kitty"
+        "$mod, D     , exec, rofi -show drun"
+        "$mod, B     , exec, rofi-rbw"
+        "$mod, W     , exec, kitty --class kittylf /home/fedeizzo/.sources/lfrun"
+        "$mod, C     , exec, clipman pick -t rofi"
+        "$mod, P     , exec, rofi -show \"sc\" -modi \"sc:~/.sources/rofi_screenshot\""
+
+        # hyprland
+        "$modSHIFT, R, exec, hyprctl reload"
+        "$modSHIFT, ESCAPE , exit,"
+        "$modSHIFT, C, forcerendererreload,"
       ];
 
       bindl = [ ];
       bindr = [ ];
       binde = [
-        "$mod      , H                     , resizeactive           , -10 0"
-        "$mod      , L                     , resizeactive           , 10 0"
-        "          , XF86AudioRaiseVolume  , exec                   , pamixer --increase 5                          "
-        "          , XF86AudioLowerVolume  , exec                   , pamixer --decrease 5                          "
-        "          , XF86AudioMute         , exec                   , pamixer -t                                    "
-        "          , XF86AudioMicMute      , exec                   , pactl set-source-mute @DEFAULT_SOURCE@ toggle "
-        "          , XF86MonBrightnessDown , exec                   , brightnessctl set 10%-                        "
-        "          , XF86MonBrightnessUp   , exec                   , brightnessctl set +10%                        "
-        "          , XF86AudioPlay         , exec                   , playerctl play-pause                          "
-        "          , XF86AudioNext         , exec                   , playerctl next                                "
-        "          , XF86AudioPrev         , exec                   , playerctl previous                            "
+        "$mod, H, resizeactive, -10 0"
+        "$mod, L, resizeactive, 10 0"
+        ", XF86AudioRaiseVolume, exec, pamixer --increase 5"
+        ", XF86AudioLowerVolume, exec, pamixer --decrease 5"
+        ", XF86AudioMute, exec, pamixer -t"
+        ", XF86AudioMicMute, exec, pactl set-source-mute @DEFAULT_SOURCE@ toggle"
+        ", XF86MonBrightnessDown, exec, brightnessctl set 10%-"
+        ", XF86MonBrightnessUp, exec, brightnessctl set +10%"
+        ", XF86AudioPlay, exec, playerctl play-pause"
+        ", XF86AudioNext, exec, playerctl next"
+        ", XF86AudioPrev, exec, playerctl previous"
 
       ];
       bindn = [ ];
       bindm = [
-        "$mod      , mouse:272 , movewindow"
-        "$modSHIFT , mouse:272 , resizewindow"
+        "$mod, mouse:272, movewindow"
+        "$modSHIFT, mouse:272, resizewindow"
       ];
       bindt = [ ];
       bindi = [ ];
 
       exec-once = [
-        "hdrop --floating --position t --background kitty --class scratchpad"
-        "eww daemon"
-        "sleep 1 && eww open-many workspaces clock sys-info-panel backup "
-        "sleep 5 && ~/.sources/launch_hyprlandevents"
-        "swaync"
-        "wl-paste -t text --watch clipman store"
+        "swaync" # notification center
+        "hdrop --floating --position t --background kitty --class scratchpad" # scratchpad
+        "wl-paste -t text --watch clipman store" # init clipboard
+        "eww daemon --config ~/.config/eww"
+        "sleep 2 && eww --no-daemonize open-many clock sys-info-panel bluetooth-info-panel backup"
       ];
     };
   };
 
-  home.packages = with pkgs-unstable; [
+  home.packages = with pkgs; [
     hyprpicker # colorpicker
     inputs.hyprland-contrib.packages.${pkgs.system}.hdrop
   ];
@@ -216,11 +222,15 @@
     hyprpaper = {
       enable = true;
       settings = {
+        splash = false;
+        ipc = false;
         preload = [
           "~/nix-dotfiles/home/common/images/wallpaper.png"
+          "~/nix-dotfiles/home/common/images/wallpaper_ultrawide.png"
         ];
         wallpaper = [
-          ",~/nix-dotfiles/home/common/images/wallpaper.png"
+          "eDP-1,~/nix-dotfiles/home/common/images/wallpaper.png"
+          "desc:Dell Inc. DELL U3423WE HPWLMP3,~/nix-dotfiles/home/common/images/wallpaper_ultrawide.png"
         ];
       };
     };

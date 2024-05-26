@@ -1,4 +1,4 @@
-{ pkgs, pkgs-unstable, ... }:
+{ pkgs, ... }:
 
 {
   home.packages = with pkgs; [
@@ -12,23 +12,14 @@
       categories = [ "GTK" "GNOME" "Settings" "HardwareSettings" "X-XFCE-SettingsDialog" "X-XFCE-HardwareSettings" ];
       icon = "bluetooth";
     })
-    # fonts
-    joypixels
-    (nerdfonts.override {
-      fonts = [
-        "Meslo"
-        "RobotoMono"
-      ];
-    })
-
     pavucontrol
     vlc
     gimp
-    pkgs-unstable.calibre
+    calibre
     yubikey-manager
     yubikey-manager-qt
-    pkgs-unstable.bitwarden
-    pkgs-unstable.tdesktop
+    bitwarden
+    tdesktop
   ];
 
   systemd.user.services = {
