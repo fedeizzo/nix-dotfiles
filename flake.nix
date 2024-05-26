@@ -53,7 +53,7 @@
       lib = import ./lib { inherit inputs; };
       inherit (lib) mkHost forAllSystems;
 
-      macOSPkgs = import inputs.nixpkgs-unstable {
+      macOSPkgs = import inputs.nixpkgs {
         system = "aarch64-darwin";
         overlays = builtins.attrValues {
           emacs = inputs.emacs-overlay.overlays.default;

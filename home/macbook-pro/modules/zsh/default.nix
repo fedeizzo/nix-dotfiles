@@ -4,7 +4,7 @@
   programs.starship.enableZshIntegration = true;
   programs.zsh = {
     enable = true;
-    enableAutosuggestions = true;
+    autosuggestion.enable = true;
     enableCompletion = true;
     enableVteIntegration = true;
     syntaxHighlighting.enable = true;
