@@ -9,6 +9,7 @@
 (fi/load-package-config PROG-MODULE-PATH "gendoxy.el")
 (fi/load-package-config PROG-MODULE-PATH "git-gutter.el")
 (fi/load-package-config PROG-MODULE-PATH "go-lang.el")
+(fi/load-package-config PROG-MODULE-PATH "hurl.el")
 (fi/load-package-config PROG-MODULE-PATH "java.el")
 (fi/load-package-config PROG-MODULE-PATH "lsp-mode.el")
 (fi/load-package-config PROG-MODULE-PATH "magit.el")

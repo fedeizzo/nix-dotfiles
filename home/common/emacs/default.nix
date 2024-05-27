@@ -1,4 +1,4 @@
-{ config, pkgs, libs, ...}:
+{ config, pkgs, libs, ... }:
 let
   myEmacs = (pkgs.emacsWithPackagesFromUsePackage {
     config = ''
@@ -67,6 +67,12 @@ let
     rev = "master";
     sha256 = "sha256-tCrtNnJXmLY6+yUxfrMHnYVY+Hwc+ODxT8fx8jBEN7M=";
   };
+  hurl-mode = pkgs.fetchFromGitHub {
+    owner = "JasZhe";
+    repo = "hurl-mode";
+    rev = "master";
+    sha256 = "sha256-luj/3T/sFmBxnccbUcxZCd49QgnUHXABwzVazP8aoFM=";
+  };
 in
 {
   home.packages = with pkgs; [
@@ -90,4 +96,5 @@ in
   xdg.configFile."emacs/gotest-ui-mode".source = gotest-ui-mode;
   xdg.configFile."emacs/ts-fold".source = ts-fold;
   xdg.configFile."emacs/hideshowvis".source = hideshowvis;
+  xdg.configFile."emacs/hurl-mode".source = hurl-mode;
 }

@@ -17,6 +17,7 @@
       git-crypt
       rbw
       pet
+      hurl
     ];
 
     # programs.pet = {
