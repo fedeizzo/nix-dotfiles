@@ -208,7 +208,7 @@
         "hdrop --floating --position t --background kitty --class scratchpad" # scratchpad
         "wl-paste -t text --watch clipman store" # init clipboard
         "eww daemon --config ~/.config/eww"
-        "sleep 2 && eww --no-daemonize open-many clock sys-info-panel bluetooth-info-panel backup"
+        "sleep 5 && eww --no-daemonize open-many clock sys-info-panel bluetooth-info-panel backup"
       ];
     };
   };

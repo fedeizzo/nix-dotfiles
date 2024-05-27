@@ -1,39 +1,64 @@
-/*==============================================================================================*
+#TabsToolbar
+{
+    visibility: collapse;
+}
 
-  +-----+-----+-----+-----+-----+-----+-----+
-  | █▀▀ | ▄▀█ | █▀▀ | █▀▀ | ▄▀█ | █▀▄ | █▀▀ |
-  | █▄▄ | █▀█ | ▄▄█ | █▄▄ | █▀█ | █▄▀ | ██▄ |
-  +-----+-----+-----+-----+-----+-----+-----+
+#sidebar-header {
+  display: none;
+}
 
-  Description:    Cascade is a minimalstic and keyboard centered custom theme removing a lot of the
-                  subjective clutter default Firefox comes with. This theme is highly inspired by the
-                  stylistic choices of SimpleFox by Miguel Ávila. 🦊
-                  https://github.com/migueravila/SimpleFox
+#sidebar-header {
+  /* display: none; */
+  visibility: collapse !important;
+}
 
-  Author:         Andreas Grafen
-                  (https://andreas.grafen.info)
+/* Hide splitter */
+#sidebar-box[sidebarcommand="_3c078156-979c-498b-8990-85f7987dd929_-sidebar-action"] + #sidebar-splitter {
+  display: none !important;
+}
 
-  Repository:     https://github.com/andreasgrafen/cascade
-                  Thank you Nick, Abdallah, Benyamin and Wael for all the great suggestions for improvements! ♡
+/* Shrink sidebar until hovered */
+:root {
+  --thin-tab-width: 32px;
+  --wide-tab-width: 300px;
+}
+#sidebar-box:not([sidebarcommand="_3c078156-979c-498b-8990-85f7987dd929_-sidebar-action"]) {
+  min-width: var(--wide-tab-width) !important;
+  max-width: none !important;
+}
+#sidebar-box[sidebarcommand="_3c078156-979c-498b-8990-85f7987dd929_-sidebar-action"] {
+  overflow: hidden !important;
+  position: relative !important;
+  transition: all 300ms !important;
+  /*transition: all 0ms 0s !important;*/
+  min-width: var(--thin-tab-width) !important;
+  max-width: var(--thin-tab-width) !important;
+  z-index: 2;
+}
+#sidebar-box[sidebarcommand="_3c078156-979c-498b-8990-85f7987dd929_-sidebar-action"]:hover,
+#sidebar-box[sidebarcommand="_3c078156-979c-498b-8990-85f7987dd929_-sidebar-action"] #sidebar {
+  /*transition-delay: 0s !important;*/
+  transition: all 300ms !important;
+  min-width: var(--wide-tab-width) !important;
+  max-width: var(--wide-tab-width) !important;
+  z-index: 1;
+}
+#sidebar-box[sidebarcommand="_3c078156-979c-498b-8990-85f7987dd929_-sidebar-action"]:hover {
+  margin-right: calc((var(--wide-tab-width) - var(--thin-tab-width)) * -1) !important;
+}
 
-                  Nick:     https://github.com/nicksundermeyer
-                  Abdallah: https://github.com/HeiWiper
-                  Benyamin: https://github.com/benyaminl
-                  Wael:     https://github.com/wael444
-
-                  If you're looking for a **mouse-friendly** clone please check out Waterfall.
-                  https://github.com/crambaud/waterfall
-
-*==============================================================================================*/
 
 
+#main-window #titlebar {
+  overflow: hidden;
+  transition: height 0.3s 0.3s !important;
+}
+/* Default state: Set initial height to enable animation */
+#main-window #titlebar { height: 3em !important; }
+#main-window[uidensity="touch"] #titlebar { height: 3.35em !important; }
+#main-window[uidensity="compact"] #titlebar { height: 2.7em !important; }
+/* Hidden state: Hide native tabs strip */
+#main-window[titlepreface*="XXX"] #titlebar { height: 0 !important; }
+/* Hidden state: Fix z-index of active pinned tabs */
+#main-window[titlepreface*="XXX"] #tabbrowser-tabs { z-index: 0 !important; }
 
-@import 'includes/cascade-config.css';
-@import 'includes/cascade-colours.css';
-
-@import 'includes/cascade-layout.css';
-@import 'includes/cascade-responsive.css';
-@import 'includes/cascade-floating-panel.css';
-
-@import 'includes/cascade-nav-bar.css';
-@import 'includes/cascade-tabs.css';

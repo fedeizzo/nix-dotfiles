@@ -13,7 +13,7 @@
 (fi/load-package-config LIFE-IMPROVEMENTS-MODULE-PATH "direnv.el")
 (fi/load-package-config LIFE-IMPROVEMENTS-MODULE-PATH "elfeed.el")
 (fi/load-package-config LIFE-IMPROVEMENTS-MODULE-PATH "eshell.el")
-(fi/load-package-config LIFE-IMPROVEMENTS-MODULE-PATH "sideline.el")
+;; (fi/load-package-config LIFE-IMPROVEMENTS-MODULE-PATH "sideline.el") ;; disable for efficiency
 (fi/load-package-config LIFE-IMPROVEMENTS-MODULE-PATH "exec-path-from-shell.el")
 (fi/load-package-config LIFE-IMPROVEMENTS-MODULE-PATH "format-all.el")
 (fi/load-package-config LIFE-IMPROVEMENTS-MODULE-PATH "hide-mode-line.el")
@@ -29,6 +29,8 @@
 
 ;;; Modes
 (electric-pair-mode 1)
+
+(setq auto-save-default -1)
 
 ;; (defun fi/electric-pair-better-inhibit (char)
 ;;   "Disable electric pair for one CHAR."

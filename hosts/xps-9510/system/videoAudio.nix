@@ -37,8 +37,8 @@
       };
 
       sensor = {
-        ac_regression_points = [ 0.0 0.30 0.40 0.45 0.61 0.74 0.81 0.88 0.93 0.97 1.0 ];
-        batt_regression_points = [ 0.0 0.30 0.40 0.45 0.61 0.74 0.81 0.88 0.93 0.97 1.0 ];
+        # ac_regression_points = [ 0.0 0.30 0.40 0.45 0.61 0.74 0.81 0.88 0.93 0.97 1.0 ];
+        # batt_regression_points = [ 0.0 0.30 0.40 0.45 0.61 0.74 0.81 0.88 0.93 0.97 1.0 ];
         devname = "/dev/iio:device0";
       };
 

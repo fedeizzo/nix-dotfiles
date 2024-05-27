@@ -42,16 +42,16 @@
 
 (defpoll chocofi-left-battery :interval "60s"
                           :initial "0"
-                          `~/nix-dotfiles/home/xps-9510/modules/wayland/eww/scripts/bluetooth_battery chocofi_left`)
+                          `~/.config/eww/scripts/bluetooth_battery chocofi_left`)
 (defpoll chocofi-right-battery :interval "60s"
                           :initial "0"
-                          `~/nix-dotfiles/home/xps-9510/modules/wayland/eww/scripts/bluetooth_battery chocofi_right`)
+                          `~/.config/eww/scripts/bluetooth_battery chocofi_right`)
 (defpoll trackpad-battery :interval "60s"
                           :initial "0"
-                          `~/nix-dotfiles/home/xps-9510/modules/wayland/eww/scripts/bluetooth_battery trackpad`)
+                          `~/.config/eww/scripts/bluetooth_battery trackpad`)
 (defpoll headset-battery :interval "60s"
                           :initial "0"
-                          `~/nix-dotfiles/home/xps-9510/modules/wayland/eww/scripts/bluetooth_battery headset`)
+                          `~/.config/eww/scripts/bluetooth_battery headset`)
                           
 (defwidget bluetooth-info-panel []
     (box :orientation "h" :class "card" :vexpand "false" :hexpand "false" :spacing 0

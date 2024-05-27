@@ -9,9 +9,6 @@
       ".ssh"
       "docs"
       "nix-dotfiles"
-      "fbk"
-      "uni"
-      "personalProject"
       "org"
       "zettelkasten"
 

@@ -3,7 +3,7 @@
 
 case $1 in
     trackpad)
-        upower -i /org/freedesktop/UPower/devices/battery_hid_30o82o16of2o86oc6_battery | grep percentage | awk -F':' '{print $2}' | tr -d ' ' | tr -d '%'
+        val=$(upower -i /org/freedesktop/UPower/devices/battery_hid_30o82o16of2o86oc6_battery | grep percentage | awk -F':' '{print $2}' | tr -d ' ' | tr -d '%')
         if [[ val =~ ".*shouldbeingored" ]]; then
             exit 0
         fi
