@@ -77,6 +77,7 @@ in
     imagemagick
     # spell
     (aspellWithDicts (dicts: with dicts; [ en en-computers en-science it ]))
+    enchant
   ];
   xdg.configFile."emacs/early-init.el".source = ./early-init.el;
   xdg.configFile."emacs/init.el".source = ./init.el;
