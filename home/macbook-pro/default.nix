@@ -1,25 +1,21 @@
-{ pkgs, username, inputs, config, lib, ... }:
+{ inputs, pkgs, username, ... }:
 
 
 {
   home = {
-    username = "federico.izzo";
-    stateVersion = "22.11";
-    homeDirectory = "/Users/federico.izzo";
+    username = username;
+    stateVersion = "24.05";
+    homeDirectory = "/Users/${username}";
   };
+
   imports = [
-    ../common/kitty
-    ../common/fish
     ../common/emacs
     ./modules/languages
     ./modules/cli
     ./modules/zsh
+    ../common/starship
   ];
-  fishPerMachine.aliases = {
-    ciao = "echo 'hello world'";
-  };
+
   home.packages = with pkgs; [ pngpaste ];
-  programs.zsh.initExtra = "if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
-  . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
-fi";
+
 }

@@ -3,18 +3,29 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-24.05";
+    nixpkgs-darwin.url = "github:nixos/nixpkgs/nixpkgs-24.05-darwin";
     nixpkgs-rasp.url = "github:nixos/nixpkgs/nixos-23.11";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+    nix-darwin.url = "github:LnL7/nix-darwin";
+    nix-darwin.inputs.nixpkgs.follows = "nixpkgs-darwin";
+    home-manager.url = "github:nix-community/home-manager/release-24.05";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    nh-darwin.url = "github:ToyVo/nh-darwin";
+
+    flake-utils.url = "github:numtide/flake-utils";
     deploy-rs.url = "github:serokell/deploy-rs";
-    home-manager = {
-      url = "github:nix-community/home-manager/release-24.05";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    impermanence.url = "github:nix-community/impermanence";
+    impermanence.inputs.nixpkgs.follows = "nixpkgs";
+    sops-nix.url = "github:Mic92/sops-nix";
+    sops-nix.inputs.nixpkgs.follows = "nixpkgs";
+    comin.url = "github:nlewo/comin/increase-timeout";
+    comin.inputs.nixpkgs.follows = "nixpkgs";
+
+
     hyprland-contrib = {
       url = "github:hyprwm/contrib";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    flake-utils.url = "github:numtide/flake-utils";
     emacs-overlay = {
       url = "github:nix-community/emacs-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -24,27 +35,17 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-utils.follows = "flake-utils";
     };
-    impermanence = {
-      url = "github:nix-community/impermanence";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    sops-nix = {
-      url = "github:Mic92/sops-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    comin = {
-      url = "github:nlewo/comin/increase-timeout";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
   outputs =
     { self
     , nixpkgs
+    , nixpkgs-darwin
+    , nixpkgs-rasp
     , nixos-hardware
-    , flake-utils
-    , deploy-rs
     , home-manager
+    , deploy-rs
+    , flake-utils
     , impermanence
     , sops-nix
     , ...
@@ -53,14 +54,6 @@
       lib = import ./lib { inherit inputs; };
       inherit (lib) mkHost forAllSystems;
 
-      macOSPkgs = import inputs.nixpkgs {
-        system = "aarch64-darwin";
-        overlays = builtins.attrValues {
-          emacs = inputs.emacs-overlay.overlays.default;
-          emacs-lsp-booster = inputs.emacs-lsp-booster.overlays.default;
-          default = import ./overlays { inherit inputs; };
-        };
-      };
     in
     rec {
       overlays = {
@@ -77,13 +70,18 @@
         }
       );
       legacyPackages-rasp = forAllSystems (system:
-        import inputs.nixpkgs-rasp {
+        import nixpkgs-rasp {
           inherit system;
           overlays = builtins.attrValues overlays;
           config.allowUnfree = true;
           config.joypixels.acceptLicense = true;
         }
       );
+      legacyPackages-macos = import inputs.nixpkgs-darwin {
+        system = "aarch64-darwin";
+        overlays = builtins.attrValues overlays;
+        config.allowUnfree = true;
+      };
 
       # SYSTEM CONFIGS
       nixosConfigurations = {
@@ -102,14 +100,13 @@
           pkgs = legacyPackages-rasp."aarch64-linux";
         };
       };
-      homeConfigurations."federico.izzo" = home-manager.lib.homeManagerConfiguration {
-        pkgs = macOSPkgs;
-        modules = [
-          ./home/macbook-pro
-        ];
-        extraSpecialArgs = {
-          inputs = inputs;
-        };
+      darwinConfigurations."COMP-D2G067292T" = mkHost {
+        username = "federico.izzo";
+        hostname = "COMP-D2G067292T";
+        system = "aarch64-darwin";
+        machine = "macbook-pro";
+        pkgs = legacyPackages-macos;
+        isMac = true;
       };
 
       # REMOTE DEPLOY

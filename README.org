@@ -1,11 +1,15 @@
 * NixOS personal configuration
-Full nixos configuration for following devices:
+  Full
+  nixos
+  configuration
+  for
+  following devices:
 - Dell XPS 9510
-- Raspberry pi
+  - Raspberry pi
 
-Folder description:
-- home: contains home manager configurations.
-- hosts: contains nixos system wide configurations.
+  Folder description:
+  - home: contains home manager
+    configurations.- hosts: contains nixos system wide configurations.
 - lib: some useful function definitions.
 - modules: self explanatory.
 - overlays: self explanatory.
@@ -39,6 +43,11 @@ Some useful readings if you are interested:
 Raspberry is formatted with ext4 as filesystem.
 #+begin_src sh
 ./partitioning_ext4_rasperry.sh
+#+end_src
+
+*** Macbook-pro
+#+begin_src sh
+  nix run nix-darwin -- switch --flake .
 #+end_src
 
 ** System

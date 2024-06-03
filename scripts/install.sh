@@ -2,7 +2,7 @@
 SUPER_CMD="doas"
 IMPURE=""
 if [[ $USER == "federico.izzo" ]]; then
-   home-manager switch --flake .
+   darwin-rebuild switch --flake .
    exit 0
 fi
 if [[ $USER == "root" ]]; then
