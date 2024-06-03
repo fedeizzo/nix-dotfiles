@@ -5,6 +5,7 @@
     enable = true;
     xwayland.enable = true;
     package = pkgs.hyprland;
+    plugins = [ ];
 
     extraConfig = ''
       submap=resize
@@ -61,9 +62,9 @@
         rounding = 5;
         active_opacity = 1;
         inactive_opacity = 1;
-        drop_shadow = true;
+        drop_shadow = false;
         blur = {
-          enabled = true;
+          enabled = false;
           size = 3;
           passes = 1;
         };
@@ -102,6 +103,7 @@
         disable_autoreload = true;
         enable_swallow = true;
         swallow_regex = "^(kittylf)$";
+        vfr = false;
       };
 
       master = {
@@ -110,7 +112,7 @@
       };
 
       monitor = [
-        "eDP-1,1920x1200@60,0x0,1"
+        ",preffered,auto,1"
       ];
       workspace = [ "1" "2" "3" "4" "5" "6" "7" ];
 
@@ -184,12 +186,12 @@
       binde = [
         "$mod, H, resizeactive, -10 0"
         "$mod, L, resizeactive, 10 0"
-        ", XF86AudioRaiseVolume, exec, pamixer --increase 5"
-        ", XF86AudioLowerVolume, exec, pamixer --decrease 5"
-        ", XF86AudioMute, exec, pamixer -t"
+        ", XF86AudioRaiseVolume, exec, swayosd-client --output-volume 5"
+        ", XF86AudioLowerVolume, exec, swayosd-client --output-volume -5"
+        ", XF86AudioMute, exec, swayosd-client --output-volume mute-toggle"
         ", XF86AudioMicMute, exec, pactl set-source-mute @DEFAULT_SOURCE@ toggle"
-        ", XF86MonBrightnessDown, exec, brightnessctl set 10%-"
-        ", XF86MonBrightnessUp, exec, brightnessctl set +10%"
+        ", XF86MonBrightnessUp, exec, swayosd-client --brightness +10"
+        ", XF86MonBrightnessDown, exec, swayosd-client --brightness -10"
         ", XF86AudioPlay, exec, playerctl play-pause"
         ", XF86AudioNext, exec, playerctl next"
         ", XF86AudioPrev, exec, playerctl previous"
@@ -204,18 +206,24 @@
       bindi = [ ];
 
       exec-once = [
+        "swayosd-server"
         "swaync" # notification center
         "hdrop --floating --position t --background kitty --class scratchpad" # scratchpad
         "wl-paste -t text --watch clipman store" # init clipboard
         "eww daemon --config ~/.config/eww"
-        "sleep 5 && eww --no-daemonize open-many clock sys-info-panel bluetooth-info-panel backup"
+        "sleep 5 && eww --no-daemonize open-many clock sys-info-panel bluetooth-info-panel backup workspaces"
+        "hyprland-autoname-workspaces"
       ];
     };
   };
 
   home.packages = with pkgs; [
     hyprpicker # colorpicker
-    inputs.hyprland-contrib.packages.${pkgs.system}.hdrop
+    hdrop
+    inputs.vigiland.packages.${pkgs.system}.vigiland # idle inhibitor
+    swayosd # show info while updating volume, brightness, etc.
+    hyprland-workspaces
+    hyprland-autoname-workspaces
   ];
 
   services = {
@@ -289,6 +297,44 @@
           blur_size = 8;
         }
       ];
+    };
+  };
+
+  xdg.configFile."hyprland-autoname-workspaces/config.toml".source = (pkgs.formats.toml { }).generate "hyprland-autorename-workspaces-config" {
+    version = "1.1.14";
+    format = {
+      dedup = true;
+      dedup_inactive_fullscreen = false;
+      delim = " ";
+      client = "{icon}";
+      client_active = "{icon}";
+      workspace = "{id}:{clients}";
+      workspace_empty = "{id}";
+      client_dup = "{icon}{counter_sup}";
+      client_dup_fullscreen = "[{icon}]{counter_unfocused_sup}";
+      client_fullscreen = "[{icon}]";
+    };
+    class = {
+      DEFAULT = " ";
+      Emacs = "";
+      "(?i)firefox" = "";
+      "(?i)Kitty" = "";
+      calibre-gui = "";
+      vlc = "";
+      org-telegram-desktop = "";
+      pavucontrol = "";
+      telegramdesktop = "";
+      virt-manager = "";
+    };
+    workspace_name = {
+      "0" = "zero";
+      "1" = "one";
+      "2" = "two";
+      "3" = "three";
+      "4" = "four";
+      "5" = "five";
+      "6" = "six";
+      "7" = "seven";
     };
   };
 }

@@ -98,62 +98,25 @@
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; HYPRLAND
 ;;;;;;;;;;;;;;;;;;;;;;
-(defvar www-icon "")
-(defvar emacs-icon "")
-(defvar docs-icon "")
-(defvar chat-icon "")
-(defvar misc-icon "")
-(defvar misc2-icon "")
-(defvar misc3-icon "")
-
-(defvar workspace-1 true)
-(defvar workspace-2 false)
-(defvar workspace-3 false)
-(defvar workspace-4 false)
-(defvar workspace-5 false)
-(defvar workspace-6 false)
-(defvar workspace-7 false)
-
-(defwidget hyprland []
-   (box :orientation "v" :spacing 0 :space-evenly true :halign "start" :vexpand "false" :hexpand "false"
-    (label :class "hyprland_text" :halign "start" :valign "center" :text "S+1: www")
-    (label :class "hyprland_text" :halign "start" :valign "center" :text "S+2: emacs")
-    (label :class "hyprland_text" :halign "start" :valign "center" :text "S+3: docs")
-    (label :class "hyprland_text" :halign "start" :valign "center" :text "S+4: chat")
-    (label :class "hyprland_text" :halign "start" :valign "center" :text "S+5: misc")
-    (label :class "hyprland_text" :halign "start" :valign "center" :text "S+6: misc2")
-    (label :class "hyprland_text" :halign "start" :valign "center" :text "S+7: misc3")))
-
-(defwidget workspace [is-active workspace-number icon]
-    (button :class "${is-active == true ? 'workspace' : 'hide'}" :timeout "1s" :onclick "hyprctl dispatch workspace ${workspace-number}" icon))
+(deflisten workspaces "hyprland-workspaces _")
 
 (defwindow workspaces
     :monitor 0
     :class "dashboard"
     :hexpand false
     :vexpand false
-    :geometry (geometry :x 1743 :y 1159)
+    :geometry (geometry :anchor "bottom right" :x 20 :y 20)
     :stacking "fg"
     :exclusive false
     :focusable false
     :active true
     (box :class "${EWW_BATTERY['BAT0']['capacity'] < 30 ? "workspaces workspaces_battery_warning" : "workspaces"} " :orientation "h" :spacing 5 :space-evenly "false"
-     (workspace :is-active workspace-1 :workspace-number 1 :icon www-icon)
-     (workspace :is-active workspace-2 :workspace-number 2 :icon emacs-icon)
-     (workspace :is-active workspace-3 :workspace-number 3 :icon docs-icon)
-     (workspace :is-active workspace-4 :workspace-number 4 :icon chat-icon)
-     (workspace :is-active workspace-5 :workspace-number 5 :icon misc-icon)
-     (workspace :is-active workspace-6 :workspace-number 6 :icon misc2-icon)
-     (workspace :is-active workspace-7 :workspace-number 7 :icon misc3-icon)
-     (label :class "workspace" :text time_hour)
-     (label :class "workspace" :style "margin-left: -5px; margin-right: -5px;":text ":")
-     (label :class "workspace" :text time_min)))
-
-(defwidget network [icon color interface]
-    (box :orientation "h" :vexpand false :hexpand false :halign "start" :space-evenly false 
-      (label :class "network_text" :text icon :style "color: ${color};")
-      (label :class "network_text" :text " ${round(EWW_NET[interface]['NET_DOWN'] / 1000000, 1)}")
-      (label :class "network_text" :text " ${round(EWW_NET[interface]['NET_UP'] / 1000000, 1)}")))
+         (for i in {workspaces[0].workspaces}
+              (button :visible "${i.id > 0}" :class "workspace" :onclick "hyprctl dispatch workspace ${i.id}" "${i.name}"))
+         (label :class "workspace" :text time_hour)
+         (label :class "workspace" :style "margin-left: -5px; margin-right: -5px;":text ":")
+         (label :class "workspace" :text time_min)
+         (label :class "workspace" :style "margin-left: -5px; margin-right: -5px;":text "  ")))
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; BACKUP

@@ -3,8 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-24.05";
-    nixpkgs-darwin.url = "github:nixos/nixpkgs/nixpkgs-24.05-darwin";
-    nixpkgs-rasp.url = "github:nixos/nixpkgs/nixos-23.11";
+    nixpkgs-rasp.url = "github:nixos/nixpkgs/nixos-24.05";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     nix-darwin.url = "github:LnL7/nix-darwin";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs-darwin";
@@ -21,11 +20,6 @@
     comin.url = "github:nlewo/comin/increase-timeout";
     comin.inputs.nixpkgs.follows = "nixpkgs";
 
-
-    hyprland-contrib = {
-      url = "github:hyprwm/contrib";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     emacs-overlay = {
       url = "github:nix-community/emacs-overlay";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -35,6 +29,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-utils.follows = "flake-utils";
     };
+    # Wayland and Hyprland
+    vigiland.url = "github:jappie3/vigiland";
+    hyprland-contrib.url = "github:hyprwm/contrib";
+    hyprland-contrib.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
@@ -119,7 +117,7 @@
           magicRollback = true;
           autoRollback = true;
           fastConnection = false;
-          remoteBuild = true;
+          remoteBuild = false;
           profiles.system = {
             user = "root";
             path = deploy-rs.lib.aarch64-linux.activate.nixos self.nixosConfigurations.rasp-nixos;

@@ -6,10 +6,10 @@
   ];
   fishPerMachine.aliases = {
     SS = "systemctl";
-    vlc = "swayhide vlc";
-    zathura = "swayhide zathura";
-    llpp = "swayhide llpp";
-    imv = "swayhide imv";
+    # vlc = "swayhide vlc";
+    # zathura = "swayhide zathura";
+    # llpp = "swayhide llpp";
+    # imv = "swayhide imv";
     v = "vim";
     open = "xdg-open";
     lf = "lfrun";

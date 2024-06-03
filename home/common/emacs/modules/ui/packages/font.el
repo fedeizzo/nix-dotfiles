@@ -26,6 +26,7 @@
         (set-frame-font (format "JetBrains Mono %s" size))))
   (defun fi/update-font--window-size-change (&rest _)
     "Update font size based on the screen resolution."
+    (set-frame-font (format "JetBrains Mono %s" 11))
     ))
 
 (defun fi/update-font-size ()
