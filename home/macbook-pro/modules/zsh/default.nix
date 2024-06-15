@@ -4,7 +4,7 @@
   programs.starship.enableZshIntegration = true;
   programs.zsh = {
     enable = true;
-    autosuggestion.enable = true;
+    autosuggestion.enable = false;
     enableCompletion = true;
     enableVteIntegration = true;
     syntaxHighlighting.enable = true;
@@ -15,7 +15,7 @@
       save = 10000;
       size = 10000;
     };
-    historySubstringSearch.enable = true;
+    historySubstringSearch.enable = false;
     initExtraFirst = ''
       source ~/.dd-zshrc
       source ~/.sdkman-zshrc
@@ -31,6 +31,7 @@
     '';
     envExtra = ''
       . "$HOME/.cargo/env"
+      LANG="en_US.UTF-8"
     '';
     shellAliases = {
       ls = "eza --icons --sort=type";

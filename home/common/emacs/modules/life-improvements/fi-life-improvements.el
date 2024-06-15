@@ -18,6 +18,7 @@
 (fi/load-package-config LIFE-IMPROVEMENTS-MODULE-PATH "format-all.el")
 (fi/load-package-config LIFE-IMPROVEMENTS-MODULE-PATH "hide-mode-line.el")
 ;; (fi/load-package-config LIFE-IMPROVEMENTS-MODULE-PATH "neotree.el")
+(fi/load-package-config LIFE-IMPROVEMENTS-MODULE-PATH "rg.el")
 (fi/load-package-config LIFE-IMPROVEMENTS-MODULE-PATH "treemacs.el")
 ;; (fi/load-package-config LIFE-IMPROVEMENTS-MODULE-PATH "origami.el")
 (fi/load-package-config LIFE-IMPROVEMENTS-MODULE-PATH "pdf-tools.el")

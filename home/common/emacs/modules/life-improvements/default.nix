@@ -34,6 +34,7 @@
     zoom
     rainbow-delimiters
     ripgrep
+    rg
     vterm
     esup
     ace-window

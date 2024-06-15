@@ -79,6 +79,8 @@ in
     (aspellWithDicts (dicts: with dicts; [ en en-computers en-science it ]))
     enchant
   ];
+  home.sessionVariables.ASPELL_CONF = "dict-dir ${pkgs.aspellWithDicts (ds: with ds; [ en en-computers en-science it ])}/lib/aspell";
+
   xdg.configFile."emacs/early-init.el".source = ./early-init.el;
   xdg.configFile."emacs/init.el".source = ./init.el;
   xdg.configFile."emacs/welcome.png".source = ./welcome.png;
