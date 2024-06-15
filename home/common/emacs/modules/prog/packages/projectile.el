@@ -16,7 +16,7 @@
   :init
   (if ON-MACBOOK
       (setq projectile-project-search-path '("~/dd/" "~/uni" "~/personal"))
-    (setq projectile-project-search-path '("~/personalProject" "~/uni"))))
+    (setq projectile-project-search-path '("~/docs/projects"))))
 
 (defun fi/consult-projectile-wrap ()
   (interactive)
