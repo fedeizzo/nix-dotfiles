@@ -41,7 +41,8 @@
      ("K" lsp-ui-doc-glance "Documentation"))
     " Util"
     (("uh" fi/toggle-hide-oneline-returning-if-statements "Hide oneline if" :toggle fi/hide-oneline-returning-if-statements)
-     ("ui" #'fi/go-impl "implement interface"))
+     ("ui" #'fi/go-impl "implement interface")
+     ("ud" dap-debug "debugger"))
     " Test"
     (("ti" fi/go-lang-enable-integration-test "Integration test")
      ("tf" #'gotest-ui-current-file "Current file")
@@ -166,7 +167,7 @@ func main() {
           )))
 
 ;; hide onelien returnin if statement
-(defvar fi/hide-oneline-returning-if-statements t "Hide if statements that contain a return statement with default values.")
+(defvar fi/hide-oneline-returning-if-statements nil "Hide if statements that contain a return statement with default values.")
 
 (defun fi/toggle-hide-oneline-returning-if-statements ()
   (interactive)

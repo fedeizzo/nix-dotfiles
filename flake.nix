@@ -15,11 +15,11 @@
     flake-utils.url = "github:numtide/flake-utils";
     deploy-rs.url = "github:serokell/deploy-rs";
     impermanence.url = "github:nix-community/impermanence";
-    impermanence.inputs.nixpkgs.follows = "nixpkgs";
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
     comin.url = "github:nlewo/comin/increase-timeout";
     comin.inputs.nixpkgs.follows = "nixpkgs";
+
 
     emacs-overlay = {
       url = "github:nix-community/emacs-overlay";
@@ -28,7 +28,6 @@
     emacs-lsp-booster = {
       url = "github:slotThe/emacs-lsp-booster-flake";
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.flake-utils.follows = "flake-utils";
     };
     # Wayland and Hyprland
     vigiland.url = "github:jappie3/vigiland";
@@ -58,7 +57,9 @@
       overlays = {
         emacs = inputs.emacs-overlay.overlay;
         emacs-lsp-booster = inputs.emacs-lsp-booster.overlays.default;
-        default = import ./overlays { inherit inputs; };
+        default = import ./overlays {
+          inherit inputs;
+        };
       };
       legacyPackages = forAllSystems (system:
         import inputs.nixpkgs {

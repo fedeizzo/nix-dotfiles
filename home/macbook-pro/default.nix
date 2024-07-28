@@ -14,6 +14,8 @@
     ./modules/cli
     ./modules/zsh
     ../common/starship
+    ../common/wezterm
+    ./modules/firefox
   ];
 
   home.packages = with pkgs; [ pngpaste ];
