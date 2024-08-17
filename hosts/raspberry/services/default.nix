@@ -1,10 +1,15 @@
-{ ... }:
+{ config, pkgs, ... }:
 
+let
+  docker = config.virtualisation.oci-containers.backend;
+  dockerBin = "${pkgs.${docker}}/bin/${docker}";
+in
 {
   imports = [
     ./blocky
     ./traefik
     ./garmindb
+    ./grafana
     ./fedeizzo.dev
     ./net-worth
     # ./prometheus
@@ -21,5 +26,10 @@
       };
       podman.enable = false;
     };
+
+    system.activationScripts.networth = ''
+      ${dockerBin} network inspect networth >/dev/null 2>&1 || ${dockerBin} network create networth --subnet 172.20.0.0/16
+    '';
+
   };
 }
