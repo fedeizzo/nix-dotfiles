@@ -7,7 +7,7 @@
   virtualisation.oci-containers.containers."net_worth_db" = {
     image = "postgres:16.0-alpine";
     autoStart = true;
-    extraOptions = [ "--network=homelab" ];
+    extraOptions = [ ];
     ports = [ "9999:5432" ];
     environmentFiles = [ "/var/container_envs/net_worth_db" ];
     volumes = [
@@ -27,7 +27,7 @@
   virtualisation.oci-containers.containers."nocodb" = {
     image = "nocodb/nocodb";
     autoStart = true;
-    extraOptions = [ "--network=homelab" ];
+    extraOptions = [ ];
     volumes = [ "/var/volumes/net_worth_nocodb:/usr/app/data" ];
     ports = [ "50003:8080" ];
   };
@@ -39,7 +39,7 @@
     image = "grafana/grafana-oss";
     autoStart = true;
     user = "0";
-    extraOptions = [ "--network=homelab" ];
+    extraOptions = [ ];
     environmentFiles = [ "/var/container_envs/net_worth_grafana" ];
     volumes = [ "/var/volumes/net_worth_grafana:/var/lib/grafana" ];
     ports = [ "50002:3000" ];

@@ -1,9 +1,5 @@
-{ pkgs, config, dockerNetworkScript, ... }:
+{ ... }:
 
-let
-  docker = "${config.virtualisation.oci-containers.backend}";
-  dockerBin = "${pkgs.${docker}}/bin/${docker}";
-in
 {
   imports = [
     ./blocky
@@ -24,11 +20,5 @@ in
       };
       podman.enable = false;
     };
-
-    system.activationScripts.mkHomelabNetwork = (dockerNetworkScript
-      {
-        dockerBin = dockerBin;
-        networkName = "homelab";
-      });
   };
 }

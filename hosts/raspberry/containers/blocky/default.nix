@@ -11,7 +11,7 @@
     image = "spx01/blocky";
     ports = [ "53:53/udp" ];
     autoStart = true;
-    extraOptions = [ "--network=homelab" ];
+    extraOptions = [ ];
     environment = {
       TZ = "Europe/Paris";
     };
