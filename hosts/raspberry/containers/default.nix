@@ -4,6 +4,7 @@
   imports = [
     ./blocky
     ./traefik
+    ./garmindb
     ./fedeizzo.dev
     ./net-worth
     # ./prometheus
