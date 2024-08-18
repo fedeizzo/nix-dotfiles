@@ -10,7 +10,7 @@ in
     ./traefik
     ./garmindb
     ./grafana
-    ./loki
+    # ./loki
     ./fedeizzo.dev
     ./net-worth
     ./prometheus
