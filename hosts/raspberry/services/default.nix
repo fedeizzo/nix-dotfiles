@@ -10,9 +10,10 @@ in
     ./traefik
     ./garmindb
     ./grafana
+    ./loky
     ./fedeizzo.dev
     ./net-worth
-    # ./prometheus
+    ./prometheus
     ./diun
   ];
 

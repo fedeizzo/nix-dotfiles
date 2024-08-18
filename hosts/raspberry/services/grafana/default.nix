@@ -22,6 +22,6 @@
   };
 }
 
-# list of values provided using the file-provider
+# list of values set manually
 # security.secret_key
 # security.admin_password
