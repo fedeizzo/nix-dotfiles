@@ -99,13 +99,15 @@
               };
             }
           ];
-          pipeline_stages = {
-            json = {
-              expressions = { level = "level"; time = "time"; message = "message"; };
-            };
-            labels = { level = { }; };
-            timestamp = { source = "time"; format = "2024-08-20T18:28:00+02:00"; };
-          };
+          pipeline_stages = [
+            {
+              json = {
+                expressions = { level = "level"; time = "time"; message = "message"; };
+              };
+            }
+            { labels = { level = { }; }; }
+            { timestamp = { source = "time"; format = "2024-08-20T18:28:00+02:00"; }; }
+          ];
         }
       ];
     };
