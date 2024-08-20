@@ -67,26 +67,47 @@
       clients = [{
         url = "http://127.0.0.1:3100/loki/api/v1/push";
       }];
-      scrape_configs = [{
-        job_name = "journal";
-        journal = {
-          max_age = "12h";
-          labels = {
-            job = "systemd-journal";
-            host = "rasp-nixos";
+      scrape_configs = [
+        {
+          job_name = "journal";
+          journal = {
+            max_age = "12h";
+            labels = {
+              job = "systemd-journal";
+              host = "rasp-nixos";
+            };
           };
-        };
-        relabel_configs = [
-          {
-            source_labels = [ "__journal__systemd_unit" ];
-            target_label = "unit";
-          }
-          {
-            source_labels = [ "__journal_priority" ];
-            target_label = "priority";
-          }
-        ];
-      }];
+          relabel_configs = [
+            {
+              source_labels = [ "__journal__systemd_unit" ];
+              target_label = "unit";
+            }
+            {
+              source_labels = [ "__journal_priority" ];
+              target_label = "priority";
+            }
+          ];
+        }
+        {
+          job_name = "local-logs";
+          static_configs = [
+            {
+              targets = [ "localhost" ];
+              labels = {
+                job = "traefik";
+                __path__ = "/var/volumes/traefik/logs/traefik.json";
+              };
+            }
+          ];
+          pipeline_stages = {
+            json = {
+              expressions = { level = "level"; time = "time"; message = "message"; };
+              labels = { level = { }; };
+              timestamp = { source = "time"; format = "2024-08-20T18:28:00+02:00"; };
+            };
+          };
+        }
+      ];
     };
   };
 }
