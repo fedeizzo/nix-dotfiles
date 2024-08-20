@@ -7,10 +7,20 @@
     environmentFiles = [ "/var/container_envs/traefik" ];
     staticConfigOptions = {
       global = { checkNewVersion = false; sendAnonymousUsage = false; };
+      metrics = {
+        prometheus = {
+          addRoutersLabels = true;
+          addServicesLabels = true;
+          entryPoint = "metrics";
+        };
+      };
       serversTransport = { insecureSkipVerify = true; };
       api = { insecure = true; dashboard = true; debug = false; };
       log = { level = "DEBUG"; };
       entryPoints = {
+        metrics = {
+          address = ":8082";
+        };
         web = {
           address = ":80";
           http = {
