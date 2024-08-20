@@ -6,7 +6,7 @@
     alertmanagers = [ ];
     exporters = {
       systemd.enable = true;
-      node.enabled = true;
+      node.enable = true;
       wireguard.enable = true;
     };
     scrapeConfigs = [
