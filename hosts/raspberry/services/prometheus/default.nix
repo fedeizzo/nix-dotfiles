@@ -3,6 +3,7 @@
 {
   services.prometheus = {
     enable = true;
+    retentionTime = "30d";
     alertmanagers = [ ];
     exporters = {
       systemd.enable = true;
