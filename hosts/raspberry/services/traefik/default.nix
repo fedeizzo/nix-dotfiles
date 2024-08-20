@@ -17,6 +17,7 @@
       serversTransport = { insecureSkipVerify = true; };
       api = { insecure = true; dashboard = true; debug = false; };
       log = { level = "INFO"; filePath = "/var/volumes/traefik/log/traefik.json"; format = "json"; };
+      accessLog = { filePath = "/var/volumes/traefik/log/access.json"; format = "json"; };
       entryPoints = {
         metrics = {
           address = ":8082";
