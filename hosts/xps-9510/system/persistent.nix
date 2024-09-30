@@ -13,6 +13,7 @@
       "/var/lib/libvirt"
       "/var/lib/docker"
       "/var/lib/fprint"
+      "/var/lib/nixos"
       "/root/.ssh"
       "/root/.cache"
     ];

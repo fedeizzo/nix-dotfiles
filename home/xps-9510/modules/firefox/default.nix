@@ -2,6 +2,6 @@
 
 {
   imports = [
-    ../../common/firefox
+    ../../../common/firefox
   ];
 }

@@ -7,14 +7,6 @@ let
     waybar = super.waybar.overrideAttrs (oldAttrs: {
       mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ];
     });
-    hyprland = super.hyprland.overrideAttrs (oldAttrs: {
-      patches = [
-        (self.fetchpatch {
-          url = "https://github.com/hyprwm/Hyprland/pull/6136.patch";
-          hash = "sha256-KAkuogPQeA+ZM5Fkmw3Tdu5GRaLqDVv/s7mHVACI6Ho=";
-        })
-      ];
-    });
   };
 in
 inputs.nixpkgs.lib.composeManyExtensions [ modifications additions ]
