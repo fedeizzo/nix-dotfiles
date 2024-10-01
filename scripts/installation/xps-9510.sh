@@ -1,5 +1,6 @@
 #! /usr/bin/env nix-shell
 #! nix-shell -i bash -p git nixUnstable
+set -e
 hostname=fedeizzo-nixos
 colorPrint() {
   echo -e "$(tput setaf 6)$1$(tput sgr0)"

@@ -18,7 +18,7 @@ encrypt () {
     mv $1.encoded $1
 }
 
-edit_secretes () {
+edit_secrets () {
     colorPrint "Edit secrets on file $1"
 
     if [[ $1 == "./secrets/raspberry-secrets.yaml" ]]; then
@@ -27,8 +27,6 @@ edit_secretes () {
         SOPS_AGE_KEY=$(bw get item 'sops-age-keys-xps-9510' | jq -r ."notes") sops $1
     elif [[ $1 == "./secrets/x1-carbon-secrets.yaml" ]]; then
         SOPS_AGE_KEY=$(bw get item 'sops-age-keys-x1-carbon' | jq -r ."notes") sops $1
-    elif [[ $1 == "./secrets.yaml" ]]; then
-        SOPS_AGE_KEY=$(bw get item 'sops-age-keys-laptop' | jq -r ."notes") sops $1
     fi
 }
 
@@ -41,10 +39,10 @@ for file in $files; do
 done
 read -p "Select a number: " selectedIndex
 selectedFile=$(echo $files | awk -F' ' "{print \$${selectedIndex}}")
-
+echo $selectedFile
 case $1 in
     "edit")
-	edit_secretes $selectedFile
+	edit_secrets $selectedFile
 	shift
 	;;
     "encrypt")

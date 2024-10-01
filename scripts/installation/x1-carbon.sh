@@ -1,5 +1,6 @@
 #! /usr/bin/env nix-shell
-#! nix-shell -i bash -p git nixUnstable
+#! nix-shell -i bash -p git
+set -e
 hostname=fedeizzo-nixos
 colorPrint() {
   echo -e "$(tput setaf 6)$1$(tput sgr0)"
@@ -153,13 +154,13 @@ mkfs.vfat -n boot "$boot"
 mkfs.ext4 -L root /dev/mapper/nixenc
 root="/dev/mapper/nixenc"
 
-colorPrint "Mount boot partition"
-mkdir /mnt/boot
-mount "$boot" /mnt/boot
-
 colorPrint "Mount root partition"
 mkdir /mnt/root
 mount "$root" /mnt/root
+
+colorPrint "Mount boot partition"
+mkdir /mnt/boot
+mount "$boot" /mnt/boot
 
 colorPrint "Installing configuration under system folder"
 cp /var/lib/sops/keys.txt /mnt/var/lib/sops/
