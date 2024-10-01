@@ -19,13 +19,13 @@
           };
         };
       };
-      fprintd = {
+    };
+    fprintd = {
+      enable = true;
+      package = pkgs.fprintd;
+      tod = {
         enable = true;
-        package = pkgs.fprintd;
-        tod = {
-          enable = true;
-          driver = pkgs.libfprint-2-tod1-goodix;
-        };
+        driver = pkgs.libfprint-2-tod1-goodix;
       };
     };
   };

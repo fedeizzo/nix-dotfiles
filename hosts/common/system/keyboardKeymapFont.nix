@@ -29,4 +29,5 @@
         monospace = [ "JetBrains Mono" ];
       };
     };
-  }
+  };
+}
