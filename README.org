@@ -1,15 +1,13 @@
 * NixOS personal configuration
-  Full
-  nixos
-  configuration
-  for
-  following devices:
+Full nixos configuration for following devices:
 - Dell XPS 9510
-  - Raspberry pi
+- Thinkpad X1 Carbon 6th gen
+- Raspberry pi
+- Macbook pro M1 Max
 
-  Folder description:
-  - home: contains home manager
-    configurations.- hosts: contains nixos system wide configurations.
+Folder description:
+- home: contains home manager configurations.
+- hosts: contains nixos system wide configurations.
 - lib: some useful function definitions.
 - modules: self explanatory.
 - overlays: self explanatory.
@@ -17,8 +15,15 @@
 - qmk_config: keyboard configurations.
 - secrets: [[https://github.com/Mic92/sops-nix][sops-nix]] secrets.
 - templates: flakes templates.
-
+  
 ** Fresh install
+*** Thinkpad X1 Carbon 6th gen
+#+begin_src sh
+  ./scripts/installation/x1-carbon.sh
+  # reboot
+  ./scripts/installation/x1-carbon.sh --complete
+#+end_src
+
 *** Dell xps 9510
 Partitioning is made with ~btrfs~ file system, during it two blank read-only snapshots are taken:
 - ~root~
@@ -26,7 +31,9 @@ Partitioning is made with ~btrfs~ file system, during it two blank read-only sna
 
 It can be done with the following script:
 #+begin_src sh
-./partitioning_btrfs.sh
+  ./scripts/installation/xps-9510.sh
+  # reboot
+  ./scripts/installation/xps-9510.sh --complete
 #+end_src
 
 Snapshots are used to erase the disk at every boot in order to obtain a complete immutable and declarative system.
@@ -42,21 +49,13 @@ Some useful readings if you are interested:
 *** Raspberry
 Raspberry is formatted with ext4 as filesystem.
 #+begin_src sh
-./partitioning_ext4_rasperry.sh
+  ./scripts/installation/raspberry.sh
 #+end_src
 
 *** Macbook-pro
 #+begin_src sh
   nix run nix-darwin -- switch --flake .
 #+end_src
-
-** System
-*** Dell xps 9510
-*** Raspberry
-
-** User
-*** Dell xps 9510
-*** Raspberry
 
 ** Keyboards
 [[file:./qmk_config/README.org][QMK keyboard firmware]]

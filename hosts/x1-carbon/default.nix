@@ -7,7 +7,6 @@
     inputs.sops-nix.nixosModules.sops
     (modulesPath + "/installer/scan/not-detected.nix")
 
-    ./system/backup.nix
     ../common/system/bluetooth.nix
     ./system/boot.nix
     ../common/system/disk.nix

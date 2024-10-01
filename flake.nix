@@ -92,6 +92,13 @@
           machine = "xps-9510";
           pkgs = legacyPackages."x86_64-linux";
         };
+        oven = mkHost {
+          username = "oven";
+          hostname = "oven-nixos";
+          system = "x86_64-linux";
+          machine = "x1-carbon";
+          pkgs = legacyPackages."x86_64-linux";
+        };
         rasp-nixos = mkHost {
           username = "rasp";
           hostname = "rasp-nixos";

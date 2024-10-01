@@ -19,15 +19,14 @@ encrypt () {
 }
 
 edit_secretes () {
-    colorPrint "Edit secrtes on file $1"
+    colorPrint "Edit secrets on file $1"
 
     if [[ $1 == "./secrets/raspberry-secrets.yaml" ]]; then
         SOPS_AGE_KEY=$(bw get item 'sops-age-keys-homelab' | jq -r ."notes") sops $1
-    elif [[ $1 == "./secrets/laptop-secrets.yaml" ]]; then
-        SOPS_AGE_KEY=$(bw get item 'sops-age-keys-laptop' | jq -r ."notes") sops $1
-    elif [[ $1 == "./secrets/ssh-public-keys-secrets.yaml" ]]; then
-        SOPS_AGE_KEY=$(cat ~/.config/sops/age/keys.txt) sops $1
-        # SOPS_AGE_KEY=$(bw get item 'sops-age-keys-laptop' | jq -r ."notes") sops $1
+    elif [[ $1 == "./secrets/xps-9510-secrets.yaml" ]]; then
+        SOPS_AGE_KEY=$(bw get item 'sops-age-keys-xps-9510' | jq -r ."notes") sops $1
+    elif [[ $1 == "./secrets/x1-carbon-secrets.yaml" ]]; then
+        SOPS_AGE_KEY=$(bw get item 'sops-age-keys-x1-carbon' | jq -r ."notes") sops $1
     elif [[ $1 == "./secrets.yaml" ]]; then
         SOPS_AGE_KEY=$(bw get item 'sops-age-keys-laptop' | jq -r ."notes") sops $1
     fi

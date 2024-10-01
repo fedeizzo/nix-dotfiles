@@ -1,9 +1,9 @@
-{ pkgs, ... }:
+{ pkgs, username, ... }:
 
 {
   environment.systemPackages = with pkgs; [ sops age ];
   sops = {
-    defaultSopsFile = ../../../secrets/xps-9510-secrets.yaml;
+    defaultSopsFile = ../../../secrets/x1-carbon-secrets.yaml;
     defaultSopsFormat = "yaml";
     age.keyFile = "/var/lib/sops/keys.txt";
     age.generateKey = false;
@@ -11,15 +11,8 @@
   };
 
   sops.secrets = {
-    borg-home-password = { };
-    borg-root-password = { };
-    fedeizzo-path = {
+    "${username}-path" = {
       neededForUsers = true;
     };
-    root-path = {
-      neededForUsers = true;
-    };
-
-    xps-9510-wireguard-private-key = { };
   };
 }
