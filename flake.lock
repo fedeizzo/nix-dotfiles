@@ -332,6 +332,26 @@
         "type": "github"
       }
     },
+    "disko": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1727872461,
+        "narHash": "sha256-4Pw3fVhN6xey5+2gUBm9nQJAjBqivffr+a5ZsXYjzJ8=",
+        "owner": "nix-community",
+        "repo": "disko",
+        "rev": "568727a884ae7cd9f266bd19aea655def8cafd78",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "disko",
+        "type": "github"
+      }
+    },
     "emacs-lsp-booster": {
       "inputs": {
         "nixpkgs": [
@@ -1210,6 +1230,7 @@
       "inputs": {
         "comin": "comin",
         "deploy-rs": "deploy-rs",
+        "disko": "disko",
         "emacs-lsp-booster": "emacs-lsp-booster",
         "emacs-overlay": "emacs-overlay",
         "flake-utils": "flake-utils_2",
