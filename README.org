@@ -19,9 +19,7 @@ Folder description:
 ** Fresh install
 *** Thinkpad X1 Carbon 6th gen
 #+begin_src sh
-  ./scripts/installation/x1-carbon.sh
-  # reboot
-  ./scripts/installation/x1-carbon.sh --complete
+  sudo nix run 'github:nix-community/disko#disko-install' -- --flake github.com/fedeizzo/nix-dotfiles.go#oven
 #+end_src
 
 *** Dell xps 9510
