@@ -37,6 +37,27 @@ if [[ $1 == "--complete" ]]; then
 fi
 
 colorPrint
+colorPrint "Do you want to setup another device for the nix store during the installation?"
+if prompt_confirm; then
+    lsblk
+    while
+    colorPrint "-- Choose the disk"
+    read gpgdisk
+    regex="^[^a-zA-Z]*${gpgdisk}\+\s\+[0-9]\+:[0-9]\+\s\+[0-9]\+\s\+[0-9]\+\([,.][0-9]\+\)\?\w\s\+[0-9]\+\s\+part\b"
+    ! (lsblk | grep -q $regex)
+    do
+    colorPrint "-- Invalid disk ($gpgdisk)"
+    lsblk
+    done
+
+    colorPrint "You are about to choose disk $gpgdisk"
+    colorPrint
+    mkdir -p /mntcache
+    mount "/dev/$gpgdisk" /mntcache
+    mkdir -p /mntcache/flake/cache
+fi
+
+colorPrint
 colorPrint "Do you want to setup age folder for sops-nix?"
 if prompt_confirm; then
     colorPrint "Choose the device containing the key file for age initialization"
@@ -82,4 +103,8 @@ if [ $(id -u) -ne 0 ]; then
   exit 1
 fi
 
-nix --extra-experimental-features 'nix-command flakes' run 'github:nix-community/disko#disko-install' -- --flake .#oven --disk main /dev/nvme0n1
+if [ -d /mntcache/flake/cache ]; then
+  TMPDIR=/mntcache/flake/cache nix --extra-experimental-features 'nix-command flakes' run 'github:nix-community/disko#disko-install' -- --flake .#oven --disk main /dev/nvme0n1
+else
+  nix --extra-experimental-features 'nix-command flakes' run 'github:nix-community/disko#disko-install' -- --flake .#oven --disk main /dev/nvme0n1
+fi
