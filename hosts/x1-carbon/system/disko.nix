@@ -25,7 +25,7 @@
             };
             luks = {
               size = "100%";
-              label = "nixenc";
+              label = "cryptroot";
               content = {
                 type = "luks";
                 name = "cryptroot";

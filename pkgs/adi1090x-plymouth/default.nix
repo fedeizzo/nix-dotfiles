@@ -8,7 +8,7 @@ pkgs.stdenv.mkDerivation rec {
     owner = "adi1090x";
     repo = "plymouth-themes";
     rev = "${version}";
-    sha256 = "sha256-e3lRgIBzDkKcWEp5yyRCzQJM6yyTjYC5XmNUZZroWuw=";
+    sha256 = "sha256-e3lRgIBzDkKcWEp5yyRCzQJM6yyTjYC5XmNUZZroDuw=";
   };
 
   buildInputs = [
