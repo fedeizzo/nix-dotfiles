@@ -2,13 +2,13 @@
 }:
 pkgs.stdenv.mkDerivation rec {
   pname = "adi1090x-plymouth";
-  version = "master";
+  version = "5d8817458d764bff4ff9daae94cf1bbaabf16ede";
 
   src = pkgs.fetchFromGitHub {
     owner = "adi1090x";
     repo = "plymouth-themes";
     rev = "${version}";
-    sha256 = "sha256-VNGvA8ujwjpC2rTVZKrXni2GjfiZk7AgAn4ZB4Baj2k=";
+    sha256 = "sha256-e3lRgIBzDkKcWEp5yyRCzQJM6yyTjYC5XmNUZZroWuw=";
   };
 
   buildInputs = [

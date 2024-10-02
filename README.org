@@ -19,7 +19,7 @@ Folder description:
 ** Fresh install
 *** Thinkpad X1 Carbon 6th gen
 #+begin_src sh
-  sudo nix run 'github:nix-community/disko#disko-install' -- --flake github.com/fedeizzo/nix-dotfiles.go#oven
+  sudo nix --extra-experimental-features 'nix-command flakes' run 'github:nix-community/disko#disko-install' -- --flake github:fedeizzo/nix-dotfiles#oven --disk main /dev/nvme0n1
 #+end_src
 
 *** Dell xps 9510
