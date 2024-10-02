@@ -13,5 +13,4 @@
     allowedUDPPorts = [ 51821 ];
   };
   networking.wireguard.enable = true;
-  environment.systemPackages = [ inputs.deploy-rs.defaultPackage.x86_64-linux ];
 }

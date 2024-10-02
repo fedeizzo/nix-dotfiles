@@ -1,9 +1,11 @@
-{ config, ... }:
+{ config, inputs, ... }:
 
 {
   imports = [
     ../../common/system/networking.nix
   ];
+
+  environment.systemPackages = [ inputs.deploy-rs.defaultPackage.x86_64-linux ];
 
   networking.wireguard.interfaces = {
     wg0 = {

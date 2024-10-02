@@ -47,24 +47,6 @@
     };
   };
 
-  virtualisation = {
-    docker = {
-      enable = true;
-      enableNvidia = true;
-      enableOnBoot = true;
-      rootless = {
-        enable = true;
-        setSocketVariable = true;
-      };
-      autoPrune = {
-        enable = true;
-        flags = [ ];
-        dates = "weekly";
-      };
-    };
-    libvirtd.enable = true;
-  };
-
   environment.systemPackages = with pkgs; [
     vim
     curl
@@ -79,6 +61,5 @@
     seatd
     pkgs.gnome.adwaita-icon-theme
     pkgs.shared-mime-info
-    virt-manager
   ];
 }
