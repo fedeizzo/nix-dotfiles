@@ -1,7 +1,7 @@
 #! /usr/bin/env nix-shell
-#! nix-shell -i bash -p git
+#! nix-shell -i bash -p git bitwarden-cli
 set -e
-hostname=fedeizzo-nixos
+
 colorPrint() {
   echo -e "$(tput setaf 6)$1$(tput sgr0)"
 }
@@ -74,50 +74,14 @@ if prompt_confirm; then
     mount -o remount,size=50G,noatime /nix/.rw-store
 fi
 
-colorPrint
-colorPrint "Do you want to setup age folder for sops-nix?"
-if prompt_confirm; then
-    colorPrint "Choose the device containing the key file for age initialization"
-    lsblk
-    while
-    colorPrint "-- Choose the disk to format"
-    read gpgdisk
-    regex="^[^a-zA-Z]*${gpgdisk}\+\s\+[0-9]\+:[0-9]\+\s\+[0-9]\+\s\+[0-9]\+\([,.][0-9]\+\)\?\w\s\+[0-9]\+\s\+part\b"
-    ! (lsblk | grep -q $regex)
-    do
-    colorPrint "-- Invalid disk ($gpgdisk)"
-    lsblk
-    done
-
-    colorPrint "You are about to choose disk $gpgdisk"
-    colorPrint
-    mkdir -p /mnttmp
-    mount "/dev/$gpgdisk" /mnttmp
-
-    colorPrint "Choose the file containing the age key."
-    find /mnttmp -name '*.txt'
-    while
-    colorPrint "-- Choose the file"
-    read agefile
-    regex="^${agefile}$"
-    ! (find /mnttmp -name '*.txt' | grep -q $regex)
-    do
-    colorPrint "-- Invalid file ($agefile)"
-    lsblk
-    done
-
-    colorPrint "You are about to choose file $agefile"
-    SOPSHOME="/var/lib/sops"
-    mkdir -p $SOPSHOME
-    cp $agefile $SOPSHOME
-    chmod -R 600 $SOPSHOME
-    umount -R /mnttmp
-    rmdir /mnttmp
-fi
+bw login
+bw get item 'sops-age-keys-x1-carbon' | jq -r ."notes" > /var/lib/sops/keys.txt
 
 if [ $(id -u) -ne 0 ]; then
   errorPrint "Please run as root (you can use 'sudo su' to get a shell)"
   exit 1
 fi
 
-nix --extra-experimental-features 'nix-command flakes' run 'github:nix-community/disko#disko-install' -- --flake .#oven --disk main /dev/nvme0n1
+nix --extra-experimental-features 'nix-command flakes' run 'github:nix-community/disko#disko-install' -- --flake github.com/fedeizzo/nix-dotfiles#oven --disk main /dev/nvme0n1
+
+cp /var/lib/sops/keys.txt /mnt/var/lib/sops/keys.txt
