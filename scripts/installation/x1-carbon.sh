@@ -78,9 +78,11 @@ if [ $(id -u) -ne 0 ]; then
   exit 1
 fi
 
-bw --login
+bw --check
 if [ $? -eq 1 ]; then
     bw login
+fi
+if [ ! -f /var/lib/sops/keys.txt ]; then
     mkdir -p /var/lib/sops
     while true; do
         secret=$(bw get item 'sops-age-keys-x1-carbon' | jq -r ."notes")
