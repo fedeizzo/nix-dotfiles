@@ -1,5 +1,5 @@
 #! /usr/bin/env nix-shell
-#! nix-shell -i bash -p git bitwarden-cli
+#! nix-shell -i bash -p git bitwarden-cli jq
 set -e
 
 colorPrint() {
@@ -67,21 +67,35 @@ if prompt_confirm; then
     sleep 2
 
     wipefs -af "/dev/$disk"
-    blkdiscard -f "/dev/$disk"
     sgdisk -n 0:0:+50GiB -t 0:8200 -c 0:swap /dev/$disk
     mkswap /dev/sdb1
     swapon /dev/sdb1
     mount -o remount,size=50G,noatime /nix/.rw-store
 fi
 
-bw login
-bw get item 'sops-age-keys-x1-carbon' | jq -r ."notes" > /var/lib/sops/keys.txt
-
 if [ $(id -u) -ne 0 ]; then
   errorPrint "Please run as root (you can use 'sudo su' to get a shell)"
   exit 1
 fi
 
-nix --extra-experimental-features 'nix-command flakes' run 'github:nix-community/disko#disko-install' -- --flake github.com/fedeizzo/nix-dotfiles#oven --disk main /dev/nvme0n1
+bw --login
+if [ $? -eq 1 ]; then
+    bw login
+    mkdir -p /var/lib/sops
+    while true; do
+        secret=$(bw get item 'sops-age-keys-x1-carbon' | jq -r ."notes")
+        
+        if [ $? -eq 0 ]; then
+            echo $secret > /var/lib/sops/keys.txt
+            break
+        else
+            errorPrint "Command failed, retrying ..."
+            sleep 1
+        fi
+    done
+fi
+
+nix --extra-experimental-features 'nix-command flakes' run 'github:nix-community/disko#disko-install' -- --flake 'github:fedeizzo/nix-dotfiles#oven' --disk main /dev/nvme0n1
 
 cp /var/lib/sops/keys.txt /mnt/var/lib/sops/keys.txt
+chmod 600 /mnt/var/lib/sops/keys.txt

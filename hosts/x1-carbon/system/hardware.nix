@@ -2,7 +2,7 @@
 
 {
   hardware.cpu.intel.updateMicrocode = true;
-  hardwer.trackpoint = {
+  hardware.trackpoint = {
     enable = true;
     speed = 200;
     sensitivity = 200;
