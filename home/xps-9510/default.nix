@@ -15,7 +15,7 @@
       imports = [
         inputs.impermanence.nixosModules.home-manager.impermanence
 
-        ./modules/bottom
+        ../common/modules/bottom
         ./modules/cli
         ./modules/firefox
         ./modules/fish

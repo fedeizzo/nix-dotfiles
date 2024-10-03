@@ -89,6 +89,7 @@ if [ ! -f /var/lib/sops/keys.txt ]; then
         
         if [ $? -eq 0 ]; then
             echo $secret > /var/lib/sops/keys.txt
+            chmod 600 /var/lib/sops/keys.txt
             break
         else
             errorPrint "Command failed, retrying ..."
