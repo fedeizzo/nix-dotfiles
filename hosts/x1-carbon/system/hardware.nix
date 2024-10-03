@@ -19,7 +19,9 @@
     gpuOffset = -60;
     turbo = 0; # enabled
     p1.limit = 20;
+    p1.window = 20;
     p2.limit = 40;
+    p2.window = 10;
   };
 
   imports = [
