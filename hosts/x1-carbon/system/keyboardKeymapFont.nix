@@ -24,7 +24,7 @@
       package = pkgs.fprintd;
       tod = {
         enable = true;
-        driver = pkgs.libfprint-3-tod1-vfs0090;
+        driver = pkgs.libfprint-2-tod1-vfs0090;
       };
     };
   };
