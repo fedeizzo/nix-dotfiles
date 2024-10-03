@@ -97,7 +97,4 @@ if [ ! -f /var/lib/sops/keys.txt ]; then
     done
 fi
 
-nix --extra-experimental-features 'nix-command flakes' run 'github:nix-community/disko#disko-install' -- --flake 'github:fedeizzo/nix-dotfiles#oven' --disk main /dev/nvme0n1
-
-cp /var/lib/sops/keys.txt /mnt/var/lib/sops/keys.txt
-chmod 600 /mnt/var/lib/sops/keys.txt
+nix --extra-experimental-features 'nix-command flakes' run 'github:nix-community/disko#disko-install' -- --flake 'github:fedeizzo/nix-dotfiles#oven' --disk main /dev/nvme0n1 --extra-files /var/lib/sops/keys.txt /var/lib/sops/keys.txt
