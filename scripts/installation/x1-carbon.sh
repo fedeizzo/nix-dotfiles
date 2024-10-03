@@ -78,7 +78,7 @@ if [ $(id -u) -ne 0 ]; then
   exit 1
 fi
 
-bw --check
+bw login --check
 if [ $? -eq 1 ]; then
     bw login
 fi
