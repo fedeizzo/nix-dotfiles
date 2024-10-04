@@ -25,12 +25,6 @@ let
     rev = "master";
     sha256 = "sha256-OQ0WuMXHPusxLPpuVqkq7t1IDZx4ZvPyKdc4h+8QDAs=";
   };
-  org-fc = pkgs.fetchFromGitHub {
-    owner = "l3kn";
-    repo = "org-fc";
-    rev = "master";
-    sha256 = "sha256-X01yELYog1bRJb1jAk77jbjDBvJxMVLoDsw+7S4lLec=";
-  };
   hydra-posframe = pkgs.fetchFromGitHub {
     owner = "Ladicle";
     repo = "hydra-posframe";
@@ -53,13 +47,7 @@ let
     owner = "emacs-tree-sitter";
     repo = "ts-fold";
     rev = "master";
-    sha256 = "sha256-tCrtNnJXmLY6+yUxfrMHnYVY+Hwc+ODxT8fx8jBEN7M=";
-  };
-  hideshowvis = pkgs.fetchFromGitHub {
-    owner = "sheijk";
-    repo = "hideshowvis";
-    rev = "master";
-    sha256 = "sha256-tCrtNnJXmLY6+yUxfrMHnYVY+Hwc+ODxT8fx8jBEN7M=";
+    sha256 = "sha256-Ao6vOS8PdVPo+E+lxH0TWfHwUSMFcLFgaxGG/D3I+rc=";
   };
 in
 {
@@ -80,7 +68,6 @@ in
   xdg.configFile."emacs/welcome.png".source = ./welcome.png;
   xdg.configFile."emacs/modules".source = ./modules;
   xdg.configFile."emacs/org-cv".source = org-cv;
-  xdg.configFile."emacs/org-fc".source = org-fc;
   xdg.configFile."emacs/hydra-posframe".source = hydra-posframe;
   xdg.configFile."emacs/org-outer-indent".source = org-outer-indent;
   xdg.configFile."emacs/gotest-ui-mode".source = gotest-ui-mode;

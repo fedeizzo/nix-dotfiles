@@ -210,12 +210,6 @@
   (org-md-export-as-markdown)
   (delete-matching-lines "^<a id=.*$"))
 
-;; (use-package org-fc
-;;   :load-path "~/.config/emacs/org-fc")
-;; :custom
-;; (org-fc-directories "~/zettelkasten")
-;; (org-fc-review-history-file "~/zettelkasten/org-fc-reviews.tsv"))
-
 (fi/load-package-config ORG-MODULE-PATH "org-roam.el")
 
 (provide 'fi-org)
