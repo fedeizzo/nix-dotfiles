@@ -81,7 +81,6 @@ in
   xdg.configFile."emacs/modules".source = ./modules;
   xdg.configFile."emacs/org-cv".source = org-cv;
   xdg.configFile."emacs/org-fc".source = org-fc;
-  xdg.configFile."emacs/gendoxy".source = gendoxy;
   xdg.configFile."emacs/hydra-posframe".source = hydra-posframe;
   xdg.configFile."emacs/org-outer-indent".source = org-outer-indent;
   xdg.configFile."emacs/gotest-ui-mode".source = gotest-ui-mode;
