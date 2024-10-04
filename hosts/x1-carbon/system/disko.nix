@@ -1,5 +1,10 @@
 { lib, ... }:
 
+let
+  # mtime = "30"; # monthly
+  mtime = "7"; # weekly
+  # mtime = "1"; # daily
+in
 {
   disko.devices = {
     disk = {
@@ -69,7 +74,7 @@
 
   boot.initrd.postDeviceCommands = lib.mkAfter ''
     mkdir /btrfs_tmp
-    mount /dev/root_vg/root /btrfs_tmp
+    mount /dev/mapper/cryptroot /btrfs_tmp
     if [[ -e /btrfs_tmp/root ]]; then
         mkdir -p /btrfs_tmp/old_roots
         timestamp=$(date --date="@$(stat -c %Y /btrfs_tmp/root)" "+%Y-%m-%-d_%H:%M:%S")
@@ -84,7 +89,7 @@
         btrfs subvolume delete "$1"
     }
 
-    for i in $(find /btrfs_tmp/old_roots/ -maxdepth 1 -mtime +30); do
+    for i in $(find /btrfs_tmp/old_roots/ -maxdepth 1 -mtime +${mtime}); do
         delete_subvolume_recursively "$i"
     done
 
