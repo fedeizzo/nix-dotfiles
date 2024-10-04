@@ -1,0 +1,139 @@
+(defvar nord0 "#2e3440")
+(defvar nord1 "#3b4252")
+(defvar nord2 "#434c5e")
+(defvar nord3 "#4c566a")
+(defvar nord4 "#d8dee9")
+(defvar nord5 "#e5e9f0")
+(defvar nord6 "#eceff4")
+(defvar nord7 "#8fbcbb")
+(defvar nord8 "#88c0d0")
+(defvar nord9 "#81a1c1")
+(defvar nord10 "#5e81ac")
+(defvar nord11 "#bf616a")
+(defvar nord12 "#d08770")
+(defvar nord13 "#ebcb8b")
+(defvar nord14 "#a3be8c")
+(defvar nord15 "#b48ead")
+
+;;;;;;;;;;;;;;;;;;;;;;
+;; SYSINFO
+;;;;;;;;;;;;;;;;;;;;;;
+(defwidget sys-info-widget [value suffix class icon]
+     (circular-progress :class class :value value :start-at 75 :thickness 8
+      (box :orientation "v" :vexpand false :hexpand false :spacing 0
+       (label :text icon :class "sys_info_icon")
+       (label :text "${value + suffix}" :class "sys_info_content"))))
+
+(defwidget sys-info-panel []
+    (box :orientation "h" :class "card" :vexpand "false" :hexpand "false" :spacing 0
+     (sys-info-widget :value "${round(EWW_BATTERY['BAT0']['capacity'],0)}" :suffix "%" :class "sys_info battery" :icon "")
+     (sys-info-widget :value "${round(EWW_CPU['avg'],0)}" :class "sys_info cpu" :suffix "%" :icon "")
+     (sys-info-widget :value "${round(EWW_TEMPS['CORETEMP_PACKAGE_ID_0'],0)}" :suffix "C" :class "sys_info temperature" :icon "")
+     (sys-info-widget :value "${round(EWW_RAM['used_mem_perc'],0)}" :suffix "%" :class "sys_info memory" :icon "")))
+
+(defwindow sys-info-panel
+    :stacking "bg"
+    :focusable "false"
+    :exclusive false
+    :focusable false
+    :active true
+    :monitor 0
+    :geometry (geometry :anchor "top right" :x 20 :y 190 :width 700 :height 155) (sys-info-panel))
+
+(defpoll chocofi-left-battery :interval "60s"
+                          :initial "0"
+                          `~/.config/eww/scripts/bluetooth_battery chocofi_left`)
+(defpoll chocofi-right-battery :interval "60s"
+                          :initial "0"
+                          `~/.config/eww/scripts/bluetooth_battery chocofi_right`)
+(defpoll trackpad-battery :interval "60s"
+                          :initial "0"
+                          `~/.config/eww/scripts/bluetooth_battery trackpad`)
+(defpoll headset-battery :interval "60s"
+                          :initial "0"
+                          `~/.config/eww/scripts/bluetooth_battery headset`)
+                          
+(defwidget bluetooth-info-panel []
+    (box :orientation "h" :class "card" :vexpand "false" :hexpand "false" :spacing 0
+     (sys-info-widget :value "${chocofi-left-battery}" :suffix "%" :class "sys_info battery" :icon "")
+     (sys-info-widget :value "${chocofi-right-battery}" :suffix "%" :class "sys_info cpu" :icon "")
+     (sys-info-widget :value "${trackpad-battery}" :suffix "%" :class "sys_info temperature" :icon "󰟸")
+     (sys-info-widget :value "${headset-battery}" :suffix "%" :class "sys_info memory" :icon "")))
+
+(defwindow bluetooth-info-panel
+    :stacking "bg"
+    :focusable "false"
+    :exclusive false
+    :focusable false
+    :active true
+    :monitor 0
+    :geometry (geometry :anchor "top right" :x 20 :y 375 :width 700 :height 155) (bluetooth-info-panel))
+
+;;;;;;;;;;;;;;;;;;;;;;;;
+;; CLOCK
+;;;;;;;;;;;;;;;;;;;;;;
+(defpoll time_hour :interval "5m" "date +\"%H\"")
+(defpoll time_min :interval "5s" "date +\"%M\"")
+(defpoll time_day :interval "30m" "date +\"%d\"")
+(defpoll time_month_name :interval "48h" "date +\%b")
+
+(defwidget clock [] 
+    (box :class "card" :orientation "h" :spacing 50 :space-evenly false :vexpand "false" :hexpand "false" 
+     (box :orientation "h" :spacing 0
+     (label :class "time_hour" :valign "start" :wrap "true" :limit-width 25 :text time_hour)
+     (label :class "time_min" :valign "end" :wrap "true" :limit-width 25 :text time_min))
+     (box :orientation "v" :spacing 0 
+     (label :class "time_mer" :valign "start" :halign "end" :wrap "true" :limit-width 25 :text time_month_name)
+     (label :class "time_day" :valign "end" :halign "end" :wrap "true" :limit-width 25 :text time_day))))
+
+(defwindow clock
+    :stacking "bg"
+    :focusable "false"
+    :exclusive false
+    :focusable false
+    :active true
+    :monitor 0
+    :geometry (geometry :anchor "top right" :x 20 :y 20 :width 350 :height 155) (clock))
+
+;;;;;;;;;;;;;;;;;;;;;;
+;; HYPRLAND
+;;;;;;;;;;;;;;;;;;;;;;
+(deflisten workspaces "hyprland-workspaces _")
+
+(defwindow workspaces
+    :monitor 0
+    :class "dashboard"
+    :hexpand false
+    :vexpand false
+    :geometry (geometry :anchor "bottom right" :x 20 :y 20)
+    :stacking "fg"
+    :exclusive false
+    :focusable false
+    :active true
+    (box :class "${EWW_BATTERY['BAT0']['capacity'] < 30 ? "workspaces workspaces_battery_warning" : "workspaces"} " :orientation "h" :spacing 5 :space-evenly "false"
+         (for i in {workspaces[0].workspaces}
+              (button :visible "${i.id > 0}" :class "workspace" :onclick "hyprctl dispatch workspace ${i.id}" "${i.name}"))
+         (label :class "workspace" :text time_hour)
+         (label :class "workspace" :style "margin-left: -5px; margin-right: -5px;":text ":")
+         (label :class "workspace" :text time_min)
+         (label :class "workspace" :style "margin-left: -5px; margin-right: -5px;":text "  ")))
+
+;;;;;;;;;;;;;;;;;;;;;;
+;; BACKUP
+;;;;;;;;;;;;;;;;;;;;;;
+(defpoll home-backup :interval "5m" "journalctl -u borgbackup-job-home-persistent.service | grep 'Deactivated successfully.' | tail -n1 | cut -d ' ' -f -3 | rev | cut -c4- | rev")
+(defpoll root-backup :interval "5m" "journalctl -u borgbackup-job-root-persistent.service | grep 'Deactivated successfully.' | tail -n1 | cut -d ' ' -f -3 | rev | cut -c4- | rev")
+
+(defwidget backup [icon color]
+    (box :class "card" :orientation "h" :spacing 50 :space-evenly false :vexpand "false" :hexpand "false" 
+     (label :class "backup_icon" :valign "start" :halign "start" :text icon :style "color: ${color};")
+     (label :class "backup_date" :valign "end" :halign "end" :text root-backup)))
+
+(defwindow backup
+    :stacking "bg"
+    :focusable "false"
+    :exclusive false
+    :focusable false
+    :active true
+    :monitor 0
+    :geometry (geometry :anchor "top right" :x 390 :y 20 :width 335 :height 155) (backup :icon "" :color nord13))
