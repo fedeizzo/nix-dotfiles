@@ -5,8 +5,8 @@
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
-    backupfileextension = "backup";
-    extraspecialargs = {
+    backupFileExtension = "backup";
+    extraSpecialArgs = {
       sops = config.sops;
       username = username;
       inputs = inputs;
@@ -14,7 +14,7 @@
 
     users.${username} = {
       imports = [
-        inputs.impermanence.nixosmodules.home-manager.impermanence
+        inputs.impermanence.nixosModules.home-manager.impermanence
 
         ../common/bottom
         ./modules/cli
