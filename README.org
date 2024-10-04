@@ -22,6 +22,13 @@ Folder description:
   curl -s https://raw.githubusercontent.com/fedeizzo/nix-dotfiles/refs/heads/master/scripts/installation/x1-carbon.sh | sh
 #+end_src
 
+Unfortunately I didn't find a way to create a directory under ~/persist/home/oven~ with the right permissions, the script run automatically post initrd doesn't have the user ids. After the first boot it's required to create it manually:
+
+#+begin_src sh
+  chown oven:users /persist/home/oven/
+  chmod 700 /persist/home/oven
+#+end_src
+
 *** Dell xps 9510
 Partitioning is made with ~btrfs~ file system, during it two blank read-only snapshots are taken:
 - ~root~

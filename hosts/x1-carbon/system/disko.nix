@@ -97,11 +97,11 @@ in
     umount /btrfs_tmp
 
     # create home in /persist using the right permission
-    mount -o subvol=persist /dev/mapper/cryptroot /btrfs_tmp
-    mkdir -p /btrfs_tmp/home/${username}
-    chown ${username}:users /btrfs_tmp/home/${username}/
-    chmod 700 /btrfs_tmp/home/${username}/
-    umount /btrfs_tmp
+    # mount -o subvol=persist /dev/mapper/cryptroot /btrfs_tmp
+    # mkdir -p /btrfs_tmp/home/${username}
+    # chown ${username}:users /btrfs_tmp/home/${username}/
+    # chmod 700 /btrfs_tmp/home/${username}/
+    # umount /btrfs_tmp
   '';
   fileSystems."/persist".neededForBoot = true;
   fileSystems."/var/log".neededForBoot = true;
