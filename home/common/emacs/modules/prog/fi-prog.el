@@ -6,7 +6,6 @@
 ;; (fi/load-package-config PROG-MODULE-PATH "eglot.el")
 (fi/load-package-config PROG-MODULE-PATH "bazel.el")
 (fi/load-package-config PROG-MODULE-PATH "dockerfile")
-(fi/load-package-config PROG-MODULE-PATH "gendoxy.el")
 (fi/load-package-config PROG-MODULE-PATH "git-gutter.el")
 (fi/load-package-config PROG-MODULE-PATH "go-lang.el")
 (fi/load-package-config PROG-MODULE-PATH "hurl.el")

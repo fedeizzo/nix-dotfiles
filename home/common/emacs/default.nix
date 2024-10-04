@@ -25,12 +25,6 @@ let
     rev = "master";
     sha256 = "sha256-OQ0WuMXHPusxLPpuVqkq7t1IDZx4ZvPyKdc4h+8QDAs=";
   };
-  gendoxy = pkgs.fetchFromGitHub {
-    owner = "mp81ss";
-    repo = "gendoxy";
-    rev = "master";
-    sha256 = "sha256-z3L5VScaQ7LssIvCXjRsKbR7yHdlaamGhTkClSE/MJo=";
-  };
   org-fc = pkgs.fetchFromGitHub {
     owner = "l3kn";
     repo = "org-fc";
