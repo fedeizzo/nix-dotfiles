@@ -5,6 +5,7 @@
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
+    backupFileExtension = "backup";
     extraSpecialArgs = {
       sops = config.sops;
       username = username;
