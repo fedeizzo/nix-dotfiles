@@ -72,5 +72,4 @@ in
   xdg.configFile."emacs/org-outer-indent".source = org-outer-indent;
   xdg.configFile."emacs/gotest-ui-mode".source = gotest-ui-mode;
   xdg.configFile."emacs/ts-fold".source = ts-fold;
-  xdg.configFile."emacs/hideshowvis".source = hideshowvis;
 }
