@@ -5,8 +5,8 @@
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
-    backupFileExtension = "backup";
-    extraSpecialArgs = {
+    backupfileextension = "backup";
+    extraspecialargs = {
       sops = config.sops;
       username = username;
       inputs = inputs;
@@ -14,7 +14,7 @@
 
     users.${username} = {
       imports = [
-        inputs.impermanence.nixosModules.home-manager.impermanence
+        inputs.impermanence.nixosmodules.home-manager.impermanence
 
         ../common/bottom
         ./modules/cli
@@ -25,7 +25,7 @@
         ./modules/misc
         ./modules/persistent
         ./modules/user
-        # ./modules/wayland
+        ./modules/wayland
         ../common/zathura
 
 
