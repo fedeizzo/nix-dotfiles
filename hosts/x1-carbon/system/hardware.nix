@@ -6,6 +6,7 @@
     enable = true;
     speed = 200;
     sensitivity = 200;
+    emulateWheel = true;
   };
   services.illum.enable = true; # Enable the brightness buttons
   services.pcscd.enable = true;
