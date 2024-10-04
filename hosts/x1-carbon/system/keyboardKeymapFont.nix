@@ -22,11 +22,11 @@
     };
     fprintd = {
       enable = true;
-      package = pkgs.fprintd;
-      tod = {
-        enable = true;
-        driver = pkgs.libfprint-tod;
-      };
+      # package = pkgs.fprintd;
+      # tod = {
+      #   enable = true;
+      #   driver = pkgs.libfprint-tod;
+      # };
     };
   };
 }
