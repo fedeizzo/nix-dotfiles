@@ -1,15 +1,9 @@
 { ... }:
 
 {
-  programs.ssh = {
-    enable = true;
-    matchBlocks = {
-      homelab = {
-        hostname = "homelab";
-        user = "root";
-      };
-    };
-  };
+  imports = [
+    ../../../common/user
+  ];
 
   xdg.mimeApps = {
     enable = true;
@@ -23,29 +17,9 @@
     };
   };
 
-  programs.direnv = {
-    enable = true;
-    nix-direnv.enable = true;
-  };
-
   home.file.".sources" = {
     source = ../../sources;
     executable = true;
     recursive = true;
   };
-
-  nix.registry = {
-    fedeizzo = {
-      from = {
-        id = "fedeizzo";
-        type = "indirect";
-      };
-      to = {
-        owner = "fedeizzo";
-        repo = "nix-dotfiles";
-        type = "github";
-      };
-    };
-  };
-
 }

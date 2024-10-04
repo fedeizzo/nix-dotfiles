@@ -19,14 +19,14 @@
         ./modules/cli
         ./modules/firefox
         ./modules/fish
-        ./modules/git
+        ../common/git
         ./modules/languages
         ./modules/lf
         ./modules/misc
         ./modules/persistent
         ./modules/user
         ./modules/wayland
-        ./modules/zathura
+        ../common/zathura
 
 
         ../common/kitty

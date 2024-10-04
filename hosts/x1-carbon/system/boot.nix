@@ -16,7 +16,7 @@ in
         enable = true;
         device = "nodev";
         efiSupport = true;
-        useOSProber = true;
+        useOSProber = false;
         enableCryptodisk = true;
         efiInstallAsRemovable = true;
         configurationLimit = 5;

@@ -17,7 +17,6 @@ let
   };
   commonShellInit = ''
     set EDITOR "vim"
-    set TERMINAL "kitty"
     set XDG_CONFIG_HOME "$HOME/.config"
     set XDG_CACHE_HOME "$HOME/.cache"
     set XDG_DATA_HOME "$HOME/.local/share"

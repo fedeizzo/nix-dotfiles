@@ -96,7 +96,7 @@
         };
         oven = mkHost {
           username = "oven";
-          hostname = "oven-nixos";
+          hostname = "oven";
           system = "x86_64-linux";
           machine = "x1-carbon";
           pkgs = legacyPackages."x86_64-linux";
