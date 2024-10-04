@@ -39,20 +39,8 @@ in
     # c/c++
     ccls
 
-    # rust
-    rust-analyzer
-    rustfmt
-    lld
-
-    # java
-    # jdt-language-server
-
-    # go
-    # go # disabled becasuse on the macbook it installed with brew
-    # gopls # disabled becasuse on the macbook it installed with brew
-
     # latex
-    texlive.combined.scheme-full
+    texliveFull
   ] ++
   [
     # nix
