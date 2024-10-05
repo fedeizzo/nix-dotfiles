@@ -5,7 +5,7 @@ let
       (load-file "~/.config/emacs/init.el")
     '';
     defaultInitFile = true;
-    package = pkgs.emacs29;
+    package = pkgs.emacs-pgtk;
     alwaysEnsure = true;
     extraEmacsPackages = epkgs: with epkgs; [
       (import ./modules/checkers { epkgs = epkgs; }).packages

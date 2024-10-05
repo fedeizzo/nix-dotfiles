@@ -10,9 +10,6 @@
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs-darwin";
     home-manager.url = "github:nix-community/home-manager/release-24.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
-    nh-darwin.url = "github:ToyVo/nh-darwin";
-    disko.url = "github:nix-community/disko";
-    disko.inputs.nixpkgs.follows = "nixpkgs";
 
     flake-utils.url = "github:numtide/flake-utils";
     deploy-rs.url = "github:serokell/deploy-rs";
@@ -21,7 +18,9 @@
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
     comin.url = "github:nlewo/comin/increase-timeout";
     comin.inputs.nixpkgs.follows = "nixpkgs";
-
+    nh-darwin.url = "github:ToyVo/nh-darwin";
+    disko.url = "github:nix-community/disko";
+    disko.inputs.nixpkgs.follows = "nixpkgs";
 
     emacs-overlay = {
       url = "github:nix-community/emacs-overlay";
@@ -31,10 +30,13 @@
       url = "github:slotThe/emacs-lsp-booster-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
     # Wayland and Hyprland
     vigiland.url = "github:jappie3/vigiland";
     hyprland-contrib.url = "github:hyprwm/contrib";
     hyprland-contrib.inputs.nixpkgs.follows = "nixpkgs";
+    stylix.url = "github:danth/stylix";
+    apple-fonts.url = "github:Lyndeno/apple-fonts.nix";
   };
 
   outputs =
