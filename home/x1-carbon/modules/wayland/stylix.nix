@@ -2,10 +2,10 @@
 
 {
   imports = [
-    inputs.stylix.nixosModules.sytlix
+    inputs.stylix.homeManagerModules.stylix
   ];
 
-  sytlix = {
+  stylix = {
     enable = true;
     autoEnable = false;
     base16Scheme = "${pkgs.base16-schemes}/share/themes/nord.yaml";
