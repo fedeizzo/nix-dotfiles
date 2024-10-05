@@ -1,5 +1,14 @@
 { inputs, pkgs, ... }:
 
+let
+  myFonts = (pkgs.nerdfonts.override {
+    fonts = [
+      "Ubuntu"
+      "CascadiaCode"
+      "UbuntuSans"
+    ];
+  });
+in
 {
   imports = [
     inputs.stylix.homeManagerModules.stylix
@@ -10,6 +19,7 @@
       pkgs.font-awesome
       pkgs.joypixels
       pkgs.emacs-all-the-icons-fonts
+
     ];
   };
 
@@ -19,9 +29,20 @@
     base16Scheme = "${pkgs.base16-schemes}/share/themes/nord.yaml";
     image = ../../../common/images/wallpaper.png;
     fonts = {
+      packages = [
+        myFonts
+      ];
       serif = {
-        package = inputs.apple-fonts.packages.${pkgs.system}.sf-pro-nerd;
-        name = "SFProDisplay Nerd Font";
+        package = myFonts;
+        name = "Ubuntu Nerd Font";
+      };
+      monospace = {
+        package = myFonts;
+        name = "CaskaydiaCove Nerd Font";
+      };
+      sansSerif = {
+        package = myFonts;
+        name = "UbuntuSans Nerd Font";
       };
     };
     targets = {
@@ -30,5 +51,4 @@
       grupb.useImage = true;
     };
   };
-
 }
