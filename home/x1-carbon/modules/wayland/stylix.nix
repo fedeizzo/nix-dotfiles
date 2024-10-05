@@ -9,6 +9,7 @@
     enable = true;
     autoEnable = false;
     base16Scheme = "${pkgs.base16-schemes}/share/themes/nord.yaml";
+    image = "~/nix-dotfiles/home/common/images/wallpaper.png";
     fonts = {
       serif = {
         package = inputs.apple-fonts.packages.${pkgs.system}.sf-pro-nerd;
