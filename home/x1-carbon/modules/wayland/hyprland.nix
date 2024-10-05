@@ -46,8 +46,8 @@
         no_border_on_floating = true;
         gaps_in = 5;
         gaps_out = 5;
-        "col.active_border" = "0x55B48EAD";
-        "col.inactive_border" = "0xFF2E3440";
+        # "col.active_border" = "0x55B48EAD";
+        # "col.inactive_border" = "0xFF2E3440";
 
         # layout
         layout = "master";

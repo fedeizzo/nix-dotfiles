@@ -20,7 +20,7 @@
       fish.enable = true;
       fzf.enable = true;
       hyprland.enable = true;
-      hyprpaper.enable = true;
+      # hyprpaper.enable = true;
       rofi.enable = true;
     };
   };
