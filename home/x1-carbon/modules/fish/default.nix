@@ -18,6 +18,7 @@
     hg = "kitty +kitten hyperlinked_grep";
     colorpicker = "grim -g (slurp -p) -t ppm - | convert - -format '%[pixel:p{0,0}]' txt:-";
     er = "systemctl --user restart emacs.service";
+    update = "doas nixos-rebuild switch --flake ~/nix-dotfiles#oven";
   };
   fishPerMachine.shellInit = ''
     set TERMINAL "kitty"
