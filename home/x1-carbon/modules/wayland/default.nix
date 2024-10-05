@@ -6,7 +6,7 @@
     ./gtk-qt.nix
     ./hyprland.nix
     ./kanshi.nix
-    ./stylix.nix
+    ./style.nix
     ../../../common/rofi
   ];
 
