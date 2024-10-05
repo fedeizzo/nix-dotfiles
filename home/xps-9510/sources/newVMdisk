@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-
-[ -z $1 ] && echo -e "Please name of the disk"
-[ -z $2 ] && echo -e "Please provide disk size"
-touch "$1"
-chattr +C "$1"
-fallocate -l "$2G" "$1"

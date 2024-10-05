@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-if [[ $1 == '-r' ]]; then
-    rect=$(swaymsg -t get_tree | jq '.rect')
-    swaymsg input 1386:890:Wacom_One_by_Wacom_S_Pen map_to_region $(echo ${rect} | jq '.x') $(echo ${rect} | jq '.y') $(echo ${rect} | jq '.width') $(echo ${rect} | jq '.height')
-else
-    swaymsg input 1386:890:Wacom_One_by_Wacom_S_Pen map_to_region $(slurp -f '%x %y %w %h')
-fi

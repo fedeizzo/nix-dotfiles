@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-new_name=$(echo '' | rofi -dmenu)
-swaymsg rename workspace to $new_name
