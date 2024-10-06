@@ -23,7 +23,7 @@
     disko.inputs.nixpkgs.follows = "nixpkgs";
 
     emacs-overlay = {
-      url = "github:nix-community/emacs-overlay";
+      url = "github:nix-community/emacs-overlay?rev=f20b9cfd2c52c2ea5351008d008fd8b2f1419c30";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     emacs-lsp-booster = {
