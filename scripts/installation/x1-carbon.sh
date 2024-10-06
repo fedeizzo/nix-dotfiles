@@ -1,7 +1,5 @@
 #! /usr/bin/env nix-shell
 #! nix-shell -i bash -p git bitwarden-cli jq
-set -e
-
 colorPrint() {
   echo -e "$(tput setaf 6)$1$(tput sgr0)"
 }

@@ -46,8 +46,8 @@ let
   ts-fold = pkgs.fetchFromGitHub {
     owner = "emacs-tree-sitter";
     repo = "ts-fold";
-    rev = "master";
-    sha256 = "sha256-Ao6vOS8PdVPo+E+lxH0TWfHwUSMFcLFgaxGG/D3I+rc=";
+    rev = "01c9ecaaa89966cdcd250ac37c24a9c9f530b725";
+    sha256 = "sha256-IwItJNBzaOJlAI1785QiwYLbi1YGRL8+fhv+V4gPhlA=";
   };
 in
 {
