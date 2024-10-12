@@ -46,8 +46,8 @@ in
       fzf.enable = true;
       hyprland.enable = true;
       # hyprpaper.enable = true;
-      rofi.enable = true;
-      #kitty.enable = true;
+      # rofi.enable = true;
+      # kitty.enable = true;
       gtk.enable = true;
       waybar.enable = true;
     };
