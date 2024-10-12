@@ -62,6 +62,11 @@
           publicKey = "3i/aGGX9iOSyQ/FLbrKyvaClHzqUq3mGHX4oneerbm0=";
           allowedIPs = [ "192.168.7.2/32" ];
         }
+        {
+          # Laptop x1 carbon
+          publicKey = "zzO+Pxb/p+Yzw5eGDfOcg4axjm91vRtohUZ6o2talzY=";
+          allowedIPs = [ "192.168.7.3/32" ];
+        }
       ];
     };
   };

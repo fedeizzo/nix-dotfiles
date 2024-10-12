@@ -32,8 +32,20 @@ _:
         pre-commit-hook-ensure-sops.enable = true; # Do not push unencrypted secrets file managed with sops
         actionlint.enable = true; # GitHub actions
         detect-private-keys.enable = true;
-        ripsecrets.enable = true; # Secret keys
-        typos.enable = true;
+        ripsecrets = {
+          enable = true; # Secret keys
+          excludes = [
+            "hosts/xps-9510/system/networking.nix"
+            "hosts/raspberry/system/networking.nix"
+            "hosts/x1-carbon/system/networking.nix"
+          ];
+        };
+        typos = {
+          enable = true;
+          excludes = [
+            "home/xps-9510/sources/lfpreview"
+          ];
+        };
       };
     };
   };

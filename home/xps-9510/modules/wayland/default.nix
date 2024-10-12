@@ -24,7 +24,7 @@
     grimblast
     libappindicator # tray
     wtype # xdotool replacement
-    swaync # notification center
+    swaynotificationcenter # notification center
     socat # socket reader
     libinput-gestures
   ];

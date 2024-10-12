@@ -9,11 +9,11 @@
         unixAuth = true;
         fprintAuth = true;
       };
+      doas.fprintAuth = true;
     };
     sudo.enable = false;
     doas = {
       enable = true;
-      fprintAuth = true;
       extraRules = [
         { groups = [ "wheel" ]; keepEnv = true; persist = true; }
       ];

@@ -10,7 +10,7 @@
 
   imports = [
     ../common/emacs
-    ./modules/languages
+    ../common/languages
     ./modules/cli
     ./modules/zsh
     ../common/starship

@@ -1,4 +1,4 @@
-{ username, inputs, config, ... }:
+{ username, inputs, config, emacs-pkg, ... }:
 
 
 {
@@ -9,18 +9,19 @@
       inherit (config) sops;
       inherit username;
       inherit inputs;
+      inherit emacs-pkg;
     };
 
     users.${username} = {
       imports = [
         inputs.impermanence.nixosModules.home-manager.impermanence
 
-        ../common/modules/bottom
+        ../common/bottom
         ./modules/cli
         ./modules/firefox
         ./modules/fish
         ../common/git
-        ./modules/languages
+        ../common/languages
         ./modules/lf
         ./modules/misc
         ./modules/persistent
@@ -35,7 +36,7 @@
       programs.home-manager.enable = true;
 
       home = {
-        stateVersion = "23.11";
+        stateVersion = "24.05";
         homeDirectory = "/home/${username}";
         username = "${username}";
       };

@@ -41,7 +41,7 @@
     stylix.url = "github:danth/stylix";
   };
 
-  outputs = inputs@{ flake-parts, ... }:
+  outputs = inputs@{ self, flake-parts, ... }:
     flake-parts.lib.mkFlake
       { inherit inputs; }
       {
@@ -62,9 +62,10 @@
             (import ./nix/nixosConfigurations.nix { inherit inputs; })
             (import ./nix/deployment.nix {
               inherit inputs;
-              homelab-configuration = (import ./nix/nixosConfigurations.nix { inherit inputs; }).rasp-nixos;
+              homelab-configuration = (import ./nix/nixosConfigurations.nix { inherit inputs; }).nixosConfigurations.rasp-nixos;
             })
           ];
+          checks = builtins.mapAttrs (_system: deployLib: deployLib.deployChecks self.deploy) inputs.deploy-rs.lib;
         };
       };
 }

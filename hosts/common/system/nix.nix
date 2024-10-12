@@ -1,9 +1,13 @@
 { pkgs, system-overlays, ... }:
 
 {
-  system.stateVersion = "23.11";
+  system.stateVersion = "24.05";
 
-  nixpkgs.overlays = builtins.attrValues system-overlays;
+  nixpkgs = {
+    overlays = builtins.attrValues system-overlays;
+    config.allowUnfree = true;
+    config.joypixels.acceptLicense = true;
+  };
 
   nix = {
     settings = {

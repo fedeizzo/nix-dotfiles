@@ -16,5 +16,7 @@
     "${username}-path" = {
       neededForUsers = true;
     };
+
+    x1-wireguard-private-key = { };
   };
 }
