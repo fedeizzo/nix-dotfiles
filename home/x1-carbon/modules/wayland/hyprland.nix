@@ -91,6 +91,11 @@
         };
       };
 
+      device = {
+        name = "tpps/2-elan-trackpoint";
+        sensitivity = 1.0;
+      };
+
       gestures = {
         workspace_swipe = true;
         workspace_swipe_fingers = 4;
