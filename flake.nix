@@ -64,40 +64,4 @@
           ];
         };
       };
-
-  # outputs2 =
-  #   { self
-  #   , deploy-rs
-  #   , flake-utils
-  #   , impermanence
-  #   , sops-nix
-  #   , ...
-  #   }@inputs:
-
-
-  #     # OTHER FLAKEs FIELDS
-  #     checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) deploy-rs.lib;
-
-  #     templates = {
-  #       python = {
-  #         path = ./templates/python-mach-nix;
-  #         description = "A white python mach-nix project";
-  #       };
-  #     };
-  #   } // flake-utils.lib.eachDefaultSystem (system:
-  #   let
-  #     pkgs = inputs.nixpkgs.legacyPackages.${system};
-  #   in
-  #   {
-  #     devShells.default = pkgs.mkShell {
-  #       packages = [
-  #         pkgs.deploy-rs
-  #         pkgs.sops
-  #       ];
-  #       shellHook = ''
-  #         export PATH=$PATH:$(pwd)/scripts
-  #       '';
-  #     };
-  #   }
-  #   );;
 }
