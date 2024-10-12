@@ -7,7 +7,6 @@
       enable = true;
       extraPackages = [
         pkgs.intel-media-driver
-        pkgs.vaapiIntel
         pkgs.vaapiVdpau
         pkgs.libvdpau-va-gl
       ];
