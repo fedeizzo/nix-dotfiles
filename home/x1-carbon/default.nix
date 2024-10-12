@@ -1,4 +1,4 @@
-{ username, inputs, config, ... }:
+{ username, inputs, config, emacs-pkg, ... }:
 
 
 {
@@ -9,6 +9,7 @@
       sops = config.sops;
       username = username;
       inputs = inputs;
+      emacs-pkg = emacs-pkg;
     };
 
     users.${username} = {
