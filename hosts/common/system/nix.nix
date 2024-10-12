@@ -1,7 +1,10 @@
-{ pkgs, ... }:
+{ pkgs, system-overlays, ... }:
 
 {
   system.stateVersion = "23.11";
+
+  nixpkgs.overlays = builtins.attrValues system-overlays;
+
   nix = {
     settings = {
       auto-optimise-store = true;

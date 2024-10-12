@@ -1,9 +1,19 @@
-{ inputs, pkgs, username, ... }:
+{ inputs, pkgs, username, system-overlays, ... }:
 
 {
   imports = [
-    # ../common/nh
+    inputs.home-manager.darwinModules.home-manager
   ];
+
+  home-manager = {
+    useGlobalPkgs = true;
+    useUserPackages = true;
+    extraSpecialArgs = {
+      inherit username inputs;
+    };
+
+    users.${username} = import ../../home/macbook-pro;
+  };
 
   system.stateVersion = 4;
 
@@ -21,6 +31,7 @@
     home = "/Users/${username}";
     shell = pkgs.zsh;
   };
+  nixpkgs.overlays = builtins.attrValues system-overlays;
 
   environment.shellAliases.nh = "nh-darwin";
 }

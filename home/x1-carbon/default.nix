@@ -1,4 +1,4 @@
-{ username, inputs, config, emacs-pkg, ... }:
+{ username, inputs, config, emacs-pkg, system-overlays, ... }:
 
 
 {
@@ -27,7 +27,6 @@
         ./modules/user
         ./modules/wayland
         ../common/zathura
-
 
         ../common/kitty
         ../common/emacs

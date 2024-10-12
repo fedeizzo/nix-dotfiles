@@ -1,4 +1,4 @@
-{ config, emacs-pkg, libs, ... }:
+{ config, pkgs, emacs-pkg, libs, ... }:
 let
   myEmacs = (emacs-pkg.emacsPackagesFor emacs-pkg.emacs29-pgtk).emacsWithPackages (
     epkgs: with epkgs; [
@@ -62,7 +62,7 @@ in
     package = myEmacs;
   };
   home.packages = with emacs-pkg; [
-    emacs-lsp-booster
+    pkgs.emacs-lsp-booster
     # poppler
     poppler_utils
     imagemagick
