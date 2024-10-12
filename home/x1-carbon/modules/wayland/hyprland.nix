@@ -210,9 +210,7 @@
         "swaync" # notification center
         "hdrop --floating --position t --background kitty --class scratchpad" # scratchpad
         "wl-paste -t text --watch clipman store" # init clipboard
-        "eww daemon --config ~/.config/eww"
-        "sleep 5 && eww --no-daemonize open-many clock sys-info-panel bluetooth-info-panel backup workspaces"
-        "hyprland-autoname-workspaces"
+        "waybar"
       ];
     };
   };
@@ -222,8 +220,6 @@
     hdrop
     inputs.vigiland.packages.${pkgs.system}.vigiland # idle inhibitor
     swayosd # show info while updating volume, brightness, etc.
-    hyprland-workspaces
-    hyprland-autoname-workspaces
   ];
 
   services = {
@@ -297,44 +293,6 @@
           blur_size = 8;
         }
       ];
-    };
-  };
-
-  xdg.configFile."hyprland-autoname-workspaces/config.toml".source = (pkgs.formats.toml { }).generate "hyprland-autorename-workspaces-config" {
-    version = "1.1.14";
-    format = {
-      dedup = true;
-      dedup_inactive_fullscreen = false;
-      delim = " ";
-      client = "{icon}";
-      client_active = "{icon}";
-      workspace = "{id}:{clients}";
-      workspace_empty = "{id}";
-      client_dup = "{icon}{counter_sup}";
-      client_dup_fullscreen = "[{icon}]{counter_unfocused_sup}";
-      client_fullscreen = "[{icon}]";
-    };
-    class = {
-      DEFAULT = " ";
-      Emacs = "";
-      "(?i)firefox" = "";
-      "(?i)Kitty" = "";
-      calibre-gui = "";
-      vlc = "";
-      org-telegram-desktop = "";
-      pavucontrol = "";
-      telegramdesktop = "";
-      virt-manager = "";
-    };
-    workspace_name = {
-      "0" = "zero";
-      "1" = "one";
-      "2" = "two";
-      "3" = "three";
-      "4" = "four";
-      "5" = "five";
-      "6" = "six";
-      "7" = "seven";
     };
   };
 }

@@ -2,11 +2,11 @@
 
 {
   imports = [
-    ./eww.nix
     ./gtk-qt.nix
     ./hyprland.nix
     ./kanshi.nix
     ./style.nix
+    ./waybar.nix
     ../../../common/rofi
   ];
 
