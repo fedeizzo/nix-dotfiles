@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, config, ... }:
 
 {
   devshells.default = {
@@ -6,6 +6,7 @@
       {202}Federico Izzo's flake devshell.{reset}
        $(type -p menu &>/dev/null && menu)
     '';
+
     commands = [
       {
         help = " Update the system configuration using the current flake and hostname.";
@@ -61,6 +62,8 @@
 
     packages = with pkgs; [
       sops
-    ];
+    ] ++ config.pre-commit.settings.enabledPackages;
+
+    devshell.startup.pre-commit-hooks.text = config.pre-commit.installationScript;
   };
 }

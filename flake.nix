@@ -14,6 +14,7 @@
     # Flake management
     flake-parts.url = "github:hercules-ci/flake-parts";
     devshell.url = "github:numtide/devshell";
+    git-hooks-nix.url = "github:cachix/git-hooks.nix";
 
     # Installation and boot
     impermanence.url = "github:nix-community/impermanence";
@@ -46,11 +47,13 @@
       {
         imports = [
           inputs.devshell.flakeModule
+          inputs.git-hooks-nix.flakeModule
         ];
         systems = [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" ];
         perSystem = { pkgs, ... }: {
           formatter = pkgs.nixpkgs-fmt;
           imports = [
+            ./nix/git-hooks.nix
             ./nix/devshells.nix
           ];
         };

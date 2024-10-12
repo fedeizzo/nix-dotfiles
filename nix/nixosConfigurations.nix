@@ -10,13 +10,14 @@ let
 in
 {
   nixosConfigurations = {
-    fedeizzo-nixos = inputs.nixpks.lib.nixosSystem {
+    fedeizzo-nixos = inputs.nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = {
         inherit inputs;
         hostname = "fedeizzo-nixos";
         username = "fedeizzo";
         emacs-pkg = import inputs.emacs-pkg { system = "x86_64-linux"; };
+        system-overlays = system-overlays;
       };
 
       modules = [ ../hosts/xps-9510 ../home/xps-9510 ];
@@ -34,7 +35,7 @@ in
 
       modules = [ ../hosts/x1-carbon ../home/x1-carbon ];
     };
-    rasp-nixos = inputs.nixpkgs-rasp.nixosSystem {
+    rasp-nixos = inputs.nixpkgs-rasp.lib.nixosSystem {
       system = "aarch64-linux";
       specialArgs = {
         inherit inputs;

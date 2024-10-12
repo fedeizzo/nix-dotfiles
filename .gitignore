@@ -12,3 +12,4 @@ result
 .stfolder
 .direnv
 **/.DS_Store
+/.pre-commit-config.yaml
