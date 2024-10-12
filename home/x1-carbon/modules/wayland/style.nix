@@ -1,7 +1,7 @@
 { pkgs, inputs, ... }:
 
 let
-  myFonts = (pkgs.nerdfonts.override {
+  patchedFont = (pkgs.nerdfonts.override {
     fonts = [
       "Ubuntu"
       "CascadiaCode"
@@ -27,27 +27,29 @@ in
         terminal = 12;
       };
       serif = {
-        package = myFonts;
+        package = patchedFont;
         name = "Ubuntu Nerd Font";
       };
       monospace = {
-        package = myFonts;
+        package = patchedFont;
         name = "CaskaydiaCove Nerd Font";
       };
       sansSerif = {
-        package = myFonts;
+        package = patchedFont;
         name = "UbuntuSans Nerd Font";
       };
     };
     targets = {
       firefox.enable = true;
+      firefox.profileNames = [ "fedeizzo" ];
       fish.enable = true;
       fzf.enable = true;
       hyprland.enable = true;
       # hyprpaper.enable = true;
       rofi.enable = true;
-      kitty.enable = true;
+      #kitty.enable = true;
       gtk.enable = true;
+      waybar.enable = true;
     };
   };
 }

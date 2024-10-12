@@ -18,8 +18,6 @@
         # LINUX ONLY - WORKAROUND FOR BAR HIDING ON DRAG EVENT
         user_pref("widget.gtk.ignore-bogus-leave-notify", 1);
       '';
-
-      userChrome = (builtins.readFile ./chrome/userChrome.css);
     };
   };
 }

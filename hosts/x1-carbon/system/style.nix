@@ -1,13 +1,18 @@
 { inputs, pkgs, ... }:
 
 let
-  myFonts = (pkgs.nerdfonts.override {
-    fonts = [
-      "Ubuntu"
-      "CascadiaCode"
-      "UbuntuSans"
-    ];
-  });
+  myFonts = [
+    (pkgs.nerdfonts.override {
+      fonts = [
+        "Ubuntu"
+        "CascadiaCode"
+        "UbuntuSans"
+      ];
+    })
+    pkgs.font-awesome
+    pkgs.joypixels
+    pkgs.emacs-all-the-icons-fonts
+  ];
 in
 {
   imports = [
@@ -15,12 +20,7 @@ in
   ];
 
   fonts = {
-    packages = [
-      pkgs.font-awesome
-      pkgs.joypixels
-      pkgs.emacs-all-the-icons-fonts
-
-    ];
+    packages = [ myFonts ];
   };
 
   stylix = {
@@ -29,9 +29,7 @@ in
     base16Scheme = "${pkgs.base16-schemes}/share/themes/nord.yaml";
     image = ../../../common/images/wallpaper.png;
     fonts = {
-      packages = [
-        myFonts
-      ];
+      packages = [ myFonts ];
       serif = {
         package = myFonts;
         name = "Ubuntu Nerd Font";
@@ -48,7 +46,7 @@ in
     targets = {
       nixos-icons.enable = true;
       grub.enable = true;
-      grupb.useImage = true;
+      grub.useImage = true;
     };
   };
 }
