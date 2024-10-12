@@ -43,7 +43,7 @@ _:
         typos = {
           enable = true;
           excludes = [
-            "home/xps-9510/sources/lfpreview"
+            "home/common/sources/lfpreview"
           ];
         };
       };

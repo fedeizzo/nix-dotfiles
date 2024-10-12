@@ -18,7 +18,7 @@
   };
 
   home.file.".sources" = {
-    source = ../../sources;
+    source = ../../../common/sources;
     executable = true;
     recursive = true;
   };

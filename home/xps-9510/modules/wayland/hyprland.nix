@@ -1,4 +1,4 @@
-{ pkgs, inputs, ... }:
+{ pkgs, ... }:
 
 {
   wayland.windowManager.hyprland = {
@@ -220,7 +220,6 @@
   home.packages = with pkgs; [
     hyprpicker # colorpicker
     hdrop
-    inputs.vigiland.packages.${pkgs.system}.vigiland # idle inhibitor
     swayosd # show info while updating volume, brightness, etc.
     hyprland-workspaces
     hyprland-autoname-workspaces

@@ -1250,22 +1250,6 @@
         "type": "github"
       }
     },
-    "nixpkgs_13": {
-      "locked": {
-        "lastModified": 1719254875,
-        "narHash": "sha256-ECni+IkwXjusHsm9Sexdtq8weAq/yUyt1TWIemXt3Ko=",
-        "owner": "nixos",
-        "repo": "nixpkgs",
-        "rev": "2893f56de08021cffd9b6b6dfc70fd9ccd51eb60",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nixos",
-        "ref": "nixos-unstable",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "nixpkgs_2": {
       "locked": {
         "lastModified": 1722073938,
@@ -1515,8 +1499,7 @@
         "nixpkgs-darwin": "nixpkgs-darwin",
         "nixpkgs-rasp": "nixpkgs-rasp",
         "sops-nix": "sops-nix",
-        "stylix": "stylix",
-        "vigiland": "vigiland"
+        "stylix": "stylix"
       }
     },
     "sops-nix": {
@@ -1738,24 +1721,6 @@
       "original": {
         "owner": "numtide",
         "repo": "flake-utils",
-        "type": "github"
-      }
-    },
-    "vigiland": {
-      "inputs": {
-        "nixpkgs": "nixpkgs_13"
-      },
-      "locked": {
-        "lastModified": 1719400387,
-        "narHash": "sha256-Y/MUjPWd09YGUWBIXSjQGAcRmgKLcHAMYNjWvDTiV2c=",
-        "owner": "jappie3",
-        "repo": "vigiland",
-        "rev": "62d0d6be2e19690c88e627eff76161ba41adbf97",
-        "type": "github"
-      },
-      "original": {
-        "owner": "jappie3",
-        "repo": "vigiland",
         "type": "github"
       }
     }

@@ -35,7 +35,6 @@
     nh-darwin.url = "github:ToyVo/nh-darwin";
 
     # Wayland and Hyprland
-    vigiland.url = "github:jappie3/vigiland";
     hyprland-contrib.url = "github:hyprwm/contrib";
     hyprland-contrib.inputs.nixpkgs.follows = "nixpkgs";
     stylix.url = "github:danth/stylix";

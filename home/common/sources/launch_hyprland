@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+systemctl --user import-environment
+Hyprland
