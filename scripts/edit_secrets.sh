@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-helpMessage=""
-[ -z $1 ] && echo -e $helpMessage && exit 1
 
 colorPrint() {
   echo -e "$(tput setaf 6)$1$(tput sgr0)"
@@ -31,23 +29,16 @@ edit_secrets () {
 }
 
 colorPrint "List of available secret files:"
+
 index=1
 files=$(find . -name '*secrets*.yaml')
 for file in $files; do
     echo -e "\t${index}) ${file}"
     index=$((index + 1))
 done
+
 read -p "Select a number: " selectedIndex
 selectedFile=$(echo $files | awk -F' ' "{print \$${selectedIndex}}")
+
 echo $selectedFile
-case $1 in
-    "edit")
-	edit_secrets $selectedFile
-	shift
-	;;
-    "encrypt")
-        [[ -z $2 ]] && echo "provide the key name: homelab or laptop"
-	# encrypt $selectedFile
-	shift
-	;;
-esac
+edit_secrets $selectedFile
