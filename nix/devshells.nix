@@ -22,6 +22,16 @@
         category = " System administration";
       }
       {
+        help = " Update a flake.nix input.";
+        name = "update-input";
+        command = ''
+          selected_input=$(nix flake metadata | rg '^.───' |  tr -s '\n' '\n' | sed 's/.───//g' | gawk -F':' '{print $1}' | sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2};?)?)?[mGK]//g" | fzf)
+
+          nix flake lock --update-input $selected_input
+        '';
+        category = " System administration";
+      }
+      {
         help = " Deploy the homelab configuration over ssh.";
         name = "deploy";
         command = "deploy .#rasp-nixos";
