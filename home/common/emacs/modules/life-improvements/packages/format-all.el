@@ -1,7 +1,7 @@
 ;;; format-all.el --- format-all configuration
 
 ;;; Commentary:
-;; 
+;;
 
 ;;; Code:
 (use-package format-all

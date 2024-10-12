@@ -103,7 +103,9 @@ in
     # chmod 700 /btrfs_tmp/home/${username}/
     # umount /btrfs_tmp
   '';
-  fileSystems."/persist".neededForBoot = true;
-  fileSystems."/var/log".neededForBoot = true;
-  fileSystems."/var/lib/sops".neededForBoot = true;
+  filesystems = {
+    "/persist".neededForBoot = true;
+    "/var/log".neededForBoot = true;
+    "/var/lib/sops".neededForBoot = true;
+  };
 }

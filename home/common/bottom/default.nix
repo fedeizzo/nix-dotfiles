@@ -1,4 +1,4 @@
-{ config, pkgs, libs, ... }:
+_:
 
 {
   programs.bottom = {

@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ ... }:
 
 {
   imports = [
@@ -114,7 +114,7 @@
     };
     vterm_printf = {
       body = ''
-        if begin; [  -n "$TMUX" ]  ; and  string match -q -r "screen|tmux" "$TERM"; end 
+        if begin; [  -n "$TMUX" ]  ; and  string match -q -r "screen|tmux" "$TERM"; end
             # tell tmux to pass the escape sequences through
             printf "\ePtmux;\e\e]%s\007\e\\" "$argv"
         else if string match -q -- "screen*" "$TERM"
@@ -124,7 +124,7 @@
             printf "\e]%s\e\\" "$argv"
         end
       '';
-      description = "Comunication channel for emacs-vterm";
+      description = "Communication channel for emacs-vterm";
     };
     flakify = {
       description = "Use a flake template";

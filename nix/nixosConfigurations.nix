@@ -17,7 +17,7 @@ in
         hostname = "fedeizzo-nixos";
         username = "fedeizzo";
         emacs-pkg = import inputs.emacs-pkg { system = "x86_64-linux"; };
-        system-overlays = system-overlays;
+        inherit system-overlays;
       };
 
       modules = [ ../hosts/xps-9510 ../home/xps-9510 ];
@@ -30,7 +30,7 @@ in
         hostname = "oven";
         username = "oven";
         emacs-pkg = import inputs.emacs-pkg { system = "x86_64-linux"; };
-        system-overlays = system-overlays;
+        inherit system-overlays;
       };
 
       modules = [ ../hosts/x1-carbon ../home/x1-carbon ];

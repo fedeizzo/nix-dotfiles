@@ -1,4 +1,3 @@
 #+LaTeX_CLASS: org-plain-latex
 #+LaTeX_CLASS_OPTIONS: \usepackage[utf8]{inputenc}
 #+LaTeX_CLASS_OPTIONS: \usepackage[T1]{fontenc}
-

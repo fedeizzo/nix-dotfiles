@@ -84,7 +84,7 @@ if [ ! -f /var/lib/sops/keys.txt ]; then
     mkdir -p /var/lib/sops
     while true; do
         secret=$(bw get item 'sops-age-keys-x1-carbon' | jq -r ."notes")
-        
+
         if [ $? -eq 0 ]; then
             echo $secret > /var/lib/sops/keys.txt
             chmod 600 /var/lib/sops/keys.txt

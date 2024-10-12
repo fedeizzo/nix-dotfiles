@@ -1,4 +1,4 @@
-{ pkgs, config, ... }:
+_:
 
 {
   virtualisation.oci-containers.containers."diun" = {

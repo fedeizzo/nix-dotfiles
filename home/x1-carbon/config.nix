@@ -1,8 +1,7 @@
-{ pkgs }:
+_:
 
 {
   allowUnfree = true;
   joypixels.acceptLicense = true;
   permittedInsecurePackages = [ ];
 }
-

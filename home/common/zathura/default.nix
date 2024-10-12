@@ -1,4 +1,4 @@
-{ pkgs, system, ... }:
+_:
 
 {
   programs.zathura = {

@@ -1,4 +1,4 @@
-{ ... }:
+_:
 
 {
   virtualisation.oci-containers.containers."garmindb-sync" = {
@@ -10,4 +10,3 @@
     ];
   };
 }
-

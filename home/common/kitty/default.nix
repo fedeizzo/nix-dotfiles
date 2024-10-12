@@ -1,4 +1,4 @@
-{ pkgs, system, ... }:
+{ pkgs, ... }:
 
 {
   programs.kitty = {

@@ -1,14 +1,14 @@
-{ config, pkgs, emacs-pkg, libs, ... }:
+{ pkgs, emacs-pkg, ... }:
 let
   myEmacs = (emacs-pkg.emacsPackagesFor emacs-pkg.emacs29-pgtk).emacsWithPackages (
     epkgs: with epkgs; [
-      (import ./modules/checkers { epkgs = epkgs; }).packages
-      (import ./modules/completion { epkgs = epkgs; }).packages
-      (import ./modules/org { epkgs = epkgs; }).packages
-      (import ./modules/ui { epkgs = epkgs; }).packages
-      (import ./modules/prog { pkgs = emacs-pkg; epkgs = epkgs; }).packages
-      (import ./modules/keys { epkgs = epkgs; }).packages
-      (import ./modules/life-improvements { epkgs = epkgs; }).packages
+      (import ./modules/checkers { inherit epkgs; }).packages
+      (import ./modules/completion { inherit epkgs; }).packages
+      (import ./modules/org { inherit epkgs; }).packages
+      (import ./modules/ui { inherit epkgs; }).packages
+      (import ./modules/prog { pkgs = emacs-pkg; inherit epkgs; }).packages
+      (import ./modules/keys { inherit epkgs; }).packages
+      (import ./modules/life-improvements { inherit epkgs; }).packages
       # nano-theme
       # nano-modeline
     ]
@@ -71,16 +71,17 @@ in
     enchant
   ];
   home.sessionVariables.ASPELL_CONF = "dict-dir ${emacs-pkg.aspellWithDicts (ds: with ds; [ en en-computers en-science it ])}/lib/aspell";
-
-  xdg.configFile."emacs/early-init.el".source = ./early-init.el;
-  xdg.configFile."emacs/init.el".source = ./init.el;
-  xdg.configFile."emacs/welcome.png".source = ./welcome.png;
-  xdg.configFile."emacs/modules".source = ./modules;
-  xdg.configFile."emacs/org-cv".source = org-cv;
-  xdg.configFile."emacs/hydra-posframe".source = hydra-posframe;
-  xdg.configFile."emacs/org-outer-indent".source = org-outer-indent;
-  xdg.configFile."emacs/gotest-ui-mode".source = gotest-ui-mode;
-  xdg.configFile."emacs/ts-fold".source = ts-fold;
-  xdg.configFile."emacs/hideshowvis".source = hideshowvis;
-  xdg.configFile."emacs/all-the-icons-nerd-fonts".source = all-the-icons-nerd-fonts;
+  xdg.configFile = {
+    "emacs/early-init.el".source = ./early-init.el;
+    "emacs/init.el".source = ./init.el;
+    "emacs/welcome.png".source = ./welcome.png;
+    "emacs/modules".source = ./modules;
+    "emacs/org-cv".source = org-cv;
+    "emacs/hydra-posframe".source = hydra-posframe;
+    "emacs/org-outer-indent".source = org-outer-indent;
+    "emacs/gotest-ui-mode".source = gotest-ui-mode;
+    "emacs/ts-fold".source = ts-fold;
+    "emacs/hideshowvis".source = hideshowvis;
+    "emacs/all-the-icons-nerd-fonts".source = all-the-icons-nerd-fonts;
+  };
 }

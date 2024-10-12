@@ -41,10 +41,12 @@
     enable = true;
     allowSFTP = false; # Don't set this if you need sftp
     openFirewall = false;
-    settings.PasswordAuthentication = false;
-    settings.KbdInteractiveAuthentication = false;
-    settings.X11Forwarding = false;
-    settings.PermitRootLogin = "yes";
+    settings = {
+      PasswordAuthentication = false;
+      KbdInteractiveAuthentication = false;
+      X11Forwarding = false;
+      PermitRootLogin = "yes";
+    };
   };
   services.fail2ban.enable = true;
 

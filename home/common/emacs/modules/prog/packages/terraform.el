@@ -1,7 +1,7 @@
 ;;; terraform.el --- terraform-mode configuration
 
 ;;; Commentary:
-;; terraform langauge configs
+;; terraform language configs
 
 ;;; Code:
 

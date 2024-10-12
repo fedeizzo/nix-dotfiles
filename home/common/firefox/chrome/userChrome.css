@@ -61,4 +61,3 @@
 #main-window[titlepreface*="XXX"] #titlebar { height: 0 !important; }
 /* Hidden state: Fix z-index of active pinned tabs */
 #main-window[titlepreface*="XXX"] #tabbrowser-tabs { z-index: 0 !important; }
-

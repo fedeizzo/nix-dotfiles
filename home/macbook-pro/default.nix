@@ -1,9 +1,9 @@
-{ inputs, pkgs, username, ... }:
+{ pkgs, username, ... }:
 
 
 {
   home = {
-    username = username;
+    inherit username;
     stateVersion = "24.05";
     homeDirectory = "/Users/${username}";
   };

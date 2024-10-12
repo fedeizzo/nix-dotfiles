@@ -1,13 +1,13 @@
 { pkgs, inputs, ... }:
 
 let
-  patchedFont = (pkgs.nerdfonts.override {
+  patchedFont = pkgs.nerdfonts.override {
     fonts = [
       "Ubuntu"
       "CascadiaCode"
       "UbuntuSans"
     ];
-  });
+  };
 in
 {
   imports = [

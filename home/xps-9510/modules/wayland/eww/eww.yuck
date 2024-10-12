@@ -52,7 +52,7 @@
 (defpoll headset-battery :interval "60s"
                           :initial "0"
                           `~/.config/eww/scripts/bluetooth_battery headset`)
-                          
+
 (defwidget bluetooth-info-panel []
     (box :orientation "h" :class "card" :vexpand "false" :hexpand "false" :spacing 0
      (sys-info-widget :value "${chocofi-left-battery}" :suffix "%" :class "sys_info battery" :icon "")
@@ -77,12 +77,12 @@
 (defpoll time_day :interval "30m" "date +\"%d\"")
 (defpoll time_month_name :interval "48h" "date +\%b")
 
-(defwidget clock [] 
-    (box :class "card" :orientation "h" :spacing 50 :space-evenly false :vexpand "false" :hexpand "false" 
+(defwidget clock []
+    (box :class "card" :orientation "h" :spacing 50 :space-evenly false :vexpand "false" :hexpand "false"
      (box :orientation "h" :spacing 0
      (label :class "time_hour" :valign "start" :wrap "true" :limit-width 25 :text time_hour)
      (label :class "time_min" :valign "end" :wrap "true" :limit-width 25 :text time_min))
-     (box :orientation "v" :spacing 0 
+     (box :orientation "v" :spacing 0
      (label :class "time_mer" :valign "start" :halign "end" :wrap "true" :limit-width 25 :text time_month_name)
      (label :class "time_day" :valign "end" :halign "end" :wrap "true" :limit-width 25 :text time_day))))
 
@@ -125,7 +125,7 @@
 (defpoll root-backup :interval "5m" "journalctl -u borgbackup-job-root-persistent.service | grep 'Deactivated successfully.' | tail -n1 | cut -d ' ' -f -3 | rev | cut -c4- | rev")
 
 (defwidget backup [icon color]
-    (box :class "card" :orientation "h" :spacing 50 :space-evenly false :vexpand "false" :hexpand "false" 
+    (box :class "card" :orientation "h" :spacing 50 :space-evenly false :vexpand "false" :hexpand "false"
      (label :class "backup_icon" :valign "start" :halign "start" :text icon :style "color: ${color};")
      (label :class "backup_date" :valign "end" :halign "end" :text root-backup)))
 

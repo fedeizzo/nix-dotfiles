@@ -58,4 +58,3 @@
     binfmt.emulatedSystems = [ "aarch64-linux" ];
   };
 }
-

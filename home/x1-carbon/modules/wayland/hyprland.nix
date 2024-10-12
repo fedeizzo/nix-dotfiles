@@ -112,7 +112,7 @@
       };
 
       monitor = [
-        ",preffered,auto,1"
+        ",preferred,auto,1"
       ];
       workspace = [ "1" "2" "3" "4" "5" "6" "7" ];
 

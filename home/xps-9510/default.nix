@@ -1,4 +1,4 @@
-{ pkgs, username, inputs, config, lib, ... }:
+{ username, inputs, config, ... }:
 
 
 {
@@ -6,9 +6,9 @@
     useGlobalPkgs = true;
     useUserPackages = true;
     extraSpecialArgs = {
-      sops = config.sops;
-      username = username;
-      inputs = inputs;
+      inherit (config) sops;
+      inherit username;
+      inherit inputs;
     };
 
     users.${username} = {
@@ -45,4 +45,3 @@
     };
   };
 }
-

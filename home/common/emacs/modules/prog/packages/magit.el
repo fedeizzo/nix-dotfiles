@@ -19,7 +19,7 @@
   (:title (fi/hydra-title-factory-faicon "git" "Magit not standard commands") :quit-key "q" :exit t)
   (" From other branch"
    (("bc" magit-file-checkout "Checkout file")
-    ("bf" magit-find-file "Visist file")
+    ("bf" magit-find-file "Visit file")
     )
    " Diff"
    (("dh" git-gutter:popup-hunk "Popup hunk"))

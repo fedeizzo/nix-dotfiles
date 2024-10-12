@@ -1,4 +1,4 @@
-;;; sideline.el --- sideline and extenions configuration
+;;; sideline.el --- sideline and extensions configuration
 
 ;;; Commentary:
 ;;

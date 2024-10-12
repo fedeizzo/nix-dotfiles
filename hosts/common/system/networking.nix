@@ -1,16 +1,18 @@
-{ hostname, inputs, ... }:
+{ hostname, ... }:
 
 {
-  networking.hostName = hostname;
-  networking.networkmanager.enable = true;
-  networking.useDHCP = false;
-  networking.extraHosts = ''
-    192.168.7.1 homelab
-  '';
-  networking.firewall = {
-    enable = true;
-    checkReversePath = "loose";
-    allowedUDPPorts = [ 51821 ];
+  networking = {
+    hostName = hostname;
+    networkmanager.enable = true;
+    useDHCP = false;
+    extraHosts = ''
+      192.168.7.1 homelab
+    '';
+    firewall = {
+      enable = true;
+      checkReversePath = "loose";
+      allowedUDPPorts = [ 51821 ];
+    };
+    wireguard.enable = true;
   };
-  networking.wireguard.enable = true;
 }

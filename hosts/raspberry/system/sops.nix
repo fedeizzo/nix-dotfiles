@@ -7,9 +7,11 @@
   sops = {
     defaultSopsFile = ../../../secrets/raspberry-secrets.yaml;
     defaultSopsFormat = "yaml";
-    age.keyFile = "/var/lib/sops/keys.txt";
-    age.generateKey = false;
-    age.sshKeyPaths = [ ];
+    age = {
+      keyFile = "/var/lib/sops/keys.txt";
+      generateKey = false;
+      sshKeyPaths = [ ];
+    };
 
     secrets = {
       homelab-wireguard-private-key = { };

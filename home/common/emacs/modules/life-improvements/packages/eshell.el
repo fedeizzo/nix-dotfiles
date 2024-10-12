@@ -38,7 +38,7 @@
    ("clear" . "clear-scrollback")
    ("gs" . "git status")
    ("ga" . "git add")
-   ("gc" . "git comit -m $1")
+   ("gc" . "git commit -m $1")
    ("gp". "git push")))
 
 ;;; eshell.el ends here

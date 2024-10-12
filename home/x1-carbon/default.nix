@@ -1,4 +1,4 @@
-{ username, inputs, config, emacs-pkg, system-overlays, ... }:
+{ username, inputs, config, emacs-pkg, ... }:
 
 
 {
@@ -6,10 +6,10 @@
     useGlobalPkgs = true;
     useUserPackages = true;
     extraSpecialArgs = {
-      sops = config.sops;
-      username = username;
-      inputs = inputs;
-      emacs-pkg = emacs-pkg;
+      inherit (config) sops;
+      inherit username;
+      inherit inputs;
+      inherit emacs-pkg;
     };
 
     users.${username} = {
@@ -44,4 +44,3 @@
     };
   };
 }
-

@@ -31,7 +31,7 @@ let
 in
 {
   environment.systemPackages = [ fs-diff ];
-  boot.initrd.postDeviceCommands = (pkgs.lib.mkBefore ''
+  boot.initrd.postDeviceCommands = pkgs.lib.mkBefore ''
     mkdir -p /mnt
 
     # We first mount the btrfs root to /mnt
@@ -68,7 +68,7 @@ in
     # Once we're done rolling back to a blank snapshot,
     # we can unmount /mnt and continue on the boot process.
     umount /mnt
-  '');
+  '';
   fileSystems = {
     "/" = {
       device = "/dev/disk/by-label/root";

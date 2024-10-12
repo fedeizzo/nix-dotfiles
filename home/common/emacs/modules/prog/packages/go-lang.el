@@ -150,7 +150,7 @@ func main() {
   )
 
 (defun fi/treesit-golang-default-result-type-identifier (node)
-  "Get return + defaul value for treesit NODE type identiefier."
+  "Get return + default value for treesit NODE type identiefier."
   (concat "return " (fi/treesit-golang-map-node-to-default-value node)))
 
 (defun fi/golang-return ()

@@ -65,12 +65,12 @@
 (use-package org-download
   :after org
   :config
-  (setq org-downlaod-screenshot-method (if ON-MACBOOK
+  (setq org-download-screenshot-method (if ON-MACBOOK
 					   "screencapture -i -c -P"
 					 "grim -g \"$(slurp)\" - | swappy -f -"))
   (setq org-download-annotate-function
         #'fi/dummy-org-download-annotate-function)
-  (setq org-downlaod-image-dir "./img"))
+  (setq org-download-image-dir "./img"))
 (setq org-link-frame-setup '((file . find-file)))
 
 

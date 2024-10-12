@@ -35,7 +35,7 @@
       gesture swipe up 4 hyprctl dispatch togglespecialworkspace " "
     '';
   };
-  home.file.".pam_environmet" = {
+  home.file.".pam_environment" = {
     text = "XDG_CURRENT_DESKTOP_DEFAULT=Hyprland";
   };
 }

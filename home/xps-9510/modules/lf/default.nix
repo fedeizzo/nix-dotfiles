@@ -1,4 +1,4 @@
-{ config, pkgs, libs, ... }:
+{ pkgs, ... }:
 
 {
   home.packages = with pkgs; [
@@ -72,7 +72,7 @@
           if [ -f "$res" ]; then
            cmd="select"
           elif [ -d "$res" ]; then
-           cmd="cd"                                                       
+           cmd="cd"
           fi
           lf -remote "send $id $cmd \"$res\""
       }}

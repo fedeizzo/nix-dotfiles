@@ -1,4 +1,4 @@
-{ ... }:
+_:
 
 {
   # UPDATE ALSO SCRIPT INSTALL
@@ -26,4 +26,3 @@
     ];
   };
 }
-

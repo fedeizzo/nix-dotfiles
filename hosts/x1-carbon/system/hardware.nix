@@ -8,9 +8,11 @@
     sensitivity = 200;
     emulateWheel = true;
   };
-  services.illum.enable = true; # Enable the brightness buttons
-  services.pcscd.enable = true;
-  services.fwupd.enable = true; # update firmware
+  services = {
+    illum.enable = true; # Enable the brightness buttons
+    pcscd.enable = true;
+    fwupd.enable = true; # update firmware
+  };
 
   # https://nicholaslyz.com/blog/2024/04/29/how-to-undervolt-a-laptop-with-nixos/
   services.undervolt = {

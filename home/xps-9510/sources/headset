@@ -2,14 +2,14 @@
 
 if [[ "$(bluetoothctl info '38:18:4C:D4:10:3C' | grep "Connected: no")" = *Connected:\ no ]]; then
     bluetoothctl connect '38:18:4C:D4:10:3C'
-    pacmd set-default-sink bluez_sink.38_18_4C_D4_10_3C.a2dp_sink 
+    pacmd set-default-sink bluez_sink.38_18_4C_D4_10_3C.a2dp_sink
     pacmd list-sink-inputs | grep index | while read line
     do
     pacmd move-sink-input `echo $line | cut -f2 -d' '` bluez_sink.38_18_4C_D4_10_3C.a2dp_sink
     done
 elif [[ "$(bluetoothctl info '38:18:4C:D4:10:3C' | grep "Connected: yes")" = *Connected:\ yes ]]; then
-    # bluetoothctl disconnect '38:18:4C:D4:10:3C' 
-    pacmd set-default-sink bluez_sink.38_18_4C_D4_10_3C.a2dp_sink 
+    # bluetoothctl disconnect '38:18:4C:D4:10:3C'
+    pacmd set-default-sink bluez_sink.38_18_4C_D4_10_3C.a2dp_sink
     [[ $? == 0 ]] && notify-send "Default sink changed"
     pacmd list-sink-inputs | grep index | while read line
     do
