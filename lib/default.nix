@@ -20,7 +20,9 @@ rec {
     , system
     , machine
     , pkgs
+    , emacs-pkg
     , isMac ? false
+    , ...
     }:
     if isMac
     then
@@ -29,7 +31,7 @@ rec {
           pkgs = pkgs;
           inherit system;
           specialArgs = {
-            inherit inputs username hostname;
+            inherit inputs username hostname emacs-pkg;
           };
 
           modules = [
@@ -56,7 +58,7 @@ rec {
           pkgs = pkgs;
           inherit system;
           specialArgs = {
-            inherit inputs username hostname;
+            inherit inputs username hostname emacs-pkg;
           };
 
           modules = [

@@ -15,3 +15,9 @@
 ;; icons
 (use-package all-the-icons
   :if (display-graphic-p))
+
+(use-package all-the-icons-nerd-fonts
+  :load-path "~/.config/emacs/all-the-icons-nerd-fonts"
+  :after all-the-icons
+  :config
+  (all-the-icons-nerd-fonts-prefer))

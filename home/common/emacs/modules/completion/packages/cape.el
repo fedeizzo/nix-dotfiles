@@ -2,7 +2,6 @@
 
 ;;; Commentary:
 ;; cape provides several completion functions
-
 ;;; Code:
 (use-package cape
   :init

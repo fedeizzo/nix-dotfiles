@@ -10,26 +10,25 @@
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs-darwin";
     home-manager.url = "github:nix-community/home-manager/release-24.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
-
     flake-utils.url = "github:numtide/flake-utils";
-    deploy-rs.url = "github:serokell/deploy-rs";
+
+    # Installation and boot
     impermanence.url = "github:nix-community/impermanence";
+    disko.url = "github:nix-community/disko";
+    disko.inputs.nixpkgs.follows = "nixpkgs";
+
+    # Remote deployment and secretes
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
     comin.url = "github:nlewo/comin/increase-timeout";
     comin.inputs.nixpkgs.follows = "nixpkgs";
-    nh-darwin.url = "github:ToyVo/nh-darwin";
-    disko.url = "github:nix-community/disko";
-    disko.inputs.nixpkgs.follows = "nixpkgs";
+    deploy-rs.url = "github:serokell/deploy-rs";
 
-    emacs-overlay = {
-      url = "github:nix-community/emacs-overlay?rev=f20b9cfd2c52c2ea5351008d008fd8b2f1419c30";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    emacs-lsp-booster = {
-      url = "github:slotThe/emacs-lsp-booster-flake";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    # Misc
+    emacs-pkg.url = "github:nixos/nixpkgs/b805fe3d6f3e702ecee01710ee552e3ed39d16c8";
+    emacs-lsp-booster.url = "github:slotThe/emacs-lsp-booster-flake";
+    emacs-lsp-booster.inputs.nixpkgs.follows = "nixpkgs";
+    nh-darwin.url = "github:ToyVo/nh-darwin";
 
     # Wayland and Hyprland
     vigiland.url = "github:jappie3/vigiland";
@@ -40,11 +39,6 @@
 
   outputs =
     { self
-    , nixpkgs
-    , nixpkgs-darwin
-    , nixpkgs-rasp
-    , nixos-hardware
-    , home-manager
     , deploy-rs
     , flake-utils
     , impermanence
@@ -58,13 +52,12 @@
     in
     rec {
       overlays = {
-        emacs = inputs.emacs-overlay.overlay;
         emacs-lsp-booster = inputs.emacs-lsp-booster.overlays.default;
         default = import ./overlays {
           inherit inputs;
         };
       };
-      legacyPackages = forAllSystems (system:
+      pkgs = forAllSystems (system:
         import inputs.nixpkgs {
           inherit system;
           overlays = builtins.attrValues overlays;
@@ -72,15 +65,23 @@
           config.joypixels.acceptLicense = true;
         }
       );
-      legacyPackages-rasp = forAllSystems (system:
-        import nixpkgs-rasp {
+      emacs-pkg = forAllSystems (system:
+        import inputs.emacs-pkg {
           inherit system;
           overlays = builtins.attrValues overlays;
           config.allowUnfree = true;
           config.joypixels.acceptLicense = true;
         }
       );
-      legacyPackages-macos = import inputs.nixpkgs-darwin {
+      pkgs-rasp = forAllSystems (system:
+        import inputs.nixpkgs-rasp {
+          inherit system;
+          overlays = builtins.attrValues overlays;
+          config.allowUnfree = true;
+          config.joypixels.acceptLicense = true;
+        }
+      );
+      pkgs-macos = import inputs.nixpkgs-darwin {
         system = "aarch64-darwin";
         overlays = builtins.attrValues overlays;
         config.allowUnfree = true;
@@ -93,21 +94,24 @@
           hostname = "fedeizzo-nixos";
           system = "x86_64-linux";
           machine = "xps-9510";
-          pkgs = legacyPackages."x86_64-linux";
+          pkgs = pkgs."x86_64-linux";
+	  emacs-pkg = emacs-pkg."x86_64-linux";
         };
         oven = mkHost {
           username = "oven";
           hostname = "oven";
           system = "x86_64-linux";
           machine = "x1-carbon";
-          pkgs = legacyPackages."x86_64-linux";
+          pkgs = pkgs."x86_64-linux";
+	  emacs-pkg = emacs-pkg."x86_64-linux";
         };
         rasp-nixos = mkHost {
           username = "rasp";
           hostname = "rasp-nixos";
           system = "aarch64-linux";
           machine = "raspberry";
-          pkgs = legacyPackages-rasp."aarch64-linux";
+          pkgs = pkgs-rasp."aarch64-linux";
+	  emacs-pkg = emacs-pkg."aarch64-linux";
         };
       };
       darwinConfigurations."COMP-D2G067292T" = mkHost {
@@ -115,7 +119,8 @@
         hostname = "COMP-D2G067292T";
         system = "aarch64-darwin";
         machine = "macbook-pro";
-        pkgs = legacyPackages-macos;
+        pkgs = pkgs-macos;
+	emacs-pkg = emacs-pkg."aarch64-darwing";
         isMac = true;
       };
 
@@ -148,7 +153,7 @@
       };
     } // flake-utils.lib.eachDefaultSystem (system:
     let
-      pkgs = nixpkgs.legacyPackages.${system};
+      pkgs = inputs.nixpkgs.legacyPackages.${system};
     in
     {
       devShells.default = pkgs.mkShell {

@@ -137,4 +137,8 @@
   '("v" . sp-backward-barf-sexp)
   '("c" . sp-backward-slurp-sexp)
   '("u" . meow-undo))
+
+(global-set-key (kbd "C-S-C") #'clipboard-kill-ring-save)
+(global-set-key (kbd "C-S-V") #'clipboard-yank)
+
 ;;; meow.el ends here

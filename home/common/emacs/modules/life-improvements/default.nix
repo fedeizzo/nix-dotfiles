@@ -39,6 +39,5 @@
     esup
     ace-window
     centaur-tabs
-    hideshowvis
   ];
 }
