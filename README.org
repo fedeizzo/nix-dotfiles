@@ -1,47 +1,61 @@
-* NixOS personal configuration
-Full nixos configuration for following devices:
+* Nix dotfiles
+
+Three laptops and one homelab:
 - Dell XPS 9510
 - Thinkpad X1 Carbon 6th gen
-- Raspberry pi
 - Macbook pro M1 Max
+- Raspberry pi 4th gen
 
-Folder description:
-- home: contains home manager configurations.
-- hosts: contains nixos system wide configurations.
-- lib: some useful function definitions.
-- modules: self explanatory.
-- overlays: self explanatory.
-- pkgs: custom derivations.
-- qmk_config: keyboard configurations.
-- secrets: [[https://github.com/Mic92/sops-nix][sops-nix]] secrets.
-- templates: flakes templates.
+#+ATTR_HTML: :width 400px :style margin-left: auto; margin-right: auto;
+[[./images/architecture.png]]
 
-** Fresh install
-*** Thinkpad X1 Carbon 6th gen
-#+begin_src sh
-  curl -s https://raw.githubusercontent.com/fedeizzo/nix-dotfiles/refs/heads/master/scripts/installation/x1-carbon.sh | sh
+My personal laptops have access to the homelab using ssh and [[https://www.wireguard.com/][Wireguard]].
+My work laptop cannot does not have directly access to the homelab.
+
+-  [[file:home/][home]]: home manager configurations.
+- 󰍹 [[file:hosts/][hosts]]: host system configurations.
+- 󱄅 [[file:nix/][nix]]: flake modules.
+- 󱧘 [[file:overlays/][overlays]]: package overlays.
+-  [[file:scripts/][scripts]]: system management scripts.
+-  [[file:secrets/][secrets]]: secrets.
+
+** Usage
+You can use [[https://direnv.net/][direnv]] to easily manage this flake.
+
+After executing ~direnv allow~, you should have a shell powered by [[https://numtide.github.io/devshell/][devshell]] and by running ~menu~ you have an help message.
+
+#+begin_src sh :results verbatim
+menu
 #+end_src
 
-Unfortunately I didn't find a way to create a directory under ~/persist/home/oven~ with the right permissions, the script run automatically post initrd doesn't have the user ids. After the first boot it's required to create it manually:
+#+RESULTS:
+#+begin_example
 
-#+begin_src sh
-  chown oven:users /persist/home/oven/
-  chmod 700 /persist/home/oven
-#+end_src
+ [[[[general commands]]]]
 
-*** Dell xps 9510
-Partitioning is made with ~btrfs~ file system, during it two blank read-only snapshots are taken:
-- ~root~
-- ~home~
+  menu                             - prints this menu
 
-It can be done with the following script:
-#+begin_src sh
-  ./scripts/installation/xps-9510.sh
-  # reboot
-  ./scripts/installation/xps-9510.sh --complete
-#+end_src
+ [ System installation]
 
-Snapshots are used to erase the disk at every boot in order to obtain a complete immutable and declarative system.
+  erase-disk-and-install-raspberry -  Raspberry Pi4 8Gb.
+  erase-disk-and-install-x1.       -  Thinkpad X1 Carbon 6th generation.
+  erase-disk-and-install-xps       -  Dell XPS 9510.
+
+ [ System administration]
+
+  clean                            -  Delete old generations and clean nix store.
+  deploy                           -  Deploy the homelab configuration over ssh.
+  refresh                          -  Refresh the devshell.
+  secrets                          -  Edit secrets.
+  update                           -  Update the system configuration using the current flake and hostname.
+  update-input                     -  Update a flake.nix input.
+
+#+end_example
+
+** System installation
+The following instructions are valid for all machines except the Macbook pro.
+
+In my personal laptops the disk is erased at every boot in order to obtain a complete immutable and declarative system. This is achieved thanks to BTRFS.
 
 Obviously some data, logs, cache, etc. must survive the boot process, this is achieved using [[https://github.com/nix-community/impermanence][imperamanence]].
 
@@ -51,16 +65,17 @@ Some useful readings if you are interested:
 - [[https://elis.nu/blog/2020/05/nixos-tmpfs-as-root/][erase with tmpfs]]
 - [[https://elis.nu/blog/2020/06/nixos-tmpfs-as-home/][erase home]]
 
-*** Raspberry
-Raspberry is formatted with ext4 as filesystem.
 #+begin_src sh
-  ./scripts/installation/raspberry.sh
+git clone https://github.com/fedeizzo/nix-dotfiles.git
+cd nix-dotfiles
+nix develop
+erase-disk-and-install-{machine}
 #+end_src
 
-*** Macbook-pro
-#+begin_src sh
-  nix run nix-darwin -- switch --flake .
-#+end_src
+Unfortunately I didn't find a way to create a directory under ~/persist/home/{user}~ with the right permissions, the script run automatically the post initrd and it doesn't have the user ids.
+A simple workaround is to setup the home manually after the first boot:
 
-** Keyboards
-[[file:./qmk_config/README.org][QMK keyboard firmware]]
+#+begin_src sh
+  chown {user}:users /persist/home/{user}/
+  chmod 700 /persist/home/{user}
+#+end_src
