@@ -9,7 +9,7 @@
     emulateWheel = true;
   };
   services = {
-    illum.enable = true; # Enable the brightness buttons
+    # illum.enable = true; # Enable the brightness buttons
     pcscd.enable = true;
     fwupd.enable = true; # update firmware
   };

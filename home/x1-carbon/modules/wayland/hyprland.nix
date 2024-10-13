@@ -200,7 +200,7 @@
         ", XF86AudioPlay, exec, playerctl play-pause"
         ", XF86AudioNext, exec, playerctl next"
         ", XF86AudioPrev, exec, playerctl previous"
-
+        ", XF86Display, exec, wdisplays"
       ];
       bindn = [ ];
       bindm = [
