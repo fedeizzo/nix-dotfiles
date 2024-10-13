@@ -3,7 +3,7 @@
 {
   imports = [
     inputs.home-manager.darwinModules.home-manager
-    inputs.nh-darwin.darwinModules.default
+    inputs.nh-darwin.nixDarwinModules.prebuiltin
     (import ../common/nh { inherit username; isMac = true; })
   ];
 
