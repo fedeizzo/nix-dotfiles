@@ -3,6 +3,8 @@
 {
   imports = [
     inputs.home-manager.darwinModules.home-manager
+    inputs.nh-darwin.darwinModules.default
+    (import ../common/nh { inherit username; isMac = true; })
   ];
 
   home-manager = {
@@ -32,6 +34,4 @@
     shell = pkgs.zsh;
   };
   nixpkgs.overlays = builtins.attrValues system-overlays;
-
-  environment.shellAliases.nh = "nh-darwin";
 }

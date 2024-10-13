@@ -1,4 +1,4 @@
-{ pkgs, config, ... }:
+{ inputs', pkgs, config, ... }:
 
 {
   devshells.default = {
@@ -11,15 +11,15 @@
       {
         help = " Update the system configuration using the current flake and hostname.";
         name = "update";
-        command = ''
-          if [[ $USER == "federico.izzo" ]]; then
-             darwin-rebuild switch --flake .
-             exit 0
-          fi
-
-          doas nixos-rebuild switch --flake .
-        '';
+        command = "nh_darwin os switch";
         category = " System administration";
+      }
+      {
+        help = " Delete old generations and clean nix store.";
+        name = "clean";
+        command = "nh_darwin clean all";
+        category = " System administration";
+        package = inputs'.nh-darwin.packages.default;
       }
       {
         help = " Update a flake.nix input.";
@@ -52,18 +52,18 @@
       }
       {
         help = " Thinkpad X1 Carbon 6th generation.";
-        name = "erase-disk-and-install-x1"; # long command to prevent accidental use
+        name = "erase-disk-and-install-x1."; # long command to prevent accidental use
         command = builtins.readFile ../scripts/installation/x1-carbon.sh;
         category = " System installation";
       }
       {
-        help = " Raspberry Pi4 8Gb";
+        help = " Raspberry Pi4 8Gb.";
         name = "erase-disk-and-install-raspberry"; # long command to prevent accidental use
         command = builtins.readFile ../scripts/installation/raspberry.sh;
         category = " System installation";
       }
       {
-        help = " Dell XPS 9510";
+        help = " Dell XPS 9510.";
         name = "erase-disk-and-install-xps"; # long command to prevent accidental use
         command = builtins.readFile ../scripts/installation/xps-9510.sh;
         category = " System installation";
