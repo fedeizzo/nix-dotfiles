@@ -56,6 +56,7 @@ in
         hostname = "COMP-D2G067292T";
         username = "federico.izzo";
         emacs-pkg = import inputs.emacs-pkg { system = "aarch64-darwin"; };
+        inherit system-overlays;
       };
 
       modules = [ ../hosts/macbook-pro ];

@@ -173,5 +173,5 @@
 (require 'fi-life-improvements)
 
 
-(load-theme 'doom-nord t)
+;; (load-theme 'doom-nord t)
 ;;; init.el ends here

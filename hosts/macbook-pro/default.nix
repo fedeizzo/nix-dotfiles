@@ -1,5 +1,15 @@
-{ inputs, pkgs, username, system-overlays, ... }:
+{ inputs, pkgs, username, system-overlays, emacs-pkg, ... }:
 
+let
+  myFonts = [
+    (pkgs.nerdfonts.override {
+      fonts = [
+        "JetBrainsMono"
+      ];
+    })
+    pkgs.emacs-all-the-icons-fonts
+  ];
+in
 {
   imports = [
     inputs.home-manager.darwinModules.home-manager
@@ -11,7 +21,7 @@
     useGlobalPkgs = true;
     useUserPackages = true;
     extraSpecialArgs = {
-      inherit username inputs;
+      inherit username inputs emacs-pkg;
     };
 
     users.${username} = import ../../home/macbook-pro;
@@ -28,7 +38,7 @@
     extra-platforms = x86_64-darwin aarch64-darwin
   '';
   programs.zsh.enable = true;
-
+  fonts.packages = myFonts;
   users.users.${username} = {
     home = "/Users/${username}";
     shell = pkgs.zsh;
