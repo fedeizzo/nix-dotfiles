@@ -1,5 +1,8 @@
-_:
+{ pkgs, ... }:
 
+let
+  conventional-commit = pkgs.callPackage ./pkgs/conventional-pre-commit.nix { };
+in
 {
   pre-commit = {
     check.enable = true;
@@ -45,6 +48,15 @@ _:
           excludes = [
             "home/common/sources/lfpreview"
           ];
+        };
+        conventional-commit = {
+          enable = true;
+          name = "conventional-commit";
+          description = "A pre-commit hook that checks commit messages for Conventional Commits formatting";
+          package = conventional-commit;
+          entry = "${conventional-commit}/bin/conventional-pre-commit";
+          args = [ "--strict" "feat" "fix" "chore" "revert" "style" "docs" "build" "refactor" "test" "ci" "perf" ];
+          stages = [ "commit-msg" ];
         };
       };
     };
