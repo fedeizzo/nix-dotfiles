@@ -1,17 +1,17 @@
 ;;; font.el --- Font configuration
 
 ;;; Commentary:
-;; Personal font configuration using CaskaydiaCove Nerd Font
+;; Personal font configuration using JetBrainsMono Nerd Font
 
 ;;; Code:
 (set-face-attribute 'default nil
-		    :family "CaskaydiaCove Nerd Font"
+		    :family "JetBrainsMono Nerd Font"
 		    :weight 'light)
 (set-face-attribute 'bold nil
-		    :family "CaskaydiaCove Nerd Font"
+		    :family "JetBrainsMono Nerd Font"
 		    :weight 'regular)
 (set-face-attribute 'italic nil
-		    :family "CaskaydiaCove Nerd Font"
+		    :family "JetBrainsMono Nerd Font"
 		    :weight 'semilight
 		    :slant 'italic)
 
@@ -23,10 +23,10 @@
 	     (size 12))         ;; default size for the internal laptop monitor
         (when (or (eq width-mm 602) (eq width-mm 801))  ;; office and home monitor
           (setq size 13))
-        (set-frame-font (format "CaskaydiaCove Nerd Font %s" size))))
+        (set-frame-font (format "JetBrainsMono Nerd Font %s" size))))
   (defun fi/update-font--window-size-change (&rest _)
     "Update font size based on the screen resolution."
-    (set-frame-font (format "CaskaydiaCove Nerd Font %s" 11))
+    (set-frame-font (format "JetBrainsMono Nerd Font %s" 11))
     ))
 
 (defun fi/update-font-size ()

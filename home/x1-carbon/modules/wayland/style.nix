@@ -4,7 +4,7 @@ let
   patchedFont = pkgs.nerdfonts.override {
     fonts = [
       "Ubuntu"
-      "CascadiaCode"
+      "JetBrainsMono"
       "UbuntuSans"
     ];
   };
@@ -32,7 +32,7 @@ in
       };
       monospace = {
         package = patchedFont;
-        name = "CaskaydiaCove Nerd Font";
+        name = "JetBrainsMono Nerd Font";
       };
       sansSerif = {
         package = patchedFont;
