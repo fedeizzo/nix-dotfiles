@@ -7,6 +7,7 @@
 (fi/load-package-config PROG-MODULE-PATH "bazel.el")
 (fi/load-package-config PROG-MODULE-PATH "dockerfile")
 (fi/load-package-config PROG-MODULE-PATH "git-gutter.el")
+(fi/load-package-config PROG-MODULE-PATH "git-link.el")
 (fi/load-package-config PROG-MODULE-PATH "go-lang.el")
 (fi/load-package-config PROG-MODULE-PATH "hurl.el")
 (fi/load-package-config PROG-MODULE-PATH "java.el")
@@ -22,7 +23,6 @@
 (fi/load-package-config PROG-MODULE-PATH "tempel.el")
 (fi/load-package-config PROG-MODULE-PATH "tree-sitter.el")
 (fi/load-package-config PROG-MODULE-PATH "typescript.el")
-(fi/load-package-config PROG-MODULE-PATH "yaml-mode.el")
 (fi/load-package-config PROG-MODULE-PATH "yaml-mode.el")
 
 (provide 'fi-prog)

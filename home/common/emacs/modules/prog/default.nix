@@ -42,5 +42,6 @@
     lsp-java
     dockerfile-mode
     # hurl-mode
+    git-link
   ];
 }
