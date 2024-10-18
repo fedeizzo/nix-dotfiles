@@ -1,4 +1,4 @@
-;;; cape.el --- Cape configuration
+;;; cape.el --- Completion framework
 
 ;;; Commentary:
 ;; cape provides several completion functions

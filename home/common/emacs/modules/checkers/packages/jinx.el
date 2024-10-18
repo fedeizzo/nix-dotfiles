@@ -5,8 +5,10 @@
 
 ;;; Code:
 (use-package jinx
+  :custom
+  (jinx-languages . "en")
   :hook (emacs-startup . global-jinx-mode)
   :bind (("M-$" . jinx-correct)
          ("C-M-$" . jinx-languages)))
-(setq jinx-languages "en")
+
 ;;; jinx.el ends here
