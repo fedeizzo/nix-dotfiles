@@ -5,7 +5,7 @@
     flycheck # flymake substitute
     flycheck-projectile # flycheck over the current project
     flycheck-posframe # show messages just below the cursor
-    # flyspell-correct
+    flycheck-pycheckers # pyth
     jinx # spell checking
   ];
 }
