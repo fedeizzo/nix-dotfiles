@@ -1,4 +1,4 @@
-{ inputs, pkgs, ... }:
+{ inputs, pkgs, hostname, ... }:
 
 {
   imports = [
@@ -7,6 +7,11 @@
 
   services.comin = {
     enable = true;
+    inherit hostname;
+    exporter = {
+      listen_address = "0.0.0.0";
+      port = 40000;
+    };
     remotes = [
       {
         name = "origin";
