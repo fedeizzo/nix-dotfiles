@@ -33,10 +33,9 @@
       }
       {
         help = " Deploy the homelab configuration over ssh.";
-        name = "deploy";
+        name = "deploy-homelab";
         command = "deploy --skip-checks .#rasp-nixos";
         category = " System administration";
-        package = pkgs.deploy-rs;
       }
       {
         help = " Refresh the devshell.";
@@ -72,6 +71,7 @@
 
     packages = with pkgs; [
       sops
+      deploy-rs
     ] ++ config.pre-commit.settings.enabledPackages;
 
     devshell.startup.pre-commit-hooks.text = config.pre-commit.installationScript;
