@@ -2,15 +2,15 @@
 
 {
   security = {
-    pam.services = {
-      login.fprintAuth = true;
-      system-local-login.fprintAuth = true;
-      hyprlock = {
-        unixAuth = true;
-        fprintAuth = true;
-      };
-      doas.fprintAuth = true;
-    };
+    # pam.services = {
+    #   login.fprintAuth = true;
+    #   system-local-login.fprintAuth = true;
+    #   hyprlock = {
+    #     unixAuth = true;
+    #     fprintAuth = true;
+    #   };
+    #   doas.fprintAuth = true;
+    # };
     sudo.enable = false;
     doas = {
       enable = true;

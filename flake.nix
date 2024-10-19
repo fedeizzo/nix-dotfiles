@@ -24,7 +24,7 @@
     # Remote deployment and secretes
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
-    comin.url = "github:nlewo/comin/increase-timeout";
+    comin.url = "github:nlewo/comin";
     comin.inputs.nixpkgs.follows = "nixpkgs";
     deploy-rs.url = "github:serokell/deploy-rs";
 
@@ -33,6 +33,11 @@
     emacs-lsp-booster.url = "github:slotThe/emacs-lsp-booster-flake";
     emacs-lsp-booster.inputs.nixpkgs.follows = "nixpkgs";
     nh-darwin.url = "github:ToyVo/nh-darwin";
+    nix-index-database.url = "github:nix-community/nix-index-database";
+    nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
+    nixpkgs-for-fingerprint.url = "github:nixos/nixpkgs/nixos-23.11";
+    nixos-06cb-009a-fingerprint-sensor.url = "github:ahbnr/nixos-06cb-009a-fingerprint-sensor";
+    nixos-06cb-009a-fingerprint-sensor.inputs.nixpkgs.follows = "nixpkgs-for-fingerprint";
 
     # Wayland and Hyprland
     hyprland-contrib.url = "github:hyprwm/contrib";
