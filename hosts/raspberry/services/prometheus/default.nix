@@ -13,6 +13,12 @@
         enable = true;
         devices = [ "/dev/sda" ];
       };
+      restic = {
+        enable = true;
+        repository = "b2:fedeizzo-homelab-backup";
+        environmentFile = "/root/.restic_backup_env";
+        passwordFile = config.sops.secrets.restic-password.path;
+      };
     };
     scrapeConfigs = [
       {
@@ -55,6 +61,12 @@
         job_name = "comin";
         static_configs = [{
           targets = [ "127.0.0.1:${toString config.services.comin.exporter.port}" ];
+        }];
+      }
+      {
+        job_name = "restic";
+        static_configs = [{
+          targets = [ "127.0.0.1:${toString config.services.prometheus.exporters.restic.port}" ];
         }];
       }
     ];
