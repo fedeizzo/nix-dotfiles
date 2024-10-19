@@ -60,6 +60,7 @@
             ./nix/git-hooks.nix
             ./nix/devshells.nix
           ];
+          packages.default = pkgs.hello;
         };
         flake = {
           imports = [
