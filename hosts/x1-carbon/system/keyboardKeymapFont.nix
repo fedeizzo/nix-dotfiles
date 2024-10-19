@@ -27,6 +27,17 @@
     python-validity.enable = true;
   };
 
+  systemd.services.fix-fingerprint-suspend = {
+    enable = true;
+
+    after = [ "suspend.target" "hibernate.target" "hybrid-sleep.target" "suspend-then-hibernate.target" ];
+    wantedBy = [ "suspend.target" "hibernate.target" "hybrid-sleep.target" "suspend-then-hibernate.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "systemctl restart open-fprintd.service python3-validity.service";
+    };
+  };
+
   security.pam.services = {
     doas.fprintAuth = true;
     hyprlock = {
