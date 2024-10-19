@@ -16,6 +16,7 @@ in
     ./net-worth
     ./prometheus
     ./diun
+    ./sftpgo
   ];
 
   config = {

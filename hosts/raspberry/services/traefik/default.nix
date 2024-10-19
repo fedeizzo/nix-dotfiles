@@ -1,4 +1,5 @@
-_:
+{ config, ... }:
+
 {
   services.traefik = {
     enable = true;
@@ -64,11 +65,13 @@ _:
           fedeizzodev = { entryPoints = [ "websecure" ]; rule = "Host(`fedeizzo.dev`)"; service = "fedeizzodev"; };
           grafana = { entryPoints = [ "websecure" ]; rule = "Host(`grafana.fedeizzo.dev`)"; service = "grafana"; };
           nocodb = { entryPoints = [ "websecure" ]; rule = "Host(`nocodb.fedeizzo.dev`)"; service = "nocodb"; };
+          drive = { entryPoints = [ "websecure" ]; rule = "Host(`drive.fedeizzo.dev`)"; service = "drive"; };
         };
         services = {
           fedeizzodev = { loadBalancer = { servers = [{ url = "http://localhost:50001"; }]; }; };
-          grafana = { loadBalancer = { servers = [{ url = "http://localhost:50002"; }]; }; };
+          grafana = { loadBalancer = { servers = [{ url = "http://localhost:${toString config.services.grafana.settings.server.http_port}"; }]; }; };
           nocodb = { loadBalancer = { servers = [{ url = "http://localhost:50003"; }]; }; };
+          drive = { loadBalancer = { servers = [{ url = "http://localhost:50006"; }]; }; };
         };
       };
     };
