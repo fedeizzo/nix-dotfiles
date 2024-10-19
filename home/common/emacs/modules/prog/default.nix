@@ -43,5 +43,6 @@
     dockerfile-mode
     # hurl-mode
     git-link
+    lua-mode
   ];
 }

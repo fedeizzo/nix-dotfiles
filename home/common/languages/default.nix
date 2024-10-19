@@ -41,6 +41,9 @@ in
 
     # latex
     texliveFull
+
+    # lua
+    lua-language-server
   ] ++
   [
     # nix

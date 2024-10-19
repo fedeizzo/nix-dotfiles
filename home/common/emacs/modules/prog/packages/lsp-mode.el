@@ -37,6 +37,8 @@
   ;; go
   (go-mode . lsp-deferred)
   (go-ts-mode . lsp-deferred)
+  ;; lua
+  (lua-mode . lsp-deferred)
   ;; dockerfile
   (dockerfile-mode . lsp-deferred)
   (dockerfile-ts-mode . lsp-deferred)
