@@ -35,10 +35,10 @@ _:
           algo = "sha512";
         };
       };
-      webdavd = {
+      sftpd = {
         bindings = [
           {
-            port = 50005;
+            port = 2022;
             address = "0.0.0.0";
           }
         ];
