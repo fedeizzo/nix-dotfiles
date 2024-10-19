@@ -3,7 +3,7 @@
 {
   programs.eww = {
     enable = true;
-    package = pkgs.eww-wayland;
+    package = pkgs.eww;
     configDir = ./eww;
   };
   home.file.".pam_environment" = {
