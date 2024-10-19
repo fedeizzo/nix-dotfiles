@@ -27,6 +27,7 @@
         ./modules/persistent
         ./modules/user
         ./modules/wayland
+        # ../common/wezterm
         ../common/zathura
 
         ../common/kitty

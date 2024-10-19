@@ -48,6 +48,7 @@ in
       # hyprpaper.enable = true;
       # rofi.enable = true;
       # kitty.enable = true;
+      wezterm.enable = true;
       gtk.enable = true;
       waybar.enable = true;
     };

@@ -38,6 +38,7 @@
     xdragon
     w3m
     file
+    yubioath-flutter
 
     # nix
     cachix

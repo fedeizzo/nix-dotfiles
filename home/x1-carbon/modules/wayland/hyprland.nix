@@ -107,7 +107,6 @@
         disable_hyprland_logo = true;
         disable_autoreload = true;
         enable_swallow = true;
-        swallow_regex = "^(kittylf)$";
         vfr = false;
       };
 
@@ -127,8 +126,6 @@
         "idleinhibit fullscreen,class:^(firefox)$,title:"
         "float,class:,title:^(Firefox — Sharing Indicator)$"
         "workspace 4 silent,class:^(telegramdesktop)$,title:^(Telegram*)$"
-        "noanim,class:^(kittylf)$,title:"
-        "opacity 0.9,class:^(kittylf)$,title:"
         "float,class:,title:Solanum"
         "float,class:blueberry.py,title:"
         "float,class:,title:^(Zoom*)$"
@@ -176,7 +173,7 @@
         "$mod, RETURN, exec, kitty"
         "$mod, D     , exec, rofi -show drun"
         "$mod, B     , exec, rofi-rbw"
-        "$mod, W     , exec, kitty --class kittylf /home/fedeizzo/.sources/lfrun"
+        # "$mod, W     , exec, kitty --class kittylf /home/fedeizzo/.sources/lfrun"
         "$mod, C     , exec, clipman pick -t rofi"
         "$mod, P     , exec, rofi -show \"sc\" -modi \"sc:~/.sources/rofi_screenshot\""
 
