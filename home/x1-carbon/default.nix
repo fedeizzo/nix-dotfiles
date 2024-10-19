@@ -22,6 +22,7 @@
         ./modules/fish
         ../common/git
         ../common/languages
+        ../common/nix-index
         ./modules/misc
         ./modules/persistent
         ./modules/user

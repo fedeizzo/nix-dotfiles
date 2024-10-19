@@ -41,7 +41,6 @@
 
     # nix
     cachix
-    nix-index
 
     # linux
     openssl
