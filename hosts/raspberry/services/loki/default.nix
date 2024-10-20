@@ -10,6 +10,9 @@ _:
         http_listen_port = 3100;
         grpc_listen_port = 9096;
       };
+      limits_config = {
+        reject_old_samples = false;
+      };
       common = {
         instance_addr = "127.0.0.1";
         path_prefix = "/tmp/loki";
@@ -57,6 +60,9 @@ _:
   services.promtail = {
     enable = true;
     configuration = {
+      global = {
+        file_watch_config = { min_poll_frequency = "250ms"; max_poll_frequency = "250ms"; };
+      };
       server = {
         http_listen_port = 28183;
         grpc_listen_port = 0;
@@ -89,13 +95,13 @@ _:
           ];
         }
         {
-          job_name = "local-logs";
+          job_name = "traefik-logs";
           static_configs = [
             {
               targets = [ "localhost" ];
               labels = {
                 job = "traefik";
-                __path__ = "/var/volumes/traefik/logs/traefik.json";
+                __path__ = "/var/volumes/traefik/log/traefik.json";
               };
             }
           ];
@@ -106,7 +112,45 @@ _:
               };
             }
             { labels = { level = ""; }; }
-            { timestamp = { source = "time"; format = "2024-08-20T18:28:00+02:00"; }; }
+            # { timestamp = { source = "time"; format = "2024-08-20T18:28:00+02:00"; }; }
+          ];
+        }
+        {
+          job_name = "traefik-access";
+          static_configs = [
+            {
+              targets = [ "localhost" ];
+              labels = {
+                job = "traefik-access";
+                __path__ = "/var/volumes/traefik/log/access.json";
+              };
+            }
+          ];
+          pipeline_stages = [
+            {
+              json = {
+                expressions = {
+                  RequestHost = "host";
+                  RequestPath = "path";
+                  RequestMethod = "method";
+                  ClientHost = "client_ip";
+                  time = "time";
+                  level = "level";
+                  msg = "msg";
+                };
+              };
+            }
+            {
+              geoip = {
+                db = "/var/volumes/promtail/GeoLite2-City.mmdb";
+                db_type = "city";
+                source = "client_ip";
+              };
+            }
+            {
+              timestamp = { source = "time"; format = "RFC3339Nano"; };
+            }
+            { labels = { level = ""; host = ""; }; }
           ];
         }
       ];
