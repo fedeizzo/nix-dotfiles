@@ -38,6 +38,7 @@
     nixpkgs-for-fingerprint.url = "github:nixos/nixpkgs/nixos-23.11";
     nixos-06cb-009a-fingerprint-sensor.url = "github:ahbnr/nixos-06cb-009a-fingerprint-sensor";
     nixos-06cb-009a-fingerprint-sensor.inputs.nixpkgs.follows = "nixpkgs-for-fingerprint";
+    yazi.url = "github:sxyazi/yazi/shipped";
 
     # Wayland and Hyprland
     hyprland-contrib.url = "github:hyprwm/contrib";

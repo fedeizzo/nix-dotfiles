@@ -28,6 +28,7 @@
         ./modules/user
         ./modules/wayland
         # ../common/wezterm
+        ../common/yazi
         ../common/zathura
 
         ../common/kitty
