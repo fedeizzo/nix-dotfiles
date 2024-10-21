@@ -25,7 +25,7 @@
       enable = true;
       interfaces.eth0.allowedTCPPorts = [ 443 ];
       trustedInterfaces = [ "wg0" ];
-      allowedUDPPorts = [ 51821 ];
+      allowedUDPPorts = [ 51821 53 ];
       allowedTCPPorts = [ ];
       checkReversePath = "loose";
     };
@@ -66,6 +66,11 @@
           # Laptop x1 carbon
           publicKey = "zzO+Pxb/p+Yzw5eGDfOcg4axjm91vRtohUZ6o2talzY=";
           allowedIPs = [ "192.168.7.3/32" ];
+        }
+        {
+          # Samsung S24
+          publicKey = "+Z/mss41U9u0R7ss5GqAmL+PICUd0Wu8yb5/MPDaiW8=";
+          allowedIPs = [ "192.168.7.4/32" ];
         }
       ];
     };

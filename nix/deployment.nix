@@ -10,7 +10,7 @@
       magicRollback = true;
       autoRollback = true;
       fastConnection = false;
-      remoteBuild = false;
+      remoteBuild = true;
       profiles.system = {
         user = "root";
         path = inputs.deploy-rs.lib.aarch64-linux.activate.nixos homelab-configuration;

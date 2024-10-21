@@ -8,6 +8,7 @@
     extraHosts = ''
       192.168.7.1 homelab
     '';
+    nameservers = [ "192.168.7.1" "1.1.1.1" ];
     firewall = {
       enable = true;
       checkReversePath = "loose";
