@@ -5,14 +5,17 @@
     backblaze = {
       user = "root";
       initialize = true;
+      # Env file structure
+      # B2_ACCOUNT_ID=
+      # B2_ACCOUNT_KEY=
       environmentFile = "/root/.restic_backup_env";
       repositoryFile = config.sops.secrets.restic-repository.path;
       passwordFile = config.sops.secrets.restic-password.path;
       paths = [
         "/var/volumes"
         "/var/container_envs"
-        "/var/lib/sops"
-        "/borgbackups"
+        # "/var/lib/sops"
+        # "/borgbackups"
       ];
       pruneOpts = [
         "--keep-daily 1"
