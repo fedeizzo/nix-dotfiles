@@ -13,15 +13,15 @@ _:
           systemctl kill --signal=USR1 traefik
         '';
       };
-      # "/var/log/audit/audit.log" = {
-      #   size = "10M";
-      #   rotate = 5;
-      #   missingok = true;
-      #   notifempty = true;
-      #   postrotate = ''
-      #     systemctl kill -s HUP auditd
-      #   '';
-      # };
+      "/var/log/audit/audit.log" = {
+        size = "10M";
+        rotate = 5;
+        missingok = true;
+        notifempty = true;
+        postrotate = ''
+          systemctl kill -s HUP auditd
+        '';
+      };
     };
   };
 }
