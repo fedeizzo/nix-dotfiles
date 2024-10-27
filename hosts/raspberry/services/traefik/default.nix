@@ -66,12 +66,14 @@
           grafana = { entryPoints = [ "websecure" ]; rule = "Host(`grafana.fedeizzo.dev`)"; service = "grafana"; };
           nocodb = { entryPoints = [ "websecure" ]; rule = "Host(`nocodb.fedeizzo.dev`)"; service = "nocodb"; };
           drive = { entryPoints = [ "websecure" ]; rule = "Host(`drive.fedeizzo.dev`)"; service = "drive"; };
+          traggo = { entryPoints = [ "websecure" ]; rule = "Host(`traggo.fedeizzo.dev`)"; service = "traggo"; };
         };
         services = {
           fedeizzodev = { loadBalancer = { servers = [{ url = "http://localhost:50001"; }]; }; };
           grafana = { loadBalancer = { servers = [{ url = "http://localhost:${toString config.services.grafana.settings.server.http_port}"; }]; }; };
           nocodb = { loadBalancer = { servers = [{ url = "http://localhost:50003"; }]; }; };
           drive = { loadBalancer = { servers = [{ url = "http://localhost:50006"; }]; }; };
+          traggo = { loadBalancer = { servers = [{ url = "http://localhost:50008"; }]; }; };
         };
       };
     };

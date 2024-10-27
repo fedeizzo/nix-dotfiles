@@ -16,7 +16,9 @@ in
     ./net-worth
     ./prometheus
     ./diun
+    ./postgres
     ./sftpgo
+    ./traggo
   ];
 
   config = {
