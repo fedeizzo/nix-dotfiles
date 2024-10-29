@@ -35,12 +35,12 @@ in
 
       modules = [ ../hosts/x1-carbon ../home/x1-carbon ];
     };
-    rasp-nixos = inputs.nixpkgs-rasp.lib.nixosSystem {
+    rasp = inputs.nixpkgs-rasp.lib.nixosSystem {
       system = "aarch64-linux";
       specialArgs = {
         inherit inputs;
         hostname = "rasp";
-        username = "rasp-nixos";
+        username = "rasp";
       };
 
       modules = [ ../hosts/raspberry ../home/raspberry ];

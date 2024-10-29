@@ -2,7 +2,7 @@
 
 {
   deploy.nodes = {
-    rasp-nixos = {
+    rasp = {
       hostname = "homelab";
       sshUser = "root";
       sudo = "doas -u";

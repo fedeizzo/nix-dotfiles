@@ -34,7 +34,7 @@
       {
         help = " Deploy the homelab configuration over ssh.";
         name = "deploy-homelab";
-        command = "deploy --skip-checks .#rasp-nixos";
+        command = "deploy --skip-checks .#rasp";
         category = " System administration";
       }
       {

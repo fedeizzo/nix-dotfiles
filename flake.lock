@@ -168,26 +168,6 @@
         "type": "github"
       }
     },
-    "comin": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1724145018,
-        "narHash": "sha256-6R5CeMgr3EGKhqWPkqtteOtix7hBaurfpjHepiq2OrU=",
-        "owner": "nlewo",
-        "repo": "comin",
-        "rev": "84ef9af404b9157eab2c5e3e44d7c29239329901",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nlewo",
-        "repo": "comin",
-        "type": "github"
-      }
-    },
     "crate2nix": {
       "inputs": {
         "cachix": "cachix",
@@ -1570,7 +1550,6 @@
     },
     "root": {
       "inputs": {
-        "comin": "comin",
         "deploy-rs": "deploy-rs",
         "devshell": "devshell",
         "disko": "disko",

@@ -24,8 +24,6 @@
     # Remote deployment and secretes
     sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
-    comin.url = "github:nlewo/comin";
-    comin.inputs.nixpkgs.follows = "nixpkgs";
     deploy-rs.url = "github:serokell/deploy-rs";
 
     # Misc
@@ -67,7 +65,7 @@
             (import ./nix/nixosConfigurations.nix { inherit inputs; })
             (import ./nix/deployment.nix {
               inherit inputs;
-              homelab-configuration = (import ./nix/nixosConfigurations.nix { inherit inputs; }).nixosConfigurations.rasp-nixos;
+              homelab-configuration = (import ./nix/nixosConfigurations.nix { inherit inputs; }).nixosConfigurations.rasp;
             })
           ];
           checks = builtins.mapAttrs (_system: deployLib: deployLib.deployChecks self.deploy) inputs.deploy-rs.lib;

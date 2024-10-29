@@ -80,7 +80,7 @@ _:
             max_age = "12h";
             labels = {
               job = "systemd-journal";
-              host = "rasp-nixos";
+              host = "rasp";
             };
           };
           relabel_configs = [

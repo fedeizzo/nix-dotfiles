@@ -1,29 +1,6 @@
-{ inputs, pkgs, username, ... }:
+{ pkgs, ... }:
 
 {
-  imports = [
-    inputs.comin.nixosModules.comin
-  ];
-
-  services.comin = {
-    enable = true;
-    hostname = username;
-    exporter = {
-      listen_address = "0.0.0.0";
-      port = 40000;
-    };
-    remotes = [
-      {
-        name = "origin";
-        url = "https://github.com/fedeizzo/nix-dotfiles.git";
-        branches.testing.name = ""; # No testing branch on this remote
-        branches.main.name = "master";
-        poller.period = 60; # 60s
-        timeout = 300; # 300s = 5m
-      }
-    ];
-  };
-
   systemd.services.restart-docker-containers = {
     path = with pkgs; [ nixos-rebuild jq systemd ];
 
