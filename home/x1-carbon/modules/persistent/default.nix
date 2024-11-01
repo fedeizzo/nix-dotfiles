@@ -10,7 +10,7 @@
       "docs"
       "nix-dotfiles"
       # "org"
-      # "zettelkasten"
+      "notes"
 
       # AppData
       ".local"

@@ -93,7 +93,7 @@
 
       device = {
         name = "tpps/2-elan-trackpoint";
-        sensitivity = 1.0;
+        sensitivity = 0.75;
       };
 
       gestures = {
