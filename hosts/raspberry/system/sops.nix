@@ -1,4 +1,4 @@
-{ inputs, ... }:
+{ inputs, config, ... }:
 
 {
   imports = [
@@ -18,6 +18,12 @@
 
       restic-repository = { };
       restic-password = { };
+
+      # postgres passwords
+      sftpgo-pg-password = {
+        owner = config.systemd.services.postgresql.serviceConfig.User;
+        restartUnits = [ "postgresql.service" ];
+      };
     };
   };
 }
