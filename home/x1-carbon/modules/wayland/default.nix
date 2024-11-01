@@ -14,6 +14,8 @@
     wlr-randr # xrandr replacement
     kanshi # autorandr replacement
     wdisplays # arandr replacement
+    ddcui # control external monitor
+    ddcutil
     xdg-utils
     # clipboard
     wl-clipboard

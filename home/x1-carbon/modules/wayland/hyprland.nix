@@ -208,7 +208,6 @@
       bindi = [ ];
 
       exec-once = [
-        "swayosd-server"
         "swaync" # notification center
         "hdrop --floating --position t --background kitty --class scratchpad" # scratchpad
         "wl-paste -t text --watch clipman store" # init clipboard
@@ -220,7 +219,6 @@
   home.packages = with pkgs; [
     hyprpicker # colorpicker
     hdrop
-    swayosd # show info while updating volume, brightness, etc.
   ];
 
   services = {
@@ -278,6 +276,12 @@
             }
           ];
         };
+    };
+
+    swayosd = {
+      # show info while updating volume, brightness, etc.
+      enable = true;
+      package = pkgs.swayosd;
     };
   };
 

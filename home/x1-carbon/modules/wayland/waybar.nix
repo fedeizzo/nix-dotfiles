@@ -1,5 +1,17 @@
-_:
+{ pkgs, ... }:
 
+let
+  ddc-audio-up = pkgs.writers.writeBashBin "ddc-audio-up" ''
+    ddcutil -d 1 setvcp 62 + 10
+    current_audio=$(ddcutil -d 1 getvcp 62 -t | awk -F' ' '{print $4}')
+    swayosd-client --custom-message="$current_audio" --custom-icon=multimedia-volume-control
+  '';
+  ddc-audio-down = pkgs.writers.writeBashBin "ddc-audio-down" ''
+    ddcutil -d 1 setvcp 62 - 10
+    current_audio=$(ddcutil -d 1 getvcp 62 -t | awk -F' ' '{print $4}')
+    swayosd-client --custom-message="$current_audio" --custom-icon=multimedia-volume-control
+  '';
+in
 {
   programs.waybar = {
     enable = true;
@@ -70,6 +82,7 @@ _:
       "group/control-left" = {
         orientation = "inherit";
         modules = [
+          "custom/external-monitor-audio"
           "pulseaudio"
           "group/network"
         ];
@@ -108,6 +121,17 @@ _:
           "network"
           "network#speed"
         ];
+      };
+      "custom/external-monitor-audio" = {
+        exec = "ddcutil -d 1 getvcp 62 -t | awk -F' ' '{print $4}'";
+        exec-if = "sleep 1"; ## Give enough time for `sway output` command changes to propagate so we can read them in the next `exec`
+        tooltip = true;
+        tooltip-format = "{}";
+        format = "{icon}";
+        format-icons = [ "" ];
+        interval = "once";
+        on-click = "${ddc-audio-up}/bin/ddc-audio-up";
+        on-click-right = "${ddc-audio-down}/bin/ddc-audio-down";
       };
       network = {
         format = "{icon}";

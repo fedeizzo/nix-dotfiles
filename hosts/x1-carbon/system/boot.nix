@@ -40,6 +40,7 @@
       "sd_mod"
       "sr_mod"
       "rtsx_pci_sdmmc"
+      "i2c_dev" # ddcutil: controlling external display
     ];
     initrd.kernelModules = [ "i915" ];
     kernelModules = [ "kvm-intel" ];

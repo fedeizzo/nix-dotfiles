@@ -1,13 +1,17 @@
 { inputs, ... }:
 
 {
-  hardware.cpu.intel.updateMicrocode = true;
-  hardware.trackpoint = {
-    enable = true;
-    speed = 200;
-    sensitivity = 200;
-    emulateWheel = true;
+  hardware = {
+    trackpoint = {
+      enable = true;
+      speed = 200;
+      sensitivity = 200;
+      emulateWheel = true;
+    };
+    cpu.intel.updateMicrocode = true;
+    i2c.enable = true; # external monitor control
   };
+
   services = {
     # illum.enable = true; # Enable the brightness buttons
     pcscd.enable = true;
