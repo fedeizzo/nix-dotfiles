@@ -5,23 +5,32 @@
     backblaze = {
       user = "root";
       initialize = true;
+      runCheck = false; # there is already another job with a grafana alert
       # Env file structure
       # B2_ACCOUNT_ID=
       # B2_ACCOUNT_KEY=
       environmentFile = "/root/.restic_backup_env";
       repositoryFile = config.sops.secrets.restic-repository.path;
       passwordFile = config.sops.secrets.restic-password.path;
+      createWrapper = true;
+      extraBackupArgs = [
+        "--compression max"
+      ];
       paths = [
-        "/var/volumes"
+        # directories
         "/var/container_envs"
-        # "/var/lib/sops"
-        # "/borgbackups"
+        "/var/volumes/grafana/plugins"
+        "/var/volumes/sftpgo"
+        "/var/volumes/traggo"
+
+        # files
+        "/var/volumes/promtail/GeoLite2-City.mmdb"
+        "/var/volumes/grafana/data/grafana.db"
+        "/var/volumes/net_worth_nocodb/noco.db"
+        "/var/volumes/traefik/acme.json"
       ];
       pruneOpts = [
-        "--keep-daily 1"
-        "--keep-weekly 2"
-        "--keep-monthly 2"
-        "--keep-yearly 2"
+        "--keep-last 30" # keep last 30 days
       ];
     };
   };
