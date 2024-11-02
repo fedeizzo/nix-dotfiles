@@ -23,17 +23,6 @@ prompt_confirm() {
   done
 }
 
-if [[ $1 == "--complete" ]]; then
-    colorPrint
-    colorPrint "Complete new machine installation."
-    cp "/etc/adjtime"  "/persist/etc/adjtime"
-    cp "/etc/machine-id"  "/persist/etc/machine-id"
-    cp "/var/lib/NetworkManager/secret_key"  "/persist/var/lib/NetworkManager/secret_key"
-    cp "/var/lib/NetworkManager/seen-bssids"  "/persist/var/lib/NetworkManager/seen-bssids"
-    cp "/var/lib/NetworkManager/timestamps"  "/persist/var/lib/NetworkManager/timestamps"
-    exit 0
-fi
-
 colorPrint
 colorPrint "Do you want to setup another device as swap for the nix store during the installation?"
 if prompt_confirm; then

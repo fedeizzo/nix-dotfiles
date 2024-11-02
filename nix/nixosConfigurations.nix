@@ -22,6 +22,16 @@ in
 
       modules = [ ../hosts/xps-9510 ../home/xps-9510 ];
     };
+    homelab = inputs.nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+      specialArgs = {
+        inherit inputs;
+        hostname = "homelab";
+        username = "homelab";
+      };
+
+      modules = [ ../hosts/xps-9510-homelab ];
+    };
     oven = inputs.nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
 

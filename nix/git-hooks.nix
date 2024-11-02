@@ -39,6 +39,7 @@ in
           enable = true; # Secret keys
           excludes = [
             "hosts/xps-9510/system/networking.nix"
+            "hosts/xps-9510-homelab/system/networking.nix"
             "hosts/raspberry/system/networking.nix"
             "hosts/x1-carbon/system/networking.nix"
           ];
