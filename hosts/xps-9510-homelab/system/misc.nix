@@ -11,14 +11,12 @@ _:
   programs.ccache.enable = true;
 
   virtualisation = {
+    oci-containers.backend = "docker";
+    podman.enable = false;
     docker = {
       enable = true;
       # enableNvidia = true;
       enableOnBoot = true;
-      rootless = {
-        enable = true;
-        setSocketVariable = true;
-      };
       autoPrune = {
         enable = true;
         flags = [ ];

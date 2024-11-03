@@ -1,6 +1,7 @@
 { config, ... }:
 
 {
+  users.users.traefik.uid = 990; # make backup consistent across machines
   services.traefik = {
     enable = true;
     dataDir = "/var/volumes/traefik";

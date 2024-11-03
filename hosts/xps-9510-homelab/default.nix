@@ -2,7 +2,7 @@ _:
 
 {
   imports = [
-    # ./services
+    ./services
     ./system/backup.nix
     ./system/boot.nix
     ./system/deployment.nix

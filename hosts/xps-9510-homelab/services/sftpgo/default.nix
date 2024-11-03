@@ -1,6 +1,7 @@
 _:
 
 {
+  users.users.sftpgo.uid = 991; # make backup consistent across machines
   services.sftpgo = {
     enable = true;
     dataDir = "/var/volumes/sftpgo";

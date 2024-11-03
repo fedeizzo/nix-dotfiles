@@ -8,7 +8,7 @@
       unmanaged = [ "wg0" ];
     };
     useDHCP = false;
-    defaultGateway = "192.168.1.1";
+    defaultGateway = "192.168.1.254";
     nameservers = [ "1.1.1.1" ];
     interfaces.eth0 = {
       ipv4.addresses = [{

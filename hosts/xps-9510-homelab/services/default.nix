@@ -6,20 +6,20 @@ let
 in
 {
   imports = [
-    # ./blocky
-    # ./diun
-    # ./fedeizzo.dev
-    # ./garmindb
-    # ./grafana
-    # ./logrotate
-    # ./loki
-    # ./net-worth
-    # ./postgres
-    # ./prometheus
+    ./blocky
+    ./diun
+    ./fedeizzo.dev
+    ./garmindb
+    ./grafana
+    ./logrotate
+    ./loki
+    ./net-worth
+    ./postgres
+    ./prometheus
     # ./sunshine
-    # ./sftpgo
-    # ./traefik
-    # ./traggo
+    ./sftpgo
+    ./traefik
+    ./traggo
   ];
 
   config = {

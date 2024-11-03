@@ -11,7 +11,7 @@
       wireguard.enable = true;
       smartctl = {
         enable = true;
-        devices = [ "/dev/sda" ];
+        devices = [ "/dev/nvme0" "/dev/nvme1" ];
       };
       restic = {
         enable = true;
