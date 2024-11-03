@@ -4,7 +4,7 @@
   documentation.nixos.enable = false;
   nixpkgs.config.allowUnfree = true;
   nix = {
-    settings.trusted-users = [ "root" ];
+    settings.trusted-users = [ "root" "nixremote" ];
     settings.auto-optimise-store = true;
     package = pkgs.nixFlakes;
     gc = {
