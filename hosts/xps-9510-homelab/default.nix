@@ -3,7 +3,7 @@ _:
 {
   imports = [
     # ./services
-    # ./system/backup.nix
+    ./system/backup.nix
     ./system/boot.nix
     ./system/deployment.nix
     ./system/disko.nix

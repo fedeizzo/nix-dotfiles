@@ -7,17 +7,18 @@ in
 {
   imports = [
     # ./blocky
-    # ./traefik
+    # ./diun
+    # ./fedeizzo.dev
     # ./garmindb
     # ./grafana
     # ./logrotate
     # ./loki
-    # ./fedeizzo.dev
     # ./net-worth
-    # ./prometheus
-    # ./diun
     # ./postgres
+    # ./prometheus
+    # ./sunshine
     # ./sftpgo
+    # ./traefik
     # ./traggo
   ];
 
