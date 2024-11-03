@@ -1,4 +1,4 @@
-{ inputs, config, ... }:
+{ inputs, ... }:
 
 {
   imports = [
@@ -21,7 +21,7 @@
 
       # postgres passwords
       sftpgo-pg-password = {
-        owner = config.systemd.services.postgresql.serviceConfig.User;
+        # owner = config.systemd.services.postgresql.serviceConfig.User;
         restartUnits = [ "postgresql.service" ];
       };
     };
