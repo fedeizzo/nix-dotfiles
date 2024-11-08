@@ -6,7 +6,7 @@
   nix = {
     settings.trusted-users = [ "root" "nixremote" ];
     settings.auto-optimise-store = true;
-    package = pkgs.nixFlakes;
+    package = pkgs.nixVersions.stable;
     gc = {
       automatic = true;
       dates = "daily";

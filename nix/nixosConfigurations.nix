@@ -22,12 +22,17 @@ in
 
       modules = [ ../hosts/xps-9510 ../home/xps-9510 ];
     };
-    homelab = inputs.nixpkgs.lib.nixosSystem {
+    homelab = inputs.nixpkgs-homelab-unstable.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = {
         inherit inputs;
         hostname = "homelab";
         username = "homelab";
+
+        # pkgs-unstable = import inputs.nixpkgs-homelab-unstable {
+        #   inherit system;
+        #   config.allowUnfree = true;
+        # };
       };
 
       modules = [ ../hosts/xps-9510-homelab ];
@@ -45,7 +50,7 @@ in
 
       modules = [ ../hosts/x1-carbon ../home/x1-carbon ];
     };
-    rasp = inputs.nixpkgs-rasp.lib.nixosSystem {
+    rasp = inputs.nixpkgs-homelab.lib.nixosSystem {
       system = "aarch64-linux";
       specialArgs = {
         inherit inputs;

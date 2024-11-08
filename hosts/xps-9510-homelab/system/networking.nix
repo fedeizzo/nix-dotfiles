@@ -23,9 +23,12 @@
     };
     firewall = {
       enable = true;
-      interfaces.eth0.allowedTCPPorts = [ 443 ];
+      interfaces.eth0.allowedTCPPorts = [ 443 ]; # https
       trustedInterfaces = [ "wg0" ];
-      allowedUDPPorts = [ 51821 53 ];
+      allowedUDPPorts = [
+        51821 # wireguard
+        53 # blocky
+      ];
       allowedTCPPorts = [ ];
       checkReversePath = "loose";
     };

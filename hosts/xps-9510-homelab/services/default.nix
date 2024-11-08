@@ -16,7 +16,7 @@ in
     ./net-worth
     ./postgres
     ./prometheus
-    # ./sunshine
+    ./sunshine
     ./sftpgo
     ./traefik
     ./traggo

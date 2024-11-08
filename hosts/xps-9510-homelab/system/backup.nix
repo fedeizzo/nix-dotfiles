@@ -22,6 +22,7 @@
         "/var/volumes/grafana/plugins"
         "/var/volumes/sftpgo"
         "/var/volumes/traggo"
+        "/var/volumes/net_worth_db/"
 
         # files
         "/var/volumes/promtail/GeoLite2-City.mmdb"
