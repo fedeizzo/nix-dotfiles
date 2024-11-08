@@ -12,6 +12,7 @@
     #   categories = [ "GTK" "GNOME" "Settings" "HardwareSettings" "X-XFCE-SettingsDialog" "X-XFCE-HardwareSettings" ];
     #   icon = "bluetooth";
     # })
+    moonlight-qt
     pavucontrol
     vlc
     bitwarden

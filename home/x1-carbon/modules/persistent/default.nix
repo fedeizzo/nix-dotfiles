@@ -26,6 +26,7 @@
       ".config/rbw"
       ".config/rclone"
       # ".config/calibre"
+      ".config/Moonlight Game Streaming Project"
 
       # Cache
       ".cargo"
@@ -36,6 +37,7 @@
       ".cache/nix"
       ".cache/nix-index"
       ".cache/rbw"
+      ".cache/Moonlight Game Streaming Project"
     ];
     files = [
       # Personal files
