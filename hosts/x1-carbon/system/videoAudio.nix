@@ -2,8 +2,8 @@
 
 {
   hardware = {
-    opengl = {
-      driSupport32Bit = true;
+    graphics = {
+      enable32Bit = true;
       enable = true;
       extraPackages = [
         pkgs.intel-media-driver
@@ -11,11 +11,6 @@
         pkgs.libvdpau-va-gl
       ];
     };
-  };
-
-  sound = {
-    enable = false;
-    mediaKeys.enable = false;
   };
 
   location.latitude = 48.8575;

@@ -9,21 +9,21 @@
     inputs.nh-darwin.nixosModules.default
     (modulesPath + "/installer/scan/not-detected.nix")
 
-    ../common/system/bluetooth.nix
-    ../common/system/disk.nix
-    ../common/system/environment.nix
-    ../common/system/nix.nix
-    ../common/system/powerThermal.nix
-    ../common/system/security.nix
-    ../common/system/videoAudio.nix
+    ./system/bluetooth.nix
     ./system/boot.nix
+    ./system/disk.nix
     ./system/disko.nix
+    ./system/environment.nix
     ./system/hardware.nix
     ./system/keyboardKeymapFont.nix
     ./system/networking.nix
+    ./system/nix.nix
     ./system/persistent.nix
+    ./system/powerThermal.nix
+    ./system/security.nix
     ./system/sops.nix
     ./system/user.nix
+    ./system/videoAudio.nix
     (import ../common/nh { inherit username; isMac = false; })
   ];
 }

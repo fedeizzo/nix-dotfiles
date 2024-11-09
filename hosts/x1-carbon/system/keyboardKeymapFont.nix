@@ -2,10 +2,17 @@
 
 {
   imports = [
-    ../../common/system/keyboardKeymapFont.nix
+
     inputs.nixos-06cb-009a-fingerprint-sensor.nixosModules.open-fprintd
     inputs.nixos-06cb-009a-fingerprint-sensor.nixosModules.python-validity
   ];
+
+  i18n.defaultLocale = "en_US.UTF-8";
+  console = {
+    keyMap = "us";
+  };
+  time.timeZone = "Europe/Paris";
+  time.hardwareClockInLocalTime = false;
 
   services = {
     keyd = {
@@ -40,9 +47,5 @@
 
   security.pam.services = {
     doas.fprintAuth = true;
-    hyprlock = {
-      unixAuth = true;
-      fprintAuth = true;
-    };
   };
 }

@@ -1,14 +1,6 @@
 { pkgs, ... }:
 
 {
-  programs = {
-    hyprland.enable = true;
-    bash = {
-      enableCompletion = true;
-      enableLsColors = true;
-    };
-    fish.enable = true;
-  };
   environment = {
     sessionVariables = {
       "GTK_USE_PORTAL" = "1";
@@ -47,7 +39,7 @@
       highlight
 
       seatd
-      pkgs.gnome.adwaita-icon-theme
+      pkgs.adwaita-icon-theme
       pkgs.shared-mime-info
     ];
   };
