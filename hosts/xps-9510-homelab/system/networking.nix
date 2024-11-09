@@ -51,7 +51,14 @@
       PermitRootLogin = "yes";
     };
   };
-  services.fail2ban.enable = true;
+  services.fail2ban = {
+    enable = true;
+    ignoreIP = [
+      # "192.168.7.2/32"
+      "192.168.7.3/32"
+      # "192.168.7.4/32"
+    ];
+  };
 
   networking.wireguard.enable = true;
   networking.wireguard.interfaces = {
