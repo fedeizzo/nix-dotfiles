@@ -10,13 +10,17 @@ let
 in
 {
   nixosConfigurations = {
-    fedeizzo-nixos = inputs.nixpkgs.lib.nixosSystem {
+    fedeizzo-nixos = inputs.nixpkgs.lib.nixosSystem rec {
       system = "x86_64-linux";
       specialArgs = {
         inherit inputs;
         hostname = "fedeizzo-nixos";
         username = "fedeizzo";
         emacs-pkg = import inputs.emacs-pkg { system = "x86_64-linux"; };
+        pkgs-unstable = import inputs.nixpkgs-unstable {
+          inherit system;
+          config.allowUnfree = true;
+        };
         inherit system-overlays;
       };
 
