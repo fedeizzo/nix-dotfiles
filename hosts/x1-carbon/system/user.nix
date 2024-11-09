@@ -29,4 +29,22 @@
       hashedPassword = "!";
     };
   };
+
+  services = {
+    xserver.enable = true;
+    displayManager.sddm.enable = true;
+    desktopManager.plasma6.enable = true;
+    displayManager.sddm.wayland.enable = true;
+  };
+  environment.plasma6.excludePackages = with pkgs.kdePackages; [
+    plasma-browser-integration
+    konsole
+    ark
+    elisa
+    gwenview
+    okular
+    kate
+    khelpcenter
+    print-manager
+  ];
 }

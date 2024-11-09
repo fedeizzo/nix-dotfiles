@@ -38,13 +38,25 @@
       ".cache/nix-index"
       ".cache/rbw"
       ".cache/Moonlight Game Streaming Project"
+
+      # plasma
+      ".config/kde.org"
+      ".config/plasma-workspace"
+      ".config/xsettingsd"
+
+      ".local/share/baloo"
+      ".local/share/dolphin"
+      ".local/share/kactivitymanagerd"
+      ".local/share/klipper"
+      ".local/share/konsole"
+      ".local/share/kwalletd"
+      ".local/share/RecentDocuments"
+      ".local/share/sddm"
     ];
     files = [
       # Personal files
       ".aspell.en.prepl"
       ".aspell.en.pws"
-      ".local/share/fish/fish_history"
-      ".local/share/z/data"
 
       # Config
       ".config/user-dirs.dirs"
@@ -56,6 +68,33 @@
       ".cache/rofi-3.runcache"
       ".cache/rofi3.druncache"
       ".cache/rofi3.filebrowsercache"
+
+      # plasma
+      # ".config/baloofilerc"
+      # ".config/gtkrc"
+      # ".config/gtkrc-2.0"
+      # ".config/kactivitymanagerdrc"
+      # ".config/kcminputrc"
+      # ".config/kconf_updaterc"
+      # ".config/kded5rc"
+      # ".config/kdeglobals"
+      # ".config/kglobalshortcutsrc"
+      # ".config/konsolerc"
+      # ".config/konsolesshconfig"
+      # ".config/krunnerrc"
+      # ".config/kscreenlockerrc"
+      # ".config/ksmserverrc"
+      # ".config/ksplashrc"
+      # ".config/ktimezonedrc"
+      ".config/kwinoutputconfig.json"
+      # ".config/kwinrc"
+      # ".config/plasma-localerc"
+      # ".config/plasma-org.kde.plasma.desktop-appletsrc"
+      # ".config/plasmarc"
+      # ".config/plasmashellrc"
+      # ".config/powerdevilrc"
+      # ".config/powermanagementprofilesrc"
+      # ".config/systemsettingsrc"
     ];
   };
 }

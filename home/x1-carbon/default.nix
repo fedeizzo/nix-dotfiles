@@ -11,6 +11,8 @@
       inherit inputs;
       inherit emacs-pkg;
     };
+    backupFileExtension = "to_delete";
+    sharedModules = [ inputs.plasma-manager.homeManagerModules.plasma-manager ];
 
     users.${username} = {
       imports = [
@@ -26,7 +28,9 @@
         ./modules/misc
         ./modules/persistent
         ./modules/user
-        ./modules/wayland
+        # ./modules/wayland
+        ./modules/plasma
+        ./modules/stylix
         # ../common/wezterm
         ../common/yazi
         ../common/zathura
@@ -37,7 +41,7 @@
       programs.home-manager.enable = true;
 
       home = {
-        stateVersion = "24.05";
+        stateVersion = "24.11";
         homeDirectory = "/home/${username}";
         username = "${username}";
       };

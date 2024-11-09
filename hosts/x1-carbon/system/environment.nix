@@ -1,6 +1,13 @@
 { pkgs, ... }:
 
 {
+  programs = {
+    bash = {
+      enableCompletion = true;
+      enableLsColors = true;
+    };
+    fish.enable = true;
+  };
   environment = {
     sessionVariables = {
       "GTK_USE_PORTAL" = "1";

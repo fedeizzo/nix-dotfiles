@@ -15,7 +15,7 @@
       allowedUDPPorts = [ 51821 ];
     };
     wireguard.enable = true;
-    networking.wireguard.interfaces = {
+    wireguard.interfaces = {
       wg0 = {
         ips = [ "192.168.7.3/24" ];
         listenPort = 51821;

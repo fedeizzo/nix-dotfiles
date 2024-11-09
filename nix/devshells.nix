@@ -38,6 +38,12 @@
         category = " System administration";
       }
       {
+        help = " Print the current plasma configuration.";
+        name = "plasma-manager";
+        command = "nix run github:nix-community/plasma-manager";
+        category = " System administration";
+      }
+      {
         help = " Refresh the devshell.";
         name = "refresh";
         command = "touch flake.nix";

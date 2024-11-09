@@ -53,14 +53,7 @@
     set CABAL_DIR "XDG_DATA_HOME"/.cabal
     set fbk_login_name "fizzo@fbk.eu"
     set diclub_user_name "fizzo"
-    set -x SDL_VIDEODRIVER "wayland"
     set -x _JAVA_AWT_WM_NONREPARENTING 1
-    set -x QT_QPA_PLATFORM "wayland-egl"
-    set -x XDG_CURRENT_DESKTOP "Hyprland"
-    set -x XDG_SESSION_DESKTOP "Hyprland"
-    set -x MOZ_ENABLE_WAYLAND "1"
-    set -x XDG_CURRENT_DESKTOP "Hyprland"
-    set -x XDG_SESSION_TYPE "wayland"
     set -x GTK_USE_PORTAL 0
   '';
   programs.fish.functions = {
@@ -154,5 +147,4 @@
       '';
     };
   };
-  xdg.configFile."fish/conf.d/hyprland.fish".source = ./hyprland.fish;
 }
