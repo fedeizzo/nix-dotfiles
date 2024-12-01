@@ -11,7 +11,7 @@ let
 in
 {
   nixosConfigurations = {
-    homelab = inputs.nixpkgs-homelab-unstable.lib.nixosSystem {
+    homelab = inputs.nixpkgs-homelab.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = {
         inherit inputs;

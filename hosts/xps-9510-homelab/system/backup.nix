@@ -22,9 +22,9 @@
         "/var/container_envs"
         "/var/volumes/grafana/plugins"
         "/var/volumes/sftpgo"
-        "/var/volumes/traggo"
         "/var/volumes/net_worth_db/"
         "/var/backup/postgresql"
+        "${config.services.immich.mediaLocation}"
 
         # files
         "/var/volumes/promtail/GeoLite2-City.mmdb"

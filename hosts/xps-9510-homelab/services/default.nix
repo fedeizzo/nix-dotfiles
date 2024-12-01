@@ -11,6 +11,7 @@ in
     ./fedeizzo.dev
     ./garmindb
     ./grafana
+    ./immich
     ./logrotate
     ./loki
     ./net-worth
@@ -19,7 +20,6 @@ in
     ./sunshine
     ./sftpgo
     ./traefik
-    ./traggo
   ];
 
   config = {

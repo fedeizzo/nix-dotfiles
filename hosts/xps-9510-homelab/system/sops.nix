@@ -30,6 +30,11 @@
         group = config.systemd.services.postgresql.serviceConfig.Group;
         # restartUnits = [ "postgresql.service" ];
       };
+      immich-pg-password = {
+        owner = config.systemd.services.postgresql.serviceConfig.User;
+        group = config.systemd.services.postgresql.serviceConfig.Group;
+        # restartUnits = [ "postgresql.service" ];
+      };
     };
   };
 }

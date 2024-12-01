@@ -5,8 +5,7 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
     nixpkgs-old.url = "github:nixos/nixpkgs/nixos-24.05";
     nixpkgs-darwin.url = "github:nixos/nixpkgs/nixpkgs-24.05-darwin";
-    nixpkgs-homelab.url = "github:nixos/nixpkgs/nixos-24.05";
-    nixpkgs-homelab-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs-homelab.url = "github:nixos/nixpkgs/nixos-24.11";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     nix-darwin.url = "github:LnL7/nix-darwin";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs-darwin";
