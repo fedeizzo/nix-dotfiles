@@ -18,13 +18,26 @@ encrypt () {
 
 edit_secrets () {
     colorPrint "Edit secrets on file $1"
-
+    rbw help 2&> /dev/null
+    SHOULD_USE_RBW=$?
     if [[ $1 == "./secrets/raspberry-secrets.yaml" ]]; then
-        SOPS_AGE_KEY=$(bw get item 'sops-age-keys-homelab' | jq -r ."notes") sops $1
+        if [[ $SHOULD_USE_RBW == 2 ]]; then
+            SOPS_AGE_KEY=$(rbw get 'sops-age-keys-homelab') sops $1
+        else
+            SOPS_AGE_KEY=$(bw get item id 'sops-age-keys-homelab' | jq -r ."notes") sops $1
+        fi
     elif [[ $1 == "./secrets/xps-9510-secrets.yaml" ]]; then
-        SOPS_AGE_KEY=$(bw get item 'sops-age-keys-xps-9510' | jq -r ."notes") sops $1
+        if [[ $SHOULD_USE_RBW == 2 ]]; then
+            SOPS_AGE_KEY=$(rbw get 'sops-age-keys-xps-9510') sops $1
+        else
+            SOPS_AGE_KEY=$(bw get item id 'sops-age-keys-xps-9510' | jq -r ."notes") sops $1
+        fi
     elif [[ $1 == "./secrets/x1-carbon-secrets.yaml" ]]; then
-        SOPS_AGE_KEY=$(bw get item 'sops-age-keys-x1-carbon' | jq -r ."notes") sops $1
+        if [[ $SHOULD_USE_RBW == 2 ]]; then
+            SOPS_AGE_KEY=$(rbw get 'sops-age-keys-x1-carbon') sops $1
+        else
+            SOPS_AGE_KEY=$(bw get item id 'sops-age-keys-x1-carbon' | jq -r ."notes") sops $1
+        fi
     fi
 }
 
