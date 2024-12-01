@@ -10,7 +10,8 @@
       # B2_ACCOUNT_ID=
       # B2_ACCOUNT_KEY=
       environmentFile = "/root/.restic_backup_env";
-      repositoryFile = config.sops.secrets.restic-repository.path;
+      repository = "b2:fedeizzo-homelab-backup";
+      # repositoryFile = config.sops.secrets.restic-repository.path;
       passwordFile = config.sops.secrets.restic-password.path;
       createWrapper = true;
       extraBackupArgs = [
@@ -23,6 +24,7 @@
         "/var/volumes/sftpgo"
         "/var/volumes/traggo"
         "/var/volumes/net_worth_db/"
+        "/var/backup/postgresql"
 
         # files
         "/var/volumes/promtail/GeoLite2-City.mmdb"

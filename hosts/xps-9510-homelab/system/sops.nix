@@ -1,4 +1,4 @@
-{ inputs, ... }:
+{ inputs, config, ... }:
 
 {
   imports = [
@@ -20,9 +20,15 @@
       restic-password = { };
 
       # postgres passwords
-      sftpgo-pg-password = {
-        # owner = config.systemd.services.postgresql.serviceConfig.User;
-        restartUnits = [ "postgresql.service" ];
+      networth-pg-password = {
+        owner = config.systemd.services.postgresql.serviceConfig.User;
+        group = config.systemd.services.postgresql.serviceConfig.Group;
+        # restartUnits = [ "postgresql.service" ];
+      };
+      networth-pg-password-ro = {
+        owner = config.systemd.services.postgresql.serviceConfig.User;
+        group = config.systemd.services.postgresql.serviceConfig.Group;
+        # restartUnits = [ "postgresql.service" ];
       };
     };
   };
