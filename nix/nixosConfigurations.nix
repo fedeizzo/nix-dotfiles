@@ -6,64 +6,45 @@ let
     default = import ../overlays {
       inherit inputs;
     };
+    nix-topology = inputs.nix-topology.overlays.default;
   };
 in
 {
   nixosConfigurations = {
-    fedeizzo-nixos = inputs.nixpkgs.lib.nixosSystem rec {
-      system = "x86_64-linux";
-      specialArgs = {
-        inherit inputs;
-        hostname = "fedeizzo-nixos";
-        username = "fedeizzo";
-        emacs-pkg = import inputs.emacs-pkg { system = "x86_64-linux"; };
-        pkgs-unstable = import inputs.nixpkgs-unstable {
-          inherit system;
-          config.allowUnfree = true;
-        };
-        inherit system-overlays;
-      };
-
-      modules = [ ../hosts/xps-9510 ../home/xps-9510 ];
-    };
     homelab = inputs.nixpkgs-homelab-unstable.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = {
         inherit inputs;
         hostname = "homelab";
         username = "homelab";
-
-        # pkgs-unstable = import inputs.nixpkgs-homelab-unstable {
-        #   inherit system;
-        #   config.allowUnfree = true;
-        # };
       };
 
       modules = [ ../hosts/xps-9510-homelab ];
     };
-    oven = inputs.nixpkgs.lib.nixosSystem {
+    oven = inputs.nixpkgs.lib.nixosSystem rec{
       system = "x86_64-linux";
 
-      specialArgs = {
+      specialArgs = rec {
         inherit inputs;
         hostname = "oven";
         username = "oven";
-        emacs-pkg = import inputs.emacs-pkg { system = "x86_64-linux"; };
+        emacs-pkg = import inputs.emacs-pkg { inherit system; };
+        pkgs-old = import inputs.nixpkgs-old { inherit system; };
         inherit system-overlays;
       };
 
       modules = [ ../hosts/x1-carbon ../home/x1-carbon ];
     };
-    rasp = inputs.nixpkgs-homelab.lib.nixosSystem {
-      system = "aarch64-linux";
-      specialArgs = {
-        inherit inputs;
-        hostname = "rasp";
-        username = "rasp";
-      };
+    # rasp = inputs.nixpkgs-homelab.lib.nixosSystem {
+    #   system = "aarch64-linux";
+    #   specialArgs = {
+    #     inherit inputs;
+    #     hostname = "rasp";
+    #     username = "rasp";
+    #   };
 
-      modules = [ ../hosts/raspberry ../home/raspberry ];
-    };
+    #   modules = [ ../hosts/raspberry ../home/raspberry ];
+    # };
   };
 
   darwinConfigurations = {

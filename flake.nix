@@ -2,8 +2,8 @@
   description = "My personal NixOS configuration";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
+    nixpkgs-old.url = "github:nixos/nixpkgs/nixos-24.05";
     nixpkgs-darwin.url = "github:nixos/nixpkgs/nixpkgs-24.05-darwin";
     nixpkgs-homelab.url = "github:nixos/nixpkgs/nixos-24.05";
     nixpkgs-homelab-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -22,6 +22,7 @@
     flake-parts.url = "github:hercules-ci/flake-parts";
     devshell.url = "github:numtide/devshell";
     git-hooks-nix.url = "github:cachix/git-hooks.nix";
+    nix-topology.url = "github:oddlama/nix-topology";
 
     # Installation and boot
     impermanence.url = "github:nix-community/impermanence";
@@ -58,6 +59,7 @@
         imports = [
           inputs.devshell.flakeModule
           inputs.git-hooks-nix.flakeModule
+          inputs.nix-topology.flakeModule
         ];
         systems = [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" ];
         perSystem = { pkgs, ... }: {
@@ -65,6 +67,7 @@
           imports = [
             ./nix/git-hooks.nix
             ./nix/devshells.nix
+            ./nix/topology.nix
           ];
         };
         flake = {
