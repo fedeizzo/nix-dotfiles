@@ -7,6 +7,7 @@
     inputs.sops-nix.nixosModules.sops
     inputs.disko.nixosModules.disko
     inputs.nh-darwin.nixosModules.default
+    inputs.nix-topology.nixosModules.default
     (modulesPath + "/installer/scan/not-detected.nix")
 
     ./system/bluetooth.nix

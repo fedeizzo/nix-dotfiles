@@ -1,4 +1,4 @@
-{ username, inputs, config, emacs-pkg, ... }:
+{ username, inputs, config, emacs-pkg, pkgs-old, ... }:
 
 
 {
@@ -10,6 +10,7 @@
       inherit username;
       inherit inputs;
       inherit emacs-pkg;
+      inherit pkgs-old;
     };
     backupFileExtension = "to_delete";
     sharedModules = [ inputs.plasma-manager.homeManagerModules.plasma-manager ];

@@ -27,6 +27,8 @@
       ".config/rclone"
       # ".config/calibre"
       ".config/Moonlight Game Streaming Project"
+      ".config/FreeCAD"
+      ".config/BambuStudio"
 
       # Cache
       ".cargo"
@@ -38,20 +40,22 @@
       ".cache/nix-index"
       ".cache/rbw"
       ".cache/Moonlight Game Streaming Project"
+      ".cache/FreeCAD"
+      ".cache/bambu-studio"
 
       # plasma
       ".config/kde.org"
       ".config/plasma-workspace"
       ".config/xsettingsd"
 
-      ".local/share/baloo"
-      ".local/share/dolphin"
-      ".local/share/kactivitymanagerd"
-      ".local/share/klipper"
-      ".local/share/konsole"
-      ".local/share/kwalletd"
-      ".local/share/RecentDocuments"
-      ".local/share/sddm"
+      # ".local/share/baloo"
+      # ".local/share/dolphin"
+      # ".local/share/kactivitymanagerd"
+      # ".local/share/klipper"
+      # ".local/share/konsole"
+      # ".local/share/kwalletd"
+      # ".local/share/RecentDocuments"
+      # ".local/share/sddm"
     ];
     files = [
       # Personal files

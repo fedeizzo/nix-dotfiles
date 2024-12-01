@@ -82,16 +82,33 @@
     # fonts = { };
     panels = [{
       # dock
-      location = "left";
+      location = "top";
       alignment = "center";
       floating = true;
-      height = 36;
-      hiding = "dodgewindows";
+      height = 32;
+      hiding = "none";
+      offset = 8;
       lengthMode = "fit";
 
       widgets = [
+        "org.kde.plasma.icontasks"
+        {
+          pager = {
+            general = {
+              showOnlyCurrentScreen = true;
+              showApplicationIconsOnWindowOutlines = true;
+              navigationWrapsAround = true;
+            };
+          };
+        }
         "org.kde.plasma.systemtray"
-        "org.kde.plasma.digitalclock"
+        {
+          digitalClock = {
+            date.format = "isoDate";
+            time.format = "24h";
+            calendar.firstDayOfWeek = "monday";
+          };
+        }
       ];
     }];
     workspace = {
