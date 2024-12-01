@@ -18,7 +18,11 @@
         repository = "b2:fedeizzo-homelab-backup";
         environmentFile = "/root/.restic_backup_env";
         passwordFile = config.sops.secrets.restic-password.path;
+        refreshInterval = 43200; # 12h
       };
+      # postrges = { TODO
+      #   enable = true;
+      # };
     };
     scrapeConfigs = [
       {
