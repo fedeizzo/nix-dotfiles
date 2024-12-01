@@ -23,7 +23,9 @@
     };
     firewall = {
       enable = true;
-      interfaces.eth0.allowedTCPPorts = [ 443 ]; # https
+      interfaces.eth0.allowedTCPPorts = [
+        443 # https
+      ];
       trustedInterfaces = [ "wg0" ];
       allowedUDPPorts = [
         51821 # wireguard

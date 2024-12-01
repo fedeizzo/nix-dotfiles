@@ -1,7 +1,9 @@
-_:
+{ inputs, ... }:
 
 {
   imports = [
+    inputs.nix-topology.nixosModules.default
+
     ./services
     ./system/backup.nix
     ./system/boot.nix
