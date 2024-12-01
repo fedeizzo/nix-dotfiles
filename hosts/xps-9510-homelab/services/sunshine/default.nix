@@ -86,6 +86,25 @@
     gamemode = {
       enable = true;
       enableRenice = true;
+      settings = {
+        general = {
+          reaper_freq = 5; # check every 5 seconds
+          softrealtime = "auto";
+          renice = 10;
+          ioprio = 0;
+          inhibit_screensaver = 1;
+        };
+
+        # gpu = {
+        #   apply_gpu_optimisations = "accept-responsibility";
+        #   gpu_device = 0;
+        # };
+
+        custom = {
+          start = "${pkgs.libnotify}/bin/notify-send 'GameMode started'";
+          end = "${pkgs.libnotify}/bin/notify-send 'GameMode ended'";
+        };
+      };
     };
   };
 
