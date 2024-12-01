@@ -4,7 +4,7 @@ _:
   programs.git = {
     enable = true;
     userName = "Federico Izzo";
-    userEmail = "federico.izzo99@gmail.com";
+    userEmail = "federico@fedeizzo.dev";
     # signing = {
     #   key = "7F857F72";
     #   signByDefault = true;
