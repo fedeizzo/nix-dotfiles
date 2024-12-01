@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, emacs-pkg, ... }:
 
 let
   my-python-packages = python-packages: with python-packages; [
@@ -18,7 +18,7 @@ in
     # clang
 
     # tree-sitter
-    tree-sitter
+    emacs-pkg.tree-sitter
 
     # python
     # see emacx.nix for further information

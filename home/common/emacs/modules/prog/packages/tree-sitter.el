@@ -24,7 +24,14 @@
         (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
 
 
-(use-package treesit-auto
-  :config
-  (setq treesit-auto-install 'prompt)
-  (global-treesit-auto-mode))
+;; (use-package treesit-auto
+;;   :config
+;;   (setq treesit-auto-install 'prompt)
+;;   (add-to-list 'treesit-auto-recipe-list
+;;                (make-treesit-auto-recipe
+;;                 :lang 'go
+;;                 :ts-mode 'go-ts-mode
+;;                 :remap 'go-mode
+;;                 :url "https://github.com/tree-sitter/tree-sitter-go"
+;;                 :revision "v0.20.0"))
+;;   (global-treesit-auto-mode))

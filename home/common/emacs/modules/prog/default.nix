@@ -28,8 +28,8 @@
     sidecar-locals # per project variables
     typescript-mode
     # tree-sitter
-    # tree-sitter-langs
-    treesit-auto
+    tree-sitter-langs
+    # treesit-auto
     auctex
     tempel
     tempel-collection
@@ -44,5 +44,7 @@
     # hurl-mode
     git-link
     lua-mode
+
+    web-mode
   ];
 }

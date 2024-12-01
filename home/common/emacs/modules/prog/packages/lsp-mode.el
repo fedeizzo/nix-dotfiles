@@ -58,7 +58,7 @@
   (lsp-ui-doc-show-with-cursor t)
   (lsp-ui-doc-show-with-mouse t)
   (lsp-ui-doc-position 'top)
-  (lsp-ui-doc-use-webkit t)
+  (lsp-ui-doc-use-webkit nil)
   (lsp-completion-provider :none) ;; we use Corfu!
   (lsp-signature-render-documentation nil)
   (lsp-semgrep-languages (list))
