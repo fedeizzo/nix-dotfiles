@@ -73,6 +73,11 @@
           comment = "Run kitty";
           key = "Meta+Return";
         };
+        screenshot = {
+          command = "spectacle --region --copy-image  --background";
+          comment = "Run spectacle in backgronud mode";
+          key = "Meta+Shift+P";
+        };
       };
     };
     spectacle.shortcuts.launchWithoutCapturing = "Meta+S";
