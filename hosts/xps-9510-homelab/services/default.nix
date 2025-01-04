@@ -10,6 +10,7 @@ in
     ./diun
     ./fedeizzo.dev
     ./garmindb
+    ./glance
     ./grafana
     ./immich
     ./logrotate
@@ -19,6 +20,7 @@ in
     ./prometheus
     ./sunshine
     ./sftpgo
+    ./streaming
     ./traefik
   ];
 

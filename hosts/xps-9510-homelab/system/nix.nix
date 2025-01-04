@@ -2,7 +2,19 @@
 
 {
   documentation.nixos.enable = false;
-  nixpkgs.config.allowUnfree = true;
+  nixpkgs.config =
+    {
+      allowUnfree = true;
+      packageOverrides = pkgs: {
+        vaapiIntel = pkgs.vaapiIntel.override { enableHybridCodec = true; };
+      };
+      permittedInsecurePackages = [
+        "aspnetcore-runtime-6.0.36"
+        "aspnetcore-runtime-wrapped-6.0.36"
+        "dotnet-sdk-6.0.428"
+        "dotnet-sdk-wrapped-6.0.428"
+      ];
+    };
   nix = {
     settings.trusted-users = [ "root" "nixremote" ];
     settings.auto-optimise-store = true;

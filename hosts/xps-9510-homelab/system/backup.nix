@@ -25,6 +25,14 @@
         "/var/volumes/net_worth_db/"
         "/var/backup/postgresql"
         "${config.services.immich.mediaLocation}"
+        ## streaming
+        "/var/lib/jellyfin"
+        "/var/lib/radarr"
+        "/var/lib/sonarr"
+        "/var/lib/bazarr"
+        "/var/lib/private/prowlarr"
+        "/var/lib/private/jellyseerr"
+        "/games/jellyfin/torrent/.config"
 
         # files
         "/var/volumes/promtail/GeoLite2-City.mmdb"

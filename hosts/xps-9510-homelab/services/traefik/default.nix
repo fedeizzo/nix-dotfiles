@@ -68,6 +68,7 @@
           nocodb = { entryPoints = [ "websecure" ]; rule = "Host(`nocodb.fedeizzo.dev`)"; service = "nocodb"; };
           drive = { entryPoints = [ "websecure" ]; rule = "Host(`drive.fedeizzo.dev`)"; service = "drive"; };
           immich = { entryPoints = [ "websecure" ]; rule = "Host(`photo.fedeizzo.dev`)"; service = "immich"; };
+          dashboard = { entryPoints = [ "websecure" ]; rule = "Host(`homelab.fedeizzo.dev`)"; service = "dashboard"; };
         };
         services = {
           fedeizzodev = { loadBalancer = { servers = [{ url = "http://localhost:50001"; }]; }; };
@@ -75,6 +76,7 @@
           nocodb = { loadBalancer = { servers = [{ url = "http://localhost:50003"; }]; }; };
           drive = { loadBalancer = { servers = [{ url = "http://localhost:50006"; }]; }; };
           immich = { loadBalancer = { servers = [{ url = "http://localhost:${toString config.services.immich.port}"; }]; }; };
+          dashboard = { loadBalancer = { servers = [{ url = "http://localhost:${toString config.services.glance.settings.server.port}"; }]; }; };
         };
       };
     };

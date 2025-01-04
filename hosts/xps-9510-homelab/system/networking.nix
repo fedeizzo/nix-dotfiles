@@ -8,6 +8,9 @@
       unmanaged = [ "wg0" ];
     };
     useDHCP = false;
+    extraHosts = ''
+      192.168.7.1 homelab
+    '';
     defaultGateway = "192.168.1.254";
     nameservers = [ "1.1.1.1" ];
     interfaces.eth0 = {
@@ -23,13 +26,29 @@
     };
     firewall = {
       enable = true;
-      interfaces.eth0.allowedTCPPorts = [
-        443 # https
+      interfaces.eth0 = {
+        allowedTCPPorts = [
+          443 # https
+        ];
+        allowedUDPPorts = [
+          53 # blocky
+        ];
+      };
+      interfaces.wg0.allowedTCPPorts = [
+        # streaming
+        8989 # sonarr
+        7878 # radarr
+        9696 # prowlarr
+        # 8191 # flaresolverr
+        8112 # deluge
+        6767 # bazarr
+        5055 # jellyseerr
+        9854 # dashboard
       ];
       trustedInterfaces = [ "wg0" ];
       allowedUDPPorts = [
         51821 # wireguard
-        53 # blocky
+        51815 # parquet wireguard
       ];
       allowedTCPPorts = [ ];
       checkReversePath = "loose";
@@ -67,7 +86,7 @@
     wg0 = {
       ips = [ "192.168.7.1/24" ];
       listenPort = 51821;
-      privateKeyFile = "${config.sops.secrets.homelab-wireguard-private-key.path}";
+      privateKeyFile = config.sops.secrets.homelab-wireguard-private-key.path;
       peers = [
         {
           # Laptop xps 9510
