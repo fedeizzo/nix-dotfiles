@@ -1315,16 +1315,32 @@
     },
     "nixpkgs-homelab": {
       "locked": {
-        "lastModified": 1732824227,
-        "narHash": "sha256-fYNXgpu1AEeLyd3fQt4Ym0tcVP7cdJ8wRoqJ+CtTRyY=",
+        "lastModified": 1736061677,
+        "narHash": "sha256-DjkQPnkAfd7eB522PwnkGhOMuT9QVCZspDpJJYyOj60=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "c71ad5c34d51dcbda4c15f44ea4e4aa6bb6ac1e9",
+        "rev": "cbd8ec4de4469333c82ff40d057350c30e9f7d36",
         "type": "github"
       },
       "original": {
         "owner": "nixos",
         "ref": "nixos-24.11",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs-homelab-unstable": {
+      "locked": {
+        "lastModified": 1736012469,
+        "narHash": "sha256-/qlNWm/IEVVH7GfgAIyP6EsVZI6zjAx1cV5zNyrs+rI=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "8f3e1f807051e32d8c95cd12b9b421623850a34d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-unstable",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -1598,11 +1614,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1735920791,
-        "narHash": "sha256-DPP/ioDJ283YMxU+U+URmTPECHLrFRUcXG2pbKA/MNY=",
+        "lastModified": 1736160585,
+        "narHash": "sha256-N13i75XKUbDQhXKjCQAP2LR7uGefz1zqH+45LSYbM6c=",
         "owner": "nix-community",
         "repo": "NUR",
-        "rev": "3af14b22ef7fa1eeb169840d9ee3010a43ed61ea",
+        "rev": "d6d60b0a1d4fa03a258303d19519bce412c2f04f",
         "type": "github"
       },
       "original": {
@@ -1792,6 +1808,7 @@
         "nixpkgs-darwin": "nixpkgs-darwin",
         "nixpkgs-for-fingerprint": "nixpkgs-for-fingerprint",
         "nixpkgs-homelab": "nixpkgs-homelab",
+        "nixpkgs-homelab-unstable": "nixpkgs-homelab-unstable",
         "nixpkgs-old": "nixpkgs-old",
         "nur": "nur",
         "plasma-manager": "plasma-manager",

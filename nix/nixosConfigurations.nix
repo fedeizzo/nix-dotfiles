@@ -11,15 +11,32 @@ let
 in
 {
   nixosConfigurations = {
-    homelab = inputs.nixpkgs-homelab.lib.nixosSystem {
+    homelab = inputs.nixpkgs-homelab.lib.nixosSystem rec {
       system = "x86_64-linux";
       specialArgs = {
         inherit inputs;
         hostname = "homelab";
         username = "homelab";
+        pkgs-unstable = import inputs.nixpkgs-homelab-unstable { inherit system; };
       };
 
-      modules = [ ../hosts/xps-9510-homelab ];
+      modules = [
+        # TODO: remove after jellyseerr is updated to v2 in 22.11
+        {
+          imports = [
+            (inputs.nixpkgs-homelab-unstable + /nixos/modules/services/misc/jellyseerr.nix)
+          ];
+          nixpkgs.overlays = [
+            (_: _: {
+              inherit (inputs.nixpkgs-homelab-unstable.legacyPackages.${system}) jellyseerr;
+            })
+          ];
+          disabledModules = [
+            "services/misc/jellyseerr.nix"
+          ];
+        }
+        ../hosts/xps-9510-homelab
+      ];
     };
     oven = inputs.nixpkgs.lib.nixosSystem rec{
       system = "x86_64-linux";

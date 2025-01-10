@@ -25,8 +25,8 @@ _:
                   cache = "1m";
                   title = "Streaming";
                   sites = [
-                    { title = "Jellyfin"; url = "http://homelab:8096"; icon = "si:jellyfin"; }
-                    { title = "Jellyseerr"; url = "http://homelab:5055"; icon = "si:jellyfin"; }
+                    { title = "Jellyfin"; url = "https://jellyfin.fedeizzo.dev"; icon = "si:jellyfin"; }
+                    { title = "Jellyseerr"; url = "https://jellyseerr.fedeizzo.dev"; icon = "si:jellyfin"; }
                     { title = "Sonarr"; url = "http://homelab:8989"; icon = "si:sonarr"; }
                     { title = "Radarr"; url = "http://homelab:7878"; icon = "si:radarr"; }
                     { title = "Prowlar"; url = "http://homelab:9696"; icon = "si:searxng"; }
