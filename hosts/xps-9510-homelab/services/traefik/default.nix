@@ -19,7 +19,19 @@
       serversTransport = { insecureSkipVerify = true; };
       api = { insecure = true; dashboard = true; debug = false; };
       log = { level = "INFO"; filePath = "/var/volumes/traefik/log/traefik.json"; format = "json"; };
-      accessLog = { filePath = "/var/volumes/traefik/log/access.json"; format = "json"; };
+      accessLog = {
+        filePath = "/var/volumes/traefik/log/access.json";
+        format = "json";
+        bufferingSize = 0; # collect logs as in-memory buffer before writing into log file
+        fields = {
+          headers = {
+            defaultMode = "drop"; # drop all headers per default
+            names = {
+              User-Agent = "keep"; # log user agent strings
+            };
+          };
+        };
+      };
       entryPoints = {
         metrics = {
           address = ":8082";
@@ -69,6 +81,8 @@
           drive = { entryPoints = [ "websecure" ]; rule = "Host(`drive.fedeizzo.dev`)"; service = "drive"; };
           immich = { entryPoints = [ "websecure" ]; rule = "Host(`photo.fedeizzo.dev`)"; service = "immich"; };
           dashboard = { entryPoints = [ "websecure" ]; rule = "Host(`homelab.fedeizzo.dev`)"; service = "dashboard"; };
+          jellyfin = { entryPoints = [ "websecure" ]; rule = "Host(`jellyfin.fedeizzo.dev`)"; service = "jellyfin"; };
+          jellyseerr = { entryPoints = [ "websecure" ]; rule = "Host(`jellyseerr.fedeizzo.dev`)"; service = "jellyseerr"; };
         };
         services = {
           fedeizzodev = { loadBalancer = { servers = [{ url = "http://localhost:50001"; }]; }; };
@@ -77,6 +91,8 @@
           drive = { loadBalancer = { servers = [{ url = "http://localhost:50006"; }]; }; };
           immich = { loadBalancer = { servers = [{ url = "http://localhost:${toString config.services.immich.port}"; }]; }; };
           dashboard = { loadBalancer = { servers = [{ url = "http://localhost:${toString config.services.glance.settings.server.port}"; }]; }; };
+          jellyfin = { loadBalancer = { servers = [{ url = "http://localhost:8096"; }]; }; };
+          jellyseerr = { loadBalancer = { servers = [{ url = "http://localhost:5055"; }]; }; };
         };
       };
     };
