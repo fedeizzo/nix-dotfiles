@@ -1,4 +1,4 @@
-{ pkgs, pkgs-unstable, system-overlays, config, ... }:
+{ pkgs, pkgs-unstable, system-overlays, inputs, ... }:
 
 {
   system.stateVersion = "24.11";
@@ -8,6 +8,7 @@
       (_:_: {
         inherit (pkgs-unstable) rbw;
       })
+      inputs.nix-topology.overlays.default
     ];
     config.allowUnfree = true;
     config.joypixels.acceptLicense = true;

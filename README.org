@@ -7,7 +7,10 @@ Three laptops and one homelab:
 - Raspberry pi 4th gen
 
 #+ATTR_HTML: :width 400px :style margin-left: auto; margin-right: auto;
-[[./images/architecture.png]]
+[[./images/main.svg]]
+
+#+ATTR_HTML: :width 400px :style margin-left: auto; margin-right: auto;
+[[./images/network.svg]]
 
 My personal laptops have access to the homelab using ssh and [[https://www.wireguard.com/][Wireguard]].
 My work laptop cannot does not have directly access to the homelab.

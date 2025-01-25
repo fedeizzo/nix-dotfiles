@@ -1,4 +1,4 @@
-_:
+{ config, ... }:
 
 {
   topology.self = {
@@ -11,10 +11,10 @@ _:
       addresses = [ "192.168.7.1" ];
       network = "wg0";
       type = "wireguard";
-    };
+      physicalConnections = [
+        (config.lib.topology.mkConnection "oven" "wg0")
+      ];
 
-    interfaces.eth0 = {
-      physicalConnections = [{ node = "router"; interface = "eth1"; }];
     };
   };
 }

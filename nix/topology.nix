@@ -3,56 +3,53 @@
 {
   topology = {
     modules = [
-      {
-        nodes.internet = {
-          name = "Internet";
-          deviceType = "internet";
-          # hardware.image = ../icons/devices/cloud.svg;
-          interfaces."*".physicalConnections = [
-            { node = "router"; interface = "wan1"; }
-          ];
-        };
+      (
+        { config, ... }:
+        let
+          inherit (config.lib.topology)
+            mkConnection
+            mkInternet
+            mkRouter
+            ;
+        in
+        {
+          nodes = {
+            internet = mkInternet {
+              connections = mkConnection "router" "wan1";
+            };
 
-        nodes.router = {
-          name = "Router";
-          deviceType = "router";
-          hardware.info = "FreeBox Pop";
-          interfaces = {
-            eth1 = {
-              network = "home";
-              addresses = [ "192.168.1.254/24" ];
-              sharesNetworkWith = [ (x: lib.elem x [ "wifi" "eth1" ]) ];
-              physicalConnections = [
-                { node = "homelab"; interface = "eth0"; }
+            router = mkRouter "Router" {
+              interfaceGroups = [
+                [ "eth1" "wifi" ]
+                [ "wan1" ]
               ];
-            };
-            wifi = {
-              network = "home";
-              addresses = [ "192.168.1.254/24" ];
-              sharesNetworkWith = [ (x: lib.elem x [ "wifi" "eth1" ]) ];
-              physicalConnections = [
-                { node = "oven"; interface = "wlp2s0"; }
-              ];
-            };
-            wan1 = {
-              # physicalConnections = [
-              #   { node = "internet"; interface = "*"; }
-              # ];
+              interfaces = {
+                eth1 = {
+                  network = "home";
+                  addresses = [ "192.168.1.254/24" ];
+                };
+                wifi = {
+                  network = "home";
+                  addresses = [ "192.168.1.254/24" ];
+                };
+              };
+              connections.eth1 = mkConnection "homelab" "eth0";
+              connections.wifi = mkConnection "oven" "wlp2s0";
             };
           };
-        };
 
-        networks = {
-          wg0 = {
-            name = "Wireguard VPN";
-            cidrv4 = "192.168.7.0/24";
+          networks = {
+            home = {
+              name = "Home";
+              cidrv4 = "192.168.1.0/24";
+            };
+            wg0 = {
+              name = "Wireguard VPN";
+              cidrv4 = "192.168.7.0/24";
+            };
           };
-          home = {
-            name = "Home";
-            cidrv4 = "192.168.1.0/24";
-          };
-        };
-      }
+        }
+      )
     ];
   };
 }

@@ -1,4 +1,4 @@
-_:
+{ config, ... }:
 
 {
   topology.self = {
@@ -9,15 +9,11 @@ _:
 
     interfaces.wg0 = {
       addresses = [ "192.168.7.3" ];
-      network = "wg0";
+      renderer.hidePhysicalConnections = false;
       type = "wireguard";
       physicalConnections = [
-        { node = "homelab"; interface = "wg0"; }
+        (config.lib.topology.mkConnection "homelab" "wg0")
       ];
-    };
-
-    interfaces.wlp2s0 = {
-      physicalConnections = [{ node = "router"; interface = "wifi"; }];
     };
   };
 }

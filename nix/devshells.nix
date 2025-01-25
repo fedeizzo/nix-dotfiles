@@ -56,6 +56,14 @@
         category = " System administration";
       }
       {
+        help = " Generate topology image";
+        name = "topology";
+        command = ''
+          nix build .#topology.x86_64-linux.config.output
+        '';
+        category = " Repository administration";
+      }
+      {
         help = " Thinkpad X1 Carbon 6th generation.";
         name = "erase-disk-and-install-x1."; # long command to prevent accidental use
         command = builtins.readFile ../scripts/installation/x1-carbon.sh;
