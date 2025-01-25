@@ -29,7 +29,6 @@
         ./modules/misc
         ./modules/persistent
         ./modules/user
-        # ./modules/wayland
         ./modules/plasma
         ./modules/stylix
         # ../common/wezterm
