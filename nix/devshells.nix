@@ -11,15 +11,15 @@
       {
         help = " Update the system configuration using the current flake and hostname.";
         name = "update";
-        command = "nh_darwin os switch";
+        command = "nh os switch";
         category = " System administration";
       }
       {
         help = " Delete old generations and clean nix store.";
         name = "clean";
-        command = "nh_darwin clean all";
+        command = "nh clean all";
         category = " System administration";
-        package = inputs'.nh-darwin.packages.default;
+        package = inputs'.nh-plus.packages.default;
       }
       {
         help = " Update a flake.nix input.";

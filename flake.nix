@@ -2,14 +2,11 @@
   description = "My personal NixOS configuration";
 
   inputs = {
+    # Nixpkgs
+    ##X1
     nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
     nixpkgs-old.url = "github:nixos/nixpkgs/nixos-24.05";
-    nixpkgs-darwin.url = "github:nixos/nixpkgs/nixpkgs-24.05-darwin";
-    nixpkgs-homelab.url = "github:nixos/nixpkgs/nixos-24.11";
-    nixpkgs-homelab-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
-    nix-darwin.url = "github:LnL7/nix-darwin";
-    nix-darwin.inputs.nixpkgs.follows = "nixpkgs-darwin";
+    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     plasma-manager = {
@@ -17,6 +14,16 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
     };
+
+    ## Mac
+    nixpkgs-darwin.url = "github:nixos/nixpkgs/nixpkgs-24.05-darwin";
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+    nix-darwin.url = "github:LnL7/nix-darwin";
+    nix-darwin.inputs.nixpkgs.follows = "nixpkgs-darwin";
+
+    ## Homelab
+    nixpkgs-homelab.url = "github:nixos/nixpkgs/nixos-24.11";
+    nixpkgs-homelab-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
     # Flake management
     flake-parts.url = "github:hercules-ci/flake-parts";
@@ -38,7 +45,7 @@
     emacs-pkg.url = "github:nixos/nixpkgs/b805fe3d6f3e702ecee01710ee552e3ed39d16c8";
     emacs-lsp-booster.url = "github:slotThe/emacs-lsp-booster-flake";
     emacs-lsp-booster.inputs.nixpkgs.follows = "nixpkgs";
-    nh-darwin.url = "github:ToyVo/nh-darwin";
+    nh-plus.url = "github:ToyVo/nh_plus";
     nix-index-database.url = "github:nix-community/nix-index-database";
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
     nixpkgs-for-fingerprint.url = "github:nixos/nixpkgs/nixos-23.11";
