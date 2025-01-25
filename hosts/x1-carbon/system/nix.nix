@@ -1,10 +1,14 @@
-{ pkgs, system-overlays, ... }:
+{ pkgs, pkgs-unstable, system-overlays, config, ... }:
 
 {
   system.stateVersion = "24.11";
 
   nixpkgs = {
-    overlays = builtins.attrValues system-overlays;
+    overlays = builtins.attrValues system-overlays ++ [
+      ("_:_:" {
+        inherit (pkgs-unstable) rbw;
+      })
+    ];
     config.allowUnfree = true;
     config.joypixels.acceptLicense = true;
   };

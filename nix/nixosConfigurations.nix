@@ -47,6 +47,8 @@ in
         username = "oven";
         emacs-pkg = import inputs.emacs-pkg { inherit system; };
         pkgs-old = import inputs.nixpkgs-old { inherit system; };
+        pkgs-unstable = import inputs.nixpkgs-unstable { inherit system; };
+
         inherit system-overlays;
       };
 

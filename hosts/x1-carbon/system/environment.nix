@@ -64,4 +64,14 @@
       wantedBy = [ "multi-user.target" ];
     };
   };
+
+  virtualisation.oci-containers.backend = "docker";
+  virtualisation = {
+    docker = {
+      enable = true;
+      enableOnBoot = true;
+      enableNvidia = false;
+    };
+    podman.enable = false;
+  };
 }
