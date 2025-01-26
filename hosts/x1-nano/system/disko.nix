@@ -52,10 +52,6 @@ in
                       mountpoint = "/var/log";
                       mountOptions = [ "subvol=var/log" "noautodefrag" "space_cache=v2" "noatime" "compress=zstd:3" "ssd" "discard" ];
                     };
-                    "/var/lib/sops" = {
-                      mountpoint = "/var/lib/sops";
-                      mountOptions = [ "subvol=var/lib/sops" "noautodefrag" "space_cache=v2" "noatime" "compress=zstd:3" "ssd" "discard" ];
-                    };
                     "/persist" = {
                       mountpoint = "/persist";
                       mountOptions = [ "subvol=persist" "noautodefrag" "space_cache=v2" "noatime" "compress=zstd:3" "ssd" "discard" ];
@@ -104,6 +100,5 @@ in
   fileSystems = {
     "/persist".neededForBoot = true;
     "/var/log".neededForBoot = true;
-    "/var/lib/sops".neededForBoot = true;
   };
 }
