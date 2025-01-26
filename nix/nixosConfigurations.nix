@@ -52,7 +52,7 @@ in
         inherit system-overlays;
       };
 
-      modules = [ ../hosts/x1-carbon ../home/x1-carbon ];
+      modules = [ ../hosts/x1-nano ../home/x1-nano ];
     };
     # rasp = inputs.nixpkgs-homelab.lib.nixosSystem {
     #   system = "aarch64-linux";
