@@ -55,8 +55,8 @@ if prompt_confirm; then
 
     wipefs -af "/dev/$disk"
     sgdisk -n 0:0:+50GiB -t 0:8200 -c 0:swap /dev/$disk
-    mkswap /dev/$disk1
-    swapon /dev/$disk1
+    mkswap /dev/${disk}1
+    swapon /dev/${disk}1
     mount -o remount,size=50G,noatime /nix/.rw-store
 fi
 
