@@ -3,19 +3,18 @@
 {
   boot = {
     supportedFilesystems = [ "ext4" "ntfs" "btrfs" ];
-    # loader = {
-    #   efi.canTouchEfiVariables = false;
-    #   grub = {
-    #     enable = true;
-    #     device = "nodev";
-    #     efiSupport = true;
-    #     useOSProber = false;
-    #     enableCryptodisk = true;
-    #     efiInstallAsRemovable = true;
-    #     configurationLimit = 5;
-    #   };
-    # };
-    loader.systemd-boot.enable = true;
+    loader = {
+      efi.canTouchEfiVariables = false;
+      grub = {
+        enable = true;
+        device = "nodev";
+        efiSupport = true;
+        useOSProber = false;
+        enableCryptodisk = true;
+        efiInstallAsRemovable = true;
+        configurationLimit = 5;
+      };
+    };
     tmp.cleanOnBoot = true;
     kernelPackages = pkgs.linuxPackages_latest;
     kernel.sysctl = {

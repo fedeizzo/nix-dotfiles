@@ -69,10 +69,12 @@ Some useful readings if you are interested:
 - [[https://elis.nu/blog/2020/06/nixos-tmpfs-as-home/][erase home]]
 
 #+begin_src sh
-git clone https://github.com/fedeizzo/nix-dotfiles.git
-cd nix-dotfiles
-nix develop
-erase-disk-and-install-{machine}
+  passwd root
+  su
+  git clone https://github.com/fedeizzo/nix-dotfiles.git
+  cd nix-dotfiles
+  nix develop
+  erase-disk-and-install-{machine}
 #+end_src
 
 Unfortunately I didn't find a way to create a directory under ~/persist/home/{user}~ with the right permissions, the script run automatically the post initrd and it doesn't have the user ids.
