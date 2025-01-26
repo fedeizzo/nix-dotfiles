@@ -25,11 +25,11 @@
     extraModprobeConfig = ''
       options iwlwifi power_save=1 disable_11ax=1
     '';
-    plymouth = {
-      enable = true;
-      themePackages = [ pkgs.adi1090x-plymouth ];
-      theme = "owl";
-    };
+    # plymouth = {
+    #   enable = true;
+    #   themePackages = [ pkgs.adi1090x-plymouth ];
+    #   theme = "owl";
+    # };
     initrd.availableKernelModules = [
       "thunderbolt"
       "vmd"
