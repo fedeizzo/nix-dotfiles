@@ -31,8 +31,6 @@
         ./modules/user
         ./modules/plasma
         ./modules/stylix
-        # ../common/wezterm
-        ../common/yazi
         ../common/zathura
 
         ../common/kitty
