@@ -37,7 +37,7 @@
     disko.inputs.nixpkgs.follows = "nixpkgs";
 
     # Remote deployment and secretes
-    sops-nix.url = "github:Mic92/sops-nix/06535d0e3d0201e6a8080dd32dbfde339b94f01b";
+    sops-nix.url = "github:Mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
     deploy-rs.url = "github:serokell/deploy-rs";
 
