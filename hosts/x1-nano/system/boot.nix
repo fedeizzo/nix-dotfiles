@@ -44,7 +44,7 @@
       "i2c_dev" # ddcutil: controlling external display
     ];
     initrd.kernelModules = [ "i915" ];
-    initrd.systemd.enable = false;
+    initrd.systemd.enable = true;
     kernelModules = [ "kvm-intel" ];
     extraModulePackages = [ ];
     kernelParams = [
