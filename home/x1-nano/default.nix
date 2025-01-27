@@ -34,7 +34,7 @@
         ../common/zathura
 
         ../common/kitty
-        # ../common/emacs
+        ../common/emacs
       ];
       programs.home-manager.enable = true;
 

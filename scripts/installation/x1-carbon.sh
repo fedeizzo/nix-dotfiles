@@ -85,4 +85,7 @@ if [ ! -f /var/lib/sops/keys.txt ]; then
     done
 fi
 
-nix --extra-experimental-features 'nix-command flakes' run 'github:nix-community/disko#disko-install' -- --flake 'github:fedeizzo/nix-dotfiles#oven' --disk main /dev/nvme0n1 --extra-files /var/lib/sops/keys.txt /var/lib/sops/keys.txt
+sed 's/..\/common\/emacs/# ..\/common\/emacs/g' -i home/x1-nano/default.nix
+sed 's/..\/common\/persistent/# ..\/common\/persistent/g' -i home/x1-nano/default.nix
+
+nix --extra-experimental-features 'nix-command flakes' run 'github:nix-community/disko#disko-install' -- --flake '.#oven' --disk main /dev/nvme0n1 --extra-files /var/lib/sops/keys.txt /var/lib/sops/keys.txt
