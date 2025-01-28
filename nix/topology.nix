@@ -34,7 +34,7 @@
                 };
               };
               connections.eth1 = mkConnection "homelab" "eth0";
-              connections.wifi = mkConnection "oven" "wlp2s0";
+              connections.wifi = mkConnection "oven" "wlp0s20f3";
             };
           };
 
