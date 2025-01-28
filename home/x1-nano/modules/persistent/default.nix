@@ -1,7 +1,7 @@
 { username, ... }:
 
 {
-  environment.persistence."/persist/home/${username}" = {
+  environment.persistence."/persist" = {
     hideMounts = true;
     users.${username} = {
       directories = [
