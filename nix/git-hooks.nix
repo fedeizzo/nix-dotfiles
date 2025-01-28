@@ -41,7 +41,7 @@ in
             "hosts/xps-9510/system/networking.nix"
             "hosts/xps-9510-homelab/system/networking.nix"
             "hosts/raspberry/system/networking.nix"
-            "hosts/x1-carbon/system/networking.nix"
+            "hosts/x1-nano/system/networking.nix"
           ];
         };
         typos = {

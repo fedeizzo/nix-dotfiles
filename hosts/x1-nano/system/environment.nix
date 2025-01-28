@@ -3,7 +3,7 @@
 {
   programs = {
     bash = {
-      enableCompletion = true;
+      completion.enable = true;
       enableLsColors = true;
     };
     fish.enable = true;

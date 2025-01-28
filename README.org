@@ -2,7 +2,7 @@
 
 Three laptops and one homelab:
 - Dell XPS 9510
-- Thinkpad X1 Carbon 6th gen
+- Thinkpad X1 Nano 6th gen
 - Macbook pro M1 Max
 - Raspberry pi 4th gen
 
@@ -41,7 +41,7 @@ menu
  [ System installation]
 
   erase-disk-and-install-raspberry -  Raspberry Pi4 8Gb.
-  erase-disk-and-install-x1.       -  Thinkpad X1 Carbon 6th generation.
+  erase-disk-and-install-x1.       -  Thinkpad X1 Nano 6th generation.
   erase-disk-and-install-xps       -  Dell XPS 9510.
 
  [ System administration]

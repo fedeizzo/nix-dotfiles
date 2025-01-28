@@ -32,11 +32,11 @@ edit_secrets () {
         else
             SOPS_AGE_KEY=$(bw get item 'sops-age-keys-xps-9510' | jq -r ."notes") sops $1
         fi
-    elif [[ $1 == "./secrets/x1-carbon-secrets.yaml" ]]; then
+    elif [[ $1 == "./secrets/x1-nano-secrets.yaml" ]]; then
         if [[ $SHOULD_USE_RBW == 2 ]]; then
-            SOPS_AGE_KEY=$(rbw get 'sops-age-keys-x1-carbon') sops $1
+            SOPS_AGE_KEY=$(rbw get 'sops-age-keys-x1-nano') sops $1
         else
-            SOPS_AGE_KEY=$(bw get item 'sops-age-keys-x1-carbon' | jq -r ."notes") sops $1
+            SOPS_AGE_KEY=$(bw get item 'sops-age-keys-x1-nano' | jq -r ."notes") sops $1
         fi
     fi
 }

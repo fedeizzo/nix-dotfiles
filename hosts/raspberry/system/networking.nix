@@ -63,7 +63,7 @@
           allowedIPs = [ "192.168.7.2/32" ];
         }
         {
-          # Laptop x1 carbon
+          # Laptop x1 nano
           publicKey = "zzO+Pxb/p+Yzw5eGDfOcg4axjm91vRtohUZ6o2talzY=";
           allowedIPs = [ "192.168.7.3/32" ];
         }

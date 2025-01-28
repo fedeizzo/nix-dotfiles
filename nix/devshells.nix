@@ -64,9 +64,9 @@
         category = " Repository administration";
       }
       {
-        help = " Thinkpad X1 Carbon 6th generation.";
+        help = " Thinkpad X1 Nano 6th generation.";
         name = "erase-disk-and-install-x1."; # long command to prevent accidental use
-        command = builtins.readFile ../scripts/installation/x1-carbon.sh;
+        command = builtins.readFile ../scripts/installation/x1-nano.sh;
         category = " System installation";
       }
       {

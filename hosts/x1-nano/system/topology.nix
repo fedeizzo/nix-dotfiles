@@ -4,7 +4,7 @@
   topology.self = {
     name = "Oven";
     deviceType = "device";
-    hardware.info = "X1 Carbon 6th Gen";
+    hardware.info = "X1 Nano 6th Gen";
     icon = "devices.laptop";
 
     interfaces.wg0 = {

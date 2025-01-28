@@ -3,7 +3,7 @@
 {
   environment.systemPackages = with pkgs; [ sops age ];
   sops = {
-    defaultSopsFile = ../../../secrets/x1-carbon-secrets.yaml;
+    defaultSopsFile = ../../../secrets/x1-nano-secrets.yaml;
     defaultSopsFormat = "yaml";
     age = {
       keyFile = "/var/lib/sops/keys.txt";
