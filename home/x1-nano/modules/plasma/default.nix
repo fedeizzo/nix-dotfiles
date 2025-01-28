@@ -15,10 +15,18 @@
         {
           enable = true;
           middleButtonEmulation = true;
-          name = "Synaptics TM3289-021";
+          name = "ELAN0670:00 04F3:3150 Touchpad";
           naturalScroll = true;
-          vendorId = "06cb";
-          productId = "0000";
+          vendorId = "04f3";
+          productId = "3150";
+        }
+        {
+          enable = true;
+          middleButtonEmulation = true;
+          name = "TPPS/2 Elan TrackPoint";
+          vendorId = "0002";
+          productId = "000a";
+          pointerSpeed = -0.6;
         }
       ];
     };

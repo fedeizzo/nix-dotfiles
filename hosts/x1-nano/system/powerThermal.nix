@@ -3,6 +3,7 @@
 {
   powerManagement.enable = true;
   powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
+  powerManagement.powertop.enable = true;
 
   services = {
     thermald = {

@@ -12,6 +12,7 @@
       ];
     };
   };
+  environment.sessionVariables = { LIBVA_DRIVER_NAME = "iHD"; }; # Force intel-media-driver
 
   location.latitude = 48.8575;
   location.longitude = 2.3514;

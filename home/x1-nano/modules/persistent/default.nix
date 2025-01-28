@@ -12,6 +12,7 @@
         "nix-dotfiles"
         # "org"
         "notes"
+        "zettelkasten"
 
         # AppData
         ".local"
