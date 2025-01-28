@@ -1,9 +1,11 @@
 { lib, pkgs, ... }:
 
 {
-  powerManagement.enable = true;
-  powerManagement.cpuFreqGovernor = lib.mkDefault "powersave";
-  powerManagement.powertop.enable = true;
+  powerManagement = {
+    enable = true;
+    cpuFreqGovernor = lib.mkDefault "powersave";
+    powertop.enable = true;
+  };
 
   services = {
     thermald = {

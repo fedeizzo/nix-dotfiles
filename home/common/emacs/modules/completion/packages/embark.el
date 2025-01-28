@@ -1,7 +1,7 @@
 ;;; embark.el --- Embark configuration
 
 ;;; Commentary:
-;; Embark confituration
+;; Embark configuration
 
 ;;; Code:
 (use-package embark

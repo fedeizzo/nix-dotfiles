@@ -2,6 +2,7 @@
 
 let
   conventional-commit = pkgs.callPackage ./pkgs/conventional-pre-commit.nix { };
+  statix-config = pkgs.writeText "statix.toml" ''disabled = [ "unquoted_uri" ]'';
 in
 {
   pre-commit = {
@@ -30,6 +31,7 @@ in
         nil.enable = true;
         nixpkgs-fmt.enable = true;
         statix.enable = true;
+        statix.settings.config = "${statix-config}";
 
         # Misc
         pre-commit-hook-ensure-sops.enable = true; # Do not push unencrypted secrets file managed with sops

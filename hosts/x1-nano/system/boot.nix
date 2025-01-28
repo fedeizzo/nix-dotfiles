@@ -30,21 +30,23 @@
     #   themePackages = [ pkgs.adi1090x-plymouth ];
     #   theme = "owl";
     # };
-    initrd.availableKernelModules = [
-      "thunderbolt"
-      "vmd"
-      "xhci_pci"
-      "ahci"
-      "nvme"
-      "usbhid"
-      "usb_storage"
-      "sd_mod"
-      "sr_mod"
-      "rtsx_pci_sdmmc"
-      "i2c_dev" # ddcutil: controlling external display
-    ];
-    initrd.kernelModules = [ "i915" ];
-    initrd.systemd.enable = false;
+    initrd = {
+      availableKernelModules = [
+        "thunderbolt"
+        "vmd"
+        "xhci_pci"
+        "ahci"
+        "nvme"
+        "usbhid"
+        "usb_storage"
+        "sd_mod"
+        "sr_mod"
+        "rtsx_pci_sdmmc"
+        "i2c_dev" # ddcutil: controlling external display
+      ];
+      kernelModules = [ "i915" ];
+      systemd.enable = false;
+    };
     kernelModules = [ "kvm-intel" ];
     extraModulePackages = [ ];
     kernelParams = [
