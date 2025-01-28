@@ -1,7 +1,6 @@
 _:
 
 {
-  # UPDATE ALSO SCRIPT INSTALL
   environment.persistence."/persist" = {
     hideMounts = true;
     directories = [
@@ -25,4 +24,8 @@ _:
       "/var/lib/NetworkManager/timestamps"
     ];
   };
+
+  imports = [
+    ../../../home/x1-nano/modules/persistent
+  ];
 }

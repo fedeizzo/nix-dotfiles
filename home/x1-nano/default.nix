@@ -17,8 +17,6 @@
 
     users.${username} = {
       imports = [
-        inputs.impermanence.nixosModules.home-manager.impermanence
-
         ../common/bottom
         ./modules/cli
         ../common/firefox
@@ -27,7 +25,6 @@
         ../common/languages
         ../common/nix-index
         ./modules/misc
-        ./modules/persistent
         ./modules/user
         ./modules/plasma
         ./modules/stylix
