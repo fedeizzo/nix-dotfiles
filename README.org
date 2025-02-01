@@ -1,20 +1,20 @@
 * Nix dotfiles
 
-Three laptops and one homelab:
-- Dell XPS 9510
-- Thinkpad X1 Nano 6th gen
-- Macbook pro M1 Max
-- Raspberry pi 4th gen
+** Devices
 
+- Homelab: Dell XPS 9510
+- Personal laptop: Thinkpad X1 Nano
+- Work laptop: Macbook pro M1 Max
+- Backup homelab (inactive): Raspberry pi 4th gen
+
+** Topology
 #+ATTR_HTML: :width 400px :style margin-left: auto; margin-right: auto;
 [[./images/main.svg]]
 
 #+ATTR_HTML: :width 400px :style margin-left: auto; margin-right: auto;
 [[./images/network.svg]]
 
-My personal laptops have access to the homelab using ssh and [[https://www.wireguard.com/][Wireguard]].
-My work laptop cannot does not have directly access to the homelab.
-
+** Repository structure
 -  [[file:home/][home]]: home manager configurations.
 - 󰍹 [[file:hosts/][hosts]]: host system configurations.
 - 󱄅 [[file:nix/][nix]]: flake modules.
@@ -23,7 +23,7 @@ My work laptop cannot does not have directly access to the homelab.
 -  [[file:secrets/][secrets]]: secrets.
 
 ** Usage
-You can use [[https://direnv.net/][direnv]] to easily manage this flake.
+You can use [[https://direnv.net/][direnv]] to easily manage the flake contained in the repository.
 
 After executing ~direnv allow~, you should have a shell powered by [[https://numtide.github.io/devshell/][devshell]] and by running ~menu~ you have an help message.
 
@@ -34,35 +34,40 @@ menu
 #+RESULTS:
 #+begin_example
 
- [[[[general commands]]]]
+  [[general commands]]
 
-  menu                             - prints this menu
+    menu                             - prints this menu
 
- [ System installation]
+  [ System installation]
 
-  erase-disk-and-install-raspberry -  Raspberry Pi4 8Gb.
-  erase-disk-and-install-x1.       -  Thinkpad X1 Nano 6th generation.
-  erase-disk-and-install-xps       -  Dell XPS 9510.
+    erase-disk-and-install-raspberry -  Raspberry Pi4 8Gb.
+    erase-disk-and-install-x1.       -  Thinkpad X1 Nano 6th generation.
+    erase-disk-and-install-xps       -  Dell XPS 9510.
 
- [ System administration]
+  [ System administration]
 
-  clean                            -  Delete old generations and clean nix store.
-  deploy                           -  Deploy the homelab configuration over ssh.
-  refresh                          -  Refresh the devshell.
-  secrets                          -  Edit secrets.
-  update                           -  Update the system configuration using the current flake and hostname.
-  update-input                     -  Update a flake.nix input.
+    clean                            -  Delete old generations and clean nix store.
+    deploy-homelab                   -  Deploy the homelab configuration over ssh.
+    plasma-manager                   -  Print the current plasma configuration.
+    refresh                          -  Refresh the devshell.
+    secrets                          -  Edit secrets.
+    update                           -  Update the system configuration using the current flake and hostname.
+    update-input                     -  Update a flake.nix input.
+
+  [ Repository administration]
+
+    topology                         -  Generate topology image
 
 #+end_example
 
 ** System installation
 The following instructions are valid for all machines except the Macbook pro.
 
-In my personal laptops the disk is erased at every boot in order to obtain a complete immutable and declarative system. This is achieved thanks to BTRFS.
+In my personal laptops the disk is erased at every boot in order to obtain a complete immutable and declarative system. This is achieved using a BTRFS snapshot.
 
 Obviously some data, logs, cache, etc. must survive the boot process, this is achieved using [[https://github.com/nix-community/impermanence][imperamanence]].
 
-Some useful readings if you are interested:
+Some useful readings:
 - [[https://mt-caret.github.io/blog/posts/2020-06-29-optin-state.html][erase with btrfs snapshot]]
 - [[https://grahamc.com/blog/erase-your-darlings][erase with zfs]]
 - [[https://elis.nu/blog/2020/05/nixos-tmpfs-as-root/][erase with tmpfs]]
@@ -75,12 +80,4 @@ Some useful readings if you are interested:
   cd nix-dotfiles
   nix develop
   erase-disk-and-install-{machine}
-#+end_src
-
-Unfortunately I didn't find a way to create a directory under ~/persist/home/{user}~ with the right permissions, the script run automatically the post initrd and it doesn't have the user ids.
-A simple workaround is to setup the home manually after the first boot:
-
-#+begin_src sh
-  chown {user}:users /persist/home/{user}/
-  chmod 700 /persist/home/{user}
 #+end_src
