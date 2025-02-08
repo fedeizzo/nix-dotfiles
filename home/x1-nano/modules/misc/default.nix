@@ -14,5 +14,8 @@
     bambu-studio
     freecad
     openscad
+
+    # notes
+    anytype
   ];
 }
