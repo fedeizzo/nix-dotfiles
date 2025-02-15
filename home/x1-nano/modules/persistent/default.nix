@@ -31,6 +31,7 @@
         ".config/Moonlight Game Streaming Project"
         ".config/FreeCAD"
         ".config/BambuStudio"
+        ".config/anytype"
 
         # Cache
         ".cargo"
