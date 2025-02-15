@@ -3,5 +3,8 @@
 {
   imports = [ ../../../common/cli/linux ];
 
-  home.packages = [ pkgs.gcc ];
+  home.packages = [
+    pkgs.gcc
+    pkgs.jujutsu
+  ];
 }

@@ -18,6 +18,8 @@
     fwupd.enable = true; # update firmware
   };
 
+  zramSwap.enable = true;
+
   # https://nicholaslyz.com/blog/2024/04/29/how-to-undervolt-a-laptop-with-nixos/
   # services.undervolt = {
   #   enable = true;
