@@ -27,6 +27,8 @@
     # };
   };
 
+  zramSwap.enable = true;
+
   services = {
     smartd = {
       enable = true;

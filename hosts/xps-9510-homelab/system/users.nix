@@ -19,6 +19,7 @@
     dnsmasq
     hostapd
     htop
+    bottom
   ];
 
   programs.bash = {
