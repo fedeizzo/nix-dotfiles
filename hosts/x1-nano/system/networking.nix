@@ -3,7 +3,15 @@
 {
   networking = {
     hostName = hostname;
-    networkmanager.enable = true;
+    networkmanager = {
+      enable = true;
+      # Disable NetworkManager's internal DNS resolution
+      dns = "none";
+      wifi.powersave = true;
+    };
+
+    # These options are unnecessary when managing DNS ourselves
+    dhcpcd.enable = false;
     useDHCP = false;
     extraHosts = ''
       192.168.7.1 homelab
