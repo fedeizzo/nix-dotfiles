@@ -5,6 +5,19 @@
 
   home.packages = [
     pkgs.gcc
-    pkgs.jujutsu
   ];
+
+  programs.jujutsu = {
+    enable = true;
+    settings = {
+      user = {
+        name = "Federico Izzo";
+        email = "federico@fedeizzo.dev";
+      };
+
+      ui = {
+        paginate = "never";
+      };
+    };
+  };
 }
