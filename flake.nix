@@ -16,9 +16,9 @@
     };
 
     ## Mac
-    nixpkgs-darwin.url = "github:nixos/nixpkgs/nixpkgs-24.05-darwin";
+    nixpkgs-darwin.url = "github:nixos/nixpkgs/nixpkgs-24.11-darwin";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
-    nix-darwin.url = "github:LnL7/nix-darwin";
+    nix-darwin.url = "github:LnL7/nix-darwin/nix-darwin-24.11";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs-darwin";
 
     ## Homelab
@@ -48,9 +48,6 @@
     nh-plus.url = "github:ToyVo/nh_plus";
     nix-index-database.url = "github:nix-community/nix-index-database";
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
-    nixpkgs-for-fingerprint.url = "github:nixos/nixpkgs/nixos-23.11";
-    nixos-06cb-009a-fingerprint-sensor.url = "github:ahbnr/nixos-06cb-009a-fingerprint-sensor";
-    nixos-06cb-009a-fingerprint-sensor.inputs.nixpkgs.follows = "nixpkgs-for-fingerprint";
     nur.url = "github:nix-community/NUR";
     nur.inputs.nixpkgs.follows = "nixpkgs";
 

@@ -4,7 +4,7 @@
 {
   home = {
     inherit username;
-    stateVersion = "24.05";
+    stateVersion = "24.11";
     homeDirectory = "/Users/${username}";
   };
 
@@ -14,7 +14,6 @@
     ./modules/cli
     ./modules/zsh
     ../common/starship
-    ../common/wezterm
     ./modules/firefox
   ];
 
