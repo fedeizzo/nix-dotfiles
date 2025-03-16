@@ -1,23 +1,14 @@
 { pkgs, ... }:
 
 {
-  imports = [ ../../../common/cli/linux ];
+  imports = [
+    ../../../common/cli/linux
+    ../../../common/jujutsu
+  ];
 
   home.packages = [
     pkgs.gcc
   ];
 
-  programs.jujutsu = {
-    enable = true;
-    settings = {
-      user = {
-        name = "Federico Izzo";
-        email = "federico@fedeizzo.dev";
-      };
-
-      ui = {
-        paginate = "never";
-      };
-    };
-  };
+  programs.jujutsu.settings.user.email = "federico@fedeizzo.dev";
 }
