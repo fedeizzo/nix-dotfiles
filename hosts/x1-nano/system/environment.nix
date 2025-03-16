@@ -7,6 +7,10 @@
       enableLsColors = true;
     };
     fish.enable = true;
+    localsend = {
+      enable = true;
+      openFirewall = true;
+    };
   };
   environment = {
     sessionVariables = {
