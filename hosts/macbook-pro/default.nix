@@ -1,4 +1,4 @@
-{ inputs, pkgs, username, system-overlays, emacs-pkg, ... }:
+{ inputs, pkgs, username, system-overlays, emacs-pkg, pkgs-unstable, ... }:
 
 let
   myFonts = [
@@ -17,7 +17,7 @@ in
     (import ../common/nh { inherit username; isMac = true; })
   ];
 
-  # nix 
+  # nix
   system.stateVersion = 4;
   services.nix-daemon.enable = true;
   nix = {
@@ -45,7 +45,7 @@ in
     useGlobalPkgs = true;
     useUserPackages = true;
     extraSpecialArgs = {
-      inherit username inputs emacs-pkg;
+      inherit username inputs emacs-pkg pkgs-unstable;
     };
 
     users.${username} = import ../../home/macbook-pro;
