@@ -30,6 +30,7 @@
         ./modules/plasma
         ./modules/stylix
         ../common/zathura
+        ./modules/zed
 
         ../common/kitty
         ../common/emacs

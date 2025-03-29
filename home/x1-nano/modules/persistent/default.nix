@@ -32,6 +32,7 @@
         ".config/FreeCAD"
         ".config/BambuStudio"
         ".config/anytype"
+        ".config/zed"
 
         # Cache
         ".cargo"
@@ -45,6 +46,7 @@
         ".cache/Moonlight Game Streaming Project"
         ".cache/FreeCAD"
         ".cache/bambu-studio"
+        ".cache/zed"
 
         # plasma
         ".config/kde.org"
