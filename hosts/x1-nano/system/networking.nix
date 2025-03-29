@@ -31,6 +31,7 @@
         privateKeyFile = "${config.sops.secrets.x1-wireguard-private-key.path}";
         peers = [
           {
+            name = "homelab";
             # home-lab
             publicKey = "Ug1P6UzLyQ0BFbrfi0G9KLJBNBs+IOisRn3uiLoR5yU=";
             allowedIPs = [ "192.168.7.1" ];
@@ -41,5 +42,11 @@
         ];
       };
     };
+  };
+  
+  # fix the annoying bug for which wireguard has to be restarted after boot
+  systemd.services."wireguard-wg0-peer-homelab" = {
+    serviceConfig = { Restart = "on-failure"; RestartSec = "10s"; };
+    unitConfig.StartLimitIntervalSec = 0;
   };
 }
