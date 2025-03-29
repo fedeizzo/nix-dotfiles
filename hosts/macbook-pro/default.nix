@@ -49,5 +49,6 @@ in
     };
 
     users.${username} = import ../../home/macbook-pro;
+    backupFileExtension = "backup";
   };
 }

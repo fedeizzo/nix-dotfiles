@@ -15,6 +15,7 @@
     ./modules/zsh
     ../common/starship
     ./modules/firefox
+    ./modules/zed
   ];
 
   home.packages = with pkgs; [ pngpaste ];
