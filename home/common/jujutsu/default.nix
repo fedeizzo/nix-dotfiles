@@ -11,7 +11,8 @@
 
       ui = {
         paginate = "never";
-      };
+        default-command = "status";
+     };
     };
   };
 }
