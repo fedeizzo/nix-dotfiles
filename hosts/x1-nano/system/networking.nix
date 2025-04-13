@@ -43,7 +43,7 @@
       };
     };
   };
-  
+
   # fix the annoying bug for which wireguard has to be restarted after boot
   systemd.services."wireguard-wg0-peer-homelab" = {
     serviceConfig = { Restart = "on-failure"; RestartSec = "10s"; };

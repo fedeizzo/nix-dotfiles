@@ -44,11 +44,11 @@
         6767 # bazarr
         5055 # jellyseerr
         9854 # dashboard
+        config.services.paperless.port
       ];
       trustedInterfaces = [ "wg0" ];
       allowedUDPPorts = [
         51821 # wireguard
-        51815 # parquet wireguard
       ];
       allowedTCPPorts = [ ];
       checkReversePath = "loose";

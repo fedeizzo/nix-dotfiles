@@ -8,6 +8,32 @@
       (_:_: {
         inherit (pkgs-unstable) rbw;
       })
+      (
+        final: prev: {
+          anytype = pkgs-unstable.anytype.overrideAttrs rec {
+            version = "0.46.1";
+            src = final.fetchFromGitHub {
+              owner = "anyproto";
+              repo = "anytype-ts";
+              tag = "v${version}";
+              hash = "sha256-S8X8NTj5LCGoWasRbYZ3gdDoi1oi6/Ji/hYH1+q7HMc=";
+            };
+
+            locales = final.fetchFromGitHub {
+              owner = "anyproto";
+              repo = "l10n-anytype-ts";
+              rev = "89343848ff6e2bc655afa3c5a1d905fbc47197c5";
+              hash = "sha256-Px6orAg7Lf05XXHKTznMwu/AlLsV23i+CdKT0T7r2Iw=";
+            };
+            npmDepsHash = "sha256-pmPg/idU3RK9TtaKy2AE/rYYumIUMd/EG01/QPq2aPg=";
+            npmDeps = final.fetchNpmDeps {
+              inherit src;
+              name = "${final.anytype.pname}-${version}-npm-deps";
+              hash = npmDepsHash;
+            };
+          };
+        }
+      )
       inputs.nix-topology.overlays.default
     ];
     config.allowUnfree = true;

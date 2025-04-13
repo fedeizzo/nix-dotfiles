@@ -17,22 +17,29 @@
       extraBackupArgs = [
         "--compression max"
       ];
+      exclude = [
+        "**/*.log"
+      ];
       paths = [
         # directories
         "/var/container_envs"
         "/var/volumes/grafana/plugins"
-        "/var/volumes/sftpgo"
-        "/var/volumes/net_worth_db/"
-        "/var/backup/postgresql"
-        "${config.services.immich.mediaLocation}"
+        "${config.services.sftpgo.dataDir}"
+        "${config.services.postgresqlBackup.location}"
+        "${config.services.immich.mediaLocation}/library"
+        "${config.services.immich.mediaLocation}/upload"
+        "${config.services.immich.mediaLocation}/profile"
+        "${config.services.home-assistant.configDir}"
+        "${config.services.mosquitto.dataDir}"
+        "${config.services.zigbee2mqtt.dataDir}"
         ## streaming
-        "/var/lib/jellyfin"
-        "/var/lib/radarr"
-        "/var/lib/sonarr"
+        "${config.services.jellyfin.dataDir}"
+        "${config.services.radarr.dataDir}"
+        "${config.services.sonarr.dataDir}"
         "/var/lib/bazarr"
         "/var/lib/private/prowlarr"
         "/var/lib/private/jellyseerr"
-        "/games/jellyfin/torrent/.config"
+        "${config.services.deluge.dataDir}/.config"
 
         # files
         "/var/volumes/promtail/GeoLite2-City.mmdb"

@@ -1,4 +1,4 @@
-{ pkgs, pkgs-unstable, ... }:
+{ pkgs, anytype-pkgs, ... }:
 
 {
   home.packages = with pkgs; [
@@ -16,6 +16,8 @@
     openscad
 
     # notes
-    pkgs-unstable.anytype
+    anytype-pkgs.anytype
+    
+    element-desktop
   ];
 }

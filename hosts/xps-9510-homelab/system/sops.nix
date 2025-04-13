@@ -5,7 +5,7 @@
     inputs.sops-nix.nixosModules.sops
   ];
   sops = {
-    defaultSopsFile = ../../../secrets/raspberry-secrets.yaml;
+    defaultSopsFile = ./homelab-secrets.yaml;
     defaultSopsFormat = "yaml";
     age = {
       keyFile = "/var/lib/sops/keys.txt";
@@ -18,6 +18,7 @@
 
       restic-repository = { };
       restic-password = { };
+      paperless-admin-password = { };
 
       # postgres passwords
       networth-pg-password = {
@@ -31,6 +32,11 @@
         # restartUnits = [ "postgresql.service" ];
       };
       immich-pg-password = {
+        owner = config.systemd.services.postgresql.serviceConfig.User;
+        group = config.systemd.services.postgresql.serviceConfig.Group;
+        # restartUnits = [ "postgresql.service" ];
+      };
+      paperless-pg-password = {
         owner = config.systemd.services.postgresql.serviceConfig.User;
         group = config.systemd.services.postgresql.serviceConfig.Group;
         # restartUnits = [ "postgresql.service" ];

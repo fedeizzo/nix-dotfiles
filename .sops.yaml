@@ -1,17 +1,12 @@
 keys:
-  - &xps-9510 age162fef9eha0za3r97qk7jaw7y87wlj5lgzl8laqemagqsftq7693sckrcc6
-  - &x1-nano age13wm6jg6enxyuapu23xn522avfgre8fesh3w8qzn3lyukf5u7fy8sxdesvu
-  - &raspberry age14jd2uvg5fwc2r2vgp4tsw5dy9rpksel97um2v494ws4tptult9ys50cndr
+  - &oven age13wm6jg6enxyuapu23xn522avfgre8fesh3w8qzn3lyukf5u7fy8sxdesvu
+  - &homelab age14jd2uvg5fwc2r2vgp4tsw5dy9rpksel97um2v494ws4tptult9ys50cndr
 creation_rules:
-  - path_regex: xps-9510-secrets.yaml$
+  - path_regex: .*oven-secrets.*$
     key_groups:
     - age:
-      - *xps-9510
-  - path_regex: x1-nano-secrets.yaml$
+      - *oven
+  - path_regex: .*homelab-secrets.*$
     key_groups:
     - age:
-      - *x1-nano
-  - path_regex: raspberry-secrets.yaml$
-    key_groups:
-    - age:
-      - *raspberry
+      - *homelab

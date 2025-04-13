@@ -104,6 +104,7 @@
         # ".config/powerdevilrc"
         # ".config/powermanagementprofilesrc"
         # ".config/systemsettingsrc"
+        ".config/codebook/codebook.toml" # spellcheck in zed
       ];
     };
   };

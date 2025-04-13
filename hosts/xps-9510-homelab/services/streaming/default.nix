@@ -5,6 +5,12 @@
   users.groups.media = {
     gid = 1800;
   };
+  users.users.media = {
+    uid = 800;
+    home = "/home/media";
+    isSystemUser = true;
+    group = "media";
+  };
 
   environment.systemPackages = with pkgs; [
     jellyfin
@@ -16,22 +22,27 @@
     jellyfin = {
       enable = true;
       openFirewall = true;
+      user = "media";
       group = "media";
     };
     jellyseerr.enable = true; # *rr integration in jellyfin
     # jellyseerr.package = pkgs-unstable.jellyseerr; # *rr integration in jellyfin
     radarr.enable = true; # movies
+    radarr.user = "media";
     radarr.group = "media";
     sonarr.enable = true; # series
+    sonarr.user = "media";
     sonarr.group = "media";
     prowlarr.enable = true; # tracker
     bazarr.enable = true; # subtitles
+    bazarr.user = "media";
     bazarr.group = "media";
     # flaresolverr.enable = true; # bypass cloudflare
     # flaresolverr.package = pkgs.nur.repos.xddxdd.flaresolverr-21hsmw;
 
     deluge = {
       enable = true;
+      user = "media";
       group = "media";
       web.enable = true;
       dataDir = "/games/jellyfin/torrent";

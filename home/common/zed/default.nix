@@ -51,6 +51,7 @@ in
         "sqruff" # sql lsp support
         "svelte"
         "terraform"
+        "toml"
         "tree-sitter-query"
 
         # ui

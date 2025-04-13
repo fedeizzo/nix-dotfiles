@@ -99,7 +99,7 @@
       alignment = "center";
       floating = true;
       height = 32;
-      hiding = "none";
+      hiding = "autohide";
       offset = 8;
       lengthMode = "fit";
 

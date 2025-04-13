@@ -83,6 +83,8 @@
           dashboard = { entryPoints = [ "websecure" ]; rule = "Host(`homelab.fedeizzo.dev`)"; service = "dashboard"; };
           jellyfin = { entryPoints = [ "websecure" ]; rule = "Host(`jellyfin.fedeizzo.dev`)"; service = "jellyfin"; };
           jellyseerr = { entryPoints = [ "websecure" ]; rule = "Host(`jellyseerr.fedeizzo.dev`)"; service = "jellyseerr"; };
+          hass = { entryPoints = [ "websecure" ]; rule = "Host(`hass.fedeizzo.dev`)"; service = "hass"; };
+          paperless = { entryPoints = [ "websecure" ]; rule = "Host(`paperless.fedeizzo.dev`)"; service = "paperless"; };
         };
         services = {
           fedeizzodev = { loadBalancer = { servers = [{ url = "http://localhost:50001"; }]; }; };
@@ -93,6 +95,8 @@
           dashboard = { loadBalancer = { servers = [{ url = "http://localhost:${toString config.services.glance.settings.server.port}"; }]; }; };
           jellyfin = { loadBalancer = { servers = [{ url = "http://localhost:8096"; }]; }; };
           jellyseerr = { loadBalancer = { servers = [{ url = "http://localhost:5055"; }]; }; };
+          hass = { loadBalancer = { servers = [{ url = "http://localhost:${toString config.services.home-assistant.config.http.server_port}"; }]; }; };
+          paperless = { loadBalancer = { servers = [{ url = "http://localhost:${toString config.services.paperless.port}"; }]; }; };
         };
       };
     };

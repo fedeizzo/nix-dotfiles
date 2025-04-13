@@ -14,6 +14,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
     };
+    anytype-pkgs.url = "github:Adda0/nixpkgs/anytype-update"; # TODO remove this after https://github.com/NixOS/nixpkgs/pull/399709 is merged
 
     ## Mac
     nixpkgs-darwin.url = "github:nixos/nixpkgs/nixpkgs-24.11-darwin";

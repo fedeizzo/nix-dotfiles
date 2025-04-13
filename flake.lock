@@ -1,5 +1,21 @@
 {
   "nodes": {
+    "anytype-pkgs": {
+      "locked": {
+        "lastModified": 1744973610,
+        "narHash": "sha256-gy7vR2NiQgFhmFaMScpj+la8osJp145yjAhYD/AMgos=",
+        "owner": "Adda0",
+        "repo": "nixpkgs",
+        "rev": "c5cb5f5451ab18f59ec968421d43279d82503345",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Adda0",
+        "ref": "anytype-update",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "base16": {
       "inputs": {
         "fromYaml": "fromYaml"
@@ -670,11 +686,11 @@
         "pre-commit-hooks": "pre-commit-hooks"
       },
       "locked": {
-        "lastModified": 1737379892,
-        "narHash": "sha256-M5FfyuvKAd5K8H0IZedlXaN04IvJesmWRhE9sviQNCQ=",
+        "lastModified": 1744142264,
+        "narHash": "sha256-h5KyodobZm8dx/HSNN+basgdmjxrQxudjrss4gAQpZk=",
         "owner": "oddlama",
         "repo": "nix-topology",
-        "rev": "21dceaf1a116f648a286a66516612c7e2b726306",
+        "rev": "f49121cbbf4a86c560638ade406d99ee58deb7aa",
         "type": "github"
       },
       "original": {
@@ -977,6 +993,7 @@
     },
     "root": {
       "inputs": {
+        "anytype-pkgs": "anytype-pkgs",
         "deploy-rs": "deploy-rs",
         "devshell": "devshell",
         "disko": "disko",

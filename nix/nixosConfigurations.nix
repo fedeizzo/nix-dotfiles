@@ -25,14 +25,20 @@ in
         {
           imports = [
             (inputs.nixpkgs-homelab-unstable + /nixos/modules/services/misc/jellyseerr.nix)
+            (inputs.nixpkgs-homelab-unstable + /nixos/modules/services/home-automation/home-assistant.nix)
+            (inputs.nixpkgs-homelab-unstable + /nixos/modules/services/misc/paperless.nix)
           ];
           nixpkgs.overlays = [
             (_: _: {
               inherit (inputs.nixpkgs-homelab-unstable.legacyPackages.${system}) jellyseerr;
+              inherit (inputs.nixpkgs-homelab-unstable.legacyPackages.${system}) home-assistant;
+              inherit (inputs.nixpkgs-homelab-unstable.legacyPackages.${system}) paperless;
             })
           ];
           disabledModules = [
             "services/misc/jellyseerr.nix"
+            "services/home-automation/home-assistant.nix"
+            "services/misc/paperless.nix"
           ];
         }
         ../hosts/xps-9510-homelab
@@ -48,6 +54,10 @@ in
         emacs-pkg = import inputs.emacs-pkg { inherit system; };
         pkgs-old = import inputs.nixpkgs-old { inherit system; };
         pkgs-unstable = import inputs.nixpkgs-unstable {
+          inherit system;
+          config.allowUnfree = true;
+        };
+        anytype-pkgs = import inputs.anytype-pkgs {
           inherit system;
           config.allowUnfree = true;
         };

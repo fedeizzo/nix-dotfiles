@@ -1,4 +1,12 @@
-{ username, inputs, config, emacs-pkg, pkgs-old, pkgs-unstable, ... }:
+{ username
+, inputs
+, config
+, emacs-pkg
+, pkgs-old
+, pkgs-unstable
+, anytype-pkgs
+, ...
+}:
 
 
 {
@@ -12,11 +20,12 @@
       inherit emacs-pkg;
       inherit pkgs-old;
       inherit pkgs-unstable;
+      inherit anytype-pkgs;
     };
     backupFileExtension = "to_delete";
     sharedModules = [ inputs.plasma-manager.homeManagerModules.plasma-manager ];
 
-    users.${username} = {
+    users.${ username} = {
       imports = [
         ../common/bottom
         ./modules/cli
@@ -35,7 +44,7 @@
         ../common/kitty
         # ../common/emacs
       ];
-      programs.home-manager.enable = true;
+      programs. home-manager. enable = true;
 
       home = {
         stateVersion = "24.11";

@@ -7,15 +7,17 @@ in
 {
   imports = [
     ./blocky
-    ./diun
     ./fedeizzo.dev
     ./garmindb
     ./glance
     ./grafana
+    ./hass
     ./immich
+    ./influxdb
     ./logrotate
     ./loki
     ./net-worth
+    ./paperless
     ./postgres
     ./prometheus
     ./sunshine

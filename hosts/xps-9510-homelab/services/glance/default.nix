@@ -1,8 +1,9 @@
-_:
+{ pkgs-unstable, ... }:
 
 {
   services.glance = {
     enable = true;
+    package = pkgs-unstable.glance;
     settings = {
       server = {
         host = "0.0.0.0";
@@ -17,31 +18,53 @@ _:
           center-vertically = true;
           columns = [
             {
+              size = "small";
+              # rss hwacker news group weather
+              widgets = [
+                { type = "weather"; units = "metric"; hour-format = "24h"; location = "Paris, France"; }
+                { type = "server-stats"; servers = [{ type = "local"; name = "homelab"; }]; }
+                { type = "markets"; markets = [{ symbol = "DDOG"; name = "Datadog"; }]; }
+                { type = "hacker-news"; limit = 15; collapse-after = 5; }
+              ];
+            }
+            {
               size = "full";
               widgets = [
-                { type = "search"; autofocus = true; }
                 {
-                  type = "monitor";
-                  cache = "1m";
-                  title = "Streaming";
-                  sites = [
-                    { title = "Jellyfin"; url = "https://jellyfin.fedeizzo.dev"; icon = "si:jellyfin"; }
-                    { title = "Jellyseerr"; url = "https://jellyseerr.fedeizzo.dev"; icon = "si:jellyfin"; }
-                    { title = "Sonarr"; url = "http://homelab:8989"; icon = "si:sonarr"; }
-                    { title = "Radarr"; url = "http://homelab:7878"; icon = "si:radarr"; }
-                    { title = "Prowlar"; url = "http://homelab:9696"; icon = "si:searxng"; }
-                    { title = "Deluge"; url = "http://homelab:8112"; icon = "si:deluge"; }
-                    { title = "Bazarr"; url = "http://homelab:6767"; icon = "si:bookstack"; }
+                  type = "search";
+                  autofocus = true;
+                  new-tab = true;
+                  bangs = [
+                    {
+                      title = "Nixpkgs github issues";
+                      shortcut = "!nh";
+                      url = "https://github.com/NixOS/nixpkgs/issues?q=sort%3Aupdated-desc%20is%3Aissue%20is%3Aopen%20{QUERY}";
+                    }
                   ];
                 }
                 {
                   type = "monitor";
                   cache = "1m";
-                  title = "Multimedia";
+                  title = "Streaming";
                   sites = [
-                    { title = "Immich"; url = "https://photo.fedeizzo.dev"; icon = "si:immich"; }
-                    { title = "Drive"; url = "https://drive.fedeizzo.dev"; icon = "si:protondrive"; }
-                    { title = "Sunshine"; url = "https://homelab:47990"; icon = "si:stadia"; }
+                    { title = "Jellyfin"; url = "https://jellyfin.fedeizzo.dev"; icon = "di:jellyfin"; }
+                    { title = "Jellyseerr"; url = "https://jellyseerr.fedeizzo.dev"; icon = "di:jellyseerr"; }
+                    { title = "Sonarr"; url = "http://homelab:8989"; icon = "di:sonarr"; }
+                    { title = "Radarr"; url = "http://homelab:7878"; icon = "di:radarr"; }
+                    { title = "Prowlar"; url = "http://homelab:9696"; icon = "di:prowlarr"; }
+                    { title = "Deluge"; url = "http://homelab:8112"; icon = "di:deluge"; }
+                    { title = "Bazarr"; url = "http://homelab:6767"; icon = "di:bazarr"; }
+                  ];
+                }
+                {
+                  type = "monitor";
+                  cache = "1m";
+                  title = "Utils";
+                  sites = [
+                    { title = "Immich"; url = "https://photo.fedeizzo.dev"; icon = "di:immich"; }
+                    { title = "Drive"; url = "https://drive.fedeizzo.dev"; icon = "di:sftpgo"; }
+                    { title = "Sunshine"; url = "https://homelab:47990"; icon = "di:sunshine"; alt-status-codes = [ 401 ]; }
+                    { title = "Paperless"; url = "https://paperless.fedeizzo.dev"; icon = "di:paperless"; }
                   ];
                 }
                 {
@@ -49,8 +72,9 @@ _:
                   cache = "1m";
                   title = "Observability";
                   sites = [
-                    { title = "Grafana"; url = "https://grafana.fedeizzo.dev"; icon = "si:grafana"; }
-                    { title = "Traefik"; url = "http://homelab:8080"; icon = "si:traefikproxy"; }
+                    { title = "Grafana"; url = "https://grafana.fedeizzo.dev"; icon = "di:grafana"; }
+                    { title = "Traefik"; url = "http://homelab:8080"; icon = "di:traefik-proxy"; }
+                    { title = "Home Assistant"; url = "https://hass.fedeizzo.dev"; icon = "di:home-assistant"; }
                   ];
                 }
               ];
