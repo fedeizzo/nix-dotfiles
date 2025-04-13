@@ -9,7 +9,7 @@
   };
 
   imports = [
-    ../common/emacs
+    # ../common/emacs
     ../common/languages
     ./modules/cli
     ./modules/zsh
