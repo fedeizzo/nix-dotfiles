@@ -29,7 +29,7 @@
       "VISUAL" = "vim";
       "CODEEDITOR" = "vim";
       "TERMINAL" = "kitty";
-      "BROWSER" = "firefox";
+      "BROWSER" = "zen";
       "COLORTERM" = "truecolor";
     };
     shellAliases = {

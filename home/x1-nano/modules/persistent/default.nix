@@ -33,6 +33,7 @@
         ".config/BambuStudio"
         ".config/anytype"
         ".config/zed"
+        ".zen"
 
         # Cache
         ".cargo"
@@ -47,6 +48,7 @@
         ".cache/FreeCAD"
         ".cache/bambu-studio"
         ".cache/zed"
+        ".cache/zen"
 
         # plasma
         ".config/kde.org"
