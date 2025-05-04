@@ -25,7 +25,7 @@
     backupFileExtension = "to_delete";
     sharedModules = [ inputs.plasma-manager.homeManagerModules.plasma-manager ];
 
-    users.${ username} = {
+    users.${username} = {
       imports = [
         ../common/bottom
         ./modules/cli
@@ -44,7 +44,7 @@
         ../common/kitty
         # ../common/emacs
       ];
-      programs. home-manager. enable = true;
+      programs.home-manager.enable = true;
 
       home = {
         stateVersion = "24.11";
