@@ -85,6 +85,7 @@
           jellyseerr = { entryPoints = [ "websecure" ]; rule = "Host(`jellyseerr.fedeizzo.dev`)"; service = "jellyseerr"; };
           hass = { entryPoints = [ "websecure" ]; rule = "Host(`hass.fedeizzo.dev`)"; service = "hass"; };
           paperless = { entryPoints = [ "websecure" ]; rule = "Host(`paperless.fedeizzo.dev`)"; service = "paperless"; };
+          fusion = { entryPoints = [ "websecure" ]; rule = "Host(`fusion.fedeizzo.dev`)"; service = "fusion"; };
         };
         services = {
           fedeizzodev = { loadBalancer = { servers = [{ url = "http://localhost:50001"; }]; }; };
@@ -97,6 +98,7 @@
           jellyseerr = { loadBalancer = { servers = [{ url = "http://localhost:5055"; }]; }; };
           hass = { loadBalancer = { servers = [{ url = "http://localhost:${toString config.services.home-assistant.config.http.server_port}"; }]; }; };
           paperless = { loadBalancer = { servers = [{ url = "http://localhost:${toString config.services.paperless.port}"; }]; }; };
+          fusion = { loadBalancer = { servers = [{ url = "http://localhost:51000"; }]; }; };
         };
       };
     };

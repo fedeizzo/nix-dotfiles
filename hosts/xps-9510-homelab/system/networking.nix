@@ -45,6 +45,7 @@
         5055 # jellyseerr
         9854 # dashboard
         config.services.paperless.port
+        51000
       ];
       trustedInterfaces = [ "wg0" ];
       allowedUDPPorts = [

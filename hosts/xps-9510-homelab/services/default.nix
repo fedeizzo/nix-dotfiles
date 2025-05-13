@@ -8,6 +8,7 @@ in
   imports = [
     ./blocky
     ./fedeizzo.dev
+    ./fusion
     ./garmindb
     ./glance
     ./grafana
