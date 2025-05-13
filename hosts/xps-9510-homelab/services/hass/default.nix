@@ -75,17 +75,7 @@ in
         default_config = { };
         lovelace.mode = "yaml";
       };
-      lovelaceConfig = {
-        title = "My Awesome Home";
-        views = [{
-          title = "Example";
-          cards = [{
-            type = "markdown";
-            title = "Lovelace";
-            content = "Welcome to your **Lovelace UI**.";
-          }];
-        }];
-      };
+      lovelaceConfig = { };
     };
 
     zigbee2mqtt = {

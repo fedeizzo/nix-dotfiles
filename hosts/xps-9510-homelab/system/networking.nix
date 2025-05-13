@@ -50,7 +50,9 @@
       allowedUDPPorts = [
         51821 # wireguard
       ];
-      allowedTCPPorts = [ ];
+      allowedTCPPorts = [
+        33333
+      ];
       checkReversePath = "loose";
     };
   };
