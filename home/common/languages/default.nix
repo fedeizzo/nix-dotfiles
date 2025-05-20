@@ -40,7 +40,7 @@ in
     ccls
 
     # latex
-    texliveFull
+    # texliveFull
 
     # lua
     lua-language-server

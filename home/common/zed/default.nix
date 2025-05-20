@@ -4,7 +4,6 @@ with lib;
 let
   cfg = config.zed-fedeizzo;
   jsonFormat = pkgs-unstable.formats.json { };
-
 in
 {
   options.zed-fedeizzo = {
@@ -54,6 +53,7 @@ in
         "toml"
         "tree-sitter-query"
         "proto"
+        "zed-react-ts-snippets" # react snippets
 
         # ui
         "nord"
@@ -169,6 +169,11 @@ in
             binary.path = getExe pkgs-unstable.nil;
             initialization_options = {
               formatting.command = [ "nixpkgs-fmt" ];
+            };
+          };
+          vtsls = {
+            settings = {
+              typescript = { tsserver = { maxTsServerMemory = 16184; }; };
             };
           };
         };

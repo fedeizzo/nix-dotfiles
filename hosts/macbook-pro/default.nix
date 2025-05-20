@@ -1,15 +1,5 @@
 { inputs, pkgs, username, system-overlays, emacs-pkg, pkgs-unstable, ... }:
 
-let
-  myFonts = [
-    (pkgs.nerdfonts.override {
-      fonts = [
-        "JetBrainsMono"
-      ];
-    })
-    pkgs.emacs-all-the-icons-fonts
-  ];
-in
 {
   imports = [
     inputs.home-manager.darwinModules.home-manager
@@ -19,7 +9,6 @@ in
 
   # nix
   system.stateVersion = 4;
-  services.nix-daemon.enable = true;
   nix = {
     enable = true;
     settings = {
@@ -36,7 +25,7 @@ in
 
   # user
   programs.zsh.enable = true;
-  fonts.packages = myFonts;
+  fonts.packages = [ pkgs.nerd-fonts.jetbrains-mono ];
   users.users.${username} = {
     home = "/Users/${username}";
     shell = pkgs.zsh;
@@ -51,4 +40,5 @@ in
     users.${username} = import ../../home/macbook-pro;
     backupFileExtension = "backup";
   };
+  ids.gids.nixbld = 350;
 }

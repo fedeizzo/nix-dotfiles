@@ -5,9 +5,6 @@
     ../../../common/cli/default.nix
     ../../../common/jujutsu
   ];
-  home.packages = with pkgs; [
-    marp-cli # markdowm to slides
-  ];
   programs.direnv = {
     enable = true;
     enableZshIntegration = true;

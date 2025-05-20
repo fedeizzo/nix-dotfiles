@@ -2,8 +2,8 @@
 
 {
   imports = [
-    ../../../common/firefox
+    # ../../../common/firefox # until the flake doesn't include m* processors
   ];
 
-  programs.firefox.package = lib.mkDefault null;
+  # programs.zen-browser.package = lib.mkDefault null;
 }
