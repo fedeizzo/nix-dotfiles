@@ -22,7 +22,7 @@
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs-darwin";
 
     ## Homelab
-    nixpkgs-homelab.url = "github:nixos/nixpkgs/nixos-24.11";
+    nixpkgs-homelab.url = "github:nixos/nixpkgs/nixos-25.05";
     nixpkgs-homelab-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
     # Flake management

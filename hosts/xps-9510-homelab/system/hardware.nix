@@ -6,31 +6,26 @@
     inputs.nixos-hardware.nixosModules.dell-xps-15-9510-nvidia
   ];
 
+  systemd.services.jellyfin.environment.LIBVA_DRIVER_NAME = "iHD"; # Or "i965" if using older driver
+  environment.sessionVariables = { LIBVA_DRIVER_NAME = "iHD"; }; # Same here
   hardware = {
     bluetooth = {
       enable = false;
       powerOnBoot = false;
     };
     cpu.intel.updateMicrocode = true;
-    nvidia.package = config.boot.kernelPackages.nvidiaPackages.mkDriver {
-      version = "570.86.16"; # use new 570 drivers
-      sha256_64bit = "sha256-RWPqS7ZUJH9JEAWlfHLGdqrNlavhaR1xMyzs8lJhy9U=";
-      openSha256 = "sha256-DuVNA63+pJ8IB7Tw2gM4HbwlOh1bcDg2AN2mbEU9VPE=";
-      settingsSha256 = "sha256-9rtqh64TyhDF5fFAYiWl3oDHzKJqyOW3abpcf2iNRT8=";
-      usePersistenced = false;
-    };
 
-    # graphics = {
-    #   enable = true;
-    #   extraPackages = with pkgs; [
-    #     intel-media-driver
-    #     intel-vaapi-driver
-    #     vaapiVdpau
-    #     intel-compute-runtime # OpenCL filter support (hardware tonemapping and subtitle burn-in)
-    #     vpl-gpu-rt # QSV on 11th gen or newer
-    #     intel-media-sdk # QSV up to 11th gen
-    #   ];
-    # };
+    graphics = {
+      enable = true;
+      extraPackages = with pkgs; [
+        intel-media-driver # For Broadwell (2014) or newer processors. LIBVA_DRIVER_NAME=iHD
+        libva-vdpau-driver # Previously vaapiVdpau
+        intel-compute-runtime # OpenCL filter support (hardware tonemapping and subtitle burn-in)
+        vpl-gpu-rt # QSV on 11th gen or newer
+        intel-media-sdk # QSV up to 11th gen
+        intel-ocl # OpenCL support
+      ];
+    };
   };
 
   zramSwap.enable = true;
