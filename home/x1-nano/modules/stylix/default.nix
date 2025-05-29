@@ -1,14 +1,5 @@
 { pkgs, inputs, ... }:
 
-let
-  patchedFont = pkgs.nerdfonts.override {
-    fonts = [
-      "Ubuntu"
-      "JetBrainsMono"
-      "UbuntuSans"
-    ];
-  };
-in
 {
   imports = [
     inputs.stylix.homeManagerModules.stylix
@@ -27,15 +18,15 @@ in
         terminal = 12;
       };
       serif = {
-        package = patchedFont;
+        package = pkgs.nerd-fonts.ubuntu;
         name = "Ubuntu Nerd Font";
       };
       monospace = {
-        package = patchedFont;
+        package = pkgs.nerd-fonts.jetbrains-mono;
         name = "JetBrainsMono Nerd Font";
       };
       sansSerif = {
-        package = patchedFont;
+        package = pkgs.nerd-fonts.ubuntu-sans;
         name = "UbuntuSans Nerd Font";
       };
     };

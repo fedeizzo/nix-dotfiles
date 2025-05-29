@@ -2,7 +2,6 @@
 , inputs
 , config
 , emacs-pkg
-, pkgs-old
 , pkgs-unstable
 , anytype-pkgs
 , ...
@@ -18,7 +17,6 @@
       inherit username;
       inherit inputs;
       inherit emacs-pkg;
-      inherit pkgs-old;
       inherit pkgs-unstable;
       inherit anytype-pkgs;
     };
