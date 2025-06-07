@@ -23,7 +23,7 @@ in
 
     tasks = mkOption {
       type = jsonFormat.type;
-      default = { };
+      default = [ ];
     };
   };
 
@@ -53,6 +53,7 @@ in
         "terraform"
         "toml"
         "tree-sitter-query"
+        "proto"
 
         # ui
         "nord"
@@ -76,7 +77,6 @@ in
         active_pane_modifiers = {
           inactive_opacity = 0.9;
           border_size = 1;
-          magnification = 1;
         };
 
         # telemtry and AI
@@ -88,7 +88,7 @@ in
           edit_prediction_provider = "copilot";
           copilot = true;
         };
-        assistant = {
+        agent = {
           enabled = false;
           version = "1";
           # version = "2";
@@ -109,6 +109,7 @@ in
             milliseconds = 1000;
           };
         };
+        auto_update = false;
         load_direnv = "shell_hook";
         current_line_highlight = "gutter";
         tabs = {
