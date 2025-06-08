@@ -31,6 +31,7 @@
         ".config/Moonlight Game Streaming Project"
         ".config/FreeCAD"
         ".config/BambuStudio"
+        ".config/OrcaSlicer"
         ".config/anytype"
         ".config/zed"
         ".zen"
@@ -47,6 +48,7 @@
         ".cache/Moonlight Game Streaming Project"
         ".cache/FreeCAD"
         ".cache/bambu-studio"
+        ".cache/orca-slicer"
         ".cache/zed"
         ".cache/zen"
 

@@ -11,13 +11,13 @@
     ddcutil
 
     # 3d printing
-    bambu-studio
+    orca-slicer
     freecad
     openscad
 
     # notes
     anytype-pkgs.anytype
-    
+
     element-desktop
   ];
 }
