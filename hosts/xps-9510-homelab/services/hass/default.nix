@@ -47,10 +47,10 @@ in
         home-assistant-custom-lovelace-modules.bubble-card
         home-assistant-custom-lovelace-modules.button-card
         (pkgs.callPackage ./custom-lovelace-modules/config-template-card.nix { })
-        (pkgs.callPackage ./custom-lovelace-modules/custom-ui.nix { })
-        (pkgs.callPackage ./custom-lovelace-modules/font-awesome.nix { })
-        (pkgs.callPackage ./custom-lovelace-modules/hui-element.nix { })
-        (pkgs.callPackage ./custom-lovelace-modules/lovelace-layout-card.nix { })
+        # (pkgs.callPackage ./custom-lovelace-modules/custom-ui.nix { })
+        # (pkgs.callPackage ./custom-lovelace-modules/font-awesome.nix { })
+        # (pkgs.callPackage ./custom-lovelace-modules/hui-element.nix { })
+        # (pkgs.callPackage ./custom-lovelace-modules/lovelace-layout-card.nix { })
       ];
 
       config = {

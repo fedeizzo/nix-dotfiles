@@ -8,12 +8,12 @@ stdenvNoCC.mkDerivation rec {
     owner = "oddlama";
     repo = pname;
     rev = "517159d1d0aed3d9b7664e832d20a184c52e6e2f";
-    sha256 = lib.fakeSha;
+    sha256 = "sha256-U+yHjhrFw+6DtADIy7kkAGu3hXdxbgH0kG8Ay6cCAWI=";
   };
 
   offlineCache = fetchYarnDeps {
     inherit src;
-    sha256 = lib.fakeSha;
+    sha256 = "sha256-H5vADyspiGSWxBISXWiXvehqFItYDI0PEou42LdqEJU=";
   };
 
   nativeBuildInputs = [ yarnConfigHook yarnBuildHook nodejs ];

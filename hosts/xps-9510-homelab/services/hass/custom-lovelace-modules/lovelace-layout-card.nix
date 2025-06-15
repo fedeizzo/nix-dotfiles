@@ -8,12 +8,12 @@ stdenvNoCC.mkDerivation rec {
     owner = "thomasloven";
     repo = pname;
     rev = "v${version}";
-    sha256 = lib.fakeSha;
+    sha256 = lib.fakeSha256;
   };
 
   offlineCache = fetchYarnDeps {
     inherit src;
-    sha256 = lib.fakeSha;
+    sha256 = lib.fakeSha256;
   };
 
   nativeBuildInputs = [ yarnConfigHook yarnBuildHook nodejs ];

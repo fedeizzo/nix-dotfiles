@@ -1,19 +1,19 @@
 { lib, stdenvNoCC, fetchFromGitHub, fetchYarnDeps, yarnConfigHook, yarnBuildHook, nodejs }:
 
 stdenvNoCC.mkDerivation rec {
-  pname = "hui-element";
-  version = "1.0.3"; # Replace with actual version or tag
+  pname = "lovelace-hui-element";
+  version = "master"; # Replace with actual version or tag
 
   src = fetchFromGitHub {
-    owner = "home-assistant-community-themes";
+    owner = "thomasloven";
     repo = pname;
-    rev = "v${version}";
-    sha256 = lib.fakeSha;
+    rev = "${version}";
+    sha256 = lib.fakeSha256;
   };
 
   offlineCache = fetchYarnDeps {
     inherit src;
-    sha256 = lib.fakeSha;
+    sha256 = lib.fakeSha256;
   };
 
   nativeBuildInputs = [ yarnConfigHook yarnBuildHook nodejs ];

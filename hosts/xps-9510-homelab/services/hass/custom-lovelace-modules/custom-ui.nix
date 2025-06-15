@@ -2,18 +2,18 @@
 
 stdenvNoCC.mkDerivation rec {
   pname = "custom-ui";
-  version = "20210508"; # Replace with accurate version or tag
+  version = "20240118";
 
   src = fetchFromGitHub {
     owner = "Mariusthvdb";
     repo = pname;
     rev = version;
-    sha256 = lib.fakeSha;
+    sha256 = "sha256-s8vNY19kvEyhhb9OUjXGGieAcRQg2lDMWl4WEIGNxhY=";
   };
 
   offlineCache = fetchYarnDeps {
     inherit src;
-    sha256 = lib.fakeSha;
+    sha256 = lib.fakeSha256;
   };
 
   nativeBuildInputs = [ yarnConfigHook yarnBuildHook nodejs ];

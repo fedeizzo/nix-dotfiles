@@ -1,28 +1,37 @@
-{ lib, stdenvNoCC, fetchFromGitHub, fetchYarnDeps, yarnConfigHook, yarnBuildHook, nodejs }:
+{ lib, stdenvNoCC, fetchFromGitHub, fetchNpmDeps, npmHooks, nodejs }:
 
 stdenvNoCC.mkDerivation rec {
   pname = "hass-fontawesome";
-  version = "0.1.0"; # Replace with actual tag if available
+  version = "2.2.3"; # Replace with actual tag if available
 
   src = fetchFromGitHub {
     owner = "thomasloven";
     repo = pname;
     rev = "v${version}";
-    sha256 = lib.fakeSha;
+    sha256 = "sha256-yKeWqzQbEAQNfqeUgjkpWz+Ya1drDcvnk9xyMeNs+yA=";
   };
 
-  offlineCache = fetchYarnDeps {
+  offlineCache = fetchNpmDeps {
     inherit src;
-    sha256 = lib.fakeSha;
+    hash = "sha256-g38ZVnK+bm41reVPaPRqPjY3fjsGC4ACi8tpFl1IgQM=";
   };
 
-  nativeBuildInputs = [ yarnConfigHook yarnBuildHook nodejs ];
+  nativeBuildInputs = [ npmHooks.npmConfigHook nodejs ];
+
+  buildPhase = ''
+    runHook preBuild
+
+    rm hui-element.js
+    npm run build
+
+    runHook postBuild
+  '';
 
   installPhase = ''
     runHook preInstall
 
     mkdir -p $out
-    cp dist/* $out
+    cp hui-element.js $out/
 
     runHook postInstall
   '';
