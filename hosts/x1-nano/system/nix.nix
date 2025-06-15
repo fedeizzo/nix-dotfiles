@@ -1,7 +1,7 @@
 { pkgs, pkgs-unstable, system-overlays, inputs, ... }:
 
 {
-  system.stateVersion = "24.11";
+  system.stateVersion = "25.05";
 
   nixpkgs = {
     overlays = builtins.attrValues system-overlays ++ [
