@@ -73,5 +73,8 @@
       enable = true;
       usePercentageForPolicy = false;
     };
+    logind.lidSwitch = "ignore";
+    logind.lidSwitchExternalPower = "ignore";
+    logind.lidSwitchDocked = "ignore";
   };
 }

@@ -86,6 +86,7 @@
           hass = { entryPoints = [ "websecure" ]; rule = "Host(`hass.fedeizzo.dev`)"; service = "hass"; };
           paperless = { entryPoints = [ "websecure" ]; rule = "Host(`paperless.fedeizzo.dev`)"; service = "paperless"; };
           fusion = { entryPoints = [ "websecure" ]; rule = "Host(`fusion.fedeizzo.dev`)"; service = "fusion"; };
+          nextcloud = { entryPoints = [ "websecure" ]; rule = "Host(`nextcloud.fedeizzo.dev`)"; service = "nextcloud"; };
         };
         services = {
           fedeizzodev = { loadBalancer = { servers = [{ url = "http://localhost:50001"; }]; }; };
@@ -99,8 +100,10 @@
           hass = { loadBalancer = { servers = [{ url = "http://localhost:${toString config.services.home-assistant.config.http.server_port}"; }]; }; };
           paperless = { loadBalancer = { servers = [{ url = "http://localhost:${toString config.services.paperless.port}"; }]; }; };
           fusion = { loadBalancer = { servers = [{ url = "http://localhost:51000"; }]; }; };
+          nextcloud = { loadBalancer = { servers = [{ url = "http://localhost:8180"; }]; }; };
         };
       };
     };
   };
+  systemd.services.traefik.serviceConfig.SupplementaryGroups = [ "nextcloud" ];
 }

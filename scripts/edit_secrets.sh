@@ -48,12 +48,13 @@ encrypt_file() {
 
     colorPrint "Encrypting $file (input type: $input_type) → $output_file..."
 
+    output_file="$output_file.enc"
+
     # Run SOPS encryption with the appropriate input/output types
     sops --input-type "$input_type" --output-type "$input_type" --encrypt "$file" > "$output_file"
+    mv $output_file $file
 
-    colorPrint "Encryption complete: $output_file"
-    colorPrint "Removing $file"
-    rm $file
+    colorPrint "Encryption complete: $file"
 }
 
 # Determine key_id based on file name

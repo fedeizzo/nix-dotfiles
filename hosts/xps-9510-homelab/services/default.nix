@@ -18,10 +18,11 @@ in
     ./logrotate
     ./loki
     ./net-worth
+    ./nextcloud
     ./paperless
     ./postgres
     ./prometheus
-    ./sunshine
+    # ./sunshine
     ./sftpgo
     ./streaming
     ./traefik
