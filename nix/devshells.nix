@@ -19,7 +19,7 @@
         name = "clean";
         command = "nh clean all";
         category = " System administration";
-        package = inputs'.nh-plus.packages.default;
+        package = inputs'.nh.packages.default;
       }
       {
         help = " Update a flake.nix input.";

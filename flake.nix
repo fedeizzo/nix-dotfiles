@@ -45,7 +45,7 @@
     emacs-pkg.url = "github:nixos/nixpkgs/b805fe3d6f3e702ecee01710ee552e3ed39d16c8";
     emacs-lsp-booster.url = "github:slotThe/emacs-lsp-booster-flake";
     emacs-lsp-booster.inputs.nixpkgs.follows = "nixpkgs";
-    nh-plus.url = "github:ToyVo/nh_plus";
+    nh.url = "github:nix-community/nh";
     nix-index-database.url = "github:nix-community/nix-index-database";
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
     nur.url = "github:nix-community/NUR";
