@@ -12,4 +12,10 @@
   };
 
   programs.jujutsu.settings.user.email = "federico.izzo@datadoghq.com";
+  programs.jujutsu.settings.core = {
+    fsmonitor = "watchman";
+    watchman.register-snapshot-trigger = true;
+  };
+
+  home.packages = [ pkgs.watchman pkgs.gg ];
 }
