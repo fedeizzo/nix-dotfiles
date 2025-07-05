@@ -1,5 +1,18 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
+let
+  dbs = [
+    { user = "networth_ro"; db = "networth"; }
+    { user = "networth"; db = "networth"; }
+    { user = "immich"; db = "immich"; }
+    { user = "paperless"; db = "paperless"; }
+    { user = "nextcloud"; db = "nextcloud"; }
+  ];
+  authenticationEntry = user: db: "host " + db + " " + user + " samehost md5";
+  passwordDeclarationEntry = user: "DECLARE " + user + "_password TEXT;";
+  passwordInitEntry = user: "${user}_password := trim(both from replace(pg_read_file('${config.sops.secrets."${user}-pg-password".path}'), E\'\\n\', \'\'));";
+  passwordExecuteEntry = user: "EXECUTE format('ALTER ROLE ${user} WITH PASSWORD %L;', ${user}_password);";
+in
 {
   services.postgresqlBackup = {
     enable = true;
@@ -21,24 +34,23 @@
     ensureDatabases = [
       "networth"
       "paperless"
+      "nextcloud"
     ];
     ensureUsers = [
       { name = "networth"; ensureDBOwnership = true; }
       { name = "networth_ro"; }
       { name = "paperless"; ensureDBOwnership = true; }
+      { name = "nextcloud"; ensureDBOwnership = true; }
     ];
     authentication = pkgs.lib.mkForce ''
       # TYPE  DATABASE        USER            ADDRESS                 METHOD    ARGS
-      host    networth        networth_ro     samehost                md5
-      host    networth        networth        samehost                md5
-      host    immich          immich          samehost                md5
-      host    sftpgo          sftpgo          samehost                md5
-      host    paperless       paperless       samehost                md5
+      ${lib.strings.concatLines (map (el: authenticationEntry el.user el.db) dbs)}
+      host postgres nextcloud samehost md5
       local   all             postgres                                trust
     '';
-    # identMap = ''
-    #   superuser_map      sftpgo      sftpgo
-    # '';
+    identMap = ''
+      postgres postgres postgres
+    '';
   };
 
   # Everything is in post start instead of init script because post start
@@ -47,19 +59,10 @@
     ''
       $PSQL -tA <<'EOF'
         DO $$
-        DECLARE networth_password TEXT;
-        DECLARE networth_ro_password TEXT;
-        DECLARE immich_password TEXT;
-        DECLARE paperless_password TEXT;
+        ${lib.strings.concatLines (map (el: passwordDeclarationEntry el.user) dbs)}
         BEGIN
-          networth_password := trim(both from replace(pg_read_file('${config.sops.secrets.networth-pg-password.path}'), E'\n', '''));
-          networth_ro_password := trim(both from replace(pg_read_file('${config.sops.secrets.networth-pg-password-ro.path}'), E'\n', '''));
-          immich_password := trim(both from replace(pg_read_file('${config.sops.secrets.immich-pg-password.path}'), E'\n', '''));
-          paperless_password := trim(both from replace(pg_read_file('${config.sops.secrets.paperless-pg-password.path}'), E'\n', '''));
-          EXECUTE format('ALTER ROLE networth WITH PASSWORD '''%s''';', networth_password);
-          EXECUTE format('ALTER ROLE networth_ro WITH PASSWORD '''%s''';', networth_ro_password);
-          EXECUTE format('ALTER ROLE immich WITH PASSWORD '''%s''';', immich_password);
-          EXECUTE format('ALTER ROLE paperless WITH PASSWORD '''%s''';', paperless_password);
+          ${lib.strings.concatLines (map (el: passwordInitEntry el.user) dbs)}
+          ${lib.strings.concatLines (map (el: passwordExecuteEntry el.user) dbs)}
         END $$;
         ${(builtins.readFile ./datbases/role_permissions.sql)}
       EOF

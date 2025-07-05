@@ -26,7 +26,7 @@
         group = config.systemd.services.postgresql.serviceConfig.Group;
         # restartUnits = [ "postgresql.service" ];
       };
-      networth-pg-password-ro = {
+      networth_ro-pg-password = {
         owner = config.systemd.services.postgresql.serviceConfig.User;
         group = config.systemd.services.postgresql.serviceConfig.Group;
         # restartUnits = [ "postgresql.service" ];
@@ -39,6 +39,12 @@
       paperless-pg-password = {
         owner = config.systemd.services.postgresql.serviceConfig.User;
         group = config.systemd.services.postgresql.serviceConfig.Group;
+        # restartUnits = [ "postgresql.service" ];
+      };
+      nextcloud-pg-password = {
+        owner = config.systemd.services.postgresql.serviceConfig.User;
+        group = config.systemd.services.postgresql.serviceConfig.Group;
+        mode = "440";
         # restartUnits = [ "postgresql.service" ];
       };
     };
