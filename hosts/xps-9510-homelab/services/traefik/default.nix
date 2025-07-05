@@ -87,6 +87,7 @@
           paperless = { entryPoints = [ "websecure" ]; rule = "Host(`paperless.fedeizzo.dev`)"; service = "paperless"; };
           fusion = { entryPoints = [ "websecure" ]; rule = "Host(`fusion.fedeizzo.dev`)"; service = "fusion"; };
           nextcloud = { entryPoints = [ "websecure" ]; rule = "Host(`nextcloud.fedeizzo.dev`)"; service = "nextcloud"; };
+          collabora = { entryPoints = [ "websecure" ]; rule = "Host(`collabora.fedeizzo.dev`)"; service = "collabora"; };
         };
         services = {
           fedeizzodev = { loadBalancer = { servers = [{ url = "http://localhost:50001"; }]; }; };
@@ -101,6 +102,7 @@
           paperless = { loadBalancer = { servers = [{ url = "http://localhost:${toString config.services.paperless.port}"; }]; }; };
           fusion = { loadBalancer = { servers = [{ url = "http://localhost:51000"; }]; }; };
           nextcloud = { loadBalancer = { servers = [{ url = "http://localhost:8180"; }]; }; };
+          collabora = { loadBalancer = { servers = [{ url = "http://localhost:${toString config.services.collabora-online.port}"; }]; }; };
         };
       };
     };
