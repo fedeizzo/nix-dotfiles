@@ -11,13 +11,13 @@
       {
         help = " Update the system configuration using the current flake and hostname.";
         name = "update";
-        command = "nh os switch";
+        command = "doas nh os switch -R";
         category = " System administration";
       }
       {
         help = " Delete old generations and clean nix store.";
         name = "clean";
-        command = "nh clean all";
+        command = "doas nh clean all -R";
         category = " System administration";
         package = inputs'.nh.packages.default;
       }

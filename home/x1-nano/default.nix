@@ -33,6 +33,7 @@
         ../common/languages
         ../common/nix-index
         ./modules/misc
+        ./modules/nextcloud
         ./modules/user
         ./modules/plasma
         ./modules/stylix

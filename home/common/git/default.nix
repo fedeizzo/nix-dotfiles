@@ -1,4 +1,4 @@
-_:
+{ config, ... }:
 
 {
   programs.git = {
@@ -13,6 +13,9 @@ _:
     extraConfig = {
       init = {
         defaultBranch = "master";
+      };
+      safe = {
+        directory = "${config.home.homeDirectory}/nix-dotfiles";
       };
     };
     aliases = {

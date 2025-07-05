@@ -22,6 +22,7 @@ _:
       "/var/lib/NetworkManager/secret_key"
       "/var/lib/NetworkManager/seen-bssids"
       "/var/lib/NetworkManager/timestamps"
+      "/root/.gitconfig"
     ];
   };
 

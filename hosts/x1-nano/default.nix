@@ -6,7 +6,6 @@
     inputs.home-manager.nixosModules.home-manager
     inputs.sops-nix.nixosModules.sops
     inputs.disko.nixosModules.disko
-    inputs.nh.nixosModules.default
     inputs.nix-topology.nixosModules.default
     (modulesPath + "/installer/scan/not-detected.nix")
 

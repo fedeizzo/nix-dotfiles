@@ -13,6 +13,7 @@
         # "org"
         "notes"
         "zettelkasten"
+        "Documents"
 
         # AppData
         ".local"
@@ -35,6 +36,8 @@
         ".config/anytype"
         ".config/zed"
         ".zen"
+        ".config/Nextcloud"
+        ".config/libreoffice"
 
         # Cache
         ".cargo"
@@ -51,6 +54,7 @@
         ".cache/orca-slicer"
         ".cache/zed"
         ".cache/zen"
+        ".cache/Nextcloud"
 
         # plasma
         ".config/kde.org"
