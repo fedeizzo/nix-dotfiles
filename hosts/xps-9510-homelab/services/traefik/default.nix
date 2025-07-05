@@ -10,11 +10,7 @@
     staticConfigOptions = {
       global = { checkNewVersion = false; sendAnonymousUsage = false; };
       metrics = {
-        prometheus = {
-          addRoutersLabels = true;
-          addServicesLabels = true;
-          entryPoint = "metrics";
-        };
+        prometheus = { addRoutersLabels = true; addServicesLabels = true; entryPoint = "metrics"; };
       };
       serversTransport = { insecureSkipVerify = true; };
       api = { insecure = true; dashboard = true; debug = false; };
@@ -74,6 +70,13 @@
 
     dynamicConfigOptions = {
       http = {
+        # middlewares = {
+        #   nextcloud-secure-headers = {
+        #     headers = { hostsProxyHeaders = [ "X-Forwarded-Host" ]; referrerPolicy = "same-origin"; };
+        #   };
+        #   https-redirect = { redirectscheme = { scheme = "https"; }; };
+        #   nextcloud-chain = { chain = { middlewares = [ "https-redirect" "nextcloud-secure-headers" ]; }; };
+        # };
         routers = {
           fedeizzodev = { entryPoints = [ "websecure" ]; rule = "Host(`fedeizzo.dev`)"; service = "fedeizzodev"; };
           grafana = { entryPoints = [ "websecure" ]; rule = "Host(`grafana.fedeizzo.dev`)"; service = "grafana"; };

@@ -9,6 +9,7 @@ in
 {
   # users.users.nextcloud.extraGroups = lib.mkIf config.services.nextcloud.enable [ "render" "users" "keys" ];
   services.nginx.virtualHosts."nextcloud.fedeizzo.dev".listen = [{ addr = "127.0.0.1"; port = 8180; }];
+  services.nginx.recommendedProxySettings = true;
 
   services.nextcloud = {
     enable = true;
@@ -29,7 +30,7 @@ in
     };
     settings = {
       overwriteprotocol = "https";
-      trusted_proxies = [ "127.0.0.1" "::1" ]; # Trust Traefik (localhost)
+      trusted_proxies = [ "127.0.0.1" "::1" "192.168.7.1" ]; # Trust Traefik (localhost) and wireguard
       maintenance_window_start = "1"; # run intensive task between 1AM and 5AM
       default_phone_region = "FR";
       log_type = "file";
@@ -38,6 +39,12 @@ in
       "opcache.interned_strings_buffer" = "16";
       "opcache.memory_consumption" = "256";
       "realpath_cache_size" = "0";
+    };
+
+    # push notification for nextcloud-client
+    notify_push = {
+      enable = true;
+      nextcloudUrl = "http://127.0.0.1:8180";
     };
 
     # cache
@@ -52,7 +59,7 @@ in
     extraAppsEnable = true;
     enableImagemagick = true;
     extraApps = {
-      inherit (pkgs.nextcloud31Packages.apps) calendar contacts richdocuments;
+      inherit (pkgs.nextcloud31Packages.apps) calendar contacts richdocuments notify_push;
     };
     autoUpdateApps.enable = true;
   };
