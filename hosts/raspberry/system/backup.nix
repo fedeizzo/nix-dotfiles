@@ -20,7 +20,6 @@
         # directories
         "/var/container_envs"
         "/var/volumes/grafana/plugins"
-        "/var/volumes/sftpgo"
         "/var/volumes/traggo"
 
         # files

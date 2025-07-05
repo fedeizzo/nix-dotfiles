@@ -49,12 +49,7 @@
           targets = [ "127.0.0.1:8082" ];
         }];
       }
-      {
-        job_name = "sftpgo";
-        static_configs = [{
-          targets = [ "127.0.0.1:${toString config.services.sftpgo.settings.telemetry.bind_port}" ];
-        }];
-      }
+      
       {
         job_name = "smartctl";
         static_configs = [{

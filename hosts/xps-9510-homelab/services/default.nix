@@ -23,7 +23,6 @@ in
     ./postgres
     ./prometheus
     # ./sunshine
-    ./sftpgo
     ./streaming
     ./traefik
   ];

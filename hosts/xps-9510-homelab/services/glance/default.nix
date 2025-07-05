@@ -23,7 +23,13 @@
               widgets = [
                 { type = "weather"; units = "metric"; hour-format = "24h"; location = "Paris, France"; }
                 { type = "server-stats"; servers = [{ type = "local"; name = "homelab"; }]; }
-                { type = "markets"; markets = [{ symbol = "DDOG"; name = "Datadog"; }]; }
+                {
+                  type = "markets";
+                  markets = [
+                    { symbol = "DDOG"; name = "Datadog"; }
+                    { symbol = "DCAM"; name = "PEA"; }
+                  ];
+                }
                 { type = "hacker-news"; limit = 15; collapse-after = 5; }
               ];
             }
@@ -62,8 +68,7 @@
                   title = "Utils";
                   sites = [
                     { title = "Immich"; url = "https://photo.fedeizzo.dev"; icon = "di:immich"; }
-                    { title = "Drive"; url = "https://drive.fedeizzo.dev"; icon = "di:sftpgo"; }
-                    { title = "Sunshine"; url = "https://homelab:47990"; icon = "di:sunshine"; alt-status-codes = [ 401 ]; }
+                    { title = "Nextctloud"; url = "https://nextcloud.fedeizzo.dev"; icon = "di:nextcloud"; }
                     { title = "Paperless"; url = "https://paperless.fedeizzo.dev"; icon = "di:paperless"; }
                   ];
                 }

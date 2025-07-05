@@ -24,7 +24,6 @@
         # directories
         "/var/container_envs"
         "/var/volumes/grafana/plugins"
-        "${config.services.sftpgo.dataDir}"
         "${config.services.postgresqlBackup.location}"
         "${config.services.immich.mediaLocation}/library"
         "${config.services.immich.mediaLocation}/upload"
