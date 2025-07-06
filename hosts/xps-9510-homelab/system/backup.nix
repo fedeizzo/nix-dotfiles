@@ -1,7 +1,18 @@
-{ config, ... }:
+{ pkgs, config, lib, ... }:
 
 {
-  services.restic.backups = {
+  services.restic.backups = rec {
+    local = backblaze // {
+      repository = "/games/local-restic-backup";
+      environmentFile = null;
+      runCheck = true;
+      passwordFile = config.sops.secrets.local-restic-password.path;
+      timerConfig = {
+        OnCalendar = "hourly";
+        Persistent = true;
+        RandomizeDelaySec = "3m";
+      };
+    };
     backblaze = {
       user = "root";
       initialize = true;
@@ -19,6 +30,9 @@
       ];
       exclude = [
         "**/*.log"
+        "**/log/**"
+        "**/cache/**"
+        "**/.cache/**"
       ];
       paths = [
         # directories
@@ -51,6 +65,21 @@
       pruneOpts = [
         "--keep-last 30" # keep last 30 days
       ];
+    };
+  };
+
+  environment.systemPackages = [ pkgs.backrest ];
+  systemd.services.backrest = {
+    description = "Backrest";
+    after = [ "network.target" ];
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig = {
+      Type = "simple";
+      User = "root";
+      ExecStart = lib.getExe pkgs.backrest;
+    };
+    environment = {
+      BACKREST_PORT = "0.0.0.0:9898";
     };
   };
 }

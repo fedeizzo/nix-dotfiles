@@ -18,6 +18,7 @@
 
       restic-repository = { };
       restic-password = { };
+      local-restic-password = { };
       paperless-admin-password = { };
     };
   };
