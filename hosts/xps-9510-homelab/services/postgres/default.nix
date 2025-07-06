@@ -70,4 +70,19 @@ in
         ${(builtins.readFile ./datbases/networth.sql)}
       EOF
     '';
+
+  sops.secrets = (builtins.listToAttrs (map
+    (db:
+      {
+        name = "${db.user}-pg-password";
+        value = {
+          sopsFile = ./postgres-homelab-secrets.yaml;
+          format = "yaml";
+          mode = "0400";
+          owner = config.systemd.services.postgresql.serviceConfig.User;
+          group = config.systemd.services.postgresql.serviceConfig.Group;
+          restartUnits = [ "postgresql.service" ];
+        };
+      })
+    dbs));
 }
