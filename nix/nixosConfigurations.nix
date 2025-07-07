@@ -56,10 +56,6 @@ in
           inherit system;
           config.allowUnfree = true;
         };
-        anytype-pkgs = import inputs.anytype-pkgs {
-          inherit system;
-          config.allowUnfree = true;
-        };
 
         inherit system-overlays;
       };

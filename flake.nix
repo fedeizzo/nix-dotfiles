@@ -13,7 +13,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
     };
-    anytype-pkgs.url = "github:autrimpo/nixpkgs/anytype-update";
 
     ## Mac
     nixpkgs-darwin.url = "github:nixos/nixpkgs/nixpkgs-25.05-darwin";

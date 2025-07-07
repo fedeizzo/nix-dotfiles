@@ -21,7 +21,7 @@ in
     };
 
     tasks = mkOption {
-      inherit (jsonFormat) type;
+      type = jsonFormat.type;
       default = [ ];
     };
   };
@@ -79,7 +79,7 @@ in
           border_size = 1;
         };
 
-        # telemetry and AI
+        # telemtry and AI
         telemetry = {
           diagnostics = false;
           metrics = false;
@@ -124,14 +124,26 @@ in
           toggle_relative_line_numbers = true;
           # default_mode = "helix_normal";
         };
+        diagnostic = {
+          button = true;
+          include_warnings = true;
+          inline = {
+            enabled = true;
+            update_debounce_ms = 150;
+            padding = 4;
+            min_column = 0;
+            max_severity = null;
+          };
+          cargo = null;
+        };
 
         # lsp
         lsp = {
           gopls = {
             # binary.path = getExe pkgs-unstable.gopls;
             initialization_options = {
-              inherit (cfg.gopls) buildFlags;
-              inherit (cfg.gopls) directoryFilters;
+              buildFlags = cfg.gopls.buildFlags;
+              directoryFilters = cfg.gopls.directoryFilters;
               # local = "github.com/DataDog/dd-go"; # TODO figure this
               codelenses = {
                 generate = true;
@@ -201,7 +213,6 @@ in
         };
       };
     };
-    home.packages = [ pkgs-unstable.gg-jj ];
-    xdg.configFile."zed/tasks.json".text = builtins.toJSON cfg.tasks;
+    xdg.configFile."zed/tasks.json".text = (builtins.toJSON cfg.tasks);
   };
 }

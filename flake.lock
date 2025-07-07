@@ -1,21 +1,5 @@
 {
   "nodes": {
-    "anytype-pkgs": {
-      "locked": {
-        "lastModified": 1748370236,
-        "narHash": "sha256-R+oU7OKKQxzjZ42HteqpLFZpx4ZqI66ZICdPzYjIOP0=",
-        "owner": "autrimpo",
-        "repo": "nixpkgs",
-        "rev": "66ab14c0dc649620a6fa31ea6bf35aed3f1c5209",
-        "type": "github"
-      },
-      "original": {
-        "owner": "autrimpo",
-        "ref": "anytype-update",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "authentik-nix": {
       "inputs": {
         "authentik-src": "authentik-src",
@@ -1157,7 +1141,6 @@
     },
     "root": {
       "inputs": {
-        "anytype-pkgs": "anytype-pkgs",
         "authentik-nix": "authentik-nix",
         "deploy-rs": "deploy-rs",
         "devshell": "devshell",

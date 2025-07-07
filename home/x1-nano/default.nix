@@ -3,7 +3,6 @@
 , config
 , emacs-pkg
 , pkgs-unstable
-, anytype-pkgs
 , ...
 }:
 
@@ -18,7 +17,6 @@
       inherit inputs;
       inherit emacs-pkg;
       inherit pkgs-unstable;
-      inherit anytype-pkgs;
     };
     backupFileExtension = "to_delete";
     sharedModules = [ inputs.plasma-manager.homeManagerModules.plasma-manager ];

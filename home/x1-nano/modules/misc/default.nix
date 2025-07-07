@@ -1,4 +1,4 @@
-{ pkgs, anytype-pkgs, ... }:
+{ pkgs, ... }:
 
 {
   home.packages = with pkgs; [
@@ -16,7 +16,7 @@
     openscad
 
     # notes
-    anytype-pkgs.anytype
+    pkgs.anytype
 
     element-desktop
   ];
