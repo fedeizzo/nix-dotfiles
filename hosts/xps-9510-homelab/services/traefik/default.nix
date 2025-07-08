@@ -49,6 +49,7 @@
                 { main = "fedeizzo.dev"; sans = [ "*.fedeizzo.dev" ]; }
               ];
             };
+            middlewares = [ "secHeaders@file" ];
           };
         };
       };
@@ -70,13 +71,20 @@
 
     dynamicConfigOptions = {
       http = {
-        # middlewares = {
-        #   nextcloud-secure-headers = {
-        #     headers = { hostsProxyHeaders = [ "X-Forwarded-Host" ]; referrerPolicy = "same-origin"; };
-        #   };
-        #   https-redirect = { redirectscheme = { scheme = "https"; }; };
-        #   nextcloud-chain = { chain = { middlewares = [ "https-redirect" "nextcloud-secure-headers" ]; }; };
-        # };
+        middlewares = {
+          secHeaders = {
+            headers = {
+              browserXssFilter = true; # enables basic protection against reflected XSS
+              contentTypeNosniff = true; # tells browsers not to try to guess the content type
+              frameDeny = true; # prevent clickjacking
+              customFrameOptionsValue = "SAMEORIGIN"; # prevent clickjacking
+              stsIncludeSubdomains = true; # enforce strict HTTPS
+              stsPreload = true; # enforce strict HTTPS
+              stsSeconds = 31536000; # enforce strict HTTPS
+              customResponseHeaders = { server = ""; x-powered-by = ""; }; # remove some unnecessary info from the header
+            };
+          };
+        };
         routers = {
           fedeizzodev = { entryPoints = [ "websecure" ]; rule = "Host(`fedeizzo.dev`)"; service = "fedeizzodev"; };
           grafana = { entryPoints = [ "websecure" ]; rule = "Host(`grafana.fedeizzo.dev`)"; service = "grafana"; };
