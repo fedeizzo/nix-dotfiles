@@ -59,7 +59,7 @@ in
     extraAppsEnable = true;
     enableImagemagick = true;
     extraApps = {
-      inherit (pkgs.nextcloud31Packages.apps) calendar contacts richdocuments notify_push;
+      inherit (pkgs.nextcloud31Packages.apps) calendar contacts richdocuments notify_push tasks deck;
     };
     autoUpdateApps.enable = true;
   };
