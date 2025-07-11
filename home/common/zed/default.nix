@@ -201,6 +201,7 @@ in
         };
       };
     };
+    home.packages = [ pkgs-unstable.gg-jj ];
     xdg.configFile."zed/tasks.json".text = (builtins.toJSON cfg.tasks);
   };
 }
