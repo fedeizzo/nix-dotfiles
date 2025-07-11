@@ -24,13 +24,13 @@ _:
   ##############
   # DATA ENTRY #
   ##############
-  virtualisation.oci-containers.containers."nocodb" = {
-    image = "nocodb/nocodb";
-    autoStart = true;
-    extraOptions = [ "--network=networth" ];
-    volumes = [ "/var/volumes/net_worth_nocodb:/usr/app/data" ];
-    ports = [ "50003:8080" ];
-  };
+  # virtualisation.oci-containers.containers."nocodb" = {
+  #   image = "nocodb/nocodb";
+  #   autoStart = true;
+  #   extraOptions = [ "--network=networth" ];
+  #   volumes = [ "/var/volumes/net_worth_nocodb:/usr/app/data" ];
+  #   ports = [ "50003:8080" ];
+  # };
 
   # ###########
   # # GRAFANA #
