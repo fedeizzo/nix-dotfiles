@@ -27,16 +27,22 @@
     };
     jellyseerr.enable = true; # *rr integration in jellyfin
     # jellyseerr.package = pkgs-unstable.jellyseerr; # *rr integration in jellyfin
-    radarr.enable = true; # movies
-    radarr.user = "media";
-    radarr.group = "media";
-    sonarr.enable = true; # series
-    sonarr.user = "media";
-    sonarr.group = "media";
+    radarr = {
+      enable = true; # movies
+      user = "media";
+      group = "media";
+    };
+    sonarr = {
+      enable = true; # series
+      user = "media";
+      group = "media";
+    };
     prowlarr.enable = true; # tracker
-    bazarr.enable = true; # subtitles
-    bazarr.user = "media";
-    bazarr.group = "media";
+    bazarr = {
+      enable = true; # subtitles
+      user = "media";
+      group = "media";
+    };
     # flaresolverr.enable = true; # bypass cloudflare
     # flaresolverr.package = pkgs.nur.repos.xddxdd.flaresolverr-21hsmw;
 
@@ -48,7 +54,7 @@
       dataDir = "/games/jellyfin/torrent";
     };
   };
-  
+
   nixpkgs.overlays = with pkgs; [
     (
       final: prev:

@@ -50,6 +50,7 @@ in
           enable = true;
           excludes = [
             "home/common/sources/lfpreview"
+            "hosts/xps-9510-homelab/services/default.nix"
           ];
         };
         conventional-commit = {

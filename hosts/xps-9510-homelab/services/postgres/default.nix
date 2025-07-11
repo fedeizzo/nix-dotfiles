@@ -71,7 +71,7 @@ in
       EOF
     '';
 
-  sops.secrets = (builtins.listToAttrs (map
+  sops.secrets = builtins.listToAttrs (map
     (db:
       {
         name = "${db.user}-pg-password";
@@ -84,5 +84,5 @@ in
           restartUnits = [ "postgresql.service" ];
         };
       })
-    dbs));
+    dbs);
 }

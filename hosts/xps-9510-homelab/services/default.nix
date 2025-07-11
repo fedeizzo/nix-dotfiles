@@ -40,23 +40,23 @@ in
       { name = "jellyfin"; port = 8096; isExposed = true; dashboardSection = "Exposed media"; }
       { name = "jellyseerr"; port = 5055; isExposed = true; dashboardSection = "Exposed media"; }
       { name = "nextcloud"; port = 8180; isExposed = true; dashboardSection = "Exposed media"; }
-      { name = "collabora"; port = config.services.collabora-online.port; isExposed = true; dashboardSection = "Exposed media"; dashboardIcon = "collabora-online"; }
+      { name = "collabora"; inherit (config.services.collabora-online) port; isExposed = true; dashboardSection = "Exposed media"; dashboardIcon = "collabora-online"; }
 
       # Media
-      { name = "immich"; subdomain = "photo"; port = config.services.immich.port; dashboardSection = "Media"; }
-      { name = "paperless"; port = config.services.paperless.port; dashboardSection = "Media"; }
+      { name = "immich"; subdomain = "photo"; inherit (config.services.immich) port; dashboardSection = "Media"; }
+      { name = "paperless"; inherit (config.services.paperless) port; dashboardSection = "Media"; }
       { name = "fusion"; port = 51000; dashboardSection = "Media"; dashboardIcon = "tinytinyrss"; }
-      { name = "sonarr"; port = config.services.sonarr.settings.server.port; dashboardSection = "Media"; }
-      { name = "radarr"; port = config.services.radarr.settings.server.port; dashboardSection = "Media"; }
-      { name = "prowlarr"; port = config.services.prowlarr.settings.server.port; dashboardSection = "Media"; }
-      { name = "deluge"; port = config.services.deluge.web.port; dashboardSection = "Media"; }
+      { name = "sonarr"; inherit (config.services.sonarr.settings.server) port; dashboardSection = "Media"; }
+      { name = "radarr"; inherit (config.services.radarr.settings.server) port; dashboardSection = "Media"; }
+      { name = "prowlarr"; inherit (config.services.prowlarr.settings.server) port; dashboardSection = "Media"; }
+      { name = "deluge"; inherit (config.services.deluge.web) port; dashboardSection = "Media"; }
       { name = "bazarr"; port = config.services.bazarr.listenPort; dashboardSection = "Media"; }
 
       # Observability
       { name = "grafana"; port = config.services.grafana.settings.server.http_port; dashboardSection = "Observability"; }
 
       # Management
-      { name = "dashboard"; subdomain = "homelab"; port = config.services.glance.settings.server.port; dashboardSection = "Management"; dashboardIcon = "glance"; }
+      { name = "dashboard"; subdomain = "homelab"; inherit (config.services.glance.settings.server) port; dashboardSection = "Management"; dashboardIcon = "glance"; }
       { name = "homeassistant"; subdomain = "hass"; port = config.services.home-assistant.config.http.server_port; dashboardSection = "Management"; dashboardIcon = "home-assistant"; }
     ];
   };

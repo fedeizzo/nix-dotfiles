@@ -1,9 +1,9 @@
 { lib, config, pkgs, ... }:
 
 let
-  groupedServices = lib.lists.groupBy (service: toString service.isExposed) config.fi.services;
+  groupedServices = builtins.groupBy (service: toString service.isExposed) config.fi.services;
 
-  getHost = service: (lib.strings.concatStringsSep "." ((lib.lists.optional (! (isNull service.subdomain)) service.subdomain) ++ [ "fedeizzo.dev" ]));
+  getHost = service: (lib.strings.concatStringsSep "." ((lib.lists.optional (service.subdomain != null) service.subdomain) ++ [ "fedeizzo.dev" ]));
 
   exposedServices = groupedServices."1";
   notExposedServices = groupedServices."";
@@ -11,7 +11,7 @@ let
   exposedDomains = lib.strings.concatStringsSep " " (map getHost exposedServices);
   notExposedDomains = lib.strings.concatStringsSep " " (map getHost notExposedServices);
 
-  dns-updater = (pkgs.writeShellScriptBin
+  dns-updater = pkgs.writeShellScriptBin
     "dns-updater"
     ''
       # === CONFIGURATION ===
@@ -83,7 +83,7 @@ let
         [ -z "$sub" ] && continue
         set_dns_record "$sub" $INTERNAL_IP
       done
-    '');
+    '';
 in
 {
   systemd.services.dns-updater = {

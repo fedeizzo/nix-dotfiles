@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, ... }:
 
 with lib;
 let
@@ -15,13 +15,13 @@ let
     };
   });
 
-  getHost = subdomain: (lib.strings.concatStringsSep "." ((lib.lists.optional (! (isNull subdomain)) subdomain) ++ [ "fedeizzo.dev" ]));
+  getHost = subdomain: (lib.strings.concatStringsSep "." ((lib.lists.optional (subdomain != null) subdomain) ++ [ "fedeizzo.dev" ]));
 
-  routersGenerator = (services: builtins.listToAttrs
+  routersGenerator = services: builtins.listToAttrs
     (map
       (service:
         {
-          name = service.name;
+          inherit (service) name;
           value = {
             entryPoints = [ "websecure" ];
             rule = "Host(`${(getHost service.subdomain)}`)";
@@ -29,13 +29,13 @@ let
           };
         }
       )
-      services));
+      services);
 
-  servicesGenerator = (services: builtins.listToAttrs
+  servicesGenerator = services: builtins.listToAttrs
     (map
       (service:
         {
-          name = service.name;
+          inherit (service) name;
           value = {
             loadBalancer = {
               servers = [
@@ -45,7 +45,7 @@ let
           };
         }
       )
-      services));
+      services);
 in
 {
   imports = [

@@ -6,7 +6,7 @@ buildHomeAssistantComponent rec {
   version = "2.1.17";
 
   src = fetchFromGitHub {
-    owner = owner;
+    inherit owner;
     repo = "ha-bambulab";
     tag = "v${version}";
     hash = "sha256-6yKwPZcp29BAlOcqN1n+rSEkohuVgwa7xJW4H/5MsxM=";

@@ -1,9 +1,9 @@
 { lib, config, pkgs-unstable, ... }:
 
 let
-  groupedServices = lib.lists.groupBy (service: service.dashboardSection) config.fi.services;
+  groupedServices = builtins.groupBy (service: service.dashboardSection) config.fi.services;
 
-  getHost = subdomain: (lib.strings.concatStringsSep "." ((lib.lists.optional (! (isNull subdomain)) subdomain) ++ [ "fedeizzo.dev" ]));
+  getHost = subdomain: (lib.strings.concatStringsSep "." ((lib.lists.optional (subdomain != null) subdomain) ++ [ "fedeizzo.dev" ]));
 
   monitorEntryMapper = service: {
     title = service.name;

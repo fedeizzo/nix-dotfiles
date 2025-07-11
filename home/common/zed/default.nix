@@ -21,7 +21,7 @@ in
     };
 
     tasks = mkOption {
-      type = jsonFormat.type;
+      inherit (jsonFormat) type;
       default = [ ];
     };
   };
@@ -79,7 +79,7 @@ in
           border_size = 1;
         };
 
-        # telemtry and AI
+        # telemetry and AI
         telemetry = {
           diagnostics = false;
           metrics = false;
@@ -130,8 +130,8 @@ in
           gopls = {
             # binary.path = getExe pkgs-unstable.gopls;
             initialization_options = {
-              buildFlags = cfg.gopls.buildFlags;
-              directoryFilters = cfg.gopls.directoryFilters;
+              inherit (cfg.gopls) buildFlags;
+              inherit (cfg.gopls) directoryFilters;
               # local = "github.com/DataDog/dd-go"; # TODO figure this
               codelenses = {
                 generate = true;
@@ -202,6 +202,6 @@ in
       };
     };
     home.packages = [ pkgs-unstable.gg-jj ];
-    xdg.configFile."zed/tasks.json".text = (builtins.toJSON cfg.tasks);
+    xdg.configFile."zed/tasks.json".text = builtins.toJSON cfg.tasks;
   };
 }

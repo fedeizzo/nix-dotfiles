@@ -5,7 +5,7 @@
 
   nixpkgs = {
     overlays = builtins.attrValues system-overlays ++ [
-      (_:_: {
+      ("_:_:" {
         inherit (pkgs-unstable) rbw;
       })
       (
