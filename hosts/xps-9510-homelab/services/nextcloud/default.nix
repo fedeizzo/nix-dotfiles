@@ -40,6 +40,8 @@ in
         "opcache.interned_strings_buffer" = "16";
         "opcache.memory_consumption" = "256";
         "realpath_cache_size" = "0";
+        "opcache.jit" = "1255";
+        "opcache.jit_buffer_size" = "8M";
       };
 
       # push notification for nextcloud-client
