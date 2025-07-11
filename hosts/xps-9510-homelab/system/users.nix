@@ -32,6 +32,7 @@
       "update_docker_images" = ''docker images --format "{{.Repository}}:{{.Tag}}" | xargs -L1 docker pull'';
       "restart_docker_containers" = "systemctl restart docker-*.service";
       "SS" = "systemctl";
+      "highlight" = "grep --color -z";
     };
   };
 }

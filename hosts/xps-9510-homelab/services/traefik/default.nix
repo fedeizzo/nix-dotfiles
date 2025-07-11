@@ -9,13 +9,20 @@ let
       name = mkOption { type = types.str; };
       subdomain = mkOption { type = types.nullOr types.str; default = config.name; };
       port = mkOption { type = types.int; };
+      path = mkOption { type = types.str; default = ""; };
       isExposed = mkOption { type = types.bool; default = false; };
+      authType = mkOption { type = (types.enum [ "proxy" "none" ]); default = "none"; };
       dashboardSection = mkOption { type = types.str; };
       dashboardIcon = mkOption { type = types.str; default = "${config.name}"; };
     };
   });
 
   getHost = subdomain: (lib.strings.concatStringsSep "." ((lib.lists.optional (subdomain != null) subdomain) ++ [ "fedeizzo.dev" ]));
+
+  authHandlers = {
+    proxy = { middlewares = [ "authentik" ]; };
+    none = { };
+  };
 
   routersGenerator = services: builtins.listToAttrs
     (map
@@ -26,10 +33,13 @@ let
             entryPoints = [ "websecure" ];
             rule = "Host(`${(getHost service.subdomain)}`)";
             service = service.name;
-          };
+            priority = 10;
+            # middlewares = lib.lists.optional (service.subdomain != "auth") "authentik";
+          } // authHandlers."${service.authType}";
         }
       )
       services);
+
 
   servicesGenerator = services: builtins.listToAttrs
     (map
@@ -39,7 +49,7 @@ let
           value = {
             loadBalancer = {
               servers = [
-                { url = "http://localhost:${toString service.port}"; }
+                { url = "http://localhost:${toString service.port}${service.path}"; }
               ];
             };
           };
@@ -60,6 +70,10 @@ in
 
   config = {
     users.users.traefik.uid = 990; # make backup consistent across machines
+    services.whoami = {
+      enable = true;
+      port = 15558;
+    };
     services.traefik = {
       enable = true;
       dataDir = "/var/volumes/traefik";
@@ -142,8 +156,35 @@ in
                 customResponseHeaders = { server = ""; x-powered-by = ""; }; # remove some unnecessary info from the header
               };
             };
+            authentik = {
+              forwardAuth = {
+                address = "http://localhost:9000/outpost.goauthentik.io/auth/traefik";
+                trustForwardHeader = true;
+                authResponseHeaders = [
+                  "X-authentik-username"
+                  "X-authentik-groups"
+                  "X-authentik-entitlements"
+                  "X-authentik-email"
+                  "X-authentik-name"
+                  "X-authentik-uid"
+                  "X-authentik-jwt"
+                  "X-authentik-meta-jwks"
+                  "X-authentik-meta-outpost"
+                  "X-authentik-meta-provider"
+                  "X-authentik-meta-app"
+                  "X-authentik-meta-version"
+                ];
+              };
+            };
           };
-          routers = routersGenerator cfg.services;
+          routers = {
+            authForwarder = {
+              entryPoints = [ "websecure" ];
+              rule = "HostRegexp(`{subdomain:[a-z0-9]+}.fedeizzo.dev`) && PathPrefix(`/outpost.goauthentik.io/`)";
+              service = "authentik";
+              priority = 150;
+            };
+          } // (routersGenerator cfg.services);
           services = servicesGenerator cfg.services;
         };
       };

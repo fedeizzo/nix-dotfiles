@@ -3,6 +3,7 @@
 {
   imports = [
     inputs.nix-topology.nixosModules.default
+    inputs.authentik-nix.nixosModules.default
 
     ./services
     ./system/backup.nix

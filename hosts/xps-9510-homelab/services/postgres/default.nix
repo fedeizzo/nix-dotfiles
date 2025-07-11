@@ -7,6 +7,7 @@ let
     { user = "immich"; db = "immich"; }
     { user = "paperless"; db = "paperless"; }
     { user = "nextcloud"; db = "nextcloud"; }
+    { user = "authentik"; db = "authentik"; }
   ];
   authenticationEntry = user: db: "host " + db + " " + user + " samehost md5";
   passwordDeclarationEntry = user: "DECLARE " + user + "_password TEXT;";
@@ -35,12 +36,14 @@ in
       "networth"
       "paperless"
       "nextcloud"
+      "authentik"
     ];
     ensureUsers = [
       { name = "networth"; ensureDBOwnership = true; }
       { name = "networth_ro"; }
       { name = "paperless"; ensureDBOwnership = true; }
       { name = "nextcloud"; ensureDBOwnership = true; }
+      { name = "authentik"; ensureDBOwnership = true; }
     ];
     authentication = pkgs.lib.mkForce ''
       # TYPE  DATABASE        USER            ADDRESS                 METHOD    ARGS

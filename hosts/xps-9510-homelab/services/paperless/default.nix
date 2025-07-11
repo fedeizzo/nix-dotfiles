@@ -36,6 +36,11 @@
       PAPERLESS_TRAIN_TASK_CRON = "40 */1 * * *";
 
       PAPERLESS_CONSUMER_DISABLE = "False";
+
+      # oauth
+      PAPERLESS_ENABLE_ALLAUTH = true;
+      PAPERLESS_APPS = "allauth.socialaccount.providers.openid_connect";
+      PAPERLESS_DISABLE_REGULAR_LOGIN = true;
     };
   };
 

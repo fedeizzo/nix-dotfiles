@@ -90,12 +90,12 @@ in
     description = "dns-updater";
     wantedBy = [ "multi-user.target" ];
     after = [ "network.target" ];
-    restartTriggers = [
-      config.sops.secrets.dns-updater-zone-id.sopsFileHash
-      config.sops.secrets.dns-updater-password.sopsFileHash
-      exposedDomains
-      notExposedDomains
-    ];
+    # restartTriggers = [
+    #   # config.sops.secrets.dns-updater-zone-id.sopsFileHash
+    #   # config.sops.secrets.dns-updater-password.sopsFileHash
+    #   exposedDomains
+    #   notExposedDomains
+    # ];
 
     serviceConfig = {
       User = "dns-updater";

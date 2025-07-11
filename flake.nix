@@ -51,6 +51,7 @@
     nur.url = "github:nix-community/NUR";
     nur.inputs.nixpkgs.follows = "nixpkgs";
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
+    authentik-nix.url = "github:nix-community/authentik-nix";
 
     # Wayland and Hyprland
     stylix.url = "github:danth/stylix";

@@ -55,6 +55,7 @@
         "${config.services.deluge.dataDir}/.config"
         "${config.services.nextcloud.datadir}"
         "${config.services.paperless.dataDir}"
+        "/var/lib/authentik/media"
 
         # files
         "/var/volumes/promtail/GeoLite2-City.mmdb"

@@ -6,6 +6,7 @@ let
 in
 {
   imports = [
+    ./authentik
     ./blocky
     ./fedeizzo.dev
     ./fusion
@@ -53,11 +54,13 @@ in
       { name = "bazarr"; port = config.services.bazarr.listenPort; dashboardSection = "Media"; }
 
       # Observability
-      { name = "grafana"; port = config.services.grafana.settings.server.http_port; dashboardSection = "Observability"; }
+      { name = "grafana"; port = config.services.grafana.settings.server.http_port; dashboardSection = "Observability"; authType = "proxy"; }
+      { name = "whoami"; port = config.services.whoami.port; dashboardSection = "Observability"; authType = "proxy"; }
 
       # Management
-      { name = "dashboard"; subdomain = "homelab"; inherit (config.services.glance.settings.server) port; dashboardSection = "Management"; dashboardIcon = "glance"; }
+      { name = "dashboard"; subdomain = "homelab"; inherit (config.services.glance.settings.server) port; dashboardSection = "Management"; dashboardIcon = "glance"; authType = "proxy"; }
       { name = "homeassistant"; subdomain = "hass"; port = config.services.home-assistant.config.http.server_port; dashboardSection = "Management"; dashboardIcon = "home-assistant"; }
+      { name = "authentik"; subdomain = "auth"; isExposed = true; port = 9000; path = "/outpost.goauthentik.io"; dashboardSection = "Management"; }
     ];
   };
 }
