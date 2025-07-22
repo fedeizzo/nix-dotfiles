@@ -132,7 +132,7 @@ in
             update_debounce_ms = 150;
             padding = 4;
             min_column = 0;
-            max_severity = null;
+            max_severity = "all";
           };
           cargo = null;
         };
