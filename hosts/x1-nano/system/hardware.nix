@@ -1,4 +1,4 @@
-{ inputs, ... }:
+{ inputs, pkgs, ... }:
 
 {
   hardware = {
@@ -32,6 +32,19 @@
   #   p2.limit = 40;
   #   p2.window = 10;
   # };
+
+  systemd.services = {
+    hdaverb-jack-fix = {
+      description = "Thinkpad X1 Nano: Fix crackly audio with headphones";
+      wantedBy = [ "multi-user.target" ];
+      after = [ "sys-devices-pci0000:00-0000:00:1f.3-skl_hda_dsp_generic-sound-card0-controlC0.device" ];
+      requires = [ "sys-devices-pci0000:00-0000:00:1f.3-skl_hda_dsp_generic-sound-card0-controlC0.device" ];
+      serviceConfig = {
+        Type = "oneshot";
+        ExecStart = "${pkgs.alsa-tools}/bin/hda-verb /dev/snd/hwC0D0 0x1d SET_PIN_WIDGET_CONTROL 0x0";
+      };
+    };
+  };
 
   imports = [
     inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x1-nano
