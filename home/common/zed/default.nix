@@ -170,6 +170,16 @@ in
           pylsp = {
             binary.path_lookup = true;
           };
+          rust-analyzer = {
+            binary = {
+              path_lookup = true;
+            };
+          };
+          package-version-server = {
+            binary = {
+              path_lookup = true;
+            };
+          };
           ruff = {
             initialization_options = {
               settings = {
