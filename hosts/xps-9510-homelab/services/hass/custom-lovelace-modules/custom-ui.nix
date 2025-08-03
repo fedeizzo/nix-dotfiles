@@ -1,4 +1,4 @@
-{ lib, stdenvNoCC, fetchFromGitHub, fetchYarnDeps, yarnConfigHook, yarnBuildHook, nodejs }:
+{ stdenvNoCC, fetchFromGitHub }:
 
 stdenvNoCC.mkDerivation rec {
   pname = "custom-ui";
@@ -11,19 +11,10 @@ stdenvNoCC.mkDerivation rec {
     sha256 = "sha256-s8vNY19kvEyhhb9OUjXGGieAcRQg2lDMWl4WEIGNxhY=";
   };
 
-  offlineCache = fetchYarnDeps {
-    inherit src;
-    sha256 = lib.fakeSha256;
-  };
-
-  nativeBuildInputs = [ yarnConfigHook yarnBuildHook nodejs ];
+  dontBuild = true;
 
   installPhase = ''
-    runHook preInstall
-
-    mkdir -p $out
-    cp dist/* $out
-
-    runHook postInstall
+    mkdir $out
+    cp -v custom-ui.js $out/${pname}.js
   '';
 }
