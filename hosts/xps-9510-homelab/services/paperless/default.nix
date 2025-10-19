@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 
 {
   services.paperless = {
@@ -8,6 +8,7 @@
     dataDir = "/var/lib/paperless";
     user = "paperless";
     consumptionDirIsPublic = false;
+    package = pkgs.paperless-ngx;
 
     database.createLocally = false; # self managed
     environmentFile = "${config.sops.secrets.paperless.path}";
@@ -36,6 +37,8 @@
       PAPERLESS_TRAIN_TASK_CRON = "40 */1 * * *";
 
       PAPERLESS_CONSUMER_DISABLE = "False";
+
+      PAPERLESS_ENABLE_NLTK = false;
 
       # oauth
       PAPERLESS_ENABLE_ALLAUTH = true;

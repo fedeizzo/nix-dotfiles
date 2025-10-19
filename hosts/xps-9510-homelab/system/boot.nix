@@ -8,7 +8,7 @@
     loader.systemd-boot.enable = true;
 
     tmp.cleanOnBoot = true;
-    kernelPackages = pkgs.linuxPackages_6_14;
+    kernelPackages = pkgs.linuxPackages_latest;
     kernel.sysctl = {
       "vm.swappiness" = 10;
       "dev.i915.perf_stream_paranoid" = 0;
