@@ -30,7 +30,7 @@ let
         {
           inherit (service) name;
           value = {
-            entryPoints = [ "websecure" ];
+            entryPoints = [ (if service.isExposed then "websecure" else "wgsecure") ];
             rule = "Host(`${(getHost service.subdomain)}`)";
             service = service.name;
             priority = 10;
@@ -105,7 +105,7 @@ in
             address = ":8082";
           };
           web = {
-            address = ":80";
+            address = "192.168.1.65:80"; # allow only ethernet interface
             http = {
               redirections = {
                 entrypoint = { to = "websecure"; };
@@ -113,7 +113,19 @@ in
             };
           };
           websecure = {
-            address = ":443";
+            address = "192.168.1.65:443"; # allow only ethernet interface
+            http = {
+              tls = {
+                certResolver = "leresolver";
+                domains = [
+                  { main = "fedeizzo.dev"; sans = [ "*.fedeizzo.dev" ]; }
+                ];
+              };
+              middlewares = [ "secHeaders@file" ];
+            };
+          };
+          wgsecure = {
+            address = "192.168.7.1:443"; # allow only wireguard interface
             http = {
               tls = {
                 certResolver = "leresolver";
