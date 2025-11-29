@@ -8,6 +8,7 @@ in
   imports = [
     ./authentik
     ./blocky
+    ./climbing-lab
     ./fedeizzo.dev
     ./fusion
     ./garmindb

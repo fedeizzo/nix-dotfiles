@@ -23,6 +23,7 @@
     ## Homelab
     nixpkgs-homelab.url = "github:nixos/nixpkgs/nixos-25.05";
     nixpkgs-homelab-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+    climbing-lab.url = "path:/home/oven/docs/climbing-lab";
 
     # Flake management
     flake-parts.url = "github:hercules-ci/flake-parts";
