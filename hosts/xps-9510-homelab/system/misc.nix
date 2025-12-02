@@ -11,7 +11,9 @@
 
   programs.ccache.enable = true;
 
-  systemd.extraConfig = "DefaultLimitNOFILE=4096:524288";
+  systemd.settings.Manager = {
+    DefaultLimitNOFILE="4096:524288";
+  };
 
   virtualisation = {
     oci-containers.backend = "docker";

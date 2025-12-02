@@ -58,11 +58,14 @@
       extraCommands = ''
         # Allow wireguard interface to hit 192.168.7.1:443
         iptables -A INPUT -i wg0 -p tcp -d 192.168.7.1 --dport 443 -j ACCEPT
+        # Allow loopback interface to hit 192.168.7.1:443
+        iptables -A INPUT -i lo -p tcp -d 192.168.7.1 --dport 443 -j ACCEPT
         # Drop everything else going to 192.168.7.1:443
         iptables -A INPUT -p tcp -d 192.168.7.1 --dport 443 -j DROP
       '';
       extraStopCommands = ''
         iptables -D INPUT -i wg0 -p tcp -d 192.168.7.1 --dport 443 -j ACCEPT || true
+        iptables -D INPUT -i lo -p tcp -d 192.168.7.1 --dport 443 -j ACCEPT || true
         iptables -D INPUT -p tcp -d 192.168.7.1 --dport 443 -j DROP || true
       '';
     };

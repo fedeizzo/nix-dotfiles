@@ -35,7 +35,7 @@ in
         zha
       ];
       customComponents = with pkgs; [
-        home-assistant-custom-components.garmin_connect
+        # home-assistant-custom-components.garmin_connect # TODO fix this later
         (pkgs.home-assistant.python.pkgs.callPackage ./custom-components/ha-bambulab.nix { })
       ];
       customLovelaceModules = with pkgs; [
@@ -93,7 +93,7 @@ in
       dataDir = "/var/lib/zigbee2mqtt";
 
       settings = {
-        homeassistant = config.services.home-assistant.enable;
+        # homeassistant = config.services.home-assistant.enable; # removed after 25.11
         permit_join = false;
         serial = {
           adapter = "ember";

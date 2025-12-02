@@ -56,36 +56,36 @@ in
     '';
   };
 
-  # Everything is in post start instead of init script because post start
-  # is executed every time, even when the db is already populated.
-  systemd.services.postgresql.postStart =
-    ''
-      $PSQL -tA <<'EOF'
+  systemd.services.postgresql.serviceConfig.ExecStartPost =
+    let
+      sqlFile = pkgs.writeText "pg-passwords-setter.sql" ''
         DO $$
         ${lib.strings.concatLines (map (el: passwordDeclarationEntry el.user) dbs)}
         BEGIN
           ${lib.strings.concatLines (map (el: passwordInitEntry el.user) dbs)}
           ${lib.strings.concatLines (map (el: passwordExecuteEntry el.user) dbs)}
         END $$;
-        ${(builtins.readFile ./datbases/role_permissions.sql)}
-      EOF
-      $PSQL -tA -d networth <<'EOF'
-        ${(builtins.readFile ./datbases/networth.sql)}
-      EOF
-    '';
+      '';
+    in
+    lib.mkAfter [
+      ''
+        ${lib.getExe' config.services.postgresql.package "psql"} -f "${sqlFile}"
+      ''
+    ];
 
-  sops.secrets = builtins.listToAttrs (map
-    (db:
-      {
-        name = "${db.user}-pg-password";
-        value = {
-          sopsFile = ./postgres-homelab-secrets.yaml;
-          format = "yaml";
-          mode = "0400";
-          owner = config.systemd.services.postgresql.serviceConfig.User;
-          group = config.systemd.services.postgresql.serviceConfig.Group;
-          restartUnits = [ "postgresql.service" ];
-        };
-      })
-    dbs);
+  sops.secrets = builtins.listToAttrs
+    (map
+      (db:
+        {
+          name = "${db.user}-pg-password";
+          value = {
+            sopsFile = ./postgres-homelab-secrets.yaml;
+            format = "yaml";
+            mode = "0400";
+            owner = config.systemd.services.postgresql.serviceConfig.User;
+            group = config.systemd.services.postgresql.serviceConfig.Group;
+            restartUnits = [ "postgresql.service" ];
+          };
+        })
+      dbs);
 }
