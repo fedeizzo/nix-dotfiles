@@ -85,8 +85,7 @@ in
           metrics = false;
         };
         features = {
-          edit_prediction_provider = "copilot";
-          copilot = true;
+          copilot = false;
         };
         agent = {
           enabled = false;
