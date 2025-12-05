@@ -16,7 +16,7 @@ let
 in
 {
   imports = [
-    inputs.stylix.homeManagerModules.stylix
+    inputs.stylix.homeModules.stylix
   ];
 
   fonts = {

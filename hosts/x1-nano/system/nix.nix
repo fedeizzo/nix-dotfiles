@@ -26,17 +26,17 @@
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       ];
     };
-    package = pkgs.nixVersions.nix_2_29;
     extraOptions = ''
       experimental-features = nix-command flakes
       keep-outputs = true
       keep-derivations = true
     '';
-    gc = {
-      automatic = true;
-      dates = "weekly";
-      options = "--delete-older-than 10d";
-      persistent = true;
-    };
+    # handled by nh
+    # gc = {
+    #   automatic = true;
+    #   dates = "weekly";
+    #   options = "--delete-older-than 10d";
+    #   persistent = true;
+    # };
   };
 }

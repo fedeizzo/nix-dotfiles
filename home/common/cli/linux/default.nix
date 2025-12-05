@@ -35,7 +35,7 @@
     gnutls
     rsync
     rclone
-    xdragon
+    dragon-drop
     w3m
     file
     yubioath-flutter

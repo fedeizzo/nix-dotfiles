@@ -5,8 +5,8 @@
     moonlight-qt
     pavucontrol
     vlc
-    bitwarden
-    tdesktop
+    bitwarden-desktop
+    telegram-desktop
     ddcui # control external monitor
     ddcutil
 

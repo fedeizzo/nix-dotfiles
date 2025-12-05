@@ -34,7 +34,7 @@ in
     nodePackages.vscode-json-languageserver
 
     # dockerfile
-    nodePackages.dockerfile-language-server-nodejs
+    dockerfile-language-server
 
     # c/c++
     ccls
