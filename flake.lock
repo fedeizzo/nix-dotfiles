@@ -120,8 +120,8 @@
         "nixpkgs": "nixpkgs_4"
       },
       "locked": {
-        "lastModified": 1764411673,
-        "narHash": "sha256-RaQsbjil4k0yLB6zAXFZNxrQZUDF/H/k0snsKomSWyU=",
+        "lastModified": 1764948449,
+        "narHash": "sha256-Iu2dffm92sCA9FUbsapLGNE5w7QdlMSQIzjl1QUZv20=",
         "path": "/home/oven/docs/climbing-lab",
         "type": "path"
       },

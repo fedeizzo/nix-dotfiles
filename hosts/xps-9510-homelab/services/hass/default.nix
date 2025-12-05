@@ -1,4 +1,4 @@
-{ pkgs, config, ... }:
+{ pkgs, config, inputs, ... }:
 
 let
   trmnlImage = pkgs.dockerTools.buildImage {
@@ -37,6 +37,8 @@ in
       customComponents = with pkgs; [
         # home-assistant-custom-components.garmin_connect # TODO fix this later
         (pkgs.home-assistant.python.pkgs.callPackage ./custom-components/ha-bambulab.nix { })
+
+        inputs.climbing-lab.packages.${pkgs.system}.homeassistant-component
       ];
       customLovelaceModules = with pkgs; [
         home-assistant-custom-lovelace-modules.zigbee2mqtt-networkmap

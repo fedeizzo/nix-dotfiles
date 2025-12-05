@@ -21,7 +21,7 @@ in
     ./loki
     ./net-worth
     ./nextcloud
-    ./opencloud
+    # ./opencloud
     ./paperless
     ./postgres
     ./prometheus

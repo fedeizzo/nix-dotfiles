@@ -18,7 +18,6 @@
   nix = {
     settings.trusted-users = [ "root" "nixremote" "@wheel" ];
     settings.auto-optimise-store = true;
-    package = pkgs.nixVersions.nix_2_29;
     gc = {
       automatic = true;
       dates = "daily";
