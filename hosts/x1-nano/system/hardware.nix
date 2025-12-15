@@ -10,6 +10,11 @@
     };
     cpu.intel.updateMicrocode = true;
     i2c.enable = true; # external monitor control
+    uinput.enable = true;
+    logitech = {
+      wireless.enable = true;
+      wireless.enableGraphical = true;
+    };
   };
 
   services = {
@@ -56,7 +61,16 @@
     };
   };
 
+  services.solaar = {
+    enable = true; # Enable the service
+    package = pkgs.solaar; # The package to use
+    window = "hide"; # Show the window on startup (show, *hide*, only [window only])
+    batteryIcons = "solaar"; # Which battery icons to use (*regular*, symbolic, solaar)
+    extraArgs = ""; # Extra arguments to pass to solaar on startup
+  };
+
   imports = [
     inputs.nixos-hardware.nixosModules.lenovo-thinkpad-x1-nano
+    inputs.solaar.nixosModules.default
   ];
 }

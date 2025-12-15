@@ -13,6 +13,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.home-manager.follows = "home-manager";
     };
+    solaar = {
+      url = "github:Svenum/Solaar-Flake/main";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     ## Mac
     nixpkgs-darwin.url = "github:nixos/nixpkgs/nixpkgs-25.05-darwin";

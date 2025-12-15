@@ -11,6 +11,7 @@
       extraGroups = [
         "wheel"
         "input"
+        "uinput"
         "video"
         "bumblebee"
         "docker"

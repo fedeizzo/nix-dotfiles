@@ -34,6 +34,7 @@
         ./modules/nextcloud
         ./modules/user
         ./modules/plasma
+        ./modules/solaar
         ./modules/stylix
         ../common/zathura
         ./modules/zed

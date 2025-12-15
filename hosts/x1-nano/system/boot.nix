@@ -47,7 +47,7 @@
       kernelModules = [ "i915" ];
       systemd.enable = false;
     };
-    kernelModules = [ "kvm-intel" ];
+    kernelModules = [ "kvm-intel" "uinput" ];
     extraModulePackages = [ ];
     kernelParams = [
       "i915.enable_fbc=1"
