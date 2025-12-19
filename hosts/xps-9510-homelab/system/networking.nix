@@ -140,6 +140,22 @@
       ips = [ "192.168.7.1/24" ];
       listenPort = 51821;
       privateKeyFile = config.sops.secrets.homelab-wireguard-private-key.path;
+
+      postSetup = ''
+        WAN_IFACE="eth0"
+        DESKTOP_PC="192.168.1.67"
+
+        ${pkgs.iptables}/bin/iptables -A FORWARD -i wg0 -d $DESKTOP_PC -j ACCEPT
+        ${pkgs.iptables}/bin/iptables -t nat -A POSTROUTING -o $WAN_IFACE -d $DESKTOP_PC -j MASQUERADE
+      '';
+
+      postShutdown = ''
+        WAN_IFACE="eth0"
+        DESKTOP_PC="192.168.1.50"
+
+        ${pkgs.iptables}/bin/iptables -D FORWARD -i wg0 -d $DESKTOP_PC -j ACCEPT
+        ${pkgs.iptables}/bin/iptables -t nat -D POSTROUTING -o $WAN_IFACE -d $DESKTOP_PC -j MASQUERADE
+      '';
       peers = [
         {
           # Laptop xps 9510

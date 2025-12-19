@@ -120,14 +120,17 @@
         "nixpkgs": "nixpkgs_4"
       },
       "locked": {
-        "lastModified": 1764948449,
-        "narHash": "sha256-Iu2dffm92sCA9FUbsapLGNE5w7QdlMSQIzjl1QUZv20=",
-        "path": "/home/oven/docs/climbing-lab",
-        "type": "path"
+        "lastModified": 1764948807,
+        "narHash": "sha256-4f0J8+mGXYrXEKniGVccyST4UMctFAMBvhmcXAZoxDg=",
+        "owner": "fedeizzo",
+        "repo": "climbing-lab",
+        "rev": "5bda1762c632ab2c517f3d3ee99cf608136be9eb",
+        "type": "github"
       },
       "original": {
-        "path": "/home/oven/docs/climbing-lab",
-        "type": "path"
+        "owner": "fedeizzo",
+        "repo": "climbing-lab",
+        "type": "github"
       }
     },
     "deploy-rs": {

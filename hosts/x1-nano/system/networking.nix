@@ -34,7 +34,7 @@
             name = "homelab";
             # home-lab
             publicKey = "Ug1P6UzLyQ0BFbrfi0G9KLJBNBs+IOisRn3uiLoR5yU=";
-            allowedIPs = [ "192.168.7.1" ];
+            allowedIPs = [ "192.168.7.1" "192.168.1.67/32" ];
             endpoint = "vpn.fedeizzo.dev:51821";
             # dynamicEndpointRefreshSeconds = 5;
             persistentKeepalive = 25;
