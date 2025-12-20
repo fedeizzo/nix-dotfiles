@@ -21,6 +21,7 @@ in
     ./loki
     ./net-worth
     ./nextcloud
+    ./open-webui
     # ./opencloud
     ./paperless
     ./postgres
@@ -54,6 +55,9 @@ in
       { name = "prowlarr"; inherit (config.services.prowlarr.settings.server) port; dashboardSection = "Media"; }
       { name = "deluge"; inherit (config.services.deluge.web) port; dashboardSection = "Media"; }
       { name = "bazarr"; port = config.services.bazarr.listenPort; dashboardSection = "Media"; }
+
+      # Tools
+      { name = "open-webui"; port = config.services.open-webui.port; dashboardSection = "Tools"; }
 
       # Observability
       { name = "grafana"; port = config.services.grafana.settings.server.http_port; dashboardSection = "Observability"; authType = "proxy"; }

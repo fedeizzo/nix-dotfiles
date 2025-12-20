@@ -56,6 +56,7 @@
         "${config.services.nextcloud.datadir}"
         "${config.services.paperless.dataDir}"
         "/var/lib/authentik/media"
+        "${config.services.open-webui.stateDir}/data"
 
         # files
         "/var/volumes/promtail/GeoLite2-City.mmdb"

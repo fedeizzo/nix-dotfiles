@@ -60,6 +60,7 @@ in
 {
   imports = [
     ./dns-updater.nix
+    ./wake-on-lan-forwarder
   ];
 
   options.fi = {
@@ -136,6 +137,18 @@ in
               middlewares = [ "secHeaders@file" ];
             };
           };
+          localhostonly = {
+            address = "127.0.0.1:34486"; # allow only localhost to reach this entrypoint
+            http = {
+              tls = {
+                certResolver = "leresolver";
+                domains = [
+                  { main = "fedeizzo.dev"; sans = [ "*.fedeizzo.dev" ]; }
+                ];
+              };
+              middlewares = [ "secHeaders@file" "wake-on-lan@file" ];
+            };
+          };
         };
         certificatesResolvers =
           {
@@ -168,6 +181,15 @@ in
                 customResponseHeaders = { server = ""; x-powered-by = ""; }; # remove some unnecessary info from the header
               };
             };
+            wake-on-lan = {
+              forwardAuth = {
+                address = "http://127.0.0.1:35867/wake";
+                trustForwardHeader = true;
+                authResponseHeaders = [
+                  "X-Wake-On-Lan"
+                ];
+              };
+            };
             authentik = {
               forwardAuth = {
                 address = "http://localhost:9000/outpost.goauthentik.io/auth/traefik";
@@ -196,8 +218,18 @@ in
               service = "authentik";
               priority = 150;
             };
+            llm-provider = {
+              rule = "Host(`llm.fedeizzo.dev`)";
+              entryPoints = [ "wgsecure" ];
+              service = "llm-provider";
+              middlewares = [ "wake-on-lan@file" ];
+            };
           } // (routersGenerator cfg.services);
-          services = servicesGenerator cfg.services;
+          services = {
+            llm-provider = {
+              loadBalancer = { servers = [{ url = "http://192.168.1.67:9999"; }]; };
+            };
+          } // servicesGenerator cfg.services;
         };
       };
     };
