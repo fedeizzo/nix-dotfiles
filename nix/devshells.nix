@@ -92,6 +92,8 @@
     packages = with pkgs; [
       sops
       deploy-rs
+      go
+      gopls
     ] ++ config.pre-commit.settings.enabledPackages;
 
     devshell.startup.pre-commit-hooks.text = config.pre-commit.installationScript;

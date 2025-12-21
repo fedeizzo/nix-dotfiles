@@ -1,5 +1,6 @@
 { pkgs, config, lib, ... }:
 
+# does this file make sense to you?
 {
   services.restic.backups = rec {
     local = backblaze // {

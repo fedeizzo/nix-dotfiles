@@ -1,4 +1,8 @@
-{ config, lib, pkgs-unstable, ... }:
+{ config
+, lib
+, pkgs-unstable
+, ...
+}:
 
 with lib;
 let
@@ -36,7 +40,10 @@ in
         "docker-compose"
         "dockerfile"
         "env" # .env and conf file
+        "git-firefly"
         "golangci-lint"
+        "go-snippets"
+        "sqlc-snippets"
         "gosum"
         "helm"
         "html"
@@ -45,6 +52,7 @@ in
         "nix"
         "pylsp"
         "python-refactoring"
+        "python-snippet"
         "ruff"
         "sql"
         "sqruff" # sql lsp support
@@ -54,6 +62,8 @@ in
         "tree-sitter-query"
         "proto"
         "zed-react-ts-snippets" # react snippets
+        "rust"
+        "rust-snippets"
 
         # ui
         "nord"
@@ -86,19 +96,6 @@ in
         };
         features = {
           copilot = false;
-        };
-        agent = {
-          enabled = false;
-          version = "1";
-          # version = "2";
-          # default_model = {
-          #   provider = "copilot_chat";
-          #   model = "claude-3.7-sonnet";
-          # };
-          # editor_model = {
-          #   provider = "copilot_chat";
-          #   model = "claude-3.7-sonnet";
-          # };
         };
 
         # features
@@ -139,7 +136,7 @@ in
         # lsp
         lsp = {
           gopls = {
-            # binary.path = getExe pkgs-unstable.gopls;
+            binary.path_lookup = true;
             initialization_options = {
               buildFlags = cfg.gopls.buildFlags;
               directoryFilters = cfg.gopls.directoryFilters;
@@ -194,7 +191,11 @@ in
           };
           vtsls = {
             settings = {
-              typescript = { tsserver = { maxTsServerMemory = 16184; }; };
+              typescript = {
+                tsserver = {
+                  maxTsServerMemory = 16184;
+                };
+              };
             };
           };
         };
@@ -202,24 +203,92 @@ in
         # languages
         languages = {
           Python = {
-            language_servers = [ "pylsp" "ruff" "python-refactoring" "!pyright" "..." ];
+            language_servers = [
+              "pylsp"
+              "ruff"
+              "python-refactoring"
+              "!pyright"
+              "..."
+            ];
             format_on_save = "on";
             formatter = [
               {
-                language_server = { name = "ruff"; };
+                language_server = {
+                  name = "ruff";
+                };
               }
               {
-                code_actions = {
-                  "source.fixAll.ruff" = true;
-                  "source.organizeImports.ruff" = true;
-                };
+                code_action = "source.fixAll.ruff";
+              }
+              {
+                code_action = "source.organizeImports.ruff";
               }
             ];
           };
           Nix = {
-            language_servers = [ "nil" "!nixd" "..." ];
+            language_servers = [
+              "nil"
+              "!nixd"
+              "..."
+            ];
           };
         };
+
+        assistant = {
+          version = "2";
+          default_model = {
+            provider = "lmstudio";
+            model = "unsloth/qwen3-coder-30b-a3b-instruct";
+          };
+        };
+
+        agent = {
+          default_model = {
+            provider = "lmstudio";
+            model = "unsloth/qwen3-coder-30b-a3b-instruct";
+          };
+          inline_assistant_model = {
+            provider = "lmstudio";
+            model = "unsloth/qwen3-coder-30b-a3b-instruct";
+          };
+        };
+
+        language_models = {
+          lmstudio = {
+            api_url = "https://llm.fedeizzo.dev/v1";
+            available_models = [
+              {
+                name = "unsloth/qwen3-coder-30b-a3b-instruct";
+                display_name = "Qwen 3 30b (Local)";
+                max_tokens = 32768;
+                supports_tool_calls = true;
+                supports_images = false;
+              }
+              # {
+              #   name = "qwen/qwen3-vl-8b";
+              #   display_name = "Qwen 3 VL (Local)";
+              #   max_tokens = 32768;
+              #   supports_tool_calls = true;
+              #   supports_images = false;
+              # }
+              # {
+              #   name = "qwen/qwen3-coder-30b";
+              #   display_name = "Qwen coder 30 (Local)";
+              #   max_tokens = 32768;
+              #   supports_tool_calls = true;
+              #   supports_images = false;
+              # }
+              # {
+              #   name = "mistralai/ministral-3-3b";
+              #   display_name = "Mistral 3 3b";
+              #   max_tokens = 262144;
+              #   supports_tool_calls = true;
+              #   supports_images = false;
+              # }
+            ];
+          };
+        };
+
       };
     };
     xdg.configFile."zed/tasks.json".text = (builtins.toJSON cfg.tasks);
