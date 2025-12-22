@@ -46,7 +46,24 @@
       PAPERLESS_DISABLE_REGULAR_LOGIN = true;
     };
   };
-
+  virtualisation.oci-containers.containers."paperless-gpt" = {
+    image = "icereed/paperless-gpt:latest";
+    autoStart = true;
+    extraOptions = [ "--network=host" ];
+    ports = [ ];
+    environmentFiles = [ "${config.sops.secrets.paperless-gpt.path}" ];
+    environment = {
+      PAPERLESS_BASE_URL = "https://paperless.fedeizzo.dev";
+      LLM_PROVIDER = "openai";
+      LLM_MODEL = "qwen/qwen3-8b";
+      OPENAI_API_KEY = "placeholder";
+      OPENAI_BASE_URL = "https://llm.fedeizzo.dev/v1";
+      LISTEN_INTERFACE = ":28982";
+      # OCR_PROVIDER="llm";
+      # VISION_LMM_PROVIDER="llm";
+      # VISION_LLM_MODEL=todo
+    };
+  };
   sops.secrets.paperless = lib.mkIf config.services.paperless.enable {
     format = "dotenv";
     mode = "0400";
@@ -59,6 +76,13 @@
       "paperless-web.service"
     ];
     sopsFile = ./paperless-homelab-secrets.env;
+    key = ""; # to map the whole file as a secret
+  };
+  sops.secrets.paperless-gpt = lib.mkIf config.services.paperless.enable {
+    format = "dotenv";
+    mode = "0400";
+    restartUnits = [ "docker-paperless-gpt.service" ];
+    sopsFile = ./paperless-gpt-homelab-secrets.env;
     key = ""; # to map the whole file as a secret
   };
 }

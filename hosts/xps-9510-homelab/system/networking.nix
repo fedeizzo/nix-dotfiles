@@ -46,6 +46,7 @@
         9854 # dashboard
         config.services.paperless.port
         51000
+        28982 # paperless-gpt
       ];
       trustedInterfaces = [ "wg0" ];
       allowedUDPPorts = [
