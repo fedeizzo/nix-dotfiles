@@ -64,6 +64,28 @@
       # VISION_LLM_MODEL=todo
     };
   };
+  virtualisation.oci-containers.containers."paperless-ai" = {
+    image = "clusterzx/paperless-ai:latest";
+    autoStart = true;
+    extraOptions = [ "--network=host" ];
+    ports = [ ];
+    volumes = [
+      "/var/lib/paperless-ai:/app/data"
+    ];
+    environmentFiles = [ "${config.sops.secrets.paperless-gpt.path}" ];
+    environment = {
+      PAPERLESS_AI_INITIAL_SETUP = "yes";
+      PAPERLESS_AI_PORT = "28983";
+      PAPERLESS_API_URL = "https://paperless.fedeizzo.dev/api";
+      PAPERLESS_USERNAME = "trackpadblue";
+      AI_PROVIDER = "custom";
+      CUSTOM_API_KEY = "placeholder";
+      CUSTOM_BASE_URL = "https://llm.fedeizzo.dev/v1";
+      # CUSTOM_MODEL = "mistralai/devstral-small-2-2512";
+      # CUSTOM_MODEL = "qwen/qwen3-8b";
+      SCAN_INTERVAL = "*/30 * * * *";
+    };
+  };
   sops.secrets.paperless = lib.mkIf config.services.paperless.enable {
     format = "dotenv";
     mode = "0400";

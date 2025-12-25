@@ -58,6 +58,7 @@
         "${config.services.paperless.dataDir}"
         "/var/lib/authentik/media"
         "${config.services.open-webui.stateDir}/data"
+        "/var/lib/paperless-ai"
 
         # files
         "/var/volumes/promtail/GeoLite2-City.mmdb"

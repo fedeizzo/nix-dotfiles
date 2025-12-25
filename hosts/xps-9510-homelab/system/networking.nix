@@ -47,6 +47,7 @@
         config.services.paperless.port
         51000
         28982 # paperless-gpt
+        28983 # paperless-ai
       ];
       trustedInterfaces = [ "wg0" ];
       allowedUDPPorts = [
