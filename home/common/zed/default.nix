@@ -238,18 +238,18 @@ in
           version = "2";
           default_model = {
             provider = "lmstudio";
-            model = "unsloth/qwen3-coder-30b-a3b-instruct";
+            model = "mistralai/devstral-small-2-2512";
           };
         };
 
         agent = {
           default_model = {
             provider = "lmstudio";
-            model = "unsloth/qwen3-coder-30b-a3b-instruct";
+            model = "mistralai/devstral-small-2-2512";
           };
           inline_assistant_model = {
             provider = "lmstudio";
-            model = "unsloth/qwen3-coder-30b-a3b-instruct";
+            model = "mistralai/devstral-small-2-2512";
           };
         };
 
@@ -257,10 +257,17 @@ in
           lmstudio = {
             api_url = "https://llm.fedeizzo.dev/v1";
             available_models = [
+              # {
+              #   name = "unsloth/qwen3-coder-30b-a3b-instruct";
+              #   display_name = "Qwen 3 30b (Local)";
+              #   max_tokens = 32768;
+              #   supports_tool_calls = true;
+              #   supports_images = false;
+              # }
               {
-                name = "unsloth/qwen3-coder-30b-a3b-instruct";
-                display_name = "Qwen 3 30b (Local)";
-                max_tokens = 32768;
+                name = "mistralai/devstral-small-2-2512";
+                display_name = "Devstral";
+                max_tokens = 262144;
                 supports_tool_calls = true;
                 supports_images = false;
               }
