@@ -59,7 +59,7 @@ let
 in
 {
   imports = [
-    ./dns-updater.nix
+    ./dns-updater
     ./wake-on-lan-forwarder
   ];
 
