@@ -58,6 +58,9 @@ in
 
       # Tools
       { name = "open-webui"; port = config.services.open-webui.port; dashboardSection = "Tools"; }
+      { name = "backrest"; port = 9898; dashboardSection = "Tools"; authType = "proxy"; }
+      { name = "paperless-gpt"; port = 28982; dashboardSection = "Tools"; authType = "proxy"; }
+      { name = "paperless-ai"; port = 28983; dashboardSection = "Tools"; authType = "proxy"; }
 
       # Observability
       { name = "grafana"; port = config.services.grafana.settings.server.http_port; dashboardSection = "Observability"; authType = "proxy"; }

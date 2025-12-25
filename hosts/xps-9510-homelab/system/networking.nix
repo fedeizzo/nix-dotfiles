@@ -34,28 +34,12 @@
           53 # blocky
         ];
       };
-      interfaces.wg0.allowedTCPPorts = [
-        # streaming
-        8989 # sonarr
-        7878 # radarr
-        9696 # prowlarr
-        # 8191 # flaresolverr
-        8112 # deluge
-        6767 # bazarr
-        5055 # jellyseerr
-        9854 # dashboard
-        config.services.paperless.port
-        51000
-        28982 # paperless-gpt
-        28983 # paperless-ai
-      ];
+      interfaces.wg0.allowedTCPPorts = [ ];
       trustedInterfaces = [ "wg0" ];
       allowedUDPPorts = [
         51821 # wireguard
       ];
-      allowedTCPPorts = [
-        33333
-      ];
+      allowedTCPPorts = [ ];
       checkReversePath = "loose";
       extraCommands = ''
         # Allow wireguard interface to hit 192.168.7.1:443
