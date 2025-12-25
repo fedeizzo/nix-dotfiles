@@ -63,7 +63,7 @@ in
       { name = "paperless-ai"; port = 28983; dashboardSection = "Tools"; authType = "proxy"; }
 
       # Observability
-      { name = "grafana"; port = config.services.grafana.settings.server.http_port; dashboardSection = "Observability"; authType = "proxy"; }
+      { name = "grafana"; port = config.services.grafana.settings.server.http_port; dashboardSection = "Observability"; }
       { name = "whoami"; port = config.services.whoami.port; dashboardSection = "Observability"; authType = "proxy"; }
 
       # Management

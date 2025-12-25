@@ -37,6 +37,7 @@ in
       customComponents = with pkgs; [
         # home-assistant-custom-components.garmin_connect # TODO fix this later
         (pkgs.home-assistant.python.pkgs.callPackage ./custom-components/ha-bambulab.nix { })
+        (pkgs.home-assistant.python.pkgs.callPackage ./custom-components/openid.nix { })
 
         inputs.climbing-lab.packages.${pkgs.system}.homeassistant-component
       ];
@@ -86,6 +87,21 @@ in
 
         "automation ui" = "!include automations.yaml";
         # "scene" = "!include scenes.yaml";
+
+        openid = {
+          block_login = true;
+          client_id = "!secret openid_client_id";
+          client_secret = "!secret openid_client_secret";
+          configure_url = "https://auth.fedeizzo.dev/application/o/home-assistant/.well-known/openid-configuration"; # Replace with your Identity Provider's URL
+          username_field = "preferred_username"; # Adjust based on your IdP's user info response
+          scope = "openid profile email";
+          # trusted_ips = # List of CIDR blocks that are not affected by block_login;
+          #    - "192.168.2.0/24"
+          #    - "192.168.2.5/32"
+          #    - "10.0.0.0/8"
+          openid_text = "Login with Authentik"; # Text to display on the login page;
+          # create_user = true; # Automatically create users on first login;
+        };
       };
       lovelaceConfig = { };
     };
