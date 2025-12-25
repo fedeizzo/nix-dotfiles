@@ -1,4 +1,4 @@
-{ pkgs, config, inputs, ... }:
+{ pkgs, pkgs-unstable, config, inputs, ... }:
 
 let
   trmnlImage = pkgs.dockerTools.buildImage {
@@ -29,13 +29,14 @@ in
         "freebox" # router
         "prometheus"
         "http"
+        "tile"
       ];
       extraPackages = python3Packages: with python3Packages; [
         zlib-ng
         zha
       ];
       customComponents = with pkgs; [
-        # home-assistant-custom-components.garmin_connect # TODO fix this later
+        pkgs-unstable.home-assistant-custom-components.garmin_connect
         (pkgs.home-assistant.python.pkgs.callPackage ./custom-components/ha-bambulab.nix { })
         (pkgs.home-assistant.python.pkgs.callPackage ./custom-components/openid.nix { })
 
