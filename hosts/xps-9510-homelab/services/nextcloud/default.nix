@@ -68,7 +68,7 @@ in
     };
 
     collabora-online = {
-      enable = false;
+      enable = true;
       port = 9980; # default
       settings = {
         # Rely on reverse proxy for SSL
