@@ -55,6 +55,9 @@
       ruler = {
         alertmanager_url = "http://localhost:9093";
       };
+      pattern_ingester = {
+        enabled = true;
+      };
     };
   };
 
