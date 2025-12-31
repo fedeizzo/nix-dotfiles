@@ -26,6 +26,7 @@ in
     ./paperless
     ./postgres
     ./prometheus
+    ./subtrackr
     # ./sunshine
     ./streaming
     ./traefik
@@ -62,6 +63,7 @@ in
       { name = "backrest"; port = 9898; dashboardSection = "Tools"; authType = "proxy"; }
       { name = "paperless-gpt"; port = 28982; dashboardSection = "Tools"; authType = "proxy"; }
       { name = "paperless-ai"; port = 28983; dashboardSection = "Tools"; authType = "proxy"; }
+      { name = "subtrackr"; port = config.services.subtrackr.port; dashboardSection = "Tools"; dashboardIcon = "nextcloud-cospend"; authType = "proxy"; }
 
       # Observability
       { name = "grafana"; port = config.services.grafana.settings.server.http_port; dashboardSection = "Observability"; }

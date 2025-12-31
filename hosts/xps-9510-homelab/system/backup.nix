@@ -59,12 +59,14 @@
         "/var/lib/authentik/media"
         "${config.services.open-webui.stateDir}/data"
         "/var/lib/paperless-ai"
+        "${config.services.uptime-kuma.settings.DATA_DIR}"
 
         # files
         "/var/volumes/promtail/GeoLite2-City.mmdb"
         "/var/volumes/grafana/data/grafana.db"
         "/var/volumes/net_worth_nocodb/noco.db"
         "/var/volumes/traefik/acme.json"
+        "${config.services.subtrackr.databasePath}"
       ];
       pruneOpts = [
         "--keep-last 30" # keep last 30 days
