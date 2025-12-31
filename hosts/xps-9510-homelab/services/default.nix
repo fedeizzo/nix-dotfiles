@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ lib, config, pkgs, ... }:
 
 let
   docker = config.virtualisation.oci-containers.backend;
@@ -29,6 +29,7 @@ in
     # ./sunshine
     ./streaming
     ./traefik
+    ./uptime-kuma
   ];
 
   config = {
@@ -64,6 +65,7 @@ in
 
       # Observability
       { name = "grafana"; port = config.services.grafana.settings.server.http_port; dashboardSection = "Observability"; }
+      { name = "uptime-kuma"; port = (lib.strings.toInt config.services.uptime-kuma.settings.UPTIME_KUMA_PORT); dashboardSection = "Observability"; }
       { name = "whoami"; port = config.services.whoami.port; dashboardSection = "Observability"; authType = "proxy"; }
 
       # Management
