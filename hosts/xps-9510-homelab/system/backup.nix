@@ -34,6 +34,8 @@
         "**/log/**"
         "**/cache/**"
         "**/.cache/**"
+        "**/garth_session"
+        "**/GarminConnectConfig.json"
       ];
       paths = [
         # directories
@@ -60,6 +62,7 @@
         "${config.services.open-webui.stateDir}/data"
         "/var/lib/paperless-ai"
         "${config.services.uptime-kuma.settings.DATA_DIR}"
+        "/var/lib/garmindb"
 
         # files
         "/var/volumes/promtail/GeoLite2-City.mmdb"
