@@ -5,6 +5,6 @@ _:
   console = {
     keyMap = "us";
   };
-  time.timeZone = "Europe/Rome";
+  time.timeZone = "Europe/Paris";
   time.hardwareClockInLocalTime = true;
 }

@@ -30,6 +30,9 @@
     # climbing-lab.url = "path:/home/oven/docs/climbing-lab";
     climbing-lab.url = "github:fedeizzo/climbing-lab";
 
+    ## Raspberry
+    nixos-pikvm.url = "github:hatch01/nixos-pikvm";
+
     # Flake management
     flake-parts.url = "github:hercules-ci/flake-parts";
     devshell.url = "github:numtide/devshell";
