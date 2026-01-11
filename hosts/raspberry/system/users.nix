@@ -26,14 +26,7 @@
   ];
 
   programs.bash = {
-    enableCompletion = true;
+    completion.enable = true;
     enableLsColors = true;
-  };
-
-  environment = {
-    shellAliases = {
-      "update_docker_images" = ''docker images --format "{{.Repository}}:{{.Tag}}" | xargs -L1 docker pull'';
-      "restart_docker_containers" = "systemctl restart docker-*.service";
-    };
   };
 }

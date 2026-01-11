@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ _, ... }:
 
 {
   documentation.nixos.enable = false;
@@ -6,7 +6,6 @@
   nix = {
     settings.trusted-users = [ "root" ];
     settings.auto-optimise-store = true;
-    package = pkgs.nixFlakes;
     gc = {
       automatic = true;
       dates = "daily";
@@ -19,5 +18,5 @@
       experimental-features = nix-command flakes
     '';
   };
-  system.stateVersion = "24.05";
+  system.stateVersion = "25.11";
 }

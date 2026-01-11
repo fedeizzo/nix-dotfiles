@@ -30,11 +30,15 @@
     # climbing-lab.url = "path:/home/oven/docs/climbing-lab";
     climbing-lab.url = "github:fedeizzo/climbing-lab";
 
+    ## Raspberry
+    nixos-pikvm.url = "github:hatch01/nixos-pikvm";
+
     # Flake management
     flake-parts.url = "github:hercules-ci/flake-parts";
     devshell.url = "github:numtide/devshell";
     git-hooks-nix.url = "github:cachix/git-hooks.nix";
     nix-topology.url = "github:oddlama/nix-topology";
+    nixos-generators.url = "github:nix-community/nixos-generators";
 
     # Installation and boot
     impermanence.url = "github:nix-community/impermanence";
@@ -82,6 +86,7 @@
         };
         flake = {
           imports = [
+            (import ./nix/packages.nix { inherit inputs self; system = "x86_64-linux"; })
             (import ./nix/nixosConfigurations.nix { inherit inputs; })
             (import ./nix/deployment.nix {
               inherit inputs;

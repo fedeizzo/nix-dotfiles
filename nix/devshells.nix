@@ -82,6 +82,12 @@
         category = " System installation";
       }
       {
+        help = " Raspberry Pi4 8Gb ISO card.";
+        name = "build-raspberry-iso-sd-card"; # long command to prevent accidental use
+        command = builtins.readFile ../scripts/build_raspberry_iso_sd_card.sh;
+        category = " System installation";
+      }
+      {
         help = " Dell XPS 9510.";
         name = "erase-disk-and-install-xps"; # long command to prevent accidental use
         command = builtins.readFile ../scripts/installation/xps-9510.sh;

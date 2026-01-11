@@ -1,41 +1,31 @@
-#!/bin/sh
-set -e
-HOSTNAME="rasp-nixos"
-BOOT_DEV="/dev/sda"
-ROOT_DEV="/dev/sda"
-NIX_ISO_DEV="/dev/mmcblk0p1"
+#! /usr/bin/env nix-shell
+#! nix-shell -i bash -p git bitwarden-cli jq
 
-wipefs -a $BOOT_DEV
+if [ $(id -u) -ne 0 ]; then
+  echo "Please run as root (you can use 'sudo su' to get a shell)"
+  exit 1
+fi
 
-# boot partition UEFI
-parted -a optimal $BOOT_DEV -- mklabel gpt
-parted -a optimal $BOOT_DEV -- mkpart ESP fat32 1MiB 513MiB
-parted -a optimal $BOOT_DEV -- set 1 esp on
+# bw login --check
+# if [ $? -eq 1 ]; then
+#     bw login
+# fi
+# if [ ! -f /var/lib/sops/keys.txt ]; then
+#     mkdir -p /var/lib/sops
+#     while true; do
+#         secret=$(bw get item 'sops-age-keys-homelab' | jq -r ."notes")
 
-# root partition
-parted -a optimal $ROOT_DEV -- mkpart primary 513MiB 100%
-boot="$BOOT_DEV"1
-root="$ROOT_DEV"2
+#         if [ $? -eq 0 ]; then
+#             echo $secret > /var/lib/sops/keys.txt
+#             chmod 600 /var/lib/sops/keys.txt
+#             break
+#         else
+#             errorPrint "Command failed, retrying ..."
+#             sleep 1
+#         fi
+#     done
+# fi
 
-mkfs.fat -F 32 -n boot "$boot"
-mkfs.ext4 -L root "$root"
+nix --extra-experimental-features 'nix-command flakes' run 'github:nix-community/disko#disko-install' -- --flake 'github:fedeizzo/nix-dotfiles#freezer' --disk main /dev/sdb
 
-# mount root on mnt
-mount "$root" /mnt
-mkdir -p /mnt/etc/nixos
-
-# mount boot partition
-mkdir /mnt/boot
-mount "$boot" /mnt/boot
-
-# install all system
-cp nixos/flake.nix /mnt/etc/nixos
-cp nixos/flake.lock /mnt/etc/nixos
-cp -r nixos/raspberry /mnt/etc/nixos
-nixos-install --root /mnt --flake /mnt/etc/nixos#$HOSTNAME
-
-mkdir -p /firmware
-mount $NIX_ISO_DEV /firmware
-cp -r /firmware/* /mnt/boot
-
-umount -R /mnt
+# --extra-files /var/lib/sops/keys.txt /var/lib/sops/keys.txt

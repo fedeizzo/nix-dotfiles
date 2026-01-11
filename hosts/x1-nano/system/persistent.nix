@@ -13,15 +13,16 @@ _:
       "/var/lib/docker"
       "/var/lib/fprint"
       "/var/lib/nixos"
+      "/var/lib/NetworkManager"
       "/root/.ssh"
       "/root/.cache"
     ];
     files = [
       "/etc/adjtime"
       "/etc/machine-id"
-      "/var/lib/NetworkManager/secret_key"
-      "/var/lib/NetworkManager/seen-bssids"
-      "/var/lib/NetworkManager/timestamps"
+      # "/var/lib/NetworkManager/secret_key"
+      # "/var/lib/NetworkManager/seen-bssids"
+      # "/var/lib/NetworkManager/timestamps"
       "/root/.gitconfig"
     ];
   };

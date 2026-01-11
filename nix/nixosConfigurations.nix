@@ -62,16 +62,16 @@ in
 
       modules = [ ../hosts/x1-nano ../home/x1-nano ];
     };
-    # rasp = inputs.nixpkgs-homelab.lib.nixosSystem {
-    #   system = "aarch64-linux";
-    #   specialArgs = {
-    #     inherit inputs;
-    #     hostname = "rasp";
-    #     username = "rasp";
-    #   };
+    freezer = inputs.nixpkgs-homelab.lib.nixosSystem {
+      system = "aarch64-linux";
+      specialArgs = {
+        inherit inputs;
+        hostname = "freezer";
+        username = "freezer";
+      };
 
-    #   modules = [ ../hosts/raspberry ../home/raspberry ];
-    # };
+      modules = [ ../hosts/raspberry ../home/raspberry ];
+    };
   };
 
   darwinConfigurations = {

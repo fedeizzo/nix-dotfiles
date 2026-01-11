@@ -1,4 +1,4 @@
-{ lib, pkgs, config, ... }:
+{ lib, pkgs, pkgs-unstable, config, ... }:
 
 let
   sopsFile = ./nextcloud-homelab-secrets.yaml;
@@ -14,7 +14,7 @@ in
 
     nextcloud = {
       enable = true;
-      package = pkgs.nextcloud31;
+      package = pkgs.nextcloud32;
       home = "/var/lib/nextcloud";
 
       hostName = "nextcloud.fedeizzo.dev";
@@ -47,6 +47,7 @@ in
       # push notification for nextcloud-client
       notify_push = {
         enable = true;
+        package = pkgs-unstable.nextcloud-notify_push;
         nextcloudUrl = "http://127.0.0.1:8180";
       };
 
@@ -62,7 +63,7 @@ in
       extraAppsEnable = true;
       enableImagemagick = true;
       extraApps = {
-        inherit (pkgs.nextcloud31Packages.apps) calendar contacts richdocuments tasks deck user_oidc;
+        inherit (pkgs.nextcloud32Packages.apps) calendar contacts richdocuments tasks deck user_oidc;
       };
       autoUpdateApps.enable = true;
     };

@@ -14,6 +14,11 @@ _:
         userAgent = "custom ua";
       };
       connectIPVersion = "dual";
+      customDNS = {
+        mapping = {
+          "kvm.lan" = "192.168.1.138";
+        };
+      };
       blocking = {
         blackLists = {
           all = [ "https://cdn.jsdelivr.net/gh/hagezi/dns-blocklists@latest/wildcard/pro.txt" "https://raw.githubusercontent.com/hagezi/dns-blocklists/main/wildcard/pro.txt" "https://gitlab.com/hagezi/mirror/-/raw/main/dns-blocklists/wildcard/pro.txt" ];
