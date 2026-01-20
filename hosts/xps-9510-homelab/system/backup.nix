@@ -63,6 +63,7 @@
         "/var/lib/paperless-ai"
         "${config.services.uptime-kuma.settings.DATA_DIR}"
         "/var/lib/garmindb"
+        "/var/lib/affine"
 
         # files
         "/var/volumes/promtail/GeoLite2-City.mmdb"

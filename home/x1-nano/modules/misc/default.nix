@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, pkgs-unstable, ... }:
 
 {
   home.packages = with pkgs; [
@@ -11,7 +11,7 @@
     ddcutil
 
     # 3d printing
-    orca-slicer
+    pkgs-unstable.orca-slicer
     freecad
     openscad
 

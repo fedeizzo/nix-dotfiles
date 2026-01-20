@@ -8,6 +8,7 @@ let
     { user = "paperless"; db = "paperless"; }
     { user = "nextcloud"; db = "nextcloud"; }
     { user = "authentik"; db = "authentik"; }
+    { user = "affine"; db = "affine"; }
   ];
   authenticationEntry = user: db: "host " + db + " " + user + " samehost md5";
   passwordDeclarationEntry = user: "DECLARE " + user + "_password TEXT;";
@@ -27,7 +28,10 @@ in
   services.postgresql = {
     enable = true;
     checkConfig = true; # check config at compile time
-    package = pkgs.postgresql_16;
+    package = pkgs.postgresql_16.withPackages (ps: [ ps.pgvector ]);
+    extensions = with pkgs.postgresql_16.pkgs; [
+      pgvector
+    ];
     initdbArgs = [
       "--data-checksums"
     ];
@@ -37,6 +41,7 @@ in
       "paperless"
       "nextcloud"
       "authentik"
+      "affine"
     ];
     ensureUsers = [
       { name = "networth"; ensureDBOwnership = true; }
@@ -44,6 +49,7 @@ in
       { name = "paperless"; ensureDBOwnership = true; }
       { name = "nextcloud"; ensureDBOwnership = true; }
       { name = "authentik"; ensureDBOwnership = true; }
+      { name = "affine"; ensureDBOwnership = true; }
     ];
     authentication = pkgs.lib.mkForce ''
       # TYPE  DATABASE        USER            ADDRESS                 METHOD    ARGS
