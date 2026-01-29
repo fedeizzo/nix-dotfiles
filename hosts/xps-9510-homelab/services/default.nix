@@ -9,6 +9,7 @@ in
     ./affine
     ./authentik
     ./blocky
+    ./calibre
     ./climbing-lab
     ./fedeizzo.dev
     ./fusion
