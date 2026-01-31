@@ -21,6 +21,7 @@
       enable = true;
       checkReversePath = "loose";
       allowedUDPPorts = [ 51821 ];
+      allowedTCPPorts = [ 2300 ];
     };
     interfaces.wlp0s20f3 = { }; # define the interface for the topology network generation
     wireguard.enable = true;

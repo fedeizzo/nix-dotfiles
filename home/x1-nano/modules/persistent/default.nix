@@ -76,7 +76,6 @@
         ".aspell.en.pws"
 
         # Config
-        ".config/user-dirs.dirs"
         ".config/user-dirs.locale"
         ".config/hypr/config.conf"
 

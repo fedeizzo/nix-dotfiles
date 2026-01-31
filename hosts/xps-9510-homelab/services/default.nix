@@ -6,8 +6,10 @@ let
 in
 {
   imports = [
+    ./affine
     ./authentik
     ./blocky
+    ./calibre
     ./climbing-lab
     ./fedeizzo.dev
     ./fusion
@@ -47,6 +49,7 @@ in
       { name = "jellyseerr"; port = 5055; isExposed = true; dashboardSection = "Exposed media"; }
       { name = "nextcloud"; port = 8180; isExposed = true; dashboardSection = "Exposed media"; }
       { name = "collabora"; inherit (config.services.collabora-online) port; isExposed = true; dashboardSection = "Exposed media"; dashboardIcon = "collabora-online"; }
+      { name = "affine"; port = 3010; isExposed = true; dashboardSection = "Exposed media"; }
 
       # Media
       { name = "immich"; subdomain = "photo"; inherit (config.services.immich) port; dashboardSection = "Media"; }

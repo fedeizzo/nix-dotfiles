@@ -11,6 +11,12 @@ _:
         user = "root";
       };
     };
+    matchBlocks = {
+      pikvm = {
+        hostname = "kvm.lan";
+        user = "root";
+      };
+    };
   };
 
   programs.direnv = {
