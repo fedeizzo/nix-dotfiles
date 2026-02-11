@@ -78,4 +78,5 @@
     };
     podman.enable = false;
   };
+  programs.nix-ld.enable = true;
 }
