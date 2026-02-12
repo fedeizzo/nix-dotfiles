@@ -1,6 +1,10 @@
 { lib, config, ... }:
 
 {
+  users.users.immich.uid = 983; # make backup consistent across machines
+  users.groups.immich.gid = 976; # make backup consistent across machines
+  users.users.immich.group = "immich";
+
   services.immich = {
     enable = true;
     host = "localhost";

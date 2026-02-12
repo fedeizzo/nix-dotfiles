@@ -60,6 +60,7 @@ in
       { name = "prowlarr"; inherit (config.services.prowlarr.settings.server) port; dashboardSection = "Media"; }
       { name = "deluge"; inherit (config.services.deluge.web) port; dashboardSection = "Media"; }
       { name = "bazarr"; port = config.services.bazarr.listenPort; dashboardSection = "Media"; }
+      { name = "calibre"; port = config.services.calibre-web.listen.port; dashboardSection = "Media"; }
 
       # Tools
       { name = "open-webui"; port = config.services.open-webui.port; dashboardSection = "Tools"; }

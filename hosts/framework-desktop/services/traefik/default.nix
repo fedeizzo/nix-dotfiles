@@ -71,6 +71,8 @@ in
 
   config = {
     users.users.traefik.uid = 990; # make backup consistent across machines
+    users.groups.traefik.gid = 989; # make backup consistent across machines
+    users.users.traefik.group = "traefik";
     services.whoami = {
       enable = true;
       port = 15558;
