@@ -41,6 +41,7 @@
         "/persist/var/container_envs"
         "/persist/var/volumes/grafana/plugins"
         "/persist${config.services.postgresqlBackup.location}"
+        "/persist${config.services.immich.mediaLocation}/backups"
         "/persist${config.services.immich.mediaLocation}/library"
         "/persist${config.services.immich.mediaLocation}/upload"
         "/persist${config.services.immich.mediaLocation}/profile"
@@ -65,8 +66,6 @@
         "/persist/var/lib/affine"
         "/persist${config.services.calibre-web.options.calibreLibrary}"
         "/persist/var/lib/postgresql"
-        "/persist/var/lib/private/openwebui"
-        "/persist/var/lib/private/uptime-kuma"
         "/persist/var/lib/tindeq"
 
         # files

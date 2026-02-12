@@ -1,6 +1,5 @@
 { pkgs, config, lib, ... }:
 
-# does this file make sense to you?
 {
   services.restic.backups = rec {
     local = backblaze // {
@@ -42,6 +41,7 @@
         "/var/container_envs"
         "/var/volumes/grafana/plugins"
         "${config.services.postgresqlBackup.location}"
+        "${config.services.immich.mediaLocation}/backups"
         "${config.services.immich.mediaLocation}/library"
         "${config.services.immich.mediaLocation}/upload"
         "${config.services.immich.mediaLocation}/profile"
@@ -64,6 +64,9 @@
         "${config.services.uptime-kuma.settings.DATA_DIR}"
         "/var/lib/garmindb"
         "/var/lib/affine"
+        "${config.services.calibre-web.options.calibreLibrary}"
+        "/var/lib/postgresql"
+        "/var/lib/tindeq"
 
         # files
         "/var/volumes/promtail/GeoLite2-City.mmdb"

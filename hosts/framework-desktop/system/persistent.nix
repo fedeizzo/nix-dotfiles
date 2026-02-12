@@ -70,6 +70,12 @@
       "/var/lib/influxdb"
       "/var/lib/postgresql"
       "/var/lib/tindeq"
+
+      "/var/lib/redis-affine"
+      "/var/lib/redis-authentik"
+      "/var/lib/redis-immich"
+      "/var/lib/redis-nextcloud"
+      "/var/lib/redis-paperless"
     ];
 
     files = [
@@ -80,10 +86,10 @@
       "/etc/adjtime"
 
       # App single-file state
-      "/var/volumes/promtail/GeoLite2-City.mmdb"
-      "/var/volumes/grafana/data/grafana.db"
-      "/var/volumes/net_worth_nocodb/noco.db"
-      "/var/volumes/traefik/acme.json"
+      # "/var/volumes/promtail/GeoLite2-City.mmdb"
+      # "/var/volumes/grafana/data/grafana.db"
+      # "/var/volumes/net_worth_nocodb/noco.db"
+      # "/var/volumes/traefik/acme.json"
       config.services.subtrackr.databasePath
       "/var/lib/private/dns-updater/cache.json"
       "/var/lib/logrotate.status"

@@ -11,6 +11,15 @@ let
   };
 in
 {
+  users.users.hass.uid = 286; # make backup consistent across machines
+  users.groups.hass.gid = 286; # make backup consistent across machines
+  users.users.hass.group = "hass";
+  users.users.mosquitto.uid = 246; # make backup consistent across machines
+  users.groups.mosquitto.gid = 246; # make backup consistent across machines
+  users.users.mosquitto.group = "mosquitto";
+  users.users.zigbee2mqtt.uid = 317; # make backup consistent across machines
+  users.groups.zigbee2mqtt.gid = 317; # make backup consistent across machines
+  users.users.zigbee2mqtt.group = "zigbee2mqtt";
   services = {
     home-assistant = {
       enable = true;
