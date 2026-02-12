@@ -14,9 +14,11 @@
       "/var/lib/systemd/linger"
       "/var/lib/systemd/timers"
 
-
       # Network (if using NetworkManager)
-      "/etc/NetworkManager/system-connections"
+      {
+        directory = "/etc/NetworkManager/system-connections";
+        mode = "u=rwx,g=,o="; # 0700
+      }
       "/var/lib/NetworkManager"
 
       # Root user state
@@ -40,56 +42,184 @@
       "/var/container_envs"
       "/var/volumes"
 
-      config.services.postgresqlBackup.location
+      # Home automation services
+      {
+        directory = config.services.home-assistant.configDir;
+        user = "hass";
+        group = "hass";
+        mode = "u=rwx,g=,o=";
+      }
+      {
+        directory = config.services.mosquitto.dataDir;
+        user = "mosquitto";
+        group = "mosquitto";
+        mode = "u=rwx,g=,o=";
+      }
+      {
+        directory = config.services.zigbee2mqtt.dataDir;
+        user = "zigbee2mqtt";
+        group = "zigbee2mqtt";
+        mode = "u=rwx,g=,o=";
+      }
 
-      config.services.home-assistant.configDir
-      config.services.mosquitto.dataDir
-      config.services.zigbee2mqtt.dataDir
+      # Media apps
+      {
+        directory = config.services.jellyfin.dataDir;
+        user = "media";
+        group = "media";
+        mode = "u=rwx,g=,o=";
+      }
+      {
+        directory = config.services.radarr.dataDir;
+        user = "media";
+        group = "media";
+        mode = "u=rwx,g=rx,o=rx";
+      }
+      {
+        directory = config.services.sonarr.dataDir;
+        user = "media";
+        group = "media";
+        mode = "u=rwx,g=rx,o=rx";
+      }
+      {
+        directory = "/var/lib/bazarr";
+        user = "media";
+        group = "media";
+        mode = "u=rwx,g=rx,o=rx";
+      }
+      {
+        directory = "/var/lib/private/prowlarr";
+        user = "prowlarr";
+        group = "prowlarr";
+        mode = "u=rwx,g=rx,o=rx";
+      }
+      {
+        directory = "/var/lib/private/jellyseerr";
+        user = "jellyseerr";
+        group = "jellyseerr";
+        mode = "u=rwx,g=rx,o=rx";
+      }
 
-      config.services.jellyfin.dataDir
-      config.services.radarr.dataDir
-      config.services.sonarr.dataDir
-      "/var/lib/bazarr"
-      "/var/lib/private/prowlarr"
-      "/var/lib/private/jellyseerr"
-      "${config.services.deluge.dataDir}/.config"
-
-      config.services.nextcloud.datadir
-      config.services.paperless.dataDir
+      # Nextcloud / Paperless / Open-WebUI
+      {
+        directory = config.services.nextcloud.datadir;
+        user = "nextcloud";
+        group = "nextcloud";
+        mode = "u=rwx,g=rx,o=";
+      }
+      {
+        directory = config.services.paperless.dataDir;
+        user = "paperless";
+        group = "paperless";
+        mode = "u=rwx,g=rx,o=rx";
+      }
       "/var/lib/paperless-ai"
-      "/var/lib/authentik/media"
-      "${config.services.open-webui.stateDir}/data"
-      config.services.uptime-kuma.settings.DATA_DIR
-      "/var/lib/garmindb"
+      {
+        directory = "/var/lib/authentik/media";
+        user = "nobody";
+        group = "nogroup";
+        mode = "u=rwx,g=rx,o=rx";
+      }
+      {
+        directory = "${config.services.open-webui.stateDir}/data";
+        user = "nobody";
+        group = "nogroup";
+        mode = "u=rwx,g=,o=";
+      }
+      {
+        directory = config.services.uptime-kuma.settings.DATA_DIR;
+        user = "nobody";
+        group = "nogroup";
+        mode = "u=rwx,g=rx,o=";
+      }
+      {
+        directory = "/var/lib/garmindb";
+        user = "garmindb";
+        group = "garmindb";
+        mode = "u=rwx,g=rx,o=rx";
+      }
       "/var/lib/affine"
-      config.services.calibre-web.options.calibreLibrary
+      {
+        directory = config.services.calibre-web.options.calibreLibrary;
+        user = "calibre-server";
+        group = "calibre-server";
+        mode = "u=rwx,g=rx,o=rx";
+      }
+
+      # System / root services
       "/var/lib/fail2ban"
       "/var/lib/fwupd"
       "/var/lib/garmin-fetch-data"
-      config.services.immich.mediaLocation
-      "/var/lib/influxdb"
-      "/var/lib/postgresql"
-      "/var/lib/tindeq"
 
-      "/var/lib/redis-affine"
-      "/var/lib/redis-authentik"
-      "/var/lib/redis-immich"
-      "/var/lib/redis-nextcloud"
-      "/var/lib/redis-paperless"
+      # Immich (pinned UID/GID)
+      {
+        directory = config.services.immich.mediaLocation;
+        user = "immich";
+        group = "immich";
+        mode = "u=rwx,g=rx,o=";
+      }
+
+      # DB services
+      {
+        directory = "/var/lib/influxdb";
+        user = "influxdb";
+        group = "influxdb";
+        mode = "u=rwx,g=rwx,o=";
+      }
+      {
+        directory = "/var/lib/postgresql";
+        user = "postgres";
+        group = "postgres";
+        mode = "u=rwx,g=rx,o=";
+      }
+
+      {
+        directory = "/var/lib/tindeq";
+        user = "nextcloud";
+        group = "nextcloud";
+        mode = "u=rwx,g=rx,o=rx";
+      }
+
+      # Redis (persist but no backup)
+      {
+        directory = "/var/lib/redis-affine";
+        user = "redis-affine";
+        group = "redis-affine";
+        mode = "u=rwx,g=,o=";
+      }
+      {
+        directory = "/var/lib/redis-authentik";
+        user = "nobody";
+        group = "nogroup";
+        mode = "u=rwx,g=,o=";
+      }
+      {
+        directory = "/var/lib/redis-immich";
+        user = "redis-immich";
+        group = "redis-immich";
+        mode = "u=rwx,g=,o=";
+      }
+      {
+        directory = "/var/lib/redis-nextcloud";
+        user = "nextcloud";
+        group = "nextcloud";
+        mode = "u=rwx,g=,o=";
+      }
+      {
+        directory = "/var/lib/redis-paperless";
+        user = "redis-paperless";
+        group = "redis-paperless";
+        mode = "u=rwx,g=,o=";
+      }
     ];
 
     files = [
       # System identity / config
       "/root/.bash_history"
-
       "/etc/machine-id"
       "/etc/adjtime"
 
       # App single-file state
-      # "/var/volumes/promtail/GeoLite2-City.mmdb"
-      # "/var/volumes/grafana/data/grafana.db"
-      # "/var/volumes/net_worth_nocodb/noco.db"
-      # "/var/volumes/traefik/acme.json"
       config.services.subtrackr.databasePath
       "/var/lib/private/dns-updater/cache.json"
       "/var/lib/logrotate.status"
