@@ -16,6 +16,9 @@ if [ "$(id -u)" -ne 0 ]; then
   exit 1
 fi
 
+# avoid to many files open in the nix store
+ulimit -n 65535
+
 # ─────────────────────────────────────────
 # Bitwarden login
 # ─────────────────────────────────────────
@@ -47,11 +50,35 @@ fi
 # ─────────────────────────────────────────
 # Fetch Restic B2 credentials
 # ─────────────────────────────────────────
-colorPrint "🗄️ Fetching Restic/B2 credentials from Bitwarden..."
-export RESTIC_REPOSITORY="b2:$(bw get item 'backblaze' | jq -r '.fields[] | select(.name=="B2_BUCKET") | .value')"
-export B2_ACCOUNT_ID="$(bw get item 'backblaze' | jq -r '.fields[] | select(.name=="B2_ACCOUNT_ID") | .value')"
-export B2_ACCOUNT_KEY="$(bw get item 'backblaze' | jq -r '.fields[] | select(.name=="B2_ACCOUNT_KEY") | .value')"
-export RESTIC_PASSWORD_FILE="$SOPS_KEY_FILE"
+CRED_FILE="/var/lib/.restic_b2_env"
+RESTIC_PASS_FILE="/var/lib/.restic_b2_password"
+
+if [ -f "$CRED_FILE" ]; then
+    colorPrint "🔑 Loading Restic/B2 credentials from $CRED_FILE..."
+    # shellcheck disable=SC1090
+    source "$CRED_FILE"
+else
+    colorPrint "🗄️ Fetching Restic/B2 credentials from Bitwarden..."
+    RESTIC_REPOSITORY="b2:$(bw get item 'backblaze' | jq -r '.fields[] | select(.name=="B2_BUCKET") | .value')"
+    B2_ACCOUNT_ID="$(bw get item 'backblaze' | jq -r '.fields[] | select(.name=="B2_ACCOUNT_ID") | .value')"
+    B2_ACCOUNT_KEY="$(bw get item 'backblaze' | jq -r '.fields[] | select(.name=="B2_ACCOUNT_KEY") | .value')"
+
+    # Save the Restic password to a secure file
+    bw get item 'resticBackup' | jq -r '.login.password' > "$RESTIC_PASS_FILE"
+    chmod 600 "$RESTIC_PASS_FILE"
+
+    # Save the env file pointing to the password file
+    cat > "$CRED_FILE" <<EOF
+export RESTIC_REPOSITORY="$RESTIC_REPOSITORY"
+export B2_ACCOUNT_ID="$B2_ACCOUNT_ID"
+export B2_ACCOUNT_KEY="$B2_ACCOUNT_KEY"
+export RESTIC_PASSWORD_FILE="$RESTIC_PASS_FILE"
+EOF
+
+    chmod 600 "$CRED_FILE"
+
+    colorPrint "💾 Saved credentials to $CRED_FILE"
+fi
 
 colorPrint "📦 B2 repository: $RESTIC_REPOSITORY"
 
@@ -61,7 +88,7 @@ colorPrint "📦 B2 repository: $RESTIC_REPOSITORY"
 colorPrint "💾 Running disko-install..."
 nix --extra-experimental-features 'nix-command flakes' \
   run github:nix-community/disko#disko-install -- \
-  --flake 'github:fedeizzo/nix-dotfiles#homelab' \
+  --flake '.#homelab' \
   --disk main /dev/nvme0n1 \
   --extra-files "$SOPS_KEY_FILE" "$SOPS_KEY_FILE"
 

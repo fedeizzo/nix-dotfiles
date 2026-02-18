@@ -41,7 +41,8 @@ in
             "services/misc/paperless.nix"
           ];
         }
-        ../hosts/xps-9510-homelab
+        ../hosts/framework-desktop
+        # ../hosts/xps-9510-homelab
       ];
     };
     oven = inputs.nixpkgs.lib.nixosSystem rec{

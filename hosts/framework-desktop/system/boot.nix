@@ -15,7 +15,7 @@
     #   "dev.i915.perf_stream_paranoid" = 0;
     # };
     initrd = {
-      systemd.enable = true;
+      # systemd.enable = true;
       availableKernelModules = [
         "nvme"
         "xhci_pci"
@@ -30,9 +30,11 @@
     extraModulePackages = [ ];
     kernelParams = [
       "nohibernate"
-      "amdgpu.gttsize=98304" # 96 GiB
-      "ttm.pages_limit=25165824" # 96 GiB (25165824 × 4 KiB = 96 GiB)
-      "amd_iommu=off"
+      # Caps pinned memory to 124 GiB; 32505856 × 4 KiB = 126976 MiB = 124 GiB
+      # Reserving a minimum of 4 GiB for the OS (max 124 GiB for iGPU)
+      "amdgpu.gttsize=126976" # Caps GPU unified memory to 124 GiB; 126976 MiB ÷ 1024 = 124 GiB
+      "ttm.pages_limit=32505856" # Caps pinned memory to 124 GiB; 32505856 × 4 KiB = 126976 MiB = 124 GiB
+      "amd_iommu=off" # Disables IOMMU for lower latency
     ];
     consoleLogLevel = 0;
   };

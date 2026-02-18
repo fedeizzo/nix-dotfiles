@@ -1,9 +1,12 @@
-{ lib, ... }:
+{ lib, inputs, ... }:
 
 let
   mtime = "7"; # weekly cleanup
 in
 {
+  imports = [
+    inputs.disko.nixosModules.disko
+  ];
   disko.devices = {
     disk = {
       main = {

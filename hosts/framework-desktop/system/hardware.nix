@@ -13,9 +13,9 @@
       powerOnBoot = false;
     };
 
-    fancontrol = {
-      enable = true;
-    };
+    # fancontrol = {
+    #   enable = true;
+    # };
 
     amdgpu.initrd.enable = true;
     cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;

@@ -2,16 +2,16 @@
 
 pkgs.buildGoModule rec {
   pname = "subtrackr";
-  version = "0.5.1";
+  version = "0.5.6";
 
   src = pkgs.fetchFromGitHub {
     owner = "bscott";
     repo = "subtrackr";
-    rev = "main";
-    sha256 = "sha256-O3frf4J6DFInW0U+02QDmS30c6NRFJWy1AGpaybc2vc=";
+    rev = "b34e0c7e869f97031ada251c7ba56c00794d60dc";
+    sha256 = "sha256-zpv9wjvnHcNBxQRoZDKNaMMFula50dd3BysAZjA4Uc0=";
   };
 
-  vendorHash = "sha256-HrcpVvDVUe6RKMF9D9xgKT4nsVen50su4KtpFupZstM=";
+  vendorHash = "sha256-SijHY0hRJAZlGGu2Ps2kYO4+MWU0pyqVcknuu2Pz3tY=";
 
   nativeBuildInputs = with pkgs; [ pkg-config ];
   buildInputs = with pkgs; [ sqlite ];
