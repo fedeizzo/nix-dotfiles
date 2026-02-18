@@ -16,10 +16,6 @@ let
   passwordExecuteEntry = user: "EXECUTE format('ALTER ROLE ${user} WITH PASSWORD %L;', ${user}_password);";
 in
 {
-  users.users.postgres.uid = 71; # make backup consistent across machines
-  users.groups.postgres.gid = 71; # make backup consistent across machines
-  users.users.postgres.group = "postgres";
-
   services.postgresqlBackup = {
     enable = true;
     location = "/var/backup/postgresql";

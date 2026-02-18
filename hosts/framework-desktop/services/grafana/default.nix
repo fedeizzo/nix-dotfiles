@@ -1,10 +1,6 @@
 { config, ... }:
 
 {
-  users.users.grafana.uid = 196; # make backup consistent across machines
-  users.groups.grafana.gid = 992; # make backup consistent across machines
-  users.users.grafana.group = "grafana";
-
   services.grafana = {
     enable = true;
     dataDir = "/var/volumes/grafana";

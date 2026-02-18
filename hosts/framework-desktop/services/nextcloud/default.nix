@@ -7,9 +7,6 @@ let
   restartUnits = [ ];
 in
 {
-  users.users.nextcloud.uid = 975; # make backup consistent across machines
-  users.groups.nextcloud.gid = 969; # make backup consistent across machines
-  users.users.nextcloud.group = "nextcloud";
   # users.users.nextcloud.extraGroups = lib.mkIf config.services.nextcloud.enable [ "render" "users" "keys" ];
   services = {
     nginx.virtualHosts."nextcloud.fedeizzo.dev".listen = [{ addr = "127.0.0.1"; port = 8180; }];

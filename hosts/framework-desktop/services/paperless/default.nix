@@ -1,9 +1,6 @@
 { config, lib, pkgs, ... }:
 
 {
-  users.users.paperless.uid = 315; # make backup consistent across machines
-  users.groups.paperless.gid = 315; # make backup consistent across machines
-  users.users.paperless.group = "paperless";
   services.paperless = {
     enable = true;
     address = "0.0.0.0";

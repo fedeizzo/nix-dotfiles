@@ -14,15 +14,6 @@ let
   };
 in
 {
-  users.groups.garmindb = {
-    gid = 962;
-  };
-  users.users.garmindb = {
-    uid = 970;
-    isSystemUser = true;
-    group = "garmindb";
-    home = "/var/lib/garmindb";
-  };
   systemd.tmpfiles.rules = [
     "C! /var/lib/garmindb/GarminConnectConfig.json 0400 garmindb garmindb - ${configFile}"
   ];

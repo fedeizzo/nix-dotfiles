@@ -1,5 +1,8 @@
 { pkgs, config, lib, ... }:
 
+let
+  backupFromServices = builtins.concatLists (map (el: el.toBackup) config.fi.services);
+in
 {
   services.restic.backups = rec {
     local = backblaze // {
@@ -39,32 +42,9 @@
       paths = [
         # directories
         "/persist/var/container_envs"
-        "/persist/var/volumes/grafana/plugins"
         "/persist${config.services.postgresqlBackup.location}"
-        "/persist${config.services.immich.mediaLocation}/backups"
-        "/persist${config.services.immich.mediaLocation}/library"
-        "/persist${config.services.immich.mediaLocation}/upload"
-        "/persist${config.services.immich.mediaLocation}/profile"
-        "/persist${config.services.home-assistant.configDir}"
-        "/persist${config.services.mosquitto.dataDir}"
-        "/persist${config.services.zigbee2mqtt.dataDir}"
         ## streaming
-        "/persist${config.services.jellyfin.dataDir}"
-        "/persist${config.services.radarr.dataDir}"
-        "/persist${config.services.sonarr.dataDir}"
-        "/persist/var/lib/bazarr"
-        "/persist/var/lib/private/prowlarr"
-        "/persist/var/lib/private/jellyseerr"
-        "/persist${config.services.deluge.dataDir}/.config"
-        "/persist${config.services.nextcloud.datadir}"
-        "/persist${config.services.paperless.dataDir}"
-        "/persist/var/lib/authentik/media"
-        "/persist${config.services.open-webui.stateDir}/data"
-        "/persist/var/lib/paperless-ai"
-        "/persist${config.services.uptime-kuma.settings.DATA_DIR}"
         "/persist/var/lib/garmindb"
-        "/persist/var/lib/affine"
-        "/persist${config.services.calibre-web.options.calibreLibrary}"
         "/persist/var/lib/postgresql"
         "/persist/var/lib/tindeq"
 
@@ -73,8 +53,7 @@
         "/persist/var/volumes/grafana/data/grafana.db"
         "/persist/var/volumes/net_worth_nocodb/noco.db"
         "/persist/var/volumes/traefik/acme.json"
-        "/persist${config.services.subtrackr.databasePath}"
-      ];
+      ] ++ backupFromServices;
       pruneOpts = [
         "--keep-last 30" # keep last 30 days
       ];

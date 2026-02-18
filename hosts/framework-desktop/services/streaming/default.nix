@@ -1,24 +1,6 @@
 { pkgs, ... }:
 
 {
-  # media group to be used by each service
-  users.groups.media = {
-    gid = 1800;
-  };
-  users.users.media = {
-    uid = 800;
-    home = "/home/media";
-    isSystemUser = true;
-    group = "media";
-  };
-  users.users.prowlarr.uid = 61654; # make backup consistent across machines
-  users.groups.prowlarr.gid = 61654; # make backup consistent across machines
-  users.users.prowlarr.group = "prowlarr";
-  users.users.prowlarr.isSystemUser = true;
-  users.users.jellyseerr.uid = 62900; # make backup consistent across machines
-  users.users.jellyseerr.isSystemUser = true;
-  users.groups.jellyseerr.gid = 62900; # make backup consistent across machines
-  users.users.jellyseerr.group = "jellyseerr";
 
   environment.systemPackages = with pkgs; [
     jellyfin

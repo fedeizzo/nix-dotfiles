@@ -1,7 +1,6 @@
 { hostname, ... }:
 
 {
-  users.users.loki.uid = 994; # make backup consistent across machines
   services.loki = {
     enable = true;
     dataDir = "/var/volumes/loki";
@@ -61,7 +60,6 @@
     };
   };
 
-  users.users.promtail.uid = 992; # make backup consistent across machines
   services.promtail = {
     enable = true;
     configuration = {
