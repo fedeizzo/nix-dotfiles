@@ -99,10 +99,10 @@ in
                       ];
                     };
 
-                    "/media" = {
-                      mountpoint = "/media";
+                    "/games" = {
+                      mountpoint = "/games";
                       mountOptions = [
-                        "subvol=media"
+                        "subvol=games"
                         "noatime"
                         "compress=zstd:3"
                         "ssd"
@@ -131,14 +131,11 @@ in
   };
 
   boot.initrd.postDeviceCommands = lib.mkAfter ''
-    set -e
-
     mkdir /btrfs_tmp
-    mount -o subvol=/ /dev/mapper/cryptroot /btrfs_tmp
-
+    mount /dev/mapper/cryptroot /btrfs_tmp
     if [[ -e /btrfs_tmp/root ]]; then
         mkdir -p /btrfs_tmp/old_roots
-        timestamp=$(date --date="@$(stat -c %Y /btrfs_tmp/root)" "+%Y-%m-%d_%H:%M:%S")
+        timestamp=$(date --date="@$(stat -c %Y /btrfs_tmp/root)" "+%Y-%m-%-d_%H:%M:%S")
         mv /btrfs_tmp/root "/btrfs_tmp/old_roots/$timestamp"
     fi
 

@@ -25,6 +25,7 @@
     nextcloud.group = "nextcloud";
 
     opencloud.uid = 997;
+    opencloud.group = "opencloud";
 
     paperless.uid = 315;
     paperless.group = "paperless";
@@ -68,6 +69,8 @@
 
     nextcloud.gid = 969;
 
+    opencloud.gid = 456;
+
     paperless.gid = 315;
 
     postgres.gid = 71;
@@ -77,8 +80,8 @@
     garmindb.gid = 962;
 
     media.gid = 1800;
-    groups.prowlarr.gid = 61654;
-    groups.jellyseerr.gid = 62900;
+    prowlarr.gid = 61654;
+    jellyseerr.gid = 62900;
   };
 
 }
