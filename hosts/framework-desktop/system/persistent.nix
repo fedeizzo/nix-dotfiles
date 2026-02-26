@@ -71,6 +71,14 @@ in
         mode = "u=rwx,g=rx,o=";
       }
 
+      # Observability
+      {
+        directory = "/var/lib/prometheus2";
+        user = "prometheus";
+        group = "prometheus";
+        mode = "u=rwx,g=rx,o=";
+      }
+
       {
         directory = "/var/lib/tindeq";
         user = "nextcloud";

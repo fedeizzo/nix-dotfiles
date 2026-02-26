@@ -1,5 +1,5 @@
 #! /usr/bin/env nix-shell
-#! nix-shell -i bash -p git bitwarden-cli jq restic
+#! nix-shell -i bash -p git bitwarden-cli jq restic rsync
 
 set -euo pipefail
 
@@ -9,6 +9,21 @@ colorPrint() {
 
 errorPrint() {
   echo -e "$(tput setaf 1)$1$(tput sgr0)"
+}
+
+prompt_confirm() {
+  while true; do
+    read -r -p "${1:-Continue?} [y/n]: " reply
+    case $reply in
+    [yY][eE][sS] | [yY])
+      return 0
+      ;;
+    [nN][oO] | [nN])
+      return 1
+      ;;
+    *) printf " \033[31m %s \n\033[0m" "invalid input" ;;
+    esac
+  done
 }
 
 # ─────────────────────────────────────────
@@ -148,17 +163,160 @@ fi
 # Restore backup
 # ─────────────────────────────────────────
 colorPrint "🚀 Restoring latest snapshot into /mnt/persist ..."
-restic snapshots
+restic snapshots --compact
 restic restore latest --target /mnt/persist
 
 colorPrint "🔍 Verifying restore..."
 ls /mnt/persist/var || true
 
 # ─────────────────────────────────────────
+# Restore /games and /home/media from external device
+# ─────────────────────────────────────────
+colorPrint ""
+colorPrint "Do you want to restore /games and /home/media from an external device?"
+if prompt_confirm; then
+    lsblk
+    colorPrint ""
+
+    while true; do
+        colorPrint "📀 Choose the source device (e.g., sda, sdb, nvme1n1):"
+        read -r media_disk
+
+        # Check if device exists
+        if [ ! -b "/dev/${media_disk}" ]; then
+            errorPrint "❌ Device /dev/${media_disk} does not exist"
+            lsblk
+            continue
+        fi
+
+        # Check if it's a disk (not a partition)
+        if ! lsblk -ndo TYPE "/dev/${media_disk}" | grep -q "disk"; then
+            errorPrint "❌ /dev/${media_disk} is not a disk device"
+            lsblk
+            continue
+        fi
+
+        break
+    done
+
+    colorPrint ""
+    colorPrint "You selected: /dev/${media_disk}"
+    lsblk "/dev/${media_disk}"
+    colorPrint ""
+
+    colorPrint "Available partitions:"
+    lsblk -o NAME,SIZE,FSTYPE,LABEL,MOUNTPOINT "/dev/${media_disk}"
+    colorPrint ""
+
+    colorPrint "📂 Enter the partition number to mount (e.g., 1 for ${media_disk}1):"
+    read -r partition_num
+
+    media_partition="/dev/${media_disk}${partition_num}"
+
+    if [ ! -b "$media_partition" ]; then
+        errorPrint "❌ Partition $media_partition does not exist. Skipping media restore."
+    else
+        colorPrint "📦 Mounting $media_partition..."
+        mkdir -p /mnt/media_source
+
+        if mount "$media_partition" /mnt/media_source; then
+            colorPrint "✅ Mounted $media_partition at /mnt/media_source"
+            colorPrint ""
+            colorPrint "Contents:"
+            ls -lh /mnt/media_source
+            colorPrint ""
+
+            # ─────────────────────────────────────────
+            # Restore /games
+            # ─────────────────────────────────────────
+            colorPrint "Enter the path to the /games backup directory (relative to mount point):"
+            colorPrint "Example: if data is in /mnt/media_source/backups/games, enter: backups/games"
+            colorPrint "Leave empty to skip /games restore."
+            read -r games_path
+
+            if [ -n "$games_path" ]; then
+                source_path="/mnt/media_source/${games_path}"
+
+                if [ ! -d "$source_path" ]; then
+                    errorPrint "❌ Directory $source_path not found. Skipping /games restore."
+                else
+                    # Mount /games subvolume
+                    colorPrint "📦 Mounting /games subvolume..."
+                    mkdir -p /mnt/games
+                    mount -o subvol=games /dev/mapper/cryptroot /mnt/games
+
+                    colorPrint "🚀 Copying /games data from $source_path..."
+                    colorPrint "This may take a while depending on data size..."
+
+                    rsync -avh --info=progress2 "$source_path/" /mnt/games/
+
+                    colorPrint "✅ /games restore complete"
+
+                    # Cleanup
+                    umount /mnt/games
+                    rmdir /mnt/games
+                fi
+            else
+                colorPrint "⏭️  Skipping /games restore."
+            fi
+
+            # ─────────────────────────────────────────
+            # Restore /home/media
+            # ─────────────────────────────────────────
+            colorPrint ""
+            colorPrint "Enter the path to the /home/media backup directory (relative to mount point):"
+            colorPrint "Example: if data is in /mnt/media_source/backups/home_media, enter: backups/home_media"
+            colorPrint "Leave empty to skip /home/media restore."
+            read -r home_media_path
+
+            if [ -n "$home_media_path" ]; then
+                home_source_path="/mnt/media_source/${home_media_path}"
+
+                if [ ! -d "$home_source_path" ]; then
+                    errorPrint "❌ Directory $home_source_path not found. Skipping /home/media restore."
+                else
+                    # Mount /home/media subvolume
+                    colorPrint "📦 Mounting /home/media subvolume..."
+                    mkdir -p /mnt/home_media_target
+                    mount -o subvol=media /dev/mapper/cryptroot /mnt/home_media_target
+
+                    colorPrint "🚀 Copying /home/media data from $home_source_path..."
+                    colorPrint "This may take a while depending on data size..."
+
+                    rsync -avh --info=progress2 "$home_source_path/" /mnt/home_media_target/
+
+                    colorPrint "✅ /home/media restore complete"
+
+                    # Fix permissions for media user (UID 800, GID 1800)
+                    colorPrint "🔧 Setting ownership to media user (800:1800)..."
+                    chown -R 800:1800 /mnt/home_media_target
+
+                    # Cleanup
+                    umount /mnt/home_media_target
+                    rmdir /mnt/home_media_target
+                fi
+            else
+                colorPrint "⏭️  Skipping /home/media restore."
+            fi
+
+            # Cleanup external device mount
+            umount /mnt/media_source
+            rmdir /mnt/media_source
+        else
+            errorPrint "❌ Failed to mount $media_partition. Skipping media restore."
+        fi
+    fi
+else
+    colorPrint "⏭️  Skipping media restore. Subvolumes will start empty."
+fi
+
+# ─────────────────────────────────────────
 # Cleanup
 # ─────────────────────────────────────────
+colorPrint ""
 colorPrint "🧹 Cleaning up mounts..."
 umount -R /mnt/persist || errorPrint "Failed to unmount /mnt recursively. Check manually."
 
+colorPrint ""
 colorPrint "🎉 Restore complete. System is ready for first boot."
 colorPrint "You can now reboot."

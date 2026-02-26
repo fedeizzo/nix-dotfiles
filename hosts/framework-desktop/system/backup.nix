@@ -47,6 +47,8 @@ in
         "/persist/var/lib/garmindb"
         "/persist/var/lib/postgresql"
         "/persist/var/lib/tindeq"
+        ## observability
+        "/persist/var/lib/influxdb"
 
         # files
         "/persist/var/volumes/promtail/GeoLite2-City.mmdb"
@@ -72,6 +74,11 @@ in
     };
     environment = {
       BACKREST_PORT = "0.0.0.0:9898";
+      BACKREST_CONFIG = "/root/.config/backrest/config.json";
+      BACKREST_DATA = "/root/.local/backrest";
+      XDG_CONFIG_HOME = "/root/.config";
+      XDG_DATA_HOME = "/root/.local/share";
+      XDG_CACHE_HOME = "/root/.cache";
     };
   };
 }

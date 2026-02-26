@@ -107,6 +107,7 @@
       ];
       toBackup = [
         "/persist/var/lib/affine"
+        "/persist/var/lib/redis-affine"
       ];
     }
 
@@ -143,7 +144,23 @@
         "/persist${config.services.paperless.dataDir}"
       ];
     }
-    { name = "fusion"; port = 51000; dashboardSection = "Media"; dashboardIcon = "tinytinyrss"; }
+    {
+      name = "fusion";
+      port = 51000;
+      dashboardSection = "Media";
+      dashboardIcon = "tinytinyrss";
+      toPersist = [
+        {
+          directory = "/var/lib/fusion";
+          user = "root";
+          group = "root";
+          mode = "u=rwx,g=rx,o=";
+        }
+      ];
+      toBackup = [
+        "/persist/var/lib/fusion"
+      ];
+    }
     {
       name = "sonarr"; inherit (config.services.sonarr.settings.server) port; dashboardSection = "Media";
       toPersist = [
@@ -189,7 +206,7 @@
     {
       name = "deluge"; inherit (config.services.deluge.web) port; dashboardSection = "Media";
       toBackup = [
-        "/persist${config.services.deluge.dataDir}/.config"
+        "${config.services.deluge.dataDir}/.config"
       ];
     }
     {
@@ -242,7 +259,29 @@
         "/persist${config.services.open-webui.stateDir}/data"
       ];
     }
-    { name = "backrest"; port = 9898; dashboardSection = "Tools"; authType = "proxy"; }
+    {
+      name = "backrest";
+      port = 9898;
+      dashboardSection = "Tools";
+      authType = "proxy";
+      toPersist = [
+        {
+          directory = "/root/.config/backrest";
+          user = "root";
+          group = "root";
+          mode = "u=rwx,g=,o=";
+        }
+        {
+          directory = "/root/.local/backrest";
+          user = "root";
+          group = "root";
+          mode = "u=rwx,g=,o=";
+        }
+      ];
+      toBackup = [
+        "/persist/root/.config/backrest"
+      ];
+    }
     { name = "paperless-gpt"; port = 28982; dashboardSection = "Tools"; authType = "proxy"; }
     {
       name = "paperless-ai";
@@ -264,6 +303,14 @@
       dashboardSection = "Tools";
       dashboardIcon = "nextcloud-cospend";
       authType = "proxy";
+      toPersist = [
+        {
+          directory = "/var/lib/subtrackr";
+          user = "subtrackr";
+          group = "subtrackr";
+          mode = "u=rwx,g=rx,o=";
+        }
+      ];
       toBackup = [
         "/persist${config.services.subtrackr.databasePath}"
       ];
