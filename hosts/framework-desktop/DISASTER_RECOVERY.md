@@ -12,13 +12,13 @@ If migrating to new hardware or recovering from planned maintenance, perform the
 
 ```bash
 # Trigger immediate backup (don't wait for scheduled run)
-sudo systemctl start restic-backups-backblaze.service
+systemctl start restic-backups-backblaze.service
 
 # Wait for completion
-sudo systemctl status restic-backups-backblaze.service
+systemctl status restic-backups-backblaze.service
 
 # Verify backup succeeded
-sudo restic-backblaze snapshots | tail -20
+restic-backblaze snapshots | tail -20
 ```
 
 ### 2. Stop Critical Services (Optional but Recommended)
@@ -27,17 +27,17 @@ Ensures consistent state for databases:
 
 ```bash
 # Stop services that write to databases
-sudo systemctl stop immich-server immich-machine-learning
-sudo systemctl stop paperless-web paperless-scheduler paperless-task-queue
-sudo systemctl stop home-assistant
-sudo systemctl stop nextcloud-setup
+systemctl stop immich-server immich-machine-learning
+systemctl stop paperless-web paperless-scheduler paperless-task-queue
+systemctl stop home-assistant
+systemctl stop nextcloud-setup
 
 # Trigger final PostgreSQL dump
-sudo systemctl start postgresqlBackup.service
-sudo systemctl status postgresqlBackup.service
+systemctl start postgresqlBackup.service
+systemctl status postgresqlBackup.service
 
 # Wait a few minutes, then trigger final backup
-sudo systemctl start restic-backups-backblaze.service
+systemctl start restic-backups-backblaze.service
 ```
 
 ### 3. Backup Media Directories to External SSD
@@ -47,33 +47,33 @@ sudo systemctl start restic-backups-backblaze.service
 lsblk
 
 # Mount external drive (example: /dev/sda1)
-sudo mkdir -p /mnt/backup_ssd
-sudo mount /dev/sda1 /mnt/backup_ssd
+mkdir -p /mnt/backup_ssd
+mount /dev/sda1 /mnt/backup_ssd
 
 # Backup /games (Jellyfin media library + Deluge data)
-sudo rsync -avhP --delete /games/ /mnt/backup_ssd/games_backup/
+rsync -avhP --delete /games/ /mnt/backup_ssd/games_backup/
 
 # Backup /home/media (Deluge downloads/cache)
-sudo rsync -avhP --delete /home/media/ /mnt/backup_ssd/home_media_backup/
+rsync -avhP --delete /home/media/ /mnt/backup_ssd/home_media_backup/
 
 # Verify backup
 ls -lh /mnt/backup_ssd/
 
 # Unmount
-sudo umount /mnt/backup_ssd
+umount /mnt/backup_ssd
 ```
 
 ### 4. Verify Backup Integrity
 
 ```bash
 # Check latest snapshot
-sudo restic-backblaze snapshots | tail -5
+restic-backblaze snapshots | tail -5
 
 # Verify critical files are in backup
-sudo restic-backblaze ls latest | grep -E "acme.json|postgresql|zigbee2mqtt/configuration.yaml"
+restic-backblaze ls latest | grep -E "acme.json|postgresql|zigbee2mqtt/configuration.yaml"
 
 # Optional: Test restore of small critical file
-sudo restic-backblaze restore latest --target /tmp/test-restore \
+restic-backblaze restore latest --target /tmp/test-restore \
   --include /persist/var/volumes/traefik/acme.json
 ls -lh /tmp/test-restore/persist/var/volumes/traefik/acme.json
 rm -rf /tmp/test-restore
@@ -99,7 +99,7 @@ ip addr > /tmp/network-config.txt
 sync
 
 # Shutdown
-sudo shutdown -h now
+shutdown -h now
 ```
 
 ---
@@ -113,6 +113,7 @@ sudo bash scripts/installation/framework-desktop.sh
 ```
 
 The script will:
+
 1. Fetch SOPS keys from Bitwarden
 2. Fetch restic credentials
 3. Partition and install NixOS
@@ -128,6 +129,7 @@ Quick reference for issues after running `scripts/installation/framework-desktop
 ## Pre-Flight Checks
 
 After first boot, verify critical services:
+
 ```bash
 # Check failed services
 systemctl --failed
@@ -144,11 +146,13 @@ systemctl status traefik
 ## PostgreSQL Database Corruption
 
 **Symptoms:**
+
 - PostgreSQL fails to start
 - Error: `data directory is of wrong version`
 - Error: `checksum mismatch` or `page verification failed`
 
 **Recovery:**
+
 ```bash
 # 1. Check if dumps exist
 ls -lh /persist/var/backup/postgresql/
@@ -179,6 +183,7 @@ sudo systemctl restart immich-server
 ```
 
 **If dumps are corrupted:**
+
 - Nextcloud: Files intact, lose shares/calendar/contacts
 - Paperless: Documents intact, lose tags/metadata
 - Immich: Photos intact, lose albums/faces/metadata
@@ -192,10 +197,12 @@ sudo systemctl restart immich-server
 ### Grafana
 
 **Symptoms:**
+
 - Grafana fails to start
 - Error: `database disk image is malformed`
 
 **Recovery:**
+
 ```bash
 # 1. Try SQLite repair
 cd /persist/var/volumes/grafana/data
@@ -216,10 +223,12 @@ systemctl restart grafana
 ### Subtrackr
 
 **Symptoms:**
+
 - Service fails to start
 - Error: `database is locked` or `malformed`
 
 **Recovery:**
+
 ```bash
 # Delete and restart (subscription data lost)
 rm /persist/var/lib/subtrackr/subtrackr.db
@@ -233,10 +242,12 @@ systemctl restart subtrackr
 ## Home Assistant
 
 **Symptoms:**
+
 - HA fails to start
 - Error: `Database malformed` or `cannot open database`
 
 **Recovery:**
+
 ```bash
 # 1. Check database
 cd /persist/var/lib/hass
@@ -257,6 +268,7 @@ systemctl restart home-assistant
 ## Zigbee2MQTT Network Key Lost
 
 **Symptoms:**
+
 - Zigbee devices not responding
 - `/persist/var/lib/zigbee2mqtt/configuration.yaml` missing or corrupted
 
@@ -280,10 +292,12 @@ cat /persist/var/lib/zigbee2mqtt/configuration.yaml
 ## Traefik SSL Certificates Lost
 
 **Symptoms:**
+
 - HTTPS sites show certificate errors
 - `/persist/var/volumes/traefik/acme.json` missing or empty
 
 **Recovery:**
+
 ```bash
 # 1. Check if file exists and has content
 ls -lh /persist/var/volumes/traefik/acme.json
@@ -307,10 +321,12 @@ journalctl -u traefik -f
 ## InfluxDB Data Corruption
 
 **Symptoms:**
+
 - InfluxDB fails to start
 - Error: `unable to open wal segment` or `snapshot corrupt`
 
 **Recovery:**
+
 ```bash
 # 1. Check InfluxDB logs
 journalctl -u influxdb -n 100
@@ -332,10 +348,12 @@ sudo systemctl start influxdb
 ## Immich Database Mismatch
 
 **Symptoms:**
+
 - Immich web UI shows errors
 - Error: `database schema version mismatch`
 
 **Recovery:**
+
 ```bash
 # Immich includes auto-migration
 # 1. Stop immich services
@@ -358,10 +376,12 @@ journalctl -u immich-server -f
 ## Nextcloud Stuck in Maintenance Mode
 
 **Symptoms:**
+
 - Nextcloud shows "Maintenance mode" page
 - Database restored but maintenance flag stuck
 
 **Recovery:**
+
 ```bash
 # Disable maintenance mode
 sudo -u nextcloud nextcloud-occ maintenance:mode --off
@@ -378,10 +398,12 @@ sudo -u nextcloud nextcloud-occ files:scan --all
 ## Service-Specific File Permissions
 
 **Symptoms:**
+
 - Service fails to start
 - Error: `Permission denied` reading config/database
 
 **Recovery:**
+
 ```bash
 # PostgreSQL
 chown -R postgres:postgres /persist/var/lib/postgresql
