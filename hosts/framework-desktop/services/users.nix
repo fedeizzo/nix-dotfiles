@@ -3,6 +3,9 @@
 {
   # make backup consistent across machines
   users.users = {
+    authentik.uid = 366;
+    authentik.group = "authentik";
+
     calibre-server.uid = 206;
     calibre-server.group = "calibre-server";
 
@@ -23,6 +26,9 @@
 
     nextcloud.uid = 975;
     nextcloud.group = "nextcloud";
+
+    open-webui.uid = 311;
+    open-webui.group = "open-webui";
 
     opencloud.uid = 997;
     opencloud.group = "opencloud";
@@ -57,6 +63,8 @@
     jellyseerr.group = "jellyseerr";
   };
   users.groups = {
+    authentik.gid = 378;
+
     calibre-server.gid = 206;
 
     grafana.gid = 992;
@@ -68,6 +76,8 @@
     immich.gid = 976;
 
     nextcloud.gid = 969;
+
+    open-webui.gid = 312;
 
     opencloud.gid = 456;
 

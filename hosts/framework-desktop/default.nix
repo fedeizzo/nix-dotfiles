@@ -15,6 +15,7 @@
     ./system/misc.nix
     ./system/networking.nix
     ./system/nix.nix
+    ./system/persistent.nix
     ./system/security.nix
     ./system/sops.nix
     ./system/users.nix

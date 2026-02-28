@@ -34,6 +34,23 @@
     };
   };
 
+  # for consistent backup
+  systemd.services.authentik-migrate.serviceConfig = {
+    DynamicUser = lib.mkForce false;
+    User = "authentik";
+    Group = "authentik";
+  };
+  systemd.services.authentik-worker.serviceConfig = {
+    DynamicUser = lib.mkForce false;
+    User = "authentik";
+    Group = "authentik";
+  };
+  systemd.services.authentik.serviceConfig = {
+    DynamicUser = lib.mkForce false;
+    User = "authentik";
+    Group = "authentik";
+  };
+
   sops.secrets.authentik-env = lib.mkIf config.services.authentik.enable {
     format = "dotenv";
     sopsFile = ./authentik-homelab-secrets.env;

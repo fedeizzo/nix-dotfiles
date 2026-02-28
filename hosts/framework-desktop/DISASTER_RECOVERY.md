@@ -109,7 +109,7 @@ shutdown -h now
 After the old system is shut down, boot from NixOS ISO on new hardware and run:
 
 ```bash
-sudo bash scripts/installation/framework-desktop.sh
+sudo scripts/installation/framework-desktop.sh
 ```
 
 The script will:

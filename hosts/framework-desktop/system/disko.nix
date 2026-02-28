@@ -113,7 +113,7 @@ in
                     "/home/media" = {
                       mountpoint = "/home/media";
                       mountOptions = [
-                        "subvol=media"
+                        "subvol=home/media"
                         "noatime"
                         "compress=zstd:3"
                         "ssd"

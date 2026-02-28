@@ -1,9 +1,12 @@
-{ config, ... }:
+{ inputs, config, ... }:
 
 let
   persistanceFromServices = builtins.concatLists (map (el: el.toPersist) config.fi.services);
 in
 {
+  imports = [
+    inputs.impermanence.nixosModules.impermanence
+  ];
   environment.persistence."/persist" = {
     hideMounts = true;
 
@@ -12,7 +15,6 @@ in
       # System identity / config
       # ─────────────────────────────
       "/etc/nixos"
-      "/etc/ssh"
       "/var/lib/nixos"
       "/var/lib/systemd/linger"
       "/var/lib/systemd/timers"
@@ -126,7 +128,6 @@ in
       "/etc/adjtime"
 
       # App single-file state
-      config.services.subtrackr.databasePath
       "/var/lib/private/dns-updater/cache.json"
       "/var/lib/logrotate.status"
     ];

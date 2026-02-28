@@ -1,4 +1,4 @@
-{ config, ... }:
+{ config, lib, ... }:
 
 {
   services.open-webui = {
@@ -18,5 +18,11 @@
     ];
     sopsFile = ./open-webui-homelab-secrets.env;
     key = ""; # to map the whole file as a secret
+  };
+  # for consistent backup
+  systemd.services.open-webui.serviceConfig = {
+    DynamicUser = lib.mkForce false;
+    User = "open-webui";
+    Group = "open-webui";
   };
 }

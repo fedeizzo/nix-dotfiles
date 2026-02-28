@@ -20,12 +20,8 @@ in
       user = "root";
       initialize = true;
       runCheck = false; # there is already another job with a grafana alert
-      # Env file structure
-      # B2_ACCOUNT_ID=
-      # B2_ACCOUNT_KEY=
-      environmentFile = "/root/.restic_backup_env";
+      environmentFile = config.sops.secrets.backblaze-credentials.path;
       repository = "b2:fedeizzo-homelab-backup";
-      # repositoryFile = config.sops.secrets.restic-repository.path;
       passwordFile = config.sops.secrets.restic-password.path;
       createWrapper = true;
       extraBackupArgs = [
@@ -80,5 +76,12 @@ in
       XDG_DATA_HOME = "/root/.local/share";
       XDG_CACHE_HOME = "/root/.cache";
     };
+  };
+
+  sops.secrets.backblaze-credentials = {
+    format = "dotenv";
+    mode = "0400";
+    sopsFile = ./backblaze-homelab-secrets.env;
+    key = ""; # to map the whole file as a secret
   };
 }

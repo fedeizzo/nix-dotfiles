@@ -27,7 +27,6 @@
     ./paperless
     ./postgres
     ./prometheus
-    ./subtrackr
     # ./sunshine
     ./streaming
     ./traefik
@@ -103,6 +102,9 @@
       toPersist = [
         {
           directory = "/var/lib/affine";
+          user = "root";
+          group = "root";
+          mode = "u=rwx,g=,o=";
         }
       ];
       toBackup = [
@@ -250,13 +252,13 @@
       toPersist = [
         {
           directory = "${config.services.open-webui.stateDir}/data";
-          user = "nobody";
-          group = "nogroup";
+          user = "open-webui";
+          group = "open-webui";
           mode = "u=rwx,g=,o=";
         }
       ];
       toBackup = [
-        "/persist${config.services.open-webui.stateDir}/data"
+        "/persist/var/lib/open-webui/data"
       ];
     }
     {
@@ -291,28 +293,13 @@
       toPersist = [
         {
           directory = "/var/lib/paperless-ai";
+          user = "root";
+          group = "root";
+          mode = "u=rwx,g=,o=";
         }
       ];
       toBackup = [
         "/persist/var/lib/paperless-ai"
-      ];
-    }
-    {
-      name = "subtrackr";
-      port = config.services.subtrackr.port;
-      dashboardSection = "Tools";
-      dashboardIcon = "nextcloud-cospend";
-      authType = "proxy";
-      toPersist = [
-        {
-          directory = "/var/lib/subtrackr";
-          user = "subtrackr";
-          group = "subtrackr";
-          mode = "u=rwx,g=rx,o=";
-        }
-      ];
-      toBackup = [
-        "/persist${config.services.subtrackr.databasePath}"
       ];
     }
 
@@ -332,13 +319,13 @@
       toPersist = [
         {
           directory = config.services.uptime-kuma.settings.DATA_DIR;
-          user = "nobody";
-          group = "nogroup";
+          user = "root";
+          group = "root";
           mode = "u=rwx,g=rx,o=";
         }
       ];
       toBackup = [
-        "/persist${config.services.uptime-kuma.settings.DATA_DIR}"
+        "/persist/var/lib/private/uptime-kuma"
       ];
     }
     { name = "whoami"; port = config.services.whoami.port; dashboardSection = "Observability"; authType = "proxy"; }
@@ -386,10 +373,10 @@
       dashboardSection = "Management";
       toPersist = [
         {
-          directory = "/var/lib/authentik/media";
-          user = "nobody";
-          group = "nogroup";
-          mode = "u=rwx,g=rx,o=rx";
+          directory = "/var/lib/authentik";
+          user = "authentik";
+          group = "authentik";
+          mode = "u=rwx,g=,o=";
         }
       ];
       toBackup = [

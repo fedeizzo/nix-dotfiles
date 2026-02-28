@@ -68,7 +68,7 @@ in
 
   virtualisation.oci-containers.containers."garmin-fetch-data" = {
     image = "thisisarpanghosh/garmin-fetch-data:latest";
-    autoStart = true;
+    autoStart = false;
     extraOptions = [
       # "--restart=unless-stopped"
       "--network=host" # to see influx

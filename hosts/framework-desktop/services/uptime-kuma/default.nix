@@ -2,7 +2,7 @@
 
 {
   services.uptime-kuma = {
-    enable = true;
+    enable = false;
     appriseSupport = true;
     settings = {
       DATA_DIR = lib.mkForce "/var/lib/uptime-kuma";

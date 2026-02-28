@@ -96,6 +96,15 @@ in
     };
   };
 
+  # sometimes nextcloud starts before pg
+  systemd.services.nextcloud-update-db = {
+    after = lib.mkAfter [ "postgresql.service" ];
+  };
+
+  systemd.services.nextcloud-setup = {
+    after = lib.mkAfter [ "postgresql.service" ];
+  };
+
   sops.secrets = {
     nextcloud-admin-password = lib.mkIf config.services.nextcloud.enable {
       inherit sopsFile mode format restartUnits;

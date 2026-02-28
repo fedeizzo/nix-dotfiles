@@ -16,7 +16,7 @@
       restic = {
         enable = true;
         repository = "b2:fedeizzo-homelab-backup";
-        environmentFile = "/root/.restic_backup_env";
+        environmentFile = config.sops.secrets.backblaze-credentials.path;
         passwordFile = config.sops.secrets.restic-password.path;
         refreshInterval = 43200; # 12h
       };

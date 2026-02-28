@@ -5,10 +5,10 @@ let
 
   directory = types.submodule ({ config, ... }: {
     options = {
-      directory = mkOption { type = type.str; };
-      user = mkOption { type = types.nullOr str; };
-      group = mkOption { type = types.nullOr str; };
-      mode = mkOption { type = types.nullOr str; };
+      directory = mkOption { type = types.str; };
+      user = mkOption { type = types.nullOr types.str; };
+      group = mkOption { type = types.nullOr types.str; };
+      mode = mkOption { type = types.nullOr types.str; };
     };
   });
 

@@ -51,25 +51,24 @@ ulimit -n 65535
 # ─────────────────────────────────────────
 colorPrint "🔐 Unlocking Bitwarden vault..."
 
-read -rp "🔐 Enter Bitwarden email: " BW_EMAIL
-read -rsp "🔐 Enter Bitwarden account password: " BW_ACC_PASSWORD
-echo
-read -rsp "🔐 Enter Bitwarden master password: " BW_PASSWORD
-echo
 
 # Check login status
 if ! bw login --check &>/dev/null; then
+  read -rp "🔐 Enter Bitwarden email: " BW_EMAIL
+  read -rsp "🔐 Enter Bitwarden account password: " BW_ACC_PASSWORD
+  echo
+  read -rsp "🔐 Enter Bitwarden master password: " BW_PASSWORD
+  echo
   colorPrint "Logging into Bitwarden..."
   BW_SESSION=$(bw login $BW_EMAIL $BW_ACC_PASSWORD --raw)
   export BW_SESSION
+  # Clear password variable immediately
+  unset BW_PASSWORD
 fi
 
 # Unlock and capture session
-BW_SESSION="$(bw unlock --raw "$BW_PASSWORD")"
+BW_SESSION="$(bw unlock --raw)"
 export BW_SESSION
-
-# Clear password variable immediately
-unset BW_PASSWORD
 
 # Sync vault to avoid stale data
 bw sync
@@ -127,6 +126,7 @@ export RESTIC_PASSWORD_FILE="$RESTIC_PASS_FILE"
 EOF
 
     chmod 600 "$CRED_FILE"
+    source "$CRED_FILE"
 
     colorPrint "💾 Saved credentials to $CRED_FILE"
 fi
@@ -139,12 +139,15 @@ mount -o remount,size=110G /nix/.rw-store
 # ─────────────────────────────────────────
 # Run Disko install
 # ─────────────────────────────────────────
-colorPrint "💾 Running disko-install..."
-nix --extra-experimental-features 'nix-command flakes' \
-  run github:nix-community/disko#disko-install -- \
-  --flake '.#homelab' \
-  --disk main /dev/nvme0n1 \
-  --extra-files "$SOPS_KEY_FILE" "$SOPS_KEY_FILE"
+if [ ! -f "/var/lib/disko-done" ]; then
+  colorPrint "💾 Running disko-install..."
+  nix --extra-experimental-features 'nix-command flakes' \
+run github:nix-community/disko#disko-install -- \
+    --flake '.#homelab' \
+    --disk main /dev/nvme0n1 \
+    --extra-files "$SOPS_KEY_FILE" "$SOPS_KEY_FILE"
+fi
+echo 'done' > '/var/lib/disko-done'
 
 colorPrint "✅ Disko complete."
 
@@ -278,7 +281,7 @@ if prompt_confirm; then
                     # Mount /home/media subvolume
                     colorPrint "📦 Mounting /home/media subvolume..."
                     mkdir -p /mnt/home_media_target
-                    mount -o subvol=media /dev/mapper/cryptroot /mnt/home_media_target
+                    mount -o subvol=home/media /dev/mapper/cryptroot /mnt/home_media_target
 
                     colorPrint "🚀 Copying /home/media data from $home_source_path..."
                     colorPrint "This may take a while depending on data size..."
