@@ -7,4 +7,6 @@ buildGoModule {
   src = ./.;
 
   vendorHash = "sha256-rpg1fAC7KH5jtAO28iNsyADnZ1H1teKlg7CHVaGLUvk=";
+
+  meta.mainProgram = "dns-updater";
 }

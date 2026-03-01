@@ -43,7 +43,7 @@ let
 in
 {
   imports = [
-    # ./dns-updater
+    ./dns-updater
   ];
 
   services.whoami = {
