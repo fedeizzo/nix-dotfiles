@@ -3,7 +3,7 @@
 {
   services.open-webui = {
     enable = true;
-    stateDir = "/var/lib/open-webui";
+    stateDir = "/persist/var/lib/open-webui";
     port = 5300;
     host = "0.0.0.0";
     openFirewall = false;
@@ -24,5 +24,8 @@
     DynamicUser = lib.mkForce false;
     User = "open-webui";
     Group = "open-webui";
+
+    StateDirectory = lib.mkForce "";
+    WorkingDirectory = "/persist/var/lib/open-webui";
   };
 }

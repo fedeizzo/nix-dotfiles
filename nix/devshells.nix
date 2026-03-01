@@ -38,6 +38,12 @@
         category = " System administration";
       }
       {
+        help = " Deploy the homelab configuration over ssh and activate config at next boot.";
+        name = "deploy-homelab-boot";
+        command = "deploy --skip-checks --boot .#homelab";
+        category = " System administration";
+      }
+      {
         help = " Deploy the homelab configuration over ssh without any rollback strategy.";
         name = "deploy-homelab-unsafe";
         command = "deploy --auto-rollback false -s --rollback-succeeded false --magic-rollback false .#homelab";

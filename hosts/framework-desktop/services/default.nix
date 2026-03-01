@@ -22,6 +22,7 @@
     ./loki
     ./net-worth
     ./nextcloud
+    ./ollama
     ./open-webui
     # ./opencloud
     ./paperless
@@ -246,16 +247,30 @@
 
     # Tools
     {
+      name = "ollama";
+      port = config.services.ollama.port;
+      dashboardSection = "Tools";
+      toPersist = [
+        {
+          directory = "${config.services.ollama.home}";
+          user = "ollama";
+          group = "ollama";
+          mode = "u=rwx,g=,o=";
+        }
+      ];
+      toBackup = [ ];
+    }
+    {
       name = "open-webui";
       port = config.services.open-webui.port;
       dashboardSection = "Tools";
       toPersist = [
-        {
-          directory = "${config.services.open-webui.stateDir}/data";
-          user = "open-webui";
-          group = "open-webui";
-          mode = "u=rwx,g=,o=";
-        }
+        # {
+        #   directory = "${config.services.open-webui.stateDir}";
+        #   user = "open-webui";
+        #   group = "open-webui";
+        #   mode = "u=rwx,g=,o=";
+        # }
       ];
       toBackup = [
         "/persist/var/lib/open-webui/data"

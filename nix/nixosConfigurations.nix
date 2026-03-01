@@ -21,28 +21,11 @@ in
       };
 
       modules = [
-        # TODO: remove after jellyseerr is updated to v2 in 22.11
-        {
-          imports = [
-            (inputs.nixpkgs-homelab-unstable + /nixos/modules/services/misc/jellyseerr.nix)
-            (inputs.nixpkgs-homelab-unstable + /nixos/modules/services/home-automation/home-assistant.nix)
-            (inputs.nixpkgs-homelab-unstable + /nixos/modules/services/misc/paperless.nix)
-          ];
-          nixpkgs.overlays = [
-            (_: _: {
-              inherit (inputs.nixpkgs-homelab-unstable.legacyPackages.${system}) jellyseerr;
-              inherit (inputs.nixpkgs-homelab-unstable.legacyPackages.${system}) home-assistant;
-              inherit (inputs.nixpkgs-homelab-unstable.legacyPackages.${system}) paperless;
-            })
-          ];
-          disabledModules = [
-            "services/misc/jellyseerr.nix"
-            "services/home-automation/home-assistant.nix"
-            "services/misc/paperless.nix"
-          ];
-        }
+        (import ../hosts/framework-desktop/system/module-override.nix {
+          pkgs-unstable = inputs.nixpkgs-unstable;
+          inherit system;
+        })
         ../hosts/framework-desktop
-        # ../hosts/xps-9510-homelab
       ];
     };
     oven = inputs.nixpkgs.lib.nixosSystem rec{

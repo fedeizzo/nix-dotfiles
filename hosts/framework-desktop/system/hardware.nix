@@ -12,6 +12,7 @@
       enable = false;
       powerOnBoot = false;
     };
+    enableRedistributableFirmware = true;
 
     # fancontrol = {
     #   enable = true;
