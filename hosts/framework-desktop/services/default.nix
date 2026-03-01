@@ -18,6 +18,7 @@
     ./hass
     ./immich
     ./influxdb
+    ./llama-swap
     ./logrotate
     ./loki
     ./net-worth
@@ -258,6 +259,14 @@
           mode = "u=rwx,g=,o=";
         }
       ];
+      toBackup = [ ];
+    }
+    {
+      name = "llama";
+      dashboardIcon = "codellm";
+      port = config.services.llama-swap.port;
+      dashboardSection = "Tools";
+      toPersist = [ ];
       toBackup = [ ];
     }
     {

@@ -1,0 +1,30 @@
+[book]
+title = "Nix Dotfiles Documentation"
+authors = ["oven"]
+description = "Documentation for Nix-based dotfiles and homelab configuration"
+language = "en"
+multilingual = false
+
+[build]
+create-missing = false
+use-default-preprocessors = true
+src = "book/src"
+output-dir = "book/html"
+
+[preprocessor]
+
+[output.html]
+site-url = "/nix-dotfiles/"
+additional-css = []
+additional-js = []
+default-theme = "light"
+copy-fonts = true
+smart-punctuation = true
+
+[output.html.playground]
+editable = true
+line-numbers = true
+
+[output.html.fold]
+enable = false
+level = 0

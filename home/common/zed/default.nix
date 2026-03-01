@@ -238,18 +238,18 @@ in
           version = "2";
           default_model = {
             provider = "ollama";
-            model = "glm-4.7-flash:q4_K_M";
+            model = "qwen3.5:35b-a3b";
           };
         };
 
         agent = {
           default_model = {
             provider = "ollama";
-            model = "glm-4.7-flash:q4_K_M";
+            model = "qwen3.5:35b-a3b";
           };
           inline_assistant_model = {
             provider = "ollama";
-            model = "glm-4.7-flash:q4_K_M";
+            model = "qwen3.5:35b-a3b";
           };
         };
 
@@ -258,12 +258,12 @@ in
             api_url = "https://ollama.fedeizzo.dev";
             available_models = [
               {
-                name = "glm-4.7-flash:q4_K_M";
-                display_name = "glm-4.7-flash:q4_K_M";
+                name = "qwen3.5:35b-a3b";
+                display_name = "qwen3.5:35b-a3b";
                 max_tokens = 202752;
                 keep_alive = "15m";
                 supports_tools = true;
-                supports_thinking = true;
+                supports_thinking = false;
                 supports_images = false;
               }
             ];

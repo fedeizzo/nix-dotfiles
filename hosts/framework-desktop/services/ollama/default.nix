@@ -12,14 +12,16 @@
     # acceleration = "rocm";
     rocmOverrideGfx = "11.5.1";
     loadModels = [
-      "qwen3:30b"
-      "devstral-small-2:24b"
-      "nemotron-3-nano:30b"
-      "devstral-small-2:24b"
-      "gpt-oss:120b"
-      "qwen3-coder:30b"
-      "rnj-1"
-      "glm-4.7-flash:q4_K_M"
+      # "qwen3:30b"
+      # "devstral-small-2:24b"
+      # "qwen3-coder:30b"
+      # "glm-4.7-flash:q4_K_M"
+
+      # qwen3.5 family
+      # "qwen3.5:27b" # dense
+      "qwen3.5:35b-a3b" # sparse
+      # "qwen3.5:122b-a10b" # sparse
+      "qwen3.5:9b" # dense
     ];
     syncModels = true;
     environmentVariables = {
