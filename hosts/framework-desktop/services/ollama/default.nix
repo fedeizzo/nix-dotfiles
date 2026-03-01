@@ -12,10 +12,10 @@
     # acceleration = "rocm";
     rocmOverrideGfx = "11.5.1";
     loadModels = [
-      # "qwen3-coder:30b"  # tool calls not working
       "qwen3:30b"
       "devstral-small-2:24b"
       "nemotron-3-nano:30b"
+      "devstral-small-2:24b"
     ];
     syncModels = true;
     environmentVariables = {

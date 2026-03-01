@@ -237,61 +237,35 @@ in
         assistant = {
           version = "2";
           default_model = {
-            provider = "lmstudio";
-            model = "mistralai/devstral-small-2-2512";
+            provider = "ollama";
+            model = "nemotron-3-nano:30b";
           };
         };
 
         agent = {
           default_model = {
-            provider = "lmstudio";
-            model = "mistralai/devstral-small-2-2512";
+            provider = "ollama";
+            model = "nemotron-3-nano:30b";
           };
           inline_assistant_model = {
-            provider = "lmstudio";
-            model = "mistralai/devstral-small-2-2512";
+            provider = "ollama";
+            model = "nemotron-3-nano:30b";
           };
         };
 
         language_models = {
-          lmstudio = {
-            api_url = "https://llm.fedeizzo.dev/v1";
+          ollama = {
+            api_url = "https://ollama.fedeizzo.dev";
             available_models = [
-              # {
-              #   name = "unsloth/qwen3-coder-30b-a3b-instruct";
-              #   display_name = "Qwen 3 30b (Local)";
-              #   max_tokens = 32768;
-              #   supports_tool_calls = true;
-              #   supports_images = false;
-              # }
               {
-                name = "mistralai/devstral-small-2-2512";
-                display_name = "Devstral";
-                max_tokens = 262144;
-                supports_tool_calls = true;
+                name = "nemotron-3-nano:30b";
+                display_name = "nemotron-3-nano:30b";
+                max_tokens = 64000;
+                keep_alive = "15m";
+                supports_tools = true;
+                supports_thinking = true;
                 supports_images = false;
               }
-              # {
-              #   name = "qwen/qwen3-vl-8b";
-              #   display_name = "Qwen 3 VL (Local)";
-              #   max_tokens = 32768;
-              #   supports_tool_calls = true;
-              #   supports_images = false;
-              # }
-              # {
-              #   name = "qwen/qwen3-coder-30b";
-              #   display_name = "Qwen coder 30 (Local)";
-              #   max_tokens = 32768;
-              #   supports_tool_calls = true;
-              #   supports_images = false;
-              # }
-              # {
-              #   name = "mistralai/ministral-3-3b";
-              #   display_name = "Mistral 3 3b";
-              #   max_tokens = 262144;
-              #   supports_tool_calls = true;
-              #   supports_images = false;
-              # }
             ];
           };
         };

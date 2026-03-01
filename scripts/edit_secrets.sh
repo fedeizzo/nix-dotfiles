@@ -93,7 +93,8 @@ edit_secrets() {
 
 # List secrets and allow user selection
 select_secret_file() {
-    colorPrint "List of available secret files:"
+    # Guard – make sure $FD_IGNORE exists but is not needed any more.
+    # The `fd` command still creates the array we need to feed to fzf.
     mapfile -t files < <(fd 'secrets.*$' --type f --exclude scripts | sort)
 
     if [[ ${#files[@]} -eq 0 ]]; then
@@ -101,17 +102,29 @@ select_secret_file() {
         exit 1
     fi
 
-    for i in "${!files[@]}"; do
-        echo -e "\t$((i+1))) ${files[$i]}"
-    done
+    # -------------------------------------------------------------
+    # Ask the user to pick one line from the list using fzf.
+    # If a selection is made, `selected_file` receives the absolute path.
+    # -------------------------------------------------------------
+    selected_file=$(printf '%s\n' "${files[@]}" | LC_ALL=C fzf \
+        --prompt="Select a secret file > " \
+        --height=15% --border \
+        --ansi \
+        --no-multi)
 
-    read -p "Select a number: " selectedIndex
-    if ! [[ "$selectedIndex" =~ ^[0-9]+$ ]] || ((selectedIndex < 1 || selectedIndex > ${#files[@]})); then
-        errorPrint "Invalid selection."
+    if [[ -z $selected_file ]]; then               # user cancelled / closed the window
+        errorPrint "No file selected – aborting."
         exit 1
     fi
 
-    selected_file="${files[$((selectedIndex - 1))]}"
+    # Verify that the chosen entry is indeed a secret (fd already filtered it,
+    # but double‑checking makes the script robust against typos).
+    if [[ ! -f "$selected_file" ]]; then
+        errorPrint "'${selected_file}' disappeared while selecting – aborting."
+        exit 1
+    fi
+
+    colorPrint "You selected:\n  $selected_file"
 }
 
 # Print usage/help
