@@ -16,6 +16,10 @@
       "devstral-small-2:24b"
       "nemotron-3-nano:30b"
       "devstral-small-2:24b"
+      "gpt-oss:120b"
+      "qwen3-coder:30b"
+      "rnj-1"
+      "glm-4.7-flash:q4_K_M"
     ];
     syncModels = true;
     environmentVariables = {

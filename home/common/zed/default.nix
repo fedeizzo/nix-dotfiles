@@ -238,18 +238,18 @@ in
           version = "2";
           default_model = {
             provider = "ollama";
-            model = "nemotron-3-nano:30b";
+            model = "glm-4.7-flash:q4_K_M";
           };
         };
 
         agent = {
           default_model = {
             provider = "ollama";
-            model = "nemotron-3-nano:30b";
+            model = "glm-4.7-flash:q4_K_M";
           };
           inline_assistant_model = {
             provider = "ollama";
-            model = "nemotron-3-nano:30b";
+            model = "glm-4.7-flash:q4_K_M";
           };
         };
 
@@ -258,9 +258,9 @@ in
             api_url = "https://ollama.fedeizzo.dev";
             available_models = [
               {
-                name = "nemotron-3-nano:30b";
-                display_name = "nemotron-3-nano:30b";
-                max_tokens = 64000;
+                name = "glm-4.7-flash:q4_K_M";
+                display_name = "glm-4.7-flash:q4_K_M";
+                max_tokens = 202752;
                 keep_alive = "15m";
                 supports_tools = true;
                 supports_thinking = true;
