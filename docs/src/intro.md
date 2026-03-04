@@ -21,8 +21,8 @@ This documentation covers a multi-machine setup managed through [Nix Flakes](htt
 | ----------------| -------- | ------------------ | ------------------------ |
 | **homelab**     | Server   | Framework Desktop  | x86_64 NixOS             |
 | **oven**        | Laptop   | ThinkPad X1 Nano   | x86_64 NixOS             |
-| **macbook-pro** | Work     | MacBook Pro M1 Max | aarch64-darwin macOS     |
-| **freezer**     | Backup   | Raspberry Pi 4     | aarch64-linux (inactive) |
+| **freezer**     | Server   | Raspberry Pi 4     | aarch64-linux NixOS      |
+| **COMP-D2G067292T** | Work | MacBook Pro M1 Max | aarch64-darwin macOS     |
 
 ## Key Architecture Choices
 

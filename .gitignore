@@ -13,3 +13,10 @@ result
 .direnv
 **/.DS_Store
 .pre-commit-config.yaml
+
+# mdbook output
+book/html/
+book/book.toml.bak
+book/book/
+docs/html/
+docs/book/
