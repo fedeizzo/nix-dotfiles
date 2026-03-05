@@ -28,7 +28,7 @@ let
   # | --defrag-thold         | Defrag trigger            | 0.1: Auto-defragments KV cache when fragmentation hits 10%.      |
   # | -t                     | CPU Thread count          | 8: Restricts CPU usage to exact physical cores to save bandwidth.|
   # +------------------------+---------------------------+------------------------------------------------------------------+
-  cmd = ''${llama-server}  --port ''${PORT} --model /persist/models/qwen35-35b-a3b/Qwen3.5-35B-A3B-UD-Q4_K_L.gguf --mmproj /persist/models/qwen35-35b-a3b/mmproj-F16.gguf --seed 3407 --temp 0.50 --top-p 0.95 --min-p 0.0 --top-k 20 -ngl 999 --no-mmap -fa 1 --no-webui --kv-unified -ub 512 -b 4096 -c 262144 --cache-type-k q8_0 --cache-type-v q8_0 --defrag-thold 0.1 -t 8'';
+  cmd = (model: mmproj: ''${llama-server}  --port ''${PORT} --model ${model} --mmproj ${mmproj} --temp 0.45 --top-p 0.95 --min-p 0.0 --top-k 20 -ngl 999 --no-mmap -fa 1 --no-webui --kv-unified -ub 512 -b 4096 -c 262144 --cache-type-k q8_0 --cache-type-v q8_0 --defrag-thold 0.1 -t 8'');
   # cmd = ''${llama-server}  --port ''${PORT} --model /persist/models/qwen35-35b-a3b/Qwen3.5-35B-A3B-UD-Q4_K_L.gguf --mmproj /persist/models/qwen35-35b-a3b/mmproj-F16.gguf --seed 3407 --temp 0.50 --top-p 0.95 --min-p 0.0 --presence-penalty=0.0 --repetition-penalty=1.0 --top-k 20 -ngl 999 --no-mmap -fa 1 --no-webui --chat-template-kwargs '{"enable_thinking":false}' --kv-unified -ub 512 -b 4096 -c 262144 --cache-type-k q8_0 --cache-type-v q8_0 --defrag-thold 0.1 -t 8'';
 in
 {
@@ -40,8 +40,27 @@ in
       healthCheckTimeout = 60;
       models = {
         "qwen35" = {
-          cmd = cmd;
+          cmd = (cmd "/persist/models/qwen35-35b-a3b/Qwen3.5-35B-A3B-UD-Q4_K_L.gguf" "/persist/models/qwen35-35b-a3b/mmproj-F16.gguf");
           aliases = [ "the-best" ];
+          # ttl = 300; # 5 minutes
+        };
+        "qwen35-small" = {
+          cmd = (cmd "/persist/models/qwen35-9b/Qwen3.5-9B-Q4_K_M.gguf" "/persist/models/qwen35-9b/mmproj-F32.gguf");
+          # ttl = 300; # 5 minutes
+        };
+        "qwen35-task" = {
+          cmd = (cmd "/persist/models/qwen35-4b/Qwen3.5-4B-Q4_K_M.gguf" "/persist/models/qwen35-4b/mmproj-F32.gguf");
+          # ttl = 300; # 5 minutes
+        };
+      };
+      groups = {
+        "model_and_task" = {
+          swap = false;
+          exclusive = false;
+          members = [
+            "qwen35"
+            "qwen35-task"
+          ];
         };
       };
     };

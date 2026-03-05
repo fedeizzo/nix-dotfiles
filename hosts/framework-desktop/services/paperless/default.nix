@@ -48,16 +48,16 @@
   };
   virtualisation.oci-containers.containers."paperless-gpt" = {
     image = "icereed/paperless-gpt:latest";
-    autoStart = true;
+    autoStart = false;
     extraOptions = [ "--network=host" ];
     ports = [ ];
     environmentFiles = [ "${config.sops.secrets.paperless-gpt.path}" ];
     environment = {
       PAPERLESS_BASE_URL = "https://paperless.fedeizzo.dev";
       LLM_PROVIDER = "openai";
-      LLM_MODEL = "qwen/qwen3-8b";
+      LLM_MODEL = "qwen35";
       OPENAI_API_KEY = "placeholder";
-      OPENAI_BASE_URL = "https://llm.fedeizzo.dev/v1";
+      OPENAI_BASE_URL = "https://llama.fedeizzo.dev/v1";
       LISTEN_INTERFACE = ":28982";
       # OCR_PROVIDER="llm";
       # VISION_LMM_PROVIDER="llm";
@@ -66,7 +66,7 @@
   };
   virtualisation.oci-containers.containers."paperless-ai" = {
     image = "clusterzx/paperless-ai:latest";
-    autoStart = true;
+    autoStart = false;
     extraOptions = [ "--network=host" ];
     ports = [ ];
     volumes = [
@@ -80,9 +80,9 @@
       PAPERLESS_USERNAME = "trackpadblue";
       AI_PROVIDER = "custom";
       CUSTOM_API_KEY = "placeholder";
-      CUSTOM_BASE_URL = "https://llm.fedeizzo.dev/v1";
+      CUSTOM_BASE_URL = "https://llama.fedeizzo.dev/v1";
       # CUSTOM_MODEL = "mistralai/devstral-small-2-2512";
-      # CUSTOM_MODEL = "qwen/qwen3-8b";
+      CUSTOM_MODEL = "qwen35";
       SCAN_INTERVAL = "*/30 * * * *";
     };
   };

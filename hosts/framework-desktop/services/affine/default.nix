@@ -56,7 +56,7 @@ in
         "/var/lib/affine/storage:/root/.affine/storage"
       ];
       extraOptions = [ "--network=host" ];
-      autoStart = false;
+      autoStart = true;
     };
   };
   # systemd.services.docker-affine-server = {

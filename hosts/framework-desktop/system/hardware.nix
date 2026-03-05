@@ -14,10 +14,6 @@
     };
     enableRedistributableFirmware = true;
 
-    # fancontrol = {
-    #   enable = true;
-    # };
-
     amdgpu.initrd.enable = true;
     cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
     graphics = {
@@ -32,7 +28,7 @@
     };
   };
 
-  zramSwap.enable = true;
+  # zramSwap.enable = true;
 
   services = {
     smartd = {
