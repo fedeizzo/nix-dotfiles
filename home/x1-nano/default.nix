@@ -40,6 +40,7 @@
         ./modules/zed
 
         ../common/kitty
+        ../common/opencode
         # ../common/emacs
       ];
       programs.home-manager.enable = true;

@@ -28,7 +28,8 @@ let
   # | --defrag-thold         | Defrag trigger            | 0.1: Auto-defragments KV cache when fragmentation hits 10%.      |
   # | -t                     | CPU Thread count          | 8: Restricts CPU usage to exact physical cores to save bandwidth.|
   # +------------------------+---------------------------+------------------------------------------------------------------+
-  cmd = ''${llama-server}  --port ''${PORT} --model /persist/models/qwen35-35b-a3b/Qwen3.5-35B-A3B-UD-Q4_K_L.gguf --mmproj /persist/models/qwen35-35b-a3b/mmproj-F16.gguf --seed 3407 --temp 1.0 --top-p 0.95 --min-p 0.01 --top-k 40 -ngl 999 --no-mmap -fa 1 --no-webui --chat-template-kwargs '{"enable_thinking":false}' --kv-unified -ub 512 -b 4096 -c 262144 --cache-type-k q8_0 --cache-type-v q8_0 --defrag-thold 0.1 -t 8'';
+  cmd = ''${llama-server}  --port ''${PORT} --model /persist/models/qwen35-35b-a3b/Qwen3.5-35B-A3B-UD-Q4_K_L.gguf --mmproj /persist/models/qwen35-35b-a3b/mmproj-F16.gguf --seed 3407 --temp 0.50 --top-p 0.95 --min-p 0.0 --top-k 20 -ngl 999 --no-mmap -fa 1 --no-webui --kv-unified -ub 512 -b 4096 -c 262144 --cache-type-k q8_0 --cache-type-v q8_0 --defrag-thold 0.1 -t 8'';
+  # cmd = ''${llama-server}  --port ''${PORT} --model /persist/models/qwen35-35b-a3b/Qwen3.5-35B-A3B-UD-Q4_K_L.gguf --mmproj /persist/models/qwen35-35b-a3b/mmproj-F16.gguf --seed 3407 --temp 0.50 --top-p 0.95 --min-p 0.0 --presence-penalty=0.0 --repetition-penalty=1.0 --top-k 20 -ngl 999 --no-mmap -fa 1 --no-webui --chat-template-kwargs '{"enable_thinking":false}' --kv-unified -ub 512 -b 4096 -c 262144 --cache-type-k q8_0 --cache-type-v q8_0 --defrag-thold 0.1 -t 8'';
 in
 {
   services.llama-swap = {
