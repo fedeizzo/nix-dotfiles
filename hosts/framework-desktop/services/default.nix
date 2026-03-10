@@ -10,6 +10,7 @@
     ./blocky
     ./calibre
     ./climbing-lab
+    ./docs
     ./fedeizzo.dev
     ./fusion
     ./garmindb
@@ -38,6 +39,7 @@
   fi.services = [
     # Exposed
     { name = "fedeizzodev"; subdomain = null; port = 50001; isExposed = true; dashboardSection = "Exposed"; dashboardIcon = "hugo"; }
+    { name = "nix-dotfiles"; port = 34999; isExposed = true; dashboardSection = "Exposed"; dashboardIcon = "mkdocs"; }
 
     # Exposed media
     {

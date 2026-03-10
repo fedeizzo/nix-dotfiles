@@ -2,7 +2,7 @@
 
 ## Declarative Infrastructure
 
-At the core of this setup lies a fundamental principle: **infrastructure as code**. Every aspect of the system, from the kernel modules loaded to the applications installed, is declared in configuration files that describe the *desired state* rather than the steps to reach it.
+At the core of this setup lies a fundamental principle: **infrastructure as code**. Every aspect of the system, from the kernel modules loaded to the applications installed, is declared in configuration files that describe the _desired state_ rather than the steps to reach it.
 
 ### Why Declarative?
 
@@ -50,7 +50,7 @@ This approach recognizes that different tools serve different purposes:
 - Run a homelab that you can rebuild in minutes
 - Use a Raspberry Pi for lightweight server workloads
 
-Yet, the *configuration philosophy* remains consistent across all systems.
+Yet, the _configuration philosophy_ remains consistent across all systems.
 
 ## The Immutable Boot Strategy
 
@@ -94,52 +94,27 @@ The configuration is organized using [flake-parts](https://flake.parts/), which 
 ### Directory Organization
 
 ```
-home/       # Home Manager configurations (user-level)
-  common/   # Shared across all machines
-  x1-nano/  # Personal laptop specific
+home/          # Home Manager configurations (user-level)
+  common/      # Shared across all machines
+  x1-nano/     # Personal laptop specific
   macbook-pro/ # Work machine specific
+  ...
 
-hosts/      # NixOS host configurations (system-level)
-  common/   # Shared modules
-  x1-nano/  # Personal laptop system config
+hosts/              # NixOS host configurations (system-level)
+  common/           # Shared modules
+  x1-nano/          # Personal laptop system config
   xps-9510-homelab/ # Homelab system config
+  ...
 
-nix/        # Flake modules and utilities
+nix/                      # Flake modules and utilities
   nixosConfigurations.nix # Declaration of all NixOS systems
   deployment.nix          # SSH deployment configuration
+  ...
 
 overlays/   # Custom package modifications
 
 secrets/    # Encrypted secrets (SOPS)
 ```
-
-## Security Through Encryption
-
-Security is approached through multiple layers:
-
-1. **Secrets encryption**: Using [SOPS](https://github.com/mozilla/sops) with age keys
-2. **Minimal attack surface**: Only necessary services exposed
-3. **Immutable infrastructure**: Compromised systems can be rebuilt from scratch
-4. **Encrypted storage**: LUKS encryption for sensitive data
-
-### Why SOPS?
-
-SOPS (Secrets OPerationS) was chosen over alternatives for several reasons:
-
-- **Key-based encryption**: Supports multiple encryption backends (GPG, age, KMS)
-- **YAML/JSON support**: Easy to integrate with Nix configurations
-- **Version control friendly**: Encrypted secrets can safely be committed
-- **Wide adoption**: Used by [sops-nix](https://github.com/Mic92/sops-nix), which integrates seamlessly with NixOS
-
-## Evolution, Not Perfection
-
-The configuration is acknowledged as **evolving**. No system is perfect from the start, and the documentation captures:
-
-- **Current best practices**: What works now
-- **Discarded approaches**: What didn't work and why
-- **Future considerations**: Ideas not yet implemented
-
-This honesty about the process is intentional. The goal is not to present an idealized system, but to document a real one with all its trade-offs and iterations.
 
 ## Reading This Documentation
 

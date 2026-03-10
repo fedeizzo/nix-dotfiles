@@ -5,12 +5,9 @@
 ## Architecture
 
 - [Philosophy](architecture/philosophy.md)
-  - [Why Nix?](architecture/why-nix.md)
-  - [Discarded Alternatives](architecture/why-not.md)
 
 - [Design](design/declarative.md)
   - [BTRFS Snapshots & Impermanence](design/erase-boot.md)
-  - [Flakes Structure](design/flakes-structure.md)
 
 ## Your Machines
 

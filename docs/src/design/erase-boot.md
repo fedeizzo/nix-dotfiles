@@ -18,7 +18,7 @@ One of the most distinctive features of this setup is the **erase-and-rebuild-on
 │                                                             │
 │  2. Bootloader (systemd-boot / GRUB) loads                  │
 │     └─ Shows available system generations                   │
-│                                                          │
+│                                                             │
 │  3. Kernel boots from selected generation                   │
 │     └─ NixOS bootloader creates BTRFS snapshot              │
 │                                                             │
@@ -68,21 +68,21 @@ The [impermanence](https://github.com/nix-community/impermanence) NixOS module h
   # Enable impermanence
   services.impermanence = {
     enable = true;
-    
+
     # Define which filesystems to persist
     filesystems = {
       "/".neededForBoot = true;
       "/home" = {};
       "/var" = {};
     };
-    
+
     # Directories that should be empty at boot
     emptyFilesystems = [
       "/var/log"
       "/var/tmp"
       "/tmp"
     ];
-    
+
     # Bind mounts for persistent directories
     postBootCommands = ''
       # Create directories if they don't exist
@@ -90,7 +90,7 @@ The [impermanence](https://github.com/nix-community/impermanence) NixOS module h
       mkdir -p /var/cache
     '';
   };
-  
+
   # Configure BTRFS
   fileSystems."/" = {
     device = "/dev/disk/by-uuid/...";
@@ -101,7 +101,7 @@ The [impermanence](https://github.com/nix-community/impermanence) NixOS module h
       "subvol=root"
     ];
   };
-  
+
   fileSystems."/home" = {
     device = "/dev/disk/by-uuid/...";
     fsType = "btrfs";
@@ -111,7 +111,7 @@ The [impermanence](https://github.com/nix-community/impermanence) NixOS module h
       "subvol=@home"
     ];
   };
-  
+
   fileSystems."/var" = {
     device = "/dev/disk/by-uuid/...";
     fsType = "btrfs";
@@ -121,10 +121,10 @@ The [impermanence](https://github.com/nix-community/impermanence) NixOS module h
       "subvol=@var"
     ];
   };
-  
+
   # Enable automatic BTRFS scrubbing
   services.btrfs.autoScrub.enable = true;
-  
+
   # Configure snapshot management
   boot.initrd.btrfs.devices = {
     "/dev/disk/by-uuid/..." = {};
@@ -265,8 +265,6 @@ This approach:
 - **Requires understanding**: Need to understand the philosophy
 - **May not fit**: Not suitable for all use cases
 
-**Mitigation**: Document the philosophy clearly, allow users to choose.
-
 ## Implementation Details
 
 ### Initrd Configuration
@@ -280,20 +278,20 @@ The initrd (initial ram filesystem) is responsible for setting up the stateless 
 {
   # BTRFS snapshot configuration
   boot.initrd.availableKernelModules = [ "btrfs" ];
-  
+
   # Load BTRFS module early
   boot.initrd.kernelModules = [ "btrfs" ];
-  
+
   # Enable BTRFS snapshot on boot
   boot.initrd.btrfs.devices = {
     "/dev/disk/by-uuid/..." = {};
   };
-  
+
   # Configure BTRFS
   boot.kernel.sysctl = {
     "vm.vfs_cache_pressure" = 50;
   };
-  
+
   # Enable automatic BTRFS scrubbing
   services.btrfs.autoScrub.enable = true;
   services.btrfs.autoScrub.interval = "weekly";
@@ -311,7 +309,7 @@ The system uses BTRFS snapshots for rollback capability:
 {
   # Enable automatic snapshot creation
   boot.initrd.systemd.enable = true;
-  
+
   # Configure snapshot retention
   boot.initrd.btrfs.subvolumes = {
     "/@home" = {
@@ -323,7 +321,7 @@ The system uses BTRFS snapshots for rollback capability:
       readOnly = false;
     };
   };
-  
+
   # Allow rollback via NixOS
   boot.supportedFilesystems = [ "btrfs" ];
   boot.supportedFilesystems = [ "btrfs" ];
@@ -341,7 +339,7 @@ Network file systems can be mounted during boot:
 {
   # Network storage for persistence
   services.networkfs.enable = true;
-  
+
   # Bind to network storage
   fileSystems."/home" = {
     device = "//server/share";
