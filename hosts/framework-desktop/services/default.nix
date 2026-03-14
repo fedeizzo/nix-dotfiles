@@ -30,6 +30,7 @@
     ./paperless
     ./postgres
     ./prometheus
+    ./searx
     # ./sunshine
     ./streaming
     ./traefik
@@ -327,6 +328,14 @@
       toBackup = [
         "/persist/var/lib/paperless-ai"
       ];
+    }
+    {
+      name = "search";
+      port = 25684;
+      dashboardIcon = "searxng";
+      dashboardSection = "Tools";
+      toPersist = [ ];
+      toBackup = [ ];
     }
 
     # Observability
