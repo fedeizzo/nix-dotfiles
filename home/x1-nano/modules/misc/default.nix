@@ -19,5 +19,6 @@
     pkgs.anytype
 
     element-desktop
+    loupe
   ];
 }
