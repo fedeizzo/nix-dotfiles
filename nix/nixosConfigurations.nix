@@ -59,12 +59,12 @@ in
   };
 
   darwinConfigurations = {
-    COMP-D2G067292T = inputs.nix-darwin.lib.darwinSystem {
+     COMP-LNY95W42WQ = inputs.nix-darwin.lib.darwinSystem {
       system = "aarch64-darwin";
 
       specialArgs = rec {
         inherit inputs;
-        hostname = "COMP-D2G067292T";
+        hostname = "COMP-LNY95W42WQ";
         username = "federico.izzo";
         emacs-pkg = import inputs.emacs-pkg { system = "aarch64-darwin"; };
         pkgs-unstable = import inputs.nixpkgs-unstable {
