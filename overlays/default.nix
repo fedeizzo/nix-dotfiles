@@ -4,6 +4,9 @@ let
   # instead of having to keep sha256 hashes in each package for src
   additions = import ./pkgs;
   modifications = _self: _super: {
+    # direnv test-fish is killed on aarch64-darwin due to a libarchive regression
+    # https://github.com/NixOS/nixpkgs/issues/507531
+    direnv = _super.direnv.overrideAttrs (_: { doCheck = false; });
     swayosd = _super.swayosd.overrideAttrs
       (_: rec {
         version = "v0.1.0";

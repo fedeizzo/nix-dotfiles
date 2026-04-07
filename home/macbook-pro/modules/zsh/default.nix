@@ -29,7 +29,7 @@ _:
         fi
       '';
       envExtra = ''
-        . "$HOME/.cargo/env"
+        # . "$HOME/.cargo/env"
         LANG="en_US.UTF-8"
       '';
       shellAliases = {
