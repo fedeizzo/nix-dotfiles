@@ -1,4 +1,4 @@
-{ inputs, pkgs, lib, config, ... }:
+{ inputs, pkgs, lib, config, pkgs-unstable, ... }:
 
 {
   imports = [
@@ -65,4 +65,25 @@
   systemd.tmpfiles.rules = [
     "L+    /opt/rocm/hip   -    -    -     -    ${pkgs.rocmPackages.clr}"
   ];
+
+  services.tuned = {
+    enable = true;
+    profiles = {
+      strix-halo = {
+        main = {
+          include = "accelerator-performance";
+        };
+      };
+    };
+  };
+
+  systemd.services.tuned-set-profile = {
+    description = "Set TuneD profile";
+    after = [ "tuned.service" ];
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = "${pkgs-unstable.tuned}/bin/tuned-adm profile accelerator-performance";
+    };
+  };
 }
