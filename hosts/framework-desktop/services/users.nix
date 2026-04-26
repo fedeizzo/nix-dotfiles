@@ -52,6 +52,9 @@
       home = "/var/lib/garmindb";
     };
 
+    n8n.uid = 288;
+    n8n.group = "n8n";
+
     media = {
       uid = 800;
       home = "/home/media";
@@ -93,6 +96,8 @@
     traefik.gid = 989;
 
     garmindb.gid = 962;
+
+    n8n.gid = 288;
 
     media.gid = 1800;
     prowlarr.gid = 61654;

@@ -23,6 +23,7 @@
     ./logrotate
     ./loki
     ./net-worth
+    ./n8n
     ./nextcloud
     ./ollama
     ./open-webui
@@ -312,6 +313,23 @@
       ];
     }
     { name = "paperless-gpt"; port = 28982; dashboardSection = "Tools"; authType = "proxy"; }
+    {
+      name = "n8n";
+      port = (lib.strings.toInt config.services.n8n.environment.N8N_PORT);
+      dashboardSection = "Tools";
+      authType = "proxy";
+      toPersist = [
+        {
+          directory = "/var/lib/n8n";
+          user = "root";
+          group = "root";
+          mode = "u=rwx,g=rx,o=";
+        }
+      ];
+      toBackup = [
+        "/persist/var/lib/n8n"
+      ];
+    }
     {
       name = "paperless-ai";
       port = 28983;
