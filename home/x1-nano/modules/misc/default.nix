@@ -20,5 +20,7 @@
 
     element-desktop
     loupe
+
+    pkgs-unstable.pi-coding-agent
   ];
 }
