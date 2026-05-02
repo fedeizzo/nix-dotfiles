@@ -68,7 +68,6 @@ Services accessible only via WireGuard VPN:
 |---------------|---------------------|-------|
 | Dashboard     | homlab.fedeizzo.dev | 8080  |
 | Home Assistant| hass.fedeizzo.dev   | 8123  |
-| Ollama        | llm.fedeizzo.dev    | 11434 |
 | Open WebUI    | openwebui.fedeizzo.dev | 8080 |
 
 ## Reverse Proxy (Traefik)

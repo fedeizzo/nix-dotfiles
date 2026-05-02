@@ -25,7 +25,6 @@
     ./net-worth
     ./n8n
     ./nextcloud
-    ./ollama
     ./open-webui
     # ./opencloud
     ./paperless
@@ -251,20 +250,6 @@
     }
 
     # Tools
-    {
-      name = "ollama";
-      port = config.services.ollama.port;
-      dashboardSection = "Tools";
-      toPersist = [
-        {
-          directory = "${config.services.ollama.home}";
-          user = "ollama";
-          group = "ollama";
-          mode = "u=rwx,g=,o=";
-        }
-      ];
-      toBackup = [ ];
-    }
     {
       name = "llama";
       dashboardIcon = "codellm";

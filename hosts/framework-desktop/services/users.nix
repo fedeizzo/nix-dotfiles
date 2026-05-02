@@ -27,9 +27,6 @@
     nextcloud.uid = 975;
     nextcloud.group = "nextcloud";
 
-    ollama.uid = 310;
-    ollama.group = "ollama";
-
     open-webui.uid = 311;
     open-webui.group = "open-webui";
 
@@ -82,8 +79,6 @@
     immich.gid = 976;
 
     nextcloud.gid = 969;
-
-    ollama.gid = 310;
 
     open-webui.gid = 312;
 

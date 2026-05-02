@@ -1,7 +1,6 @@
 { pkgs-unstable, system, ... }:
 {
   imports = [
-    (pkgs-unstable + /nixos/modules/services/misc/ollama.nix)
     (pkgs-unstable + /nixos/modules/services/networking/llama-swap.nix)
     # (pkgs-unstable + /nixos/modules/services/misc/jellyseerr.nix)
     # (pkgs-unstable + /nixos/modules/services/home-automation/home-assistant.nix)
@@ -9,7 +8,6 @@
   ];
   nixpkgs.overlays = [
     (_: _: {
-      inherit (pkgs-unstable.legacyPackages.${system}) ollama-rocm;
       inherit (pkgs-unstable.legacyPackages.${system}) llama-swap;
       inherit (pkgs-unstable.legacyPackages.${system}) llama-rocm;
       # inherit (pkgs-unstable.legacyPackages.${system}) jellyseerr;
@@ -18,7 +16,6 @@
     })
   ];
   disabledModules = [
-    "services/misc/ollama.nix"
     "services/networking/llama-swap.nix"
     # "services/misc/jellyseerr.nix"
     # "services/home-automation/home-assistant.nix"

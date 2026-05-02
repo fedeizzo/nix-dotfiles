@@ -115,8 +115,7 @@ Local AI and machine learning services.
 
 | Service | Port | Purpose |
 |---------|------|---------|
-| ollama | 11434 | Local LLM inference server |
-| open-webui | 8080 | Web interface for Ollama |
+| open-webui | 8080 | Web interface for LLMs |
 | llama-swap | 8081 | LLM model switching and management |
 
 ### Communication
