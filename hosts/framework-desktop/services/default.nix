@@ -310,9 +310,16 @@
           group = "root";
           mode = "u=rwx,g=rx,o=";
         }
+        {
+          directory = "/var/lib/redis-n8n";
+          user = "redis-n8n";
+          group = "redis-n8n";
+          mode = "u=rwx,g=,o=";
+        }
       ];
       toBackup = [
         "/persist/var/lib/n8n"
+        "/persist/var/lib/redis-n8n"
       ];
     }
     {

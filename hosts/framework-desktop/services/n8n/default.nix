@@ -17,6 +17,10 @@
       # N8N_AI_ASSISTANT_BASE_URL = "https://ai-assistant.n8n.io";
     };
   };
+  services.redis.servers.n8n = {
+    enable = true;
+    port = 52232;
+  };
   # for consistent backup
   systemd.services.n8n.serviceConfig = {
     DynamicUser = lib.mkForce false;

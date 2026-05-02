@@ -51,14 +51,21 @@ in
         };
       };
 
-      groups = {
-        "model_and_task" = {
-          swap = false;
-          exclusive = false;
-          members = [
-            "qwen35"
-            "qwen35-task"
-          ];
+      matrix = {
+        vars = {
+          "qa" = "qwen36-27b-async";
+          "qr" = "qwen36-27b-realtime";
+          "qc" = "qwen36-35b-a3b";
+        };
+
+        sets = {
+          standard = "(qa | qr) & qc";
+        };
+      };
+
+      hooks = {
+        on_startup = {
+          preload = [ "qwen36-27b-realtime" "qwen36-35b-a3b" ];
         };
       };
     };
