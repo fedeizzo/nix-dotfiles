@@ -27,6 +27,9 @@
     nextcloud.uid = 975;
     nextcloud.group = "nextcloud";
 
+    ntfy-sh.uid = 959;
+    ntfy-sh.group = "ntfy-sh";
+
     open-webui.uid = 311;
     open-webui.group = "open-webui";
 
@@ -79,6 +82,8 @@
     immich.gid = 976;
 
     nextcloud.gid = 969;
+
+    ntfy-sh.gid = 959;
 
     open-webui.gid = 312;
 

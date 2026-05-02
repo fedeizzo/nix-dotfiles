@@ -25,6 +25,7 @@
     ./net-worth
     ./n8n
     ./nextcloud
+    ./ntfy
     ./open-webui
     # ./opencloud
     ./paperless
@@ -257,6 +258,28 @@
       dashboardSection = "Tools";
       toPersist = [ ];
       toBackup = [ ];
+    }
+    {
+      name = "ntfy";
+      port = 23445;
+      dashboardSection = "Tools";
+      toPersist = [
+        {
+          directory = "/var/cache/ntfy-sh";
+          user = "ntfy-sh";
+          group = "ntfy-sh";
+          mode = "u=rwx,g=,o=";
+        }
+        {
+          directory = "/var/lib/ntfy-sh";
+          user = "ntfy-sh";
+          group = "ntfy-sh";
+          mode = "u=rwx,g=,o=";
+        }
+      ];
+      toBackup = [
+        "/persist/var/lib/ntfy-sh"
+      ];
     }
     {
       name = "open-webui";
