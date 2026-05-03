@@ -55,6 +55,9 @@
     n8n.uid = 288;
     n8n.group = "n8n";
 
+    neo4j.uid = 289;
+    neo4j.group = "neo4j";
+
     media = {
       uid = 800;
       home = "/home/media";
@@ -98,6 +101,8 @@
     garmindb.gid = 962;
 
     n8n.gid = 288;
+
+    neo4j.gid = 289;
 
     media.gid = 1800;
     prowlarr.gid = 61654;

@@ -24,6 +24,7 @@
     ./loki
     ./net-worth
     ./n8n
+    ./neo4j
     ./nextcloud
     ./ntfy
     ./open-webui
@@ -343,6 +344,22 @@
       toBackup = [
         "/persist/var/lib/n8n"
         "/persist/var/lib/redis-n8n"
+      ];
+    }
+    {
+      name = "neo4j";
+      port = 7474;
+      dashboardSection = "Tools";
+      toPersist = [
+        {
+          directory = "/var/lib/neo4j";
+          user = "neo4j";
+          group = "neo4j";
+          mode = "u=rwx,g=,o=";
+        }
+      ];
+      toBackup = [
+        "/persist/var/lib/neo4j"
       ];
     }
     {
