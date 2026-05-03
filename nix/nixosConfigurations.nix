@@ -59,7 +59,7 @@ in
   };
 
   darwinConfigurations = {
-     COMP-LNY95W42WQ = inputs.nix-darwin.lib.darwinSystem {
+    COMP-LNY95W42WQ = inputs.nix-darwin.lib.darwinSystem {
       system = "aarch64-darwin";
 
       specialArgs = rec {

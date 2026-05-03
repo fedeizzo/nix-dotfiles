@@ -27,4 +27,18 @@
     User = "n8n";
     Group = "n8n";
   };
+  nixpkgs.overlays = [
+    (self: super: {
+      n8n = super.n8n.overrideAttrs (oldAttrs: {
+        postPatch = (oldAttrs.postPatch or "") + ''
+          TARGET_FILE="packages/@n8n/nodes-langchain/nodes/llms/LMChatOpenAi/LmChatOpenAi.node.ts"
+          if [ -f "$TARGET_FILE" ]; then
+            echo "Patching LmChatOpenAi.node.ts..."
+            substituteInPlace "$TARGET_FILE" \
+              --replace "callbacks: [new N8nLlmTracing(this)]," "callbacks: [],"
+          fi
+        '';
+      });
+    })
+  ];
 }

@@ -32,6 +32,18 @@ in
           aliases = [ "coding" "q3-m" ];
         };
 
+        "gemma4-26b-a4b" = {
+          env = [ "LLAMA_CACHE=/persist/models" ];
+          cmd = ''${llama-server} --port ''${PORT} -hf unsloth/gemma-4-26B-A4B-it-GGUF:UD-Q4_K_XL --temp 0.6 --top-p 0.95 --top-k 64 ${commonFlags} --presence-penalty 0.0'';
+          aliases = [ "task" "q4-xl" ];
+        };
+
+        "gemma4-e4b" = {
+          env = [ "LLAMA_CACHE=/persist/models" ];
+          cmd = ''${llama-server} --port ''${PORT} -hf unsloth/gemma-4-E4B-it-GGUF:Q4_K_M --temp 0.6 --top-p 0.95 --top-k 64 ${commonFlags} --presence-penalty 0.0'';
+          aliases = [ "task-fast" ];
+        };
+
         "qwen36-27b-async" = {
           env = [ "LLAMA_CACHE=/persist/models" ];
           cmd = ''${llama-server} --port ''${PORT} -hf unsloth/Qwen3.6-27B-GGUF:UD-Q8_K_XL --temp 1.0 --top-p 0.95 --min-p 0.0 --top-k 20 ${commonFlags} --presence-penalty 1.5 --frequency-penalty 1.0'';
