@@ -34,7 +34,7 @@
           53 # blocky
         ];
       };
-      interfaces.wg0.allowedTCPPorts = [ ];
+      interfaces.wg0.allowedTCPPorts = [ 7474 7687 ];
       trustedInterfaces = [ "wg0" ];
       allowedUDPPorts = [
         51821 # wireguard

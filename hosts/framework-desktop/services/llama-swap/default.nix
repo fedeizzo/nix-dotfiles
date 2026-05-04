@@ -44,6 +44,12 @@ in
           aliases = [ "task-fast" ];
         };
 
+        "qwen3-embedding" = {
+          env = [ "LLAMA_CACHE=/persist/models" ];
+          cmd = ''${llama-server} --port ''${PORT} -hf Qwen/Qwen3-Embedding-8B-GGUF --embedding --pooling last -ub 8192'';
+          # aliases = [ "embedding" ];
+        };
+
         "qwen36-27b-async" = {
           env = [ "LLAMA_CACHE=/persist/models" ];
           cmd = ''${llama-server} --port ''${PORT} -hf unsloth/Qwen3.6-27B-GGUF:UD-Q8_K_XL --temp 1.0 --top-p 0.95 --min-p 0.0 --top-k 20 ${commonFlags} --presence-penalty 1.5 --frequency-penalty 1.0'';
@@ -75,11 +81,11 @@ in
         };
       };
 
-      hooks = {
-        on_startup = {
-          preload = [ "qwen36-27b-realtime" "qwen36-35b-a3b" ];
-        };
-      };
+      # hooks = {
+      #   on_startup = {
+      #     preload = [ "qwen36-27b-realtime" "qwen36-35b-a3b" ];
+      #   };
+      # };
     };
   };
 
