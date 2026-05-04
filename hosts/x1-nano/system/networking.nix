@@ -30,6 +30,7 @@
         ips = [ "192.168.7.3/24" ];
         listenPort = 51821;
         privateKeyFile = "${config.sops.secrets.x1-wireguard-private-key.path}";
+        mtu = 1280;
         peers = [
           {
             name = "homelab";
@@ -47,7 +48,7 @@
 
   services.tailscale = {
     enable = true;
-    extraSetFlags = ["--netfilter-mode=nodivert"];
+    extraSetFlags = [ "--netfilter-mode=nodivert" ];
   };
 
   # fix the annoying bug for which wireguard has to be restarted after boot
