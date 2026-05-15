@@ -40,12 +40,14 @@ jail "pi" entrypoint (with c; [
     ripgrep
     nodejs
     python3
-    jj
+    jujutsu
     nix
     direnv
     go
+    golangci-lint
     gcc
     curl
+    gnused
   ] ++ [
     pi-coding-agent
   ]))

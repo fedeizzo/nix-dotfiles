@@ -12,10 +12,10 @@ import type { ExtensionAPI } from "@mariozechner/pi-coding-agent";
 import { isToolCallEventType } from "@mariozechner/pi-coding-agent";
 
 // ---------- LIMITS (tune these as needed) ----------
-const MAX_LINES_PER_WRITE = 100;      // skeleton scaffold cap
-const MAX_LINES_PER_EDIT  = 60;       // single-feature edit cap
-const MAX_CHARS_PER_WRITE = 6000;     // ~1500 tokens for new files
-const MAX_CHARS_PER_EDIT  = 3000;     // ~750 tokens — forces small targeted edits
+const MAX_LINES_PER_WRITE = 200; // skeleton scaffold cap
+const MAX_LINES_PER_EDIT = 120; // single-feature edit cap
+const MAX_CHARS_PER_WRITE = 12000; // ~3000 tokens for new files
+const MAX_CHARS_PER_EDIT = 6000; // ~1500 tokens — forces small targeted edits
 
 // Files exempt from the cap (config files, lockfiles, etc. that legitimately
 // need to be written wholesale). Add more globs here if needed.
@@ -24,7 +24,7 @@ const EXEMPT_PATH_PATTERNS = [
   /yarn\.lock$/i,
   /pnpm-lock\.yaml$/i,
   /\.lock$/i,
-  /\.svg$/i,        // SVGs are often a single big blob
+  /\.svg$/i, // SVGs are often a single big blob
 ];
 
 function isExempt(path?: string): boolean {
@@ -46,7 +46,7 @@ export default function (pi: ExtensionAPI) {
   pi.on("session_start", async (_event, ctx) => {
     ctx.ui.notify(
       `incremental-guard active (write: ${MAX_LINES_PER_WRITE} lines/${MAX_CHARS_PER_WRITE} chars, edit: ${MAX_LINES_PER_EDIT} lines/${MAX_CHARS_PER_EDIT} chars)`,
-      "info"
+      "info",
     );
   });
 
@@ -56,7 +56,11 @@ export default function (pi: ExtensionAPI) {
     // `write` is for new files only — we let the model use it for skeletons,
     // but never for big initial blobs.
     if (event.toolName === "write") {
-      const input = event.input as { path?: string; content?: string; file_path?: string };
+      const input = event.input as {
+        path?: string;
+        content?: string;
+        file_path?: string;
+      };
       const path = input.path ?? input.file_path;
       const content = input.content ?? "";
 
@@ -137,7 +141,7 @@ export default function (pi: ExtensionAPI) {
         `incremental-guard: write ≤ ${MAX_LINES_PER_WRITE} lines/${MAX_CHARS_PER_WRITE} chars, ` +
           `edit ≤ ${MAX_LINES_PER_EDIT} lines/${MAX_CHARS_PER_EDIT} chars. ` +
           `Edit ~/.pi/agent/extensions/incremental-guard.ts to change.`,
-        "info"
+        "info",
       );
     },
   });
