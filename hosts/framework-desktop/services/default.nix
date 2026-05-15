@@ -328,10 +328,9 @@
       ];
     }
     {
-      name = "signal-cli";
+      name = "signal";
       port = 7583;
       shouldMonitorUptime = false;
-      shouldBehindReverseProxy = false;
       shouldBeInDashboard = false;
       toPersist = [
         {
@@ -344,6 +343,22 @@
       toBackup = [
         "/persist/var/lib/signal-cli"
       ];
+    }
+    {
+      name = "hindsight";
+      port = 19999;
+      dashboardSection = "Tools";
+      toPersist = [ ];
+      toBackup = [ ];
+    }
+    {
+      name = "hindsight-api";
+      port = 18888;
+      shouldMonitorUptime = false;
+      shouldBeInDashboard = false;
+      dashboardSection = "Tools";
+      toPersist = [ ];
+      toBackup = [ ];
     }
     {
       name = "backrest";

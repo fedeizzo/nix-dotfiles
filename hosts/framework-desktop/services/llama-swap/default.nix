@@ -59,13 +59,29 @@ in
         "qwen36-35b-a3b" = {
           env = [ "LLAMA_CACHE=/persist/models" ];
           cmd = ''${llama-server} --port ''${PORT} -hf unsloth/Qwen3.6-35B-A3B-MTP-GGUF:UD-Q4_K_XL ${commonFlags} --spec-type draft-mtp --spec-draft-n-max 3 --spec-draft-p-min 0.75 --temp 0.6 --top-p 0.95 --top-k 20 --min-p 0.00 --presence-penalty 0.0 --repeat-penalty 1.0'';
+
           aliases = [ "coding" "q3-m" ];
+
+          filters = {
+            setParamsByID = {
+              "qwen-nothink" = {
+                chat_template_kwargs = {
+                  enable_thinking = false;
+                };
+              };
+            };
+          };
         };
 
         "qwen3-embedding" = {
           env = [ "LLAMA_CACHE=/persist/models" ];
           cmd = ''${llama-server} --port ''${PORT} -hf Qwen/Qwen3-Embedding-8B-GGUF --embedding --pooling last -ub 8192'';
-          # aliases = [ "embedding" ];
+        };
+
+        "bge-m3" = {
+          env = [ "LLAMA_CACHE=/persist/models" ];
+          cmd = ''${llama-server} --port ''${PORT} -hf ggml-org/bge-m3-Q8_0-GGUF --embedding -ub 8192'';
+          aliases = [ "embedding" ];
         };
 
         "qwen36-27b-realtime" = {
@@ -82,12 +98,15 @@ in
         vars = {
           "qr" = "qwen36-27b-realtime";
           "qc" = "qwen36-35b-a3b";
+          "e" = "bge-m3";
         };
 
         sets = {
-          standard = "qr & qc";
+          standard = "qr & qc & e";
         };
       };
+
+      includeAliasesInList = true;
 
       # hooks = {
       #   on_startup = {

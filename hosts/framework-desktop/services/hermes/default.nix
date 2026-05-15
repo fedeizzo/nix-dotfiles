@@ -1,5 +1,17 @@
 { config, pkgs, lib, ... }:
 
+let
+  # Dedicated, isolated Python environment specifically for skills
+  skillsPythonEnv = pkgs.python3.withPackages (ps: with ps; [
+    jsonschema
+    requests
+  ]);
+
+  # Wrapper script that skills can call directly (e.g. `python-for-skills script.py`)
+  pythonForSkills = pkgs.writeShellScriptBin "python-for-skills" ''
+    exec ${skillsPythonEnv}/bin/python3 "$@"
+  '';
+in
 {
   services.hermes-agent = {
     enable = true;
@@ -26,6 +38,11 @@
       memory = {
         memory_enable = true;
         user_profile_enable = true;
+        provider = "hindsight";
+      };
+
+      plugins = {
+        enabled = [ "hindsight" ];
       };
     };
 
@@ -34,8 +51,10 @@
       # "USER.md" = ./documents/USER.md;
     };
 
+    extraPackages = [ pythonForSkills ];
     environmentFiles = [ config.sops.secrets.hermes-env.path ];
     addToSystemPackages = true;
+    extraDependencyGroups = [ "hindsight" ];
 
     # Inject proxy configuration into the Hermes environment for tool calls
     environment = {
@@ -45,6 +64,9 @@
       STT_OPENAI_API_KEY = "placeholder";
       STT_OPENAI_MODEL = "Whisper-Large-v3-Turbo";
       STT_OPENAI_BASE_URL = "https://lemonade.fedeizzo.dev/v1";
+      HINDSIGHT_API_KEY = "";
+      HINDSIGHT_API_URL = "https://hindsight-api.fedeizzo.dev";
+      HINDSIGHT_AUTO_RETAIN = "false";
     };
   };
 
@@ -55,7 +77,14 @@
     PrivateTmp = lib.mkForce true; # Mount a separate, isolated /tmp directory
     NoNewPrivileges = lib.mkForce true; # Prevent the process and its children from gaining new privileges
     IPAddressDeny = "any"; # Block all direct outbound network access at the systemd/kernel level
-    IPAddressAllow = [ "127.0.0.1/32" "::1/128" ]; # Allow outbound access ONLY to localhost (for Squid Proxy and local Signal REST API)
+    IPAddressAllow = [
+      "127.0.0.1/32"
+      "::1/128"
+      "127.0.0.53/32" # 1. Required: Allows systemd-resolved to handle DNS lookups
+      "103.168.172.0/24" # 2. Required: Fastmail IMAP network cluster
+      "202.12.124.0/24" #    Fastmail network cluster (Failover/Secondary)
+      "204.75.18.0/23" #    Fastmail network cluster (Failover/Secondary)
+    ];
   };
 
   # Egress Filtering via Squid Proxy
@@ -66,16 +95,55 @@
     proxyPort = 3128;
 
     extraConfig = ''
-      # 1. Define ACL for whitelisted domains the agent is allowed to access
+      # 1. Allow CONNECT tunnels to the standard secure IMAP port
+          acl SSL_ports port 993
+
+      # 2. Define ACL for whitelisted domains the agent is allowed to access
       acl whitelist dstdomain .github.com
       acl whitelist dstdomain .fedeizzo.dev
       acl whitelist dstdomain .openrouter.ai
+      acl whitelist dstdomain .fastmail.com
 
-      # 2. Deny any request that is NOT in the whitelist.
-      # Valid traffic (matches the whitelist) will simply bypass this rule
-      # and be allowed by the default 'http_access allow localhost' below it.
+      # 3. Deny any request that is NOT in the whitelist.
       http_access deny !whitelist
     '';
+  };
+
+  # Hindsight AI Memory system (deployed via Docker)
+  virtualisation.oci-containers.containers.hindsight = {
+    image = "ghcr.io/vectorize-io/hindsight:latest";
+    extraOptions = [
+      "--network=host"
+    ];
+    # The container is mostly stateless since memory lives in your Postgres!
+    # We only mount the HuggingFace cache so it doesn't re-download the Reranker model on every restart.
+    volumes = [
+      "hindsight-cache:/home/hindsight/.cache/huggingface"
+    ];
+    environment = {
+      HINDSIGHT_API_HOST = "127.0.0.1";
+      HINDSIGHT_API_PORT = "18888";
+      HINDSIGHT_CP_DATAPLANE_API_URL = "http://127.0.0.1:18888";
+      HINDSIGHT_CP_PORT = "19999";
+      HINDSIGHT_API_VECTOR_EXTENSION = "pgvector";
+      # Configure OpenAI-compatible provider pointing to your local llama-swap models
+      HINDSIGHT_API_LLM_API_KEY = "placeholder";
+      HINDSIGHT_API_LLM_PROVIDER = "openai";
+      HINDSIGHT_API_LLM_BASE_URL = "https://llama.fedeizzo.dev/v1";
+      HINDSIGHT_API_LLM_MODEL = "qwen-nothink";
+      HINDSIGHT_API_LLM_TIMEOUT = "600";
+      HINDSIGHT_API_EMBEDDINGS_PROVIDER = "openai";
+      HINDSIGHT_API_EMBEDDINGS_OPENAI_BASE_URL = "https://llama.fedeizzo.dev/v1";
+      HINDSIGHT_API_EMBEDDINGS_OPENAI_MODEL = "bge-m3";
+      HINDSIGHT_API_EMBEDDINGS_OPENAI_API_KEY = "placeholder";
+
+      # Reranker Configuration (Runs on CPU inside the Hindsight container to save GPU VRAM)
+      HINDSIGHT_API_RERANKER_PROVIDER = "local";
+      HINDSIGHT_API_RERANKER_LOCAL_MODEL = "BAAI/bge-reranker-v2-m3";
+    };
+    environmentFiles = [
+      config.sops.secrets.hermes-env.path
+    ];
   };
 
   # Local Signal CLI Daemon for E2EE Communication

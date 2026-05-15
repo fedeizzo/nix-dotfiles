@@ -9,11 +9,17 @@ let
     { user = "nextcloud"; db = "nextcloud"; }
     { user = "authentik"; db = "authentik"; }
     { user = "affine"; db = "affine"; }
+    { user = "hindsight"; db = "hindsight"; }
   ];
   authenticationEntry = user: db: "host " + db + " " + user + " samehost md5";
   passwordDeclarationEntry = user: "DECLARE " + user + "_password TEXT;";
   passwordInitEntry = user: "${user}_password := trim(both from replace(pg_read_file('${config.sops.secrets."${user}-pg-password".path}'), E\'\\n\', \'\'));";
-  passwordExecuteEntry = user: "EXECUTE format('ALTER ROLE ${user} WITH PASSWORD %L;', ${user}_password);";
+  passwordExecuteEntry = user: ''
+    IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = '${user}') THEN
+      CREATE ROLE ${user} WITH LOGIN;
+    END IF;
+    EXECUTE format('ALTER ROLE ${user} WITH PASSWORD %L;', ${user}_password);
+  '';
 in
 {
   services.postgresqlBackup = {
@@ -42,6 +48,7 @@ in
       "nextcloud"
       "authentik"
       "affine"
+      "hindsight"
     ];
     ensureUsers = [
       { name = "networth"; ensureDBOwnership = true; }
@@ -50,12 +57,17 @@ in
       { name = "nextcloud"; ensureDBOwnership = true; }
       { name = "authentik"; ensureDBOwnership = true; }
       { name = "affine"; ensureDBOwnership = true; }
+      { name = "hindsight"; ensureDBOwnership = true; }
     ];
     authentication = pkgs.lib.mkForce ''
       # TYPE  DATABASE        USER            ADDRESS                 METHOD    ARGS
       ${lib.strings.concatLines (map (el: authenticationEntry el.user el.db) dbs)}
       host postgres nextcloud samehost md5
       local   all             postgres                                trust
+
+      # Allow connections from Docker / Podman isolated bridge networks
+      host    all             all             172.16.0.0/12           md5
+      host    all             all             10.0.0.0/8              md5
     '';
     identMap = ''
       postgres postgres postgres
@@ -76,6 +88,7 @@ in
     lib.mkAfter [
       ''
         ${lib.getExe' config.services.postgresql.package "psql"} -f "${sqlFile}"
+        ${lib.getExe' config.services.postgresql.package "psql"} -d hindsight -c "CREATE EXTENSION IF NOT EXISTS vector;"
       ''
     ];
 
