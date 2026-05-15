@@ -20,3 +20,6 @@ book/book.toml.bak
 book/book/
 docs/html/
 docs/book/
+.think-sessions/
+.think/
+.think

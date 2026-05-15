@@ -1,0 +1,9 @@
+{
+  "name": "pi-searxng",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {},
+  "pi": {
+    "extensions": ["./src/index.ts"]
+  }
+}

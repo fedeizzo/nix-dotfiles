@@ -12,9 +12,16 @@ let
   pi-coding-agent = package;
   inherit (pkgs) lib;
   c = jail.combinators;
+  entrypoint = pkgs.writeShellScriptBin "pi" ''
+    if [ -z $1 ]; then
+        ${pi-coding-agent}/bin/pi
+    else
+        eval $@
+    fi
+  '';
 in
 # jail "pi" pi-coding-agent (with c; [
-jail "pi" pi-coding-agent (with c; [
+jail "pi" entrypoint (with c; [
   # Persistent cache/config directory
   (persist-home persistName)
 
@@ -34,6 +41,11 @@ jail "pi" pi-coding-agent (with c; [
     nodejs
     python3
     jj
+    nix
+    direnv
+    go
+    gcc
+    curl
   ] ++ [
     pi-coding-agent
   ]))
@@ -47,6 +59,7 @@ jail "pi" pi-coding-agent (with c; [
   # npm fixes
   (write-text (noescape "~/.npmrc") ''prefix = ''${HOME}/.npm-packages'')
   (add-path "~/.npm-packages/bin")
+  (add-path "~/go/bin")
   (set-env "NODE_PATH" (noescape "~/.npm-packages/lib/node_modules"))
 
   (add-runtime ''
@@ -61,26 +74,25 @@ jail "pi" pi-coding-agent (with c; [
   '')
   (add-cleanup ''
     echo "📤 syncing pi config back out of jail..."
-    if ! RSYNC_OUTPUT=$(${pkgs.rsync}/bin/rsync -Pavzh /home/${username}/.pi/agent/skills /home/${username}/nix-dotfiles/home/common/pi/config/agent 2>&1); then
-      echo "❌ rsync failed (cleanup - skills):"
-      echo "''${RSYNC_OUTPUT}"
-      exit 1
-    fi
-    if ! RSYNC_OUTPUT=$(${pkgs.rsync}/bin/rsync -Pavzh /home/${username}/.pi/agent/models.json /home/${username}/nix-dotfiles/home/common/pi/config/agent 2>&1); then
-      echo "❌ rsync failed (cleanup - models):"
-      echo "''${RSYNC_OUTPUT}"
-      exit 1
-    fi
-    if ! RSYNC_OUTPUT=$(${pkgs.rsync}/bin/rsync -Pavzh /home/${username}/.pi/agent/caveman.json /home/${username}/nix-dotfiles/home/common/pi/config/agent 2>&1); then
-      echo "❌ rsync failed (cleanup - caveman):"
-      echo "''${RSYNC_OUTPUT}"
-      exit 1
-    fi
-    if ! RSYNC_OUTPUT=$(${pkgs.rsync}/bin/rsync -Pavzh /home/${username}/.pi/agent/settings.json /home/${username}/nix-dotfiles/home/common/pi/config/agent 2>&1); then
-      echo "❌ rsync failed (cleanup - settings):"
-      echo "''${RSYNC_OUTPUT}"
-      exit 1
-    fi
+    _SYNC_PAIRS=(
+      ".pi/agent/skills:nix-dotfiles/home/common/pi/config/agent"
+      ".pi/agent/extensions:nix-dotfiles/home/common/pi/config/agent"
+      ".pi/agent/models.json:nix-dotfiles/home/common/pi/config/agent"
+      ".pi/agent/caveman.json:nix-dotfiles/home/common/pi/config/agent"
+      ".pi/agent/settings.json:nix-dotfiles/home/common/pi/config/agent"
+      ".pi/piforge-self.md:nix-dotfiles/home/common/pi/config"
+      ".pi/piforge.json:nix-dotfiles/home/common/pi/config"
+    )
+    for pair in "''${_SYNC_PAIRS[@]}"; do
+      src="''${pair%%:*}"
+      dst="''${pair##*:}"
+      label="''${src##*/}"
+      if ! RSYNC_OUTPUT=$(${pkgs.rsync}/bin/rsync -Pavzh "/home/${username}/''${src}" "/home/${username}/''${dst}" 2>&1); then
+        echo "❌ rsync failed (cleanup - ''${label}):"
+        echo "''${RSYNC_OUTPUT}"
+        exit 1
+      fi
+    done
     echo "✅ pi config synced back!"
   '')
 
