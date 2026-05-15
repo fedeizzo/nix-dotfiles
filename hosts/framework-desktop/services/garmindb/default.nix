@@ -18,7 +18,7 @@ in
     "C! /var/lib/garmindb/GarminConnectConfig.json 0400 garmindb garmindb - ${configFile}"
   ];
   systemd.services.garmindb = {
-    enable = true;
+    enable = false;
     description = "garmindb";
     wantedBy = [ ];
     after = [ "network.target" ];

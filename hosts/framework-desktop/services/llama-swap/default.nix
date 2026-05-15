@@ -1,7 +1,38 @@
 { pkgs-unstable, lib, ... }:
 
 let
-  llama-cpp = pkgs-unstable.llama-cpp-rocm;
+  # llama-cpp = pkgs-unstable.llama-cpp-rocm;
+  llama-cpp =
+    (pkgs-unstable.llama-cpp.override {
+      rocmSupport = true;
+      rocmGpuTargets = [ "gfx1151" ];
+    }).overrideAttrs
+      (oldAttrs: rec {
+        version = "9186";
+        src = pkgs-unstable.fetchFromGitHub {
+          owner = "ggml-org";
+          repo = "llama.cpp";
+          tag = "b${version}";
+          hash = "sha256-mkdZl/yReMMbls6neFmyD5gOZYR2wsafipxlRXcDPYM=";
+
+          leaveDotGit = true;
+
+          postFetch = ''
+            git -C "$out" rev-parse --short HEAD > $out/COMMIT
+            find "$out" -name .git -print0 | xargs -0 rm -rf
+          '';
+        };
+        npmRoot = "tools/ui";
+        npmDepsHash = "sha256-WaEePrEZ7O/7deP2KJhe0AwiSKYA8HOqETmMHUkmBe0=";
+        cmakeFlags = (oldAttrs.cmakeFlags or [ ]) ++ [
+          "-DLLAMA_HIP_UMA=ON" # unified memory
+        ];
+        # Mirror the Strix Halo toolbox HIP tuning: pin the ROCm path explicitly and
+        # raise the local unroll threshold for gfx1151 kernels.
+        cmakeFlagsArray = (oldAttrs.cmakeFlagsArray or [ ]) ++ [
+          "-DCMAKE_HIP_FLAGS=--rocm-path=${pkgs-unstable.rocmPackages.clr} -mllvm --amdgpu-unroll-threshold-local=600"
+        ];
+      });
   llama-server = lib.getExe' llama-cpp "llama-server";
 
   # Common flags shared across all model configurations.
@@ -10,11 +41,10 @@ let
     --no-mmap -fa 1 \
     --no-webui \
     --kv-unified \
-    -ub 2048 -b 4096 -c 262144 \
-    --cache-type-k q8_0 \
-    --cache-type-v q8_0 \
+    -c 262144 \
     -t 2
   '';
+  # -ub 2048 -b 4096 -c 262144 \
 
 in
 {
@@ -32,37 +62,16 @@ in
           aliases = [ "coding" "q3-m" ];
         };
 
-        "gemma4-26b-a4b" = {
-          env = [ "LLAMA_CACHE=/persist/models" ];
-          cmd = ''${llama-server} --port ''${PORT} -hf unsloth/gemma-4-26B-A4B-it-GGUF:UD-Q4_K_XL --temp 0.6 --top-p 0.95 --top-k 64 ${commonFlags} --presence-penalty 0.0'';
-          aliases = [ "task" "q4-xl" ];
-        };
-
-        "gemma4-e4b" = {
-          env = [ "LLAMA_CACHE=/persist/models" ];
-          cmd = ''${llama-server} --port ''${PORT} -hf unsloth/gemma-4-E4B-it-GGUF:Q4_K_M --temp 0.6 --top-p 0.95 --top-k 64 ${commonFlags} --presence-penalty 0.0'';
-          aliases = [ "task-fast" ];
-        };
-
         "qwen3-embedding" = {
           env = [ "LLAMA_CACHE=/persist/models" ];
           cmd = ''${llama-server} --port ''${PORT} -hf Qwen/Qwen3-Embedding-8B-GGUF --embedding --pooling last -ub 8192'';
           # aliases = [ "embedding" ];
         };
 
-        "qwen36-27b-async" = {
-          env = [ "LLAMA_CACHE=/persist/models" ];
-          cmd = ''${llama-server} --port ''${PORT} -hf unsloth/Qwen3.6-27B-GGUF:UD-Q8_K_XL --temp 1.0 --top-p 0.95 --min-p 0.0 --top-k 20 ${commonFlags} --presence-penalty 1.5 --frequency-penalty 1.0'';
-          aliases = [ "async" "q8-xl" ];
-          timeouts = {
-            responseHeader = 600;
-          };
-        };
-
         "qwen36-27b-realtime" = {
           env = [ "LLAMA_CACHE=/persist/models" ];
-          cmd = ''${llama-server} --port ''${PORT} -hf unsloth/Qwen3.6-27B-GGUF:UD-Q3_K_XL -hfd unsloth/Qwen3.5-0.8B-GGUF:UD-Q4_K_XL --temp 1.0 --top-p 0.95 --min-p 0.0 --top-k 20 ${commonFlags} --presence-penalty 1.5 --frequency-penalty 1.0'';
-          aliases = [ "realtime" "q3-xl" ];
+          cmd = ''${llama-server} --port ''${PORT} -hf unsloth/Qwen3.6-27B-GGUF:UD-Q4_K_XL -hfd unsloth/Qwen3.5-0.8B-GGUF:UD-Q4_K_XL --temp 1.0 --top-p 0.95 --min-p 0.0 --top-k 20 ${commonFlags} --presence-penalty 1.5 --frequency-penalty 1.0'';
+          aliases = [ "realtime" "q4-xl" ];
           timeouts = {
             responseHeader = 600;
           };
@@ -71,13 +80,12 @@ in
 
       matrix = {
         vars = {
-          "qa" = "qwen36-27b-async";
           "qr" = "qwen36-27b-realtime";
           "qc" = "qwen36-35b-a3b";
         };
 
         sets = {
-          standard = "(qa | qr) & qc";
+          standard = "qr & qc";
         };
       };
 
