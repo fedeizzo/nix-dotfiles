@@ -11,4 +11,10 @@
   ];
 
   programs.jujutsu.settings.user.email = "federico@fedeizzo.dev";
+
+  programs.jail-pi = {
+    enable = true;
+    persistName = "pi";
+    allowNetwork = true;
+  };
 }

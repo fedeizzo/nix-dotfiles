@@ -1,0 +1,14 @@
+{
+  "lastChangelogVersion": "0.74.0",
+  "defaultProvider": "llamaswap",
+  "defaultModel": "qwen36-27b-realtime",
+  "enableInstallTelemetry": false,
+  "packages": [
+    "npm:pi-powerline-footer",
+    "npm:pi-mcp-adapter",
+    "npm:@juicesharp/rpiv-todo",
+    "npm:@juicesharp/rpiv-ask-user-question",
+    "git:github.com/jonjonrankin/pi-caveman"
+  ],
+  "powerline": "default"
+}

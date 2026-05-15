@@ -21,7 +21,7 @@
     element-desktop
     loupe
 
-    pkgs-unstable.pi-coding-agent
+    # pkgs-unstable.pi-coding-agent
 
     art
   ];

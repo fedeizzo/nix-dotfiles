@@ -1,0 +1,10 @@
+{
+  "providers": {
+    "llamaswap": {
+      "baseUrl": "https://llama.fedeizzo.dev/v1",
+      "api": "openai-completions",
+      "apiKey": "placeholder",
+      "models": [{ "id": "qwen36-35b-a3b" }, { "id": "qwen36-27b-realtime" }]
+    }
+  }
+}

@@ -17,6 +17,7 @@
 
         # AppData
         ".local"
+        ".pi"
 
         # Config
         ".config/Bitwarden"

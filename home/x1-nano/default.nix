@@ -8,6 +8,7 @@
 
 
 {
+  nixpkgs.overlays = [ inputs.llm-agents.overlays.default ];
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
@@ -41,6 +42,7 @@
 
         ../common/kitty
         ../common/opencode
+        ../common/pi
         # ../common/emacs
       ];
       programs.home-manager.enable = true;

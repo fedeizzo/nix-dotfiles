@@ -65,6 +65,10 @@
 
     # Wayland and Hyprland
     stylix.url = "github:danth/stylix";
+
+    # Sandboxing
+    llm-agents.url = "github:numtide/llm-agents.nix";
+    jail-nix.url = "sourcehut:~alexdavid/jail.nix";
   };
 
   outputs = inputs@{ self, flake-parts, ... }:
