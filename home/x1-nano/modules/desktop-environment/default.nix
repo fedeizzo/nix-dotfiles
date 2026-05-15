@@ -30,6 +30,14 @@
         "eDP-1" = {
           scale = 1.25;
         };
+        "DP-3" = {
+          scale = 1.25;
+          mode = {
+            width = 3440;
+            height = 1440;
+            refresh = 59.973;
+          };
+        };
         # hot-corners.top-left.enable = true;
         focus-at-start-up.enable = true;
       };
@@ -50,7 +58,22 @@
       binds = with config.lib.niri.actions; {
         "Super+Shift+Slash".action = show-hotkey-overlay;
         "Super+Return".action.spawn = "kitty";
-        "Super+I".action.spawn = ["dms" "ipc" "call" "plugins" "toggle" "aiAssistant"];
+        "Super+I".action.spawn = [ "dms" "ipc" "call" "plugins" "toggle" "aiAssistant" ];
+
+        # Display management
+        "XF86Display".action.spawn = [
+          "sh"
+          "-c"
+          ''
+            if niri msg outputs | grep -qw "DP-3"; then
+              niri msg output eDP-1 off
+              niri msg output DP-3 on
+            else
+              niri msg output DP-3 off
+              niri msg output eDP-1 on
+            fi
+          ''
+        ];
 
         # Window management
         "Super+Q".action = close-window;
@@ -76,7 +99,7 @@
         "Super+F".action = maximize-column;
         "Super+Shift+F".action = fullscreen-window;
         "Super+Ctrl+F".action = expand-column-to-available-width;
-        "Super+T".action =  toggle-window-floating;
+        "Super+T".action = toggle-window-floating;
       };
 
       # Startup
@@ -110,8 +133,8 @@
       enableSpawn = true; # Auto-start DMS with niri, if enabled
     };
 
-    settings = (import ./settings.dms.nix {}).settings;
-    session = (import ./settings.dms.nix {}).session;
+    settings = (import ./settings.dms.nix { }).settings;
+    session = (import ./settings.dms.nix { }).session;
 
 
     clipboardSettings = {
@@ -142,16 +165,16 @@
               timeout = 120;
             };
           };
-            provider = "custom";
-            baseUrl = "https://llama.fedeizzo.dev/v1";
-            model = "qwen36-27b-realtime";
-            apiKey = "";
-            saveApiKey = false;
-            apiKeyEnvVar = "";
-            temperature = 0.7;
-            maxTokens = 32768;
-            timeout = 30;
-            geminiWebSearch = false;
+          provider = "custom";
+          baseUrl = "https://llama.fedeizzo.dev/v1";
+          model = "qwen36-27b-realtime";
+          apiKey = "";
+          saveApiKey = false;
+          apiKeyEnvVar = "";
+          temperature = 0.7;
+          maxTokens = 32768;
+          timeout = 30;
+          geminiWebSearch = false;
         };
       };
     };
