@@ -39,6 +39,7 @@
         ".zen"
         ".config/Nextcloud"
         ".config/libreoffice"
+        ".config/niri"
 
         # Cache
         ".cargo"
@@ -56,6 +57,7 @@
         ".cache/zed"
         ".cache/zen"
         ".cache/Nextcloud"
+        ".cache/DankMaterialShell"
 
         # plasma
         ".config/kde.org"

@@ -63,8 +63,11 @@
     authentik-nix.url = "github:nix-community/authentik-nix";
     opencode.url = "github:anomalyco/opencode";
 
-    # Wayland and Hyprland
+    # Wayland and niri
     stylix.url = "github:danth/stylix";
+    niri.url = "github:sodiboo/niri-flake";
+    dms.url = "github:AvengeMedia/DankMaterialShell/stable";
+    dms-plugin-registry.url = "github:AvengeMedia/dms-plugin-registry";
 
     # Sandboxing
     llm-agents.url = "github:numtide/llm-agents.nix";

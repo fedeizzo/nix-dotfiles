@@ -1,0 +1,164 @@
+{ pkgs, config, username, pkgs-unstable, ... }:
+
+{
+  programs.niri = {
+    enable = true;
+    package = pkgs.niri-unstable;
+
+    settings = {
+      # Input
+      input = {
+        # devices
+        keyboard = {
+          xkb = {
+            layout = "us";
+            variant = "";
+          };
+        };
+        touchpad = {
+          natural-scroll = true;
+          scroll-method = "two-finger";
+        };
+        touch.map-to-output = "eDP-1";
+
+        focus-follows-mouse.enable = true;
+
+        mod-key = "Alt";
+      };
+
+      outputs = {
+        "eDP-1" = {
+          scale = 1.25;
+        };
+        # hot-corners.top-left.enable = true;
+        focus-at-start-up.enable = true;
+      };
+
+      # Layout
+      layout = {
+        gaps = 8;
+        focus-ring.enable = true;
+      };
+
+      # Cursor
+      cursor = {
+        hide-when-typing = true;
+        theme = "Bibata Modern Eyes";
+      };
+
+      # Binds
+      binds = with config.lib.niri.actions; {
+        "Super+Shift+Slash".action = show-hotkey-overlay;
+        "Super+Return".action.spawn = "kitty";
+        "Super+I".action.spawn = ["dms" "ipc" "call" "plugins" "toggle" "aiAssistant"];
+
+        # Window management
+        "Super+Q".action = close-window;
+        "Super+Q".repeat = false;
+        "Super+O".action = toggle-overview;
+        "Super+O".repeat = false;
+        "Super+Left".action = focus-column-left;
+        "Super+H".action = focus-column-left;
+        "Super+Down".action = focus-window-down;
+        "Super+J".action = focus-window-down;
+        "Super+Right".action = focus-column-right;
+        "Super+L".action = focus-column-right;
+        "Super+Up".action = focus-window-up;
+        "Super+K".action = focus-window-up;
+        "Super+Shift+Left".action = move-column-left;
+        "Super+Shift+H".action = move-column-left;
+        "Super+Shift+Down".action = move-window-down;
+        "Super+Shift+J".action = move-window-down;
+        "Super+Shift+Right".action = move-column-right;
+        "Super+Shift+L".action = move-column-right;
+        "Super+Shift+Up".action = move-window-up;
+        "Super+Shift+K".action = move-window-up;
+        "Super+F".action = maximize-column;
+        "Super+Shift+F".action = fullscreen-window;
+        "Super+Ctrl+F".action = expand-column-to-available-width;
+        "Super+T".action =  toggle-window-floating;
+      };
+
+      # Startup
+      # spawn-at-startup = [
+      #   { argv = [ "waybar" ]; }
+      # ];
+
+      # Animations
+      animations = {
+        enable = true;
+      };
+
+      # Gestures
+      gestures = {
+        hot-corners.enable = true;
+      };
+
+      # Environment
+      environment = {
+        QT_QPA_PLATFORM = "wayland";
+        GTK_THEME = "Adwaita:dark";
+      };
+    };
+  };
+  # systemd.user.services.niri-flake-polkit.enable = false;
+  programs.dank-material-shell = {
+    enable = true;
+    dgop.package = pkgs-unstable.dgop;
+    niri = {
+      enableKeybinds = true; # Sets static preset keybinds
+      enableSpawn = true; # Auto-start DMS with niri, if enabled
+    };
+
+    settings = (import ./settings.dms.nix {}).settings;
+    session = (import ./settings.dms.nix {}).session;
+
+
+    clipboardSettings = {
+      maxHistory = 25;
+      maxEntrySize = 5242880;
+      autoClearDays = 1;
+      clearAtStartup = true;
+      disabled = false;
+      disableHistory = false;
+      disablePersist = true;
+    };
+
+    plugins = {
+      # nord.enable = true;
+      aiAssistant = {
+        enable = true;
+
+        settings = {
+          providers = {
+            custom = {
+              baseUrl = "https://llama.fedeizzo.dev/v1";
+              model = "qwen36-27b-realtime";
+              apiKey = "placeholder";
+              saveApiKey = false;
+              apiKeyEnvVar = "";
+              temperature = 0.7;
+              maxTokens = 32768;
+              timeout = 120;
+            };
+          };
+            provider = "custom";
+            baseUrl = "https://llama.fedeizzo.dev/v1";
+            model = "qwen36-27b-realtime";
+            apiKey = "";
+            saveApiKey = false;
+            apiKeyEnvVar = "";
+            temperature = 0.7;
+            maxTokens = 32768;
+            timeout = 30;
+            geminiWebSearch = false;
+        };
+      };
+    };
+  };
+
+  # plugin dependencies
+  home.packages = with pkgs; [
+    wl-clipboard
+  ];
+}

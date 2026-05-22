@@ -8,7 +8,10 @@
 
 
 {
-  nixpkgs.overlays = [ inputs.llm-agents.overlays.default ];
+  nixpkgs.overlays = [
+    inputs.llm-agents.overlays.default
+    inputs.niri.overlays.niri
+  ];
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
@@ -20,12 +23,19 @@
       inherit pkgs-unstable;
     };
     backupFileExtension = "to_delete";
-    sharedModules = [ inputs.plasma-manager.homeModules.plasma-manager ];
+    sharedModules = [
+      inputs.plasma-manager.homeModules.plasma-manager
+      inputs.niri.homeModules.niri
+      inputs.dms.homeModules.dank-material-shell
+      inputs.dms.homeModules.niri
+      inputs.dms-plugin-registry.modules.default
+    ];
 
     users.${username} = {
       imports = [
         ../common/bottom
         ./modules/cli
+        ./modules/desktop-environment
         ../common/firefox
         ./modules/fish
         ../common/git

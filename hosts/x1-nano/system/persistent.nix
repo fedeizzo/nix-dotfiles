@@ -14,6 +14,7 @@ _:
       "/var/lib/fprint"
       "/var/lib/nixos"
       "/var/lib/NetworkManager"
+      "/var/lib/dms-greeter"
       "/root/.ssh"
       "/root/.cache"
     ];

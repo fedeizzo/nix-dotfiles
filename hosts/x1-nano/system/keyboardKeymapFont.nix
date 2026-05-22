@@ -23,7 +23,7 @@ _:
         };
       };
     };
-    fprintd.enable = true;
+    fprintd.enable = false;
     # open-fprintd.enable = true;
     # python-validity.enable = true;
   };
@@ -40,6 +40,6 @@ _:
   # };
 
   security.pam.services = {
-    doas.fprintAuth = true;
+    doas.fprintAuth = false;
   };
 }
