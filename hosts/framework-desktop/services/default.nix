@@ -19,9 +19,10 @@
     ./hass
     ./immich
     ./influxdb
+    ./lemonade
     ./llama-swap
     ./logrotate
-    ./loki
+    # ./loki
     ./net-worth
     ./n8n
     ./neo4j
@@ -259,6 +260,15 @@
       dashboardSection = "Tools";
       toPersist = [ ];
       toBackup = [ ];
+    }
+    {
+      name = "lemonade";
+      port = config.hardware.amd-npu.lemonade.port;
+      dashboardSection = "Tools";
+      toPersist = [ ];
+      toBackup = [
+        "/root/.cache/lemonade"
+      ];
     }
     {
       name = "ntfy";

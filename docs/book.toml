@@ -3,15 +3,11 @@ title = "Nix Dotfiles Documentation"
 authors = ["oven"]
 description = "Documentation for Nix-based dotfiles and homelab configuration"
 language = "en"
-multilingual = false
 
 [build]
 create-missing = false
 use-default-preprocessors = true
-src = "book/src"
-output-dir = "book/html"
-
-[preprocessor]
+build-dir = "book/html"
 
 [output.html]
 site-url = "/nix-dotfiles/"

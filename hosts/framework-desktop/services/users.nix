@@ -11,8 +11,8 @@
 
     grafana.uid = 196;
     grafana.group = "grafana";
-    loki.uid = 994;
-    promtail.uid = 992;
+    # loki.uid = 994;
+    # promtail.uid = 992;
 
     hass.uid = 286;
     hass.group = "hass";

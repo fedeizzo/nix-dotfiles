@@ -15,7 +15,7 @@
       user = "media";
       group = "media";
     };
-    jellyseerr.enable = true; # *rr integration in jellyfin
+    seerr.enable = true; # *rr integration in jellyfin
     # jellyseerr.package = pkgs-unstable.jellyseerr; # *rr integration in jellyfin
     radarr = {
       enable = true; # movies

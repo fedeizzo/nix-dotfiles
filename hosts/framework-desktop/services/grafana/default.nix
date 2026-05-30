@@ -9,6 +9,7 @@
         root_url = "https://grafana.fedeizzo.dev";
       };
       security = {
+        secret_key = "SW2YcwTIb9zpOOhoPsMm"; # TOOD rotate key
         admin_user = "fedeizzo";
         admin_email = "grafana@fedeizzo.dev";
         disable_gravatar = true;

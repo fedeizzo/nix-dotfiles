@@ -40,6 +40,7 @@
         ".config/Nextcloud"
         ".config/libreoffice"
         ".config/niri"
+        ".config/tailscale"
 
         # Cache
         ".cargo"

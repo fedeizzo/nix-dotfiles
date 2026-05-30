@@ -125,7 +125,7 @@ in
       # System identity / config
       "/root/.bash_history"
       "/etc/machine-id"
-      "/etc/adjtime"
+      # "/etc/adjtime"
 
       # App single-file state
       "/var/lib/private/dns-updater/cache.json"

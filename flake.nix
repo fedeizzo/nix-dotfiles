@@ -25,7 +25,7 @@
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs-darwin";
 
     ## Homelab
-    nixpkgs-homelab.url = "github:nixos/nixpkgs/nixos-25.11";
+    nixpkgs-homelab.url = "github:nixos/nixpkgs/nixos-26.05";
     nixpkgs-homelab-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     # climbing-lab.url = "path:/home/oven/docs/climbing-lab";
     climbing-lab.url = "github:fedeizzo/climbing-lab";
@@ -62,6 +62,8 @@
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
     authentik-nix.url = "github:nix-community/authentik-nix";
     opencode.url = "github:anomalyco/opencode";
+    nix-amd-ai.url = "github:noamsto/nix-amd-ai";
+
 
     # Wayland and niri
     stylix.url = "github:danth/stylix";
