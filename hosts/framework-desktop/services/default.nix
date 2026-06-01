@@ -14,6 +14,7 @@
     ./fedeizzo.dev
     ./fusion
     ./garmindb
+    ./gatus
     ./glance
     ./grafana
     ./hass
@@ -37,7 +38,6 @@
     # ./sunshine
     ./streaming
     ./traefik
-    ./uptime-kuma
   ];
 
   fi.services = [
@@ -408,19 +408,19 @@
       ];
     }
     {
-      name = "uptime-kuma";
-      port = (lib.strings.toInt config.services.uptime-kuma.settings.UPTIME_KUMA_PORT);
+      name = "gatus";
+      port = config.services.gatus.settings.web.port;
       dashboardSection = "Observability";
       toPersist = [
         {
-          directory = config.services.uptime-kuma.settings.DATA_DIR;
-          user = "root";
-          group = "root";
-          mode = "u=rwx,g=rx,o=";
+          directory = "/var/lib/gatus";
+          user = "gatus";
+          group = "gatus";
+          mode = "u=rwx,g=rx,o=rx";
         }
       ];
       toBackup = [
-        "/persist/var/lib/private/uptime-kuma"
+        "/persist/var/lib/gatus"
       ];
     }
     { name = "whoami"; port = config.services.whoami.port; dashboardSection = "Observability"; authType = "proxy"; }

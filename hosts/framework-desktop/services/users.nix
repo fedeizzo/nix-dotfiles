@@ -70,6 +70,9 @@
     jellyseerr.uid = 62900;
     jellyseerr.isSystemUser = true;
     jellyseerr.group = "jellyseerr";
+    gatus.uid = 63100;
+    gatus.isSystemUser = true;
+    gatus.group = "gatus";
   };
   users.groups = {
     authentik.gid = 378;
@@ -107,6 +110,7 @@
     media.gid = 1800;
     prowlarr.gid = 61654;
     jellyseerr.gid = 62900;
+    gatus.gid = 63100;
   };
 
 }
