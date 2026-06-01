@@ -82,8 +82,6 @@ jail "pi" entrypoint (with c; [
       ".pi/agent/models.json:nix-dotfiles/home/common/pi/config/agent"
       ".pi/agent/caveman.json:nix-dotfiles/home/common/pi/config/agent"
       ".pi/agent/settings.json:nix-dotfiles/home/common/pi/config/agent"
-      ".pi/piforge-self.md:nix-dotfiles/home/common/pi/config"
-      ".pi/piforge.json:nix-dotfiles/home/common/pi/config"
     )
     for pair in "''${_SYNC_PAIRS[@]}"; do
       src="''${pair%%:*}"

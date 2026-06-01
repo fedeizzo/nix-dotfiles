@@ -19,6 +19,43 @@
           "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 }
         }
       ]
+    },
+    "lemonade": {
+      "baseUrl": "https://lemonade.fedeizzo.dev/v1",
+      "api": "openai-completions",
+      "apiKey": "placeholder",
+      "compat": {
+        "supportsDeveloperRole": false,
+        "supportsReasoningEffort": false,
+        "maxTokensField": "max_tokens",
+        "stripReasoningContent": true
+      },
+      "models": [
+        {
+          "id": "Qwen3.5-0.8B-GGUF",
+          "reasoning": true,
+          "input": ["text", "image"],
+          "contextWindow": 100000,
+          "maxTokens": 8192,
+          "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 }
+        },
+        {
+          "id": "Qwen3.6-27B-MTP-GGUF",
+          "reasoning": true,
+          "input": ["text", "image"],
+          "contextWindow": 100000,
+          "maxTokens": 8192,
+          "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 }
+        },
+        {
+          "id": "Qwen3.6-35B-A3B-MTP-GGUF",
+          "reasoning": true,
+          "input": ["text", "image"],
+          "contextWindow": 100000,
+          "maxTokens": 8192,
+          "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 }
+        }
+      ]
     }
   }
 }

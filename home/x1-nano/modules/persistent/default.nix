@@ -18,6 +18,7 @@
         # AppData
         ".local"
         ".pi"
+        ".gemini"
 
         # Config
         ".config/Bitwarden"

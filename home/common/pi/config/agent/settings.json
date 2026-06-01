@@ -13,7 +13,14 @@
     "npm:@juicesharp/rpiv-todo",
     "npm:@juicesharp/rpiv-ask-user-question",
     "git:github.com/jonjonrankin/pi-caveman",
-    "npm:pi-direnv"
+    "npm:pi-direnv",
+    "npm:@juicesharp/rpiv-pi",
+    "npm:@tintinweb/pi-subagents",
+    "npm:@juicesharp/rpiv-advisor",
+    "npm:@juicesharp/rpiv-i18n",
+    "npm:@juicesharp/rpiv-web-tools",
+    "npm:@juicesharp/rpiv-args",
+    "npm:@juicesharp/rpiv-workflow"
   ],
   "compaction": {
     "enabled": true,
