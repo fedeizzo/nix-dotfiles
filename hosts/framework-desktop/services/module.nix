@@ -23,6 +23,9 @@ let
       authType = mkOption { type = (types.enum [ "proxy" "none" ]); default = "none"; };
       dashboardSection = mkOption { type = types.str; };
       dashboardIcon = mkOption { type = types.str; default = "${config.name}"; };
+      shouldMonitorUptime = mkOption { type = types.bool; default = true; };
+      shouldBehindReverseProxy = mkOption { type = types.bool; default = true; };
+      shouldBeInDashboard = mkOption { type = types.bool; default = true; };
       # for impermenance and restic
       toPersist = mkOption { type = types.listOf directory; default = [ ]; };
       toBackup = mkOption { type = types.listOf types.str; default = [ ]; };

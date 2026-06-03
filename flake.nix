@@ -63,6 +63,7 @@
     authentik-nix.url = "github:nix-community/authentik-nix";
     opencode.url = "github:anomalyco/opencode";
     nix-amd-ai.url = "github:noamsto/nix-amd-ai";
+    hermes-agent.url = "github:NousResearch/hermes-agent";
 
 
     # Wayland and niri

@@ -1,7 +1,8 @@
 { lib, config, pkgs, ... }:
 
 let
-  groupedServices = builtins.groupBy (service: toString service.isExposed) config.fi.services;
+  reverseProxiedServices = builtins.filter (service: service.shouldBehindReverseProxy) config.fi.services;
+  groupedServices = builtins.groupBy (service: toString service.isExposed) reverseProxiedServices;
 
   getHost = service: (lib.strings.concatStringsSep "." ((lib.lists.optional (service.subdomain != null) service.subdomain) ++ [ "fedeizzo.dev" ]));
 

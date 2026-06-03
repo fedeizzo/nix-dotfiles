@@ -58,6 +58,9 @@
     neo4j.uid = 289;
     neo4j.group = "neo4j";
 
+    hermes.uid = 290;
+    hermes.group = "hermes";
+
     media = {
       uid = 800;
       home = "/home/media";
@@ -106,6 +109,8 @@
     n8n.gid = 288;
 
     neo4j.gid = 289;
+
+    hermes.gid = 290;
 
     media.gid = 1800;
     prowlarr.gid = 61654;

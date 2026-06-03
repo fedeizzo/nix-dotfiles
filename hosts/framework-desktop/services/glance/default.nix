@@ -1,7 +1,8 @@
 { lib, config, pkgs-unstable, ... }:
 
 let
-  groupedServices = builtins.groupBy (service: service.dashboardSection) config.fi.services;
+  dashboardServices = builtins.filter (service: service.shouldBeInDashboard) config.fi.services;
+  groupedServices = builtins.groupBy (service: service.dashboardSection) dashboardServices;
 
   getHost = subdomain: (lib.strings.concatStringsSep "." ((lib.lists.optional (subdomain != null) subdomain) ++ [ "fedeizzo.dev" ]));
 

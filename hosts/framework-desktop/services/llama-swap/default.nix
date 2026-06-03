@@ -58,7 +58,7 @@ in
       models = {
         "qwen36-35b-a3b" = {
           env = [ "LLAMA_CACHE=/persist/models" ];
-          cmd = ''${llama-server} --port ''${PORT} -hf unsloth/Qwen3.6-35B-A3B-GGUF:UD-Q3_K_M --temp 0.6 --top-p 0.95 --min-p 0.0 --top-k 20 ${commonFlags} --presence-penalty 0.0 --frequency-penalty 1.0'';
+          cmd = ''${llama-server} --port ''${PORT} -hf unsloth/Qwen3.6-35B-A3B-MTP-GGUF:UD-Q4_K_XL ${commonFlags} --spec-type draft-mtp --spec-draft-n-max 3 --spec-draft-p-min 0.75 --temp 0.6 --top-p 0.95 --top-k 20 --min-p 0.00 --presence-penalty 0.0 --repeat-penalty 1.0'';
           aliases = [ "coding" "q3-m" ];
         };
 

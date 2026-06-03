@@ -5,6 +5,7 @@
     inputs.nix-topology.nixosModules.default
     inputs.authentik-nix.nixosModules.default
     inputs.climbing-lab.nixosModules.default
+    inputs.hermes-agent.nixosModules.default
 
     ./services
     ./system/backup.nix

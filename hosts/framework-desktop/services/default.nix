@@ -18,6 +18,7 @@
     ./glance
     ./grafana
     ./hass
+    ./hermes
     ./immich
     ./influxdb
     ./lemonade
@@ -306,6 +307,42 @@
       ];
       toBackup = [
         "/persist/var/lib/open-webui/data"
+      ];
+    }
+    {
+      name = "hermes";
+      port = 8642; # placeholder not used
+      shouldMonitorUptime = false;
+      shouldBehindReverseProxy = false;
+      shouldBeInDashboard = false;
+      toPersist = [
+        {
+          directory = "/var/lib/hermes";
+          user = "hermes";
+          group = "hermes";
+          mode = "u=rwx,g=rwx,o=";
+        }
+      ];
+      toBackup = [
+        "/persist/var/lib/hermes"
+      ];
+    }
+    {
+      name = "signal-cli";
+      port = 7583;
+      shouldMonitorUptime = false;
+      shouldBehindReverseProxy = false;
+      shouldBeInDashboard = false;
+      toPersist = [
+        {
+          directory = "/var/lib/signal-cli";
+          user = "hermes";
+          group = "hermes";
+          mode = "u=rwx,g=rwx,o=";
+        }
+      ];
+      toBackup = [
+        "/persist/var/lib/signal-cli"
       ];
     }
     {

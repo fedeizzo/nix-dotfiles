@@ -8,7 +8,7 @@ let
     "nix-dotfiles"
   ];
 
-  servicesToMonitor = builtins.filter (service: !(builtins.elem service.name servicesToExclude)) config.fi.services;
+  servicesToMonitor = builtins.filter (service: service.shouldMonitorUptime && !(builtins.elem service.name servicesToExclude)) config.fi.services;
 
   # Map services from fi.services to Gatus endpoints for monitoring
   endpoints = map (service: {

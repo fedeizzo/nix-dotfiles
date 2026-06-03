@@ -40,6 +40,8 @@ let
         }
       )
       services);
+
+  reverseProxiedServices = builtins.filter (service: service.shouldBehindReverseProxy) config.fi.services;
 in
 {
   imports = [
@@ -199,12 +201,12 @@ in
             service = "llm-provider";
             middlewares = [ ];
           };
-        } // (routersGenerator config.fi.services);
+        } // (routersGenerator reverseProxiedServices);
         services = {
           llm-provider = {
             loadBalancer = { servers = [{ url = "http://192.168.1.67:9999"; }]; };
           };
-        } // servicesGenerator config.fi.services;
+        } // servicesGenerator reverseProxiedServices;
       };
     };
   };
