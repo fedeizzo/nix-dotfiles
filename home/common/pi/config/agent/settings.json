@@ -1,7 +1,7 @@
 {
-  "lastChangelogVersion": "0.74.0",
+  "lastChangelogVersion": "0.78.0",
   "defaultProvider": "llamaswap",
-  "defaultModel": "qwen36-27b-realtime",
+  "defaultModel": "qwen27",
   "defaultThinkingLevel": "medium",
   "hideThinkingBlock": false,
   "quietStartup": false,
@@ -14,13 +14,9 @@
     "npm:@juicesharp/rpiv-ask-user-question",
     "git:github.com/jonjonrankin/pi-caveman",
     "npm:pi-direnv",
-    "npm:@juicesharp/rpiv-pi",
-    "npm:@tintinweb/pi-subagents",
-    "npm:@juicesharp/rpiv-advisor",
     "npm:@juicesharp/rpiv-i18n",
     "npm:@juicesharp/rpiv-web-tools",
-    "npm:@juicesharp/rpiv-args",
-    "npm:@juicesharp/rpiv-workflow"
+    "npm:@juicesharp/rpiv-args"
   ],
   "compaction": {
     "enabled": true,

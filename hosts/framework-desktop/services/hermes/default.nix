@@ -11,6 +11,8 @@ let
   pythonForSkills = pkgs.writeShellScriptBin "python-for-skills" ''
     exec ${skillsPythonEnv}/bin/python3 "$@"
   '';
+  # model = "ds4";
+  model = "qwen27";
 in
 {
   services.hermes-agent = {
@@ -23,10 +25,11 @@ in
 
     settings = {
       model = {
-        default = "qwen36-35b-a3b";
+        default = "${model}";
         provider = "custom";
         base_url = "https://llama.fedeizzo.dev/v1";
       };
+
       stt = {
         enabled = true;
         provider = "openai";
@@ -44,11 +47,26 @@ in
       plugins = {
         enabled = [ "hindsight" ];
       };
+
+      skills = {
+        guard_agent_created = true;
+      };
+
+      agent.disabled_toolsets = [
+        "browser_automation"
+        "video"
+        "media_generation"
+        "social"
+        "multimodal_generation"
+        "audio_output"
+        "home_assistant"
+        "computer_use"
+        "delegation"
+      ];
     };
 
     documents = {
       "SOUL.md" = ./SOUL.md;
-      # "USER.md" = ./documents/USER.md;
     };
 
     extraPackages = [ pythonForSkills ];
@@ -56,7 +74,6 @@ in
     addToSystemPackages = true;
     extraDependencyGroups = [ "hindsight" ];
 
-    # Inject proxy configuration into the Hermes environment for tool calls
     environment = {
       HTTP_PROXY = "http://127.0.0.1:3128";
       HTTPS_PROXY = "http://127.0.0.1:3128";
@@ -67,6 +84,14 @@ in
       HINDSIGHT_API_KEY = "";
       HINDSIGHT_API_URL = "https://hindsight-api.fedeizzo.dev";
       HINDSIGHT_AUTO_RETAIN = "false";
+
+      # OPTIMIZATION: Turn off telemetry and auto-indexing loops
+      # which bloat context drift across ongoing sessions.
+      HERMES_DISABLE_TELEMETRY = "true";
+      HERMES_MINIMAL_PROMPT = "true";
+      # OPTIMIZATION: Only loads tool schemas dynamically on-demand
+      # Can drop tool schema overhead from 40% of context down to 3%
+      HERMES_TOOL_MODE = "search";
     };
   };
 
@@ -130,7 +155,7 @@ in
       HINDSIGHT_API_LLM_API_KEY = "placeholder";
       HINDSIGHT_API_LLM_PROVIDER = "openai";
       HINDSIGHT_API_LLM_BASE_URL = "https://llama.fedeizzo.dev/v1";
-      HINDSIGHT_API_LLM_MODEL = "qwen-nothink";
+      HINDSIGHT_API_LLM_MODEL = "${model}-nothink";
       HINDSIGHT_API_LLM_TIMEOUT = "600";
       HINDSIGHT_API_EMBEDDINGS_PROVIDER = "openai";
       HINDSIGHT_API_EMBEDDINGS_OPENAI_BASE_URL = "https://llama.fedeizzo.dev/v1";
