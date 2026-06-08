@@ -1,7 +1,7 @@
 { pkgs-unstable, lib, inputs, pkgs, ... }:
 
 let
-  # llama-cpp = pkgs-unstable.llama-cpp-rocm;
+  rocmfp4-llama = pkgs.callPackage ./rocmfp4-llama.nix { };
   llama-cpp =
     (pkgs-unstable.llama-cpp.override {
       rocmSupport = true;
@@ -34,6 +34,7 @@ let
         ];
       });
   llama-server = lib.getExe' llama-cpp "llama-server";
+  rocmfp4-llama-server = lib.getExe' rocmfp4-llama "llama-server";
   ds4-server = lib.getExe' inputs.ds4.packages.${pkgs.system}.default "ds4-server";
 
   # Common flags shared across all model configurations.
@@ -61,11 +62,54 @@ in
           env = [ "LLAMA_CACHE=/persist/models" ];
           cmd = ''${llama-server} --port ''${PORT} -hf unsloth/Qwen3.6-35B-A3B-MTP-GGUF:UD-Q4_K_XL ${commonFlags} --spec-type draft-mtp --spec-draft-n-max 3 --spec-draft-p-min 0.75 --temp 0.6 --top-p 0.95 --top-k 20 --min-p 0.00 --presence-penalty 0.0 --repeat-penalty 1.0'';
 
-          aliases = [ "coding" "q3-m" ];
+          aliases = [ "coding" "q3-m" "qwen" ];
 
           filters = {
             setParamsByID = {
               "qwen-nothink" = {
+                chat_template_kwargs = {
+                  enable_thinking = false;
+                };
+              };
+            };
+          };
+        };
+
+        "qwen27" = {
+          env = [ "HSA_OVERRIDE_GFX_VERSION=11.5.1" "GGML_HIP_ENABLE_UNIFIED_MEMORY=1" ];
+          cmd = ''
+            ${rocmfp4-llama-server} \
+              -m /persist/models/Qwopus3.6/Qwopus3.6-27B-v2-MTP-BF16-to-ROCmFP4-STRIX_LEAN.gguf \
+              --mmproj /persist/models/Qwopus3.6/mmproj-F32.mmproj \
+              --port ''${PORT} \
+              --jinja \
+              -c 262144 \
+              -ngl 999 \
+              -fa on \
+              -dev ROCm0 \
+              -b 512 \
+              -ub 512 \
+              -t 16 \
+              -tb 32 \
+              -ctk q4_0 \
+              -ctv q4_0 \
+              --spec-type draft-mtp \
+              --spec-draft-device ROCm0 \
+              --spec-draft-ngl all \
+              --spec-draft-type-k q4_0 \
+              --spec-draft-type-v q4_0 \
+              --spec-draft-n-max 4 \
+              --spec-draft-n-min 0 \
+              --spec-draft-p-min 0.0 \
+              --spec-draft-p-split 0.10 \
+              --parallel 1 \
+              --metrics \
+              --no-mmap
+          '';
+
+          filters = {
+            setParamsByID = {
+              "qwen27-nothink" = {
                 chat_template_kwargs = {
                   enable_thinking = false;
                 };
@@ -119,11 +163,13 @@ in
           "qc" = "qwen36-35b-a3b";
           "e" = "bge-m3";
           "ds4" = "ds4";
+          "qrr" = "qwen27";
         };
 
         sets = {
           standard = "qr & qc & e";
           ds4 = "ds4 & qc & e";
+          qrr = "qrr & qc & e";
         };
       };
 
