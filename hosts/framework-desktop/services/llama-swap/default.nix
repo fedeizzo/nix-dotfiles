@@ -1,4 +1,4 @@
-{ pkgs-unstable, lib, ... }:
+{ pkgs-unstable, lib, inputs, pkgs, ... }:
 
 let
   # llama-cpp = pkgs-unstable.llama-cpp-rocm;
@@ -34,6 +34,7 @@ let
         ];
       });
   llama-server = lib.getExe' llama-cpp "llama-server";
+  ds4-server = lib.getExe' inputs.ds4.packages.${pkgs.system}.default "ds4-server";
 
   # Common flags shared across all model configurations.
   commonFlags = ''
@@ -92,6 +93,24 @@ in
             responseHeader = 600;
           };
         };
+
+        "ds4" = {
+          cmd = ''${ds4-server} --port ''${PORT} -m /persist/models/DeepSeek-V4-Flash/DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix.gguf --ctx 262144 --kv-disk-dir /tmp/ds4-kv --kv-disk-space-mb 8192'';
+          checkEndpoint = "/v1/models";
+          aliases = [ "ds4" ];
+          timeouts = {
+            responseHeader = 600;
+          };
+          filters = {
+            setParamsByID = {
+              "ds4-nothink" = {
+                chat_template_kwargs = {
+                  enable_thinking = false;
+                };
+              };
+            };
+          };
+        };
       };
 
       matrix = {
@@ -99,10 +118,12 @@ in
           "qr" = "qwen36-27b-realtime";
           "qc" = "qwen36-35b-a3b";
           "e" = "bge-m3";
+          "ds4" = "ds4";
         };
 
         sets = {
           standard = "qr & qc & e";
+          ds4 = "ds4 & qc & e";
         };
       };
 

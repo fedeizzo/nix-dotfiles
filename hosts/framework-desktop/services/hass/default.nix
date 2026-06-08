@@ -40,7 +40,7 @@ in
         (pkgs.home-assistant.python.pkgs.callPackage ./custom-components/ha-bambulab.nix { })
         (pkgs.home-assistant.python.pkgs.callPackage ./custom-components/openid.nix { })
 
-        inputs.climbing-lab.packages.${pkgs.system}.homeassistant-component
+        # inputs.climbing-lab.packages.${pkgs.system}.homeassistant-component
       ];
       customLovelaceModules = with pkgs; [
         home-assistant-custom-lovelace-modules.zigbee2mqtt-networkmap

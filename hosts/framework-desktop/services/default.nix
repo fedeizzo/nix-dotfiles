@@ -9,7 +9,7 @@
     ./authentik
     ./blocky
     ./calibre
-    ./climbing-lab
+    # ./climbing-lab
     ./docs
     ./fedeizzo.dev
     ./fusion

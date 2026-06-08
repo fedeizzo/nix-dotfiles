@@ -27,8 +27,6 @@
     ## Homelab
     nixpkgs-homelab.url = "github:nixos/nixpkgs/nixos-26.05";
     nixpkgs-homelab-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
-    # climbing-lab.url = "path:/home/oven/docs/climbing-lab";
-    climbing-lab.url = "github:fedeizzo/climbing-lab";
 
     ## Raspberry
     nixos-pikvm.url = "github:hatch01/nixos-pikvm";
@@ -64,6 +62,7 @@
     opencode.url = "github:anomalyco/opencode";
     nix-amd-ai.url = "github:noamsto/nix-amd-ai";
     hermes-agent.url = "github:NousResearch/hermes-agent";
+    ds4.url = "github:fedeizzo/ds4";
 
 
     # Wayland and niri
