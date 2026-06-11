@@ -42,20 +42,21 @@
         inputs.self.modules.homeManager.fish
         inputs.self.modules.homeManager.git
         inputs.self.modules.homeManager.starship
-        ../common/languages
-        ../common/nix-index
+        inputs.self.modules.homeManager.languages
+        inputs.self.modules.homeManager.nix-index
+        inputs.self.modules.homeManager.jail-pi
         ./modules/misc
         ./modules/nextcloud
-        ./modules/user
+        inputs.self.modules.homeManager.ssh
+        inputs.self.modules.homeManager.nix-registry
         ./modules/plasma
         ./modules/solaar
         ./modules/stylix
-        ../common/zathura
+        inputs.self.modules.homeManager.zathura
         inputs.self.modules.homeManager.zed
         inputs.self.modules.homeManager.profile-personal
 
         inputs.self.modules.homeManager.kitty
-        ../common/pi
       ];
       programs.home-manager.enable = true;
 

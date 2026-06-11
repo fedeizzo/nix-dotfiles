@@ -9,8 +9,7 @@
   };
 
   imports = [
-    # ../common/emacs
-    ../common/languages
+    inputs.self.modules.homeManager.languages
     inputs.self.modules.homeManager.direnv
     inputs.self.modules.homeManager.cli-packages
     inputs.self.modules.homeManager.jujutsu

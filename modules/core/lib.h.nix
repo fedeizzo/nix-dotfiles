@@ -1,0 +1,65 @@
+{
+  flake.lib = {
+    buildJailedPi = { pkgs, username, package, jail, persistName ? "pi", allowNetwork ? true }:
+      let
+        pi-coding-agent = package;
+        inherit (pkgs) lib;
+        c = jail.combinators;
+        entrypoint = pkgs.writeShellScriptBin "pi" ''
+          if [ -z $1 ]; then
+              ${pi-coding-agent}/bin/pi
+          else
+              eval $@
+          fi
+        '';
+      in
+      jail "pi" entrypoint (with c; [
+        (persist-home persistName)
+        (notifications)
+        (set-hostname "pi-jail")
+        (add-pkg-deps (with pkgs; [ gnugrep findutils git fd ripgrep nodejs python3 jujutsu nix direnv go golangci-lint gcc curl gnused ] ++ [ pi-coding-agent ]))
+        (try-fwd-env "LANG")
+        (try-fwd-env "LC_ALL")
+        (readwrite "/home/${username}/.pi")
+        (write-text (noescape "~/.npmrc") ''prefix = ''${HOME}/.npm-packages'')
+        (add-path "~/.npm-packages/bin")
+        (add-path "~/go/bin")
+        (set-env "NODE_PATH" (noescape "~/.npm-packages/lib/node_modules"))
+        (add-runtime ''
+          RUNTIME_ARGS+=(--bind "''${PWD}" "/home/${username}/project")
+          echo "📥 syncing pi config into jail..."
+          if ! RSYNC_OUTPUT=$(${pkgs.rsync}/bin/rsync -Pavzh /home/${username}/nix-dotfiles/modules/dev/pi/config/agent /home/${username}/.pi 2>&1); then
+            echo "❌ rsync failed (runtime):"
+            echo "''${RSYNC_OUTPUT}"
+            exit 1
+          fi
+          echo "✅ pi config synced!"
+        '')
+        (add-cleanup ''
+          echo "📤 syncing pi config back out of jail..."
+          _SYNC_PAIRS=(
+            ".pi/agent/skills:nix-dotfiles/modules/dev/pi/config/agent"
+            ".pi/agent/extensions:nix-dotfiles/modules/dev/pi/config/agent"
+            ".pi/agent/models.json:nix-dotfiles/modules/dev/pi/config/agent"
+            ".pi/agent/caveman.json:nix-dotfiles/modules/dev/pi/config/agent"
+            ".pi/agent/settings.json:nix-dotfiles/modules/dev/pi/config/agent"
+          )
+          for pair in "''${_SYNC_PAIRS[@]}"; do
+            src="''${pair%%:*}"
+            dst="''${pair##*:}"
+            label="''${src##*/}"
+            if ! RSYNC_OUTPUT=$(${pkgs.rsync}/bin/rsync -Pavzh "/home/${username}/''${src}" "/home/${username}/''${dst}" 2>&1); then
+              echo "❌ rsync failed (cleanup - ''${label}):"
+              echo "''${RSYNC_OUTPUT}"
+              exit 1
+            fi
+          done
+          echo "✅ pi config synced back!"
+        '')
+        (wrap-entry (entry: ''
+          cd /home/${username}/project
+          ${entry}
+        ''))
+      ] ++ (lib.optional allowNetwork network));
+  };
+}
