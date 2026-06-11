@@ -1,5 +1,0 @@
-action type
-prompt pass
-selector rofi
-clipboarder wl-copy
-typer wtype

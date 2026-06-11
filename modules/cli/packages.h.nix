@@ -1,5 +1,5 @@
-{ pkgs, lib, ... }: {
-  flake.modules.homeManager.cli-packages = {
+{
+  flake.modules.homeManager.cli-packages = { pkgs, lib, ... }: {
     home.packages = with pkgs; [
       eza
       fd

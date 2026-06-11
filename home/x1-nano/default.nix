@@ -55,21 +55,9 @@
         inputs.self.modules.homeManager.profile-personal
 
         inputs.self.modules.homeManager.kitty
-        ../common/opencode
         ../common/pi
-        # ../common/emacs
       ];
       programs.home-manager.enable = true;
-
-      home.packages = [
-        pkgs.gcc
-      ];
-
-      programs.jail-pi = {
-        enable = true;
-        persistName = "pi";
-        allowNetwork = true;
-      };
 
       home = {
         stateVersion = "25.05";
