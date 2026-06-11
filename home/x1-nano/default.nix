@@ -37,7 +37,7 @@
         ./modules/cli
         ./modules/desktop-environment
         ../common/firefox
-        ./modules/fish
+        inputs.self.modules.homeManager.fish
         inputs.self.modules.homeManager.git
         inputs.self.modules.homeManager.starship
         ../common/languages

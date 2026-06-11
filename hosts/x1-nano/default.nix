@@ -24,6 +24,7 @@
     ./system/sops.nix
     ./system/user.nix
     ./system/videoAudio.nix
+    inputs.self.modules.nixos.fish
     (import ../common/nh { inherit username; isMac = false; })
   ];
 }
