@@ -57,24 +57,4 @@ in
       modules = [ ../hosts/raspberry ../home/raspberry ];
     };
   };
-
-  darwinConfigurations = {
-    COMP-LNY95W42WQ = inputs.nix-darwin.lib.darwinSystem {
-      system = "aarch64-darwin";
-
-      specialArgs = rec {
-        inherit inputs;
-        hostname = "COMP-LNY95W42WQ";
-        username = "federico.izzo";
-        emacs-pkg = import inputs.emacs-pkg { system = "aarch64-darwin"; };
-        pkgs-unstable = import inputs.nixpkgs-unstable {
-          system = "aarch64-darwin";
-          config.allowUnfree = true;
-        };
-        inherit system-overlays;
-      };
-
-      modules = [ ../hosts/macbook-pro ];
-    };
-  };
 }
