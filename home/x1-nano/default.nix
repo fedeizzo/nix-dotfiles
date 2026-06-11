@@ -38,7 +38,7 @@
         ./modules/desktop-environment
         ../common/firefox
         ./modules/fish
-        ../common/git
+        inputs.self.modules.homeManager.git
         inputs.self.modules.homeManager.starship
         ../common/languages
         ../common/nix-index
