@@ -15,7 +15,7 @@
     ./modules/zsh
     inputs.self.modules.homeManager.starship
     inputs.self.modules.homeManager.git
-    ./modules/firefox
+    inputs.self.modules.homeManager.zen
     ./modules/zed
   ];
 
