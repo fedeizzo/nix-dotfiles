@@ -33,8 +33,10 @@
 
     users.${username} = {
       imports = [
-        ../common/bottom
-        ./modules/cli
+        inputs.self.modules.homeManager.bottom
+        inputs.self.modules.homeManager.cli-packages
+        inputs.self.modules.homeManager.direnv
+        inputs.self.modules.homeManager.jujutsu
         ./modules/desktop-environment
         inputs.self.modules.homeManager.zen
         inputs.self.modules.homeManager.fish
@@ -52,12 +54,22 @@
         inputs.self.modules.homeManager.zed
         inputs.self.modules.homeManager.profile-personal
 
-        ../common/kitty
+        inputs.self.modules.homeManager.kitty
         ../common/opencode
         ../common/pi
         # ../common/emacs
       ];
       programs.home-manager.enable = true;
+
+      home.packages = [
+        pkgs.gcc
+      ];
+
+      programs.jail-pi = {
+        enable = true;
+        persistName = "pi";
+        allowNetwork = true;
+      };
 
       home = {
         stateVersion = "25.05";

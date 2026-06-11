@@ -11,7 +11,9 @@
   imports = [
     # ../common/emacs
     ../common/languages
-    ./modules/cli
+    inputs.self.modules.homeManager.direnv
+    inputs.self.modules.homeManager.cli-packages
+    inputs.self.modules.homeManager.jujutsu
     inputs.self.modules.homeManager.zsh
     inputs.self.modules.homeManager.starship
     inputs.self.modules.homeManager.git
