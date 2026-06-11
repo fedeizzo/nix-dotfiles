@@ -5,7 +5,6 @@
       lfs.enable = true;
       settings = {
         user.name = "Federico Izzo";
-        user.email = if pkgs.stdenv.isDarwin then "federico.izzo@datadoghq.com" else "federico@fedeizzo.dev";
         aliases = {
           co = "checkout";
           br = "branch";

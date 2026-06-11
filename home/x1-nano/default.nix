@@ -50,6 +50,7 @@
         ./modules/stylix
         ../common/zathura
         inputs.self.modules.homeManager.zed
+        inputs.self.modules.homeManager.profile-personal
 
         ../common/kitty
         ../common/opencode

@@ -17,6 +17,7 @@
     inputs.self.modules.homeManager.git
     inputs.self.modules.homeManager.zen
     inputs.self.modules.homeManager.zed
+    inputs.self.modules.homeManager.profile-work
   ];
 
   home.packages = with pkgs; [ pngpaste ];
