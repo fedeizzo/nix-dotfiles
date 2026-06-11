@@ -3,14 +3,12 @@
 {
   imports = [
     ../../../common/cli/linux
-    ../../../common/jujutsu
+    inputs.self.modules.homeManager.jujutsu
   ];
 
   home.packages = [
     pkgs.gcc
   ];
-
-  programs.jujutsu.settings.user.email = "federico@fedeizzo.dev";
 
   programs.jail-pi = {
     enable = true;
