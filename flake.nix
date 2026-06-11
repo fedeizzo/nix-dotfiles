@@ -37,6 +37,7 @@
     git-hooks-nix.url = "github:cachix/git-hooks.nix";
     nix-topology.url = "github:oddlama/nix-topology";
     nixos-generators.url = "github:nix-community/nixos-generators";
+    import-tree.url = "github:vic/import-tree";
 
     # Installation and boot
     impermanence.url = "github:nix-community/impermanence";
@@ -81,9 +82,11 @@
       { inherit inputs; }
       {
         imports = [
+          inputs.flake-parts.flakeModules.modules
           inputs.devshell.flakeModule
           inputs.git-hooks-nix.flakeModule
           inputs.nix-topology.flakeModule
+          (inputs.import-tree ./modules)
         ];
         systems = [ "x86_64-linux" "aarch64-linux" "aarch64-darwin" ];
         perSystem = { pkgs, ... }: {

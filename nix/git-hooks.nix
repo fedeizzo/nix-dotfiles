@@ -62,6 +62,15 @@ in
           args = [ "--strict" "feat" "fix" "chore" "revert" "style" "docs" "build" "refactor" "test" "ci" "perf" ];
           stages = [ "commit-msg" ];
         };
+        validate-dendritic-aspects = {
+          enable = true;
+          name = "validate-dendritic-aspects";
+          description = "Ensures Dendritic modules adhere to the .<class>.nix naming convention.";
+          entry = "python3 scripts/validate-aspects.py";
+          files = "^modules/.*\.nix$";
+          language = "python";
+          pass_filenames = true;
+        };
       };
     };
   };
