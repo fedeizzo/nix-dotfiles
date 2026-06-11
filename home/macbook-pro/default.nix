@@ -12,11 +12,11 @@
     # ../common/emacs
     ../common/languages
     ./modules/cli
-    ./modules/zsh
+    inputs.self.modules.homeManager.zsh
     inputs.self.modules.homeManager.starship
     inputs.self.modules.homeManager.git
     inputs.self.modules.homeManager.zen
-    ./modules/zed
+    inputs.self.modules.homeManager.zed
   ];
 
   home.packages = with pkgs; [ pngpaste ];

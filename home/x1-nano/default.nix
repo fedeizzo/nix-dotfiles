@@ -49,7 +49,7 @@
         ./modules/solaar
         ./modules/stylix
         ../common/zathura
-        ./modules/zed
+        inputs.self.modules.homeManager.zed
 
         ../common/kitty
         ../common/opencode
