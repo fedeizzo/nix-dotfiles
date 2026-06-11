@@ -13,7 +13,7 @@
     ../common/languages
     ./modules/cli
     ./modules/zsh
-    ../common/starship
+    inputs.self.modules.homeManager.starship
     ./modules/firefox
     ./modules/zed
   ];

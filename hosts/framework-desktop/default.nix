@@ -20,5 +20,6 @@
     ./system/security.nix
     ./system/sops.nix
     ./system/users.nix
+    inputs.self.modules.nixos.starship
   ];
 }

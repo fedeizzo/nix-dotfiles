@@ -2,7 +2,6 @@ _:
 
 {
   programs = {
-    starship.enableZshIntegration = true;
     zsh = {
       enable = true;
       autosuggestion.enable = false;

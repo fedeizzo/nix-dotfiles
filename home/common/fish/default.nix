@@ -34,28 +34,6 @@ in
     };
   };
   config = {
-    programs.starship = {
-      enable = true;
-      enableFishIntegration = true;
-      settings = {
-        add_newline = false;
-        character = {
-          success_symbol = "[λ](green)";
-          vicmd_symbol = "[V](green)";
-          error_symbol = "[✖](red)";
-        };
-        package.disabled = true;
-        directory.truncation_length = 8;
-        cmd_duration = {
-          min_time = 20000;
-          format = "  [$duration](bold yellow)";
-        };
-        kubernetes = {
-          disabled = false;
-          symbol = "󱃾";
-        };
-      };
-    };
     programs.fish = {
       enable = true;
       shellAliases = lib.mergeAttrs commonAliases cfg.aliases;
@@ -66,7 +44,6 @@ in
         "ssh" = "TERM=xterm-256color ssh";
       };
       interactiveShellInit = ''
-        eval (${pkgs.starship}/bin/starship init fish)
         set -U __done_min_cmd_duration 120000
         set fish_color_command A3BE8C
         set fish_greeting
