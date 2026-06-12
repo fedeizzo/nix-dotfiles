@@ -43,7 +43,7 @@ in
         inherit system-overlays;
       };
 
-      modules = [ ../hosts/x1-nano ../home/x1-nano ];
+      modules = [ ../hosts/x1-nano inputs.self.modules.nixos.x1-nano ];
     };
     freezer = inputs.nixpkgs-homelab.lib.nixosSystem {
       system = "aarch64-linux";
