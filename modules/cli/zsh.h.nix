@@ -1,5 +1,5 @@
 {
-  flake.modules.homeManager.zsh = { pkgs, lib, ... }: lib.mkIf pkgs.stdenv.isDarwin {
+  flake.modules.homeManager.zsh = { pkgs, lib, config, ... }: lib.mkIf pkgs.stdenv.isDarwin {
     programs = {
       zsh = {
         enable = true;
@@ -7,7 +7,7 @@
         enableCompletion = true;
         enableVteIntegration = true;
         syntaxHighlighting.enable = true;
-        dotDir = ".config/zsh";
+        dotDir = "${config.xdg.configHome}/zsh";
         history = {
           # extended = true;
           ignoreSpace = true;

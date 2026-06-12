@@ -1,7 +1,6 @@
 { username
 , inputs
 , config
-, emacs-pkg
 , pkgs-unstable
 , ...
 }:
@@ -19,7 +18,6 @@
       inherit (config) sops;
       inherit username;
       inherit inputs;
-      inherit emacs-pkg;
       inherit pkgs-unstable;
     };
     backupFileExtension = "to_delete";

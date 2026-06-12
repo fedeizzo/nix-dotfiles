@@ -1,5 +1,5 @@
 {
-  flake.modules.darwin.home-manager = { inputs, username, emacs-pkg, pkgs-unstable, ... }: {
+  flake.modules.darwin.home-manager = { inputs, username, pkgs-unstable, ... }: {
     imports = [
       inputs.home-manager.darwinModules.home-manager
     ];
@@ -7,7 +7,7 @@
       useGlobalPkgs = true;
       useUserPackages = true;
       extraSpecialArgs = {
-        inherit username inputs emacs-pkg pkgs-unstable;
+        inherit username inputs pkgs-unstable;
       };
       backupFileExtension = "backup";
     };

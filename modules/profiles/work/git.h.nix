@@ -1,5 +1,5 @@
 {
   flake.modules.homeManager.profile-work = {
-    programs.git.userEmail = "federico.izzo@datadoghq.com";
+    programs.git.settings.user.email = "federico.izzo@datadoghq.com";
   };
 }

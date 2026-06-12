@@ -2,10 +2,8 @@
   flake.modules.darwin.macbook = { self, inputs, username, pkgs, ... }: {
     imports = with self.modules.darwin; [
       nix-core
-      user-work
       fonts
       home-manager
-      nh
     ];
 
     programs.zsh.enable = true;

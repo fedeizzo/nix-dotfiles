@@ -1,5 +1,5 @@
 {
-  flake.modules.darwin.nix-core = { system-overlays, ... }: {
+  flake.modules.darwin.nix-core = { ... }: {
     system.stateVersion = 4;
     nix = {
       enable = true;
@@ -13,7 +13,6 @@
       '';
       optimise.automatic = true;
     };
-    nixpkgs.overlays = builtins.attrValues system-overlays;
     ids.gids.nixbld = 350;
   };
 }

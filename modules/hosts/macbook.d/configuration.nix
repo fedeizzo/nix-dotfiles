@@ -5,7 +5,7 @@
     system = "aarch64-darwin";
 
     specialArgs = rec {
-      inherit inputs;
+      inherit inputs self;
       hostname = "COMP-LNY95W42WQ";
       username = "federico.izzo";
       pkgs-unstable = import inputs.nixpkgs-unstable {
