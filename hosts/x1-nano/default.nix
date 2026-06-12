@@ -19,13 +19,13 @@
     ./system/persistent.nix
     ./system/powerThermal.nix
     ./system/security.nix
-    ./system/sops.nix
     ./system/user.nix
     ./system/videoAudio.nix
     inputs.self.modules.nixos.fish
     inputs.self.modules.nixos.nh
     inputs.self.modules.nixos.nix
     inputs.self.modules.nixos.solaar
+    inputs.self.modules.nixos.sops
     inputs.self.modules.nixos.tailscale
     inputs.self.modules.nixos.wireguard
   ];

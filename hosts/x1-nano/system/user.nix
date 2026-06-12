@@ -35,6 +35,10 @@
     };
   };
 
+  sops.secrets."${username}-path" = {
+    neededForUsers = true;
+  };
+
   # services = {
   #   xserver.enable = true;
   #   displayManager.sddm.enable = true;

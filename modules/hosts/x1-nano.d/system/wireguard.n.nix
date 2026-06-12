@@ -14,5 +14,7 @@
       ip = "192.168.7.3";
       privateKeyFile = config.sops.secrets.x1-wireguard-private-key.path;
     };
+
+    sops.secrets.x1-wireguard-private-key = { };
   };
 }
