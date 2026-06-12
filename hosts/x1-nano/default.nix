@@ -9,7 +9,7 @@
     inputs.nix-topology.nixosModules.default
     (modulesPath + "/installer/scan/not-detected.nix")
 
-    ./system/bluetooth.nix
+    inputs.self.modules.nixos.bluetooth
     ./system/boot.nix
     ./system/disk.nix
     ./system/disko.nix
