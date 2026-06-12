@@ -26,5 +26,6 @@
     ./system/videoAudio.nix
     inputs.self.modules.nixos.fish
     inputs.self.modules.nixos.nh
+    inputs.self.modules.nixos.solaar
   ];
 }
