@@ -19,14 +19,8 @@
     nameservers = [ "192.168.7.1" "1.1.1.1" ];
     firewall = {
       enable = true;
-      checkReversePath = "loose";
       allowedTCPPorts = [ 2300 ];
     };
     interfaces.wlp0s20f3 = { }; # define the interface for the topology network generation
-  };
-
-  services.tailscale = {
-    enable = true;
-    extraSetFlags = [ "--netfilter-mode=nodivert" ];
   };
 }
