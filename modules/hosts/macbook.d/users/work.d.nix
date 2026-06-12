@@ -21,7 +21,7 @@
         homeDirectory = "/Users/${username}";
       };
 
-      imports = with self.module.homeManager; [
+      imports = with self.modules.homeManager; [
         languages
         direnv
         cli-packages
