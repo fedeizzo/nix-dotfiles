@@ -35,7 +35,7 @@
         inputs.self.modules.homeManager.cli-packages
         inputs.self.modules.homeManager.direnv
         inputs.self.modules.homeManager.jujutsu
-        ./modules/desktop-environment
+        inputs.self.modules.homeManager.desktop-environment
         inputs.self.modules.homeManager.zen
         inputs.self.modules.homeManager.fish
         inputs.self.modules.homeManager.git
@@ -43,13 +43,12 @@
         inputs.self.modules.homeManager.languages
         inputs.self.modules.homeManager.nix-index
         inputs.self.modules.homeManager.jail-pi
-        ./modules/misc
-        ./modules/nextcloud
+        inputs.self.modules.homeManager.misc
+        inputs.self.modules.homeManager.nextcloud
         inputs.self.modules.homeManager.ssh
         inputs.self.modules.homeManager.nix-registry
-        ./modules/plasma
-        ./modules/solaar
-        ./modules/stylix
+        inputs.self.modules.homeManager.solaar
+        inputs.self.modules.homeManager.stylix
         inputs.self.modules.homeManager.zathura
         inputs.self.modules.homeManager.zed
         inputs.self.modules.homeManager.profile-personal

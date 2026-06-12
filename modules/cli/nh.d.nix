@@ -1,5 +1,5 @@
 {
-  flake.modules.darwin.nh = { username, ... }: {
+  flake.modules.nixos.nh = { username, ... }: {
     programs.nh = {
       enable = true;
       clean.enable = true;
