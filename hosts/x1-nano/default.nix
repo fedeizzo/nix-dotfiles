@@ -5,14 +5,13 @@
     inputs.impermanence.nixosModules.impermanence
     inputs.home-manager.nixosModules.home-manager
     inputs.sops-nix.nixosModules.sops
-    inputs.disko.nixosModules.disko
     inputs.nix-topology.nixosModules.default
     (modulesPath + "/installer/scan/not-detected.nix")
 
     inputs.self.modules.nixos.bluetooth
     ./system/boot.nix
     ./system/disk.nix
-    ./system/disko.nix
+    inputs.self.modules.nixos.disko-x1-nano
     ./system/environment.nix
     ./system/hardware.nix
     ./system/keyboardKeymapFont.nix
