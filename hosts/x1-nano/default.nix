@@ -12,9 +12,9 @@
     inputs.self.modules.nixos.boot
     ./system/disk.nix
     inputs.self.modules.nixos.disko-x1-nano
-    ./system/environment.nix
-    ./system/hardware.nix
-    ./system/keyboardKeymapFont.nix
+    inputs.self.modules.nixos.environment
+    inputs.self.modules.nixos.hardware
+    inputs.self.modules.nixos.misc
     ./system/networking.nix
     ./system/persistent.nix
     ./system/powerThermal.nix
