@@ -45,9 +45,6 @@
     deploy-rs.url = "github:serokell/deploy-rs";
 
     # Misc
-    emacs-pkg.url = "github:nixos/nixpkgs/b805fe3d6f3e702ecee01710ee552e3ed39d16c8";
-    emacs-lsp-booster.url = "github:slotThe/emacs-lsp-booster-flake";
-    emacs-lsp-booster.inputs.nixpkgs.follows = "nixpkgs";
     nh.url = "github:nix-community/nh";
     nix-index-database.url = "github:nix-community/nix-index-database";
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
@@ -55,11 +52,9 @@
     nur.inputs.nixpkgs.follows = "nixpkgs";
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
     authentik-nix.url = "github:nix-community/authentik-nix";
-    opencode.url = "github:anomalyco/opencode";
     nix-amd-ai.url = "github:noamsto/nix-amd-ai";
     hermes-agent.url = "github:NousResearch/hermes-agent";
     ds4.url = "github:fedeizzo/ds4";
-
 
     # Wayland and niri
     stylix.url = "github:danth/stylix";

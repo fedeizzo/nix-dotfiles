@@ -2,7 +2,6 @@
 
 let
   system-overlays = {
-    emacs-lsp-booster = inputs.emacs-lsp-booster.overlays.default;
     default = import ../../../overlays {
       inherit inputs;
     };
