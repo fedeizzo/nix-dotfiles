@@ -28,23 +28,7 @@ in
         ../hosts/framework-desktop
       ];
     };
-    oven = inputs.nixpkgs.lib.nixosSystem rec{
-      system = "x86_64-linux";
 
-      specialArgs = rec {
-        inherit inputs;
-        hostname = "oven";
-        username = "oven";
-        pkgs-unstable = import inputs.nixpkgs-unstable {
-          inherit system;
-          config.allowUnfree = true;
-        };
-
-        inherit system-overlays;
-      };
-
-      modules = [ ../hosts/x1-nano inputs.self.modules.nixos.x1-nano ];
-    };
     freezer = inputs.nixpkgs-homelab.lib.nixosSystem {
       system = "aarch64-linux";
       specialArgs = {
