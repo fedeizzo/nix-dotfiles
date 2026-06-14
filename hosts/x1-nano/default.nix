@@ -9,7 +9,7 @@
     (modulesPath + "/installer/scan/not-detected.nix")
 
     inputs.self.modules.nixos.bluetooth
-    ./system/boot.nix
+    inputs.self.modules.nixos.boot
     ./system/disk.nix
     inputs.self.modules.nixos.disko-x1-nano
     ./system/environment.nix
