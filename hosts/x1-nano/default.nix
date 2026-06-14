@@ -2,13 +2,13 @@
 
 {
   imports = [
-    inputs.home-manager.nixosModules.home-manager
     (modulesPath + "/installer/scan/not-detected.nix")
 
     inputs.self.modules.nixos.bluetooth
     inputs.self.modules.nixos.boot
     inputs.self.modules.nixos.disk
     inputs.self.modules.nixos.disko-x1-nano
+    inputs.self.modules.nixos.desktop-environment
     inputs.self.modules.nixos.environment
     inputs.self.modules.nixos.hardware
     inputs.self.modules.nixos.misc
@@ -16,7 +16,7 @@
     inputs.self.modules.nixos.persistent
     inputs.self.modules.nixos.power
     ./system/security.nix
-    ./system/user.nix
+    inputs.self.modules.nixos.user
     inputs.self.modules.nixos.media
     inputs.self.modules.nixos.fish
     inputs.self.modules.nixos.nh

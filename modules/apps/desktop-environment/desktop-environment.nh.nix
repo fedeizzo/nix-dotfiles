@@ -1,4 +1,40 @@
 {
+  flake.modules.nixos.desktop-environment = { inputs, pkgs, ... }: {
+    imports = [
+      inputs.dms.nixosModules.greeter
+    ];
+    programs.dank-material-shell.greeter = {
+      enable = true;
+      compositor.name = "niri";
+      compositor.customConfig = ''
+        hotkey-overlay {
+          skip-at-startup
+        }
+        environment {
+          DMS_RUN_GREETER "1"
+        }
+        gestures {
+          hot-corners {
+            off
+          }
+        }
+        layout {
+          background-color "#000000"
+        }
+      '';
+      logs = {
+        save = true;
+        path = "/tmp/dms-greeter.log";
+      };
+    };
+    programs.dconf.enable = true;
+    environment.pathsToLink = [ "/share/applications" "/share/xdg-desktop-portal" ];
+    programs.niri = {
+      enable = true;
+      package = pkgs.niri-unstable;
+    };
+  };
+
   flake.modules.homeManager.desktop-environment = { pkgs, config, username, pkgs-unstable, ... }: {
     programs.niri = {
       enable = true;
