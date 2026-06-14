@@ -1,5 +1,5 @@
 {
-  flake.modules.nixos.streaming = { pkgs, config, ... }: {
+  flake.modules.nixos.streaming = { pkgs, config, lib, ... }: {
     environment.systemPackages = with pkgs; [
       jellyfin
       jellyfin-web
@@ -39,6 +39,8 @@
         dataDir = "/games/jellyfin/torrent";
       };
     };
+    systemd.services.sonarr.serviceConfig.ProtectHome = lib.mkForce false;
+    systemd.services.radarr.serviceConfig.ProtectHome = lib.mkForce false;
 
     nixpkgs.overlays = with pkgs; [
       (
