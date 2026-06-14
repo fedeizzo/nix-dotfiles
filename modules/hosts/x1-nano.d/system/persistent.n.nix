@@ -65,11 +65,6 @@
           ".cache/zen"
           ".cache/Nextcloud"
           ".cache/DankMaterialShell"
-
-          # plasma
-          ".config/kde.org"
-          ".config/plasma-workspace"
-          ".config/xsettingsd"
         ];
         files = [
           # Personal files

@@ -15,7 +15,6 @@
       };
       backupFileExtension = "to_delete";
       sharedModules = [
-        inputs.plasma-manager.homeModules.plasma-manager
         inputs.niri.homeModules.niri
         inputs.dms.homeModules.dank-material-shell
         inputs.dms.homeModules.niri
