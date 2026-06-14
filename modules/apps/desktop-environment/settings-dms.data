@@ -2,15 +2,11 @@
 
 {
   settings = {
-    currentThemeName = "blue";
     currentThemeCategory = "generic";
-    customThemeFile = "";
     registryThemeVariants = { };
     matugenScheme = "scheme-tonal-spot";
     runUserMatugenTemplates = true;
     matugenTargetMonitor = "";
-    popupTransparency = 1;
-    dockTransparency = 1;
     widgetBackgroundColor = "sch";
     widgetColorMode = "default";
     controlCenterTileColorMode = "primary";
@@ -266,8 +262,6 @@
     launcherLogoBrightness = 0.5;
     launcherLogoContrast = 1;
     launcherLogoSizeOffset = 0;
-    fontFamily = "Inter Variable";
-    monoFontFamily = "Fira Code";
     fontWeight = 400;
     fontScale = 1;
     notepadUseMonospace = true;
@@ -586,12 +580,9 @@
   session = {
     isLightMode = false;
     doNotDisturb = false;
-    wallpaperPath = "";
     perMonitorWallpaper = false;
     monitorWallpapers = { };
     perModeWallpaper = false;
-    wallpaperPathLight = "";
-    wallpaperPathDark = "";
     monitorWallpapersLight = { };
     monitorWallpapersDark = { };
     monitorWallpaperFillModes = { };

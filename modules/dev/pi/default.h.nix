@@ -1,4 +1,7 @@
 {
+  flake-file.inputs.jail-nix.url   = "sourcehut:~alexdavid/jail.nix";
+  flake-file.inputs.llm-agents.url = "github:numtide/llm-agents.nix";
+
   flake.modules.homeManager.jail-pi = { pkgs, lib, inputs, config, username, ... }:
   let
     cfg = config.programs.jail-pi;

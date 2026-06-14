@@ -1,4 +1,6 @@
 {
+  flake-file.inputs.zen-browser.url = "github:0xc000022070/zen-browser-flake";
+
   flake.modules.homeManager.zen = { pkgs, lib, inputs, ... }: {
     imports = [
       inputs.zen-browser.homeModules.beta

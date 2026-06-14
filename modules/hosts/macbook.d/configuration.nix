@@ -1,6 +1,11 @@
 { inputs, self, ... }:
 
 {
+  flake-file.inputs.nixpkgs-darwin.url = "github:nixos/nixpkgs/nixpkgs-26.05-darwin";
+  flake-file.inputs.nix-darwin.url     = "github:LnL7/nix-darwin/nix-darwin-26.05";
+  flake-file.inputs.nix-darwin.inputs.nixpkgs.follows = "nixpkgs-darwin";
+
+
   flake.darwinConfigurations.COMP-LNY95W42WQ = inputs.nix-darwin.lib.darwinSystem {
     system = "aarch64-darwin";
 

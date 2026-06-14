@@ -9,14 +9,15 @@ let
   };
 in
 {
-  flake.nixosConfigurations.homelab = inputs.nixpkgs-homelab.lib.nixosSystem rec {
+  flake-file.inputs.hermes-agent.url             = "github:NousResearch/hermes-agent";
+  flake.nixosConfigurations.homelab = inputs.nixpkg.lib.nixosSystem rec {
     system = "x86_64-linux";
 
     specialArgs = {
       inherit inputs self;
       hostname = "homelab";
       username = "homelab";
-      pkgs-unstable = import inputs.nixpkgs-homelab-unstable { inherit system; };
+      pkgs-unstable = import inputs.nixpkgs-unstable { inherit system; };
       inherit system-overlays;
     };
 

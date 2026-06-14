@@ -1,4 +1,6 @@
 {
+  flake-file.inputs.ds4.url = "github:fedeizzo/ds4";
+
   flake.modules.nixos.llama-swap = { pkgs-unstable, lib, inputs, pkgs, config, ... }:
     let
       rocmfp4-llama = pkgs.callPackage ({ pkgs, ... }:

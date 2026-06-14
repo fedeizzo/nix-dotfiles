@@ -1,4 +1,7 @@
 {
+  # nixos-hardware also declared in framework-desktop/system/hardware.n.nix — flake-file merges them
+  flake-file.inputs.nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+
   flake.modules.nixos.x1-nano = { inputs, pkgs, ... }: {
     hardware = {
       trackpoint = {
@@ -24,7 +27,6 @@
     };
 
     environment.sessionVariables = { LIBVA_DRIVER_NAME = "iHD"; }; # Force intel-media-driver
-    programs.light.enable = true;
 
     powerManagement.powertop.enable = true;
     powerManagement.cpuFreqGovernor = "powersave";

@@ -1,4 +1,7 @@
 {
+  flake-file.inputs.solaar.url = "github:Svenum/Solaar-Flake/main";
+  flake-file.inputs.solaar.inputs.nixpkgs.follows = "nixpkgs";
+
   flake.modules.nixos.solaar = { pkgs, inputs, ... }: {
     imports = [ inputs.solaar.nixosModules.default ];
 

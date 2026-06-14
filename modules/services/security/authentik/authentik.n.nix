@@ -1,4 +1,6 @@
 {
+  flake-file.inputs.authentik-nix.url = "github:nix-community/authentik-nix";
+
   flake.modules.nixos.authentik = { config, lib, ... }: {
     services = {
       authentik = {

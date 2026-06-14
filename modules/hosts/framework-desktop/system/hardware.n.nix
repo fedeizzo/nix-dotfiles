@@ -1,4 +1,7 @@
 {
+  flake-file.inputs.nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+  flake-file.inputs.nix-amd-ai.url     = "github:noamsto/nix-amd-ai";
+
   flake.modules.nixos.framework-desktop = { inputs, pkgs, lib, config, pkgs-unstable, ... }: {
     imports = [
       inputs.nixos-hardware.nixosModules.framework-desktop-amd-ai-max-300-series

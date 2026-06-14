@@ -1,4 +1,7 @@
 {
+  flake-file.inputs.disko.url = "github:nix-community/disko";
+  flake-file.inputs.disko.inputs.nixpkgs.follows = "nixpkgs";
+
   flake.modules.nixos.framework-desktop = { lib, inputs, pkgs, ... }:
     let
       mtime = "7"; # weekly cleanup

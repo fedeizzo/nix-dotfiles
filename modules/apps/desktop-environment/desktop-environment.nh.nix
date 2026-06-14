@@ -1,4 +1,8 @@
 {
+  flake-file.inputs.niri.url                = "github:sodiboo/niri-flake";
+  flake-file.inputs.dms.url                 = "github:AvengeMedia/DankMaterialShell/stable";
+  flake-file.inputs.dms-plugin-registry.url = "github:AvengeMedia/dms-plugin-registry";
+
   flake.modules.nixos.desktop-environment = { inputs, pkgs, ... }: {
     imports = [
       inputs.dms.nixosModules.greeter

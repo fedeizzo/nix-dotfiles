@@ -1,5 +1,9 @@
 {
-  flake.modules.nixos.x1-nano = { inputs, pkgs, ... }:
+  flake-file.inputs.stylix = {
+    url              = "github:nix-community/stylix/release-26.05";
+    inputs.nixpkgs.follows = "nixpkgs";
+  };
+  flake.modules.nixos.x1-nano = { inputs, pkgs,  ... }:
     let
       myFonts = [
         pkgs.nerd-fonts.ubuntu
@@ -53,13 +57,19 @@
       ];
     };
 
-  flake.modules.homeManager.stylix = {
-    stylix.targets = {
+  flake.modules.homeManager.stylix = { lib, ...}: {
+    programs.neovide.enable = lib.mkForce false;
+    stylix = {
+      enable = true;
+      autoEnable = false;
+    targets = {
       firefox.enable = true;
       firefox.profileNames = [ "fedeizzo" ];
       fish.enable = true;
       fzf.enable = true;
       gtk.enable = true;
+      dank-material-shell.enable = true;
+    };
     };
   };
 }

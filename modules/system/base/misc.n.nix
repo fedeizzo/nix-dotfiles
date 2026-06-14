@@ -1,4 +1,7 @@
 {
+  flake-file.inputs.nur.url = "github:nix-community/NUR";
+  flake-file.inputs.nur.inputs.nixpkgs.follows = "nixpkgs";
+
   flake.modules.nixos.misc = { inputs, ... }: {
     imports = [ inputs.nur.modules.nixos.default ];
 

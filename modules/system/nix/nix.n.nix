@@ -1,4 +1,6 @@
 {
+  flake-file.inputs.nix-topology.url = "github:oddlama/nix-topology";
+
   flake.modules.nixos.nix = { pkgs, pkgs-unstable, system-overlays, inputs, ... }: {
     nixpkgs = {
       overlays = builtins.attrValues system-overlays ++ [
