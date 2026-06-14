@@ -25,20 +25,13 @@
         curl
         bc
         killall
-        neofetch
+        fastfetch
         wget
         git
         highlight
       ];
     };
 
-    virtualisation.oci-containers.backend = "docker";
-    virtualisation = {
-      docker = {
-        enable = true;
-        enableOnBoot = true;
-      };
-      podman.enable = false;
-    };
+
   };
 }

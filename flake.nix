@@ -90,12 +90,6 @@
         flake = {
           imports = [
             (import ./nix/packages.nix { inherit inputs self; system = "x86_64-linux"; })
-            (import ./nix/nixosConfigurations.nix { inherit inputs; })
-            (import ./nix/deployment.nix {
-              inherit inputs;
-              homelab-configuration = (import ./nix/nixosConfigurations.nix { inherit inputs; }).nixosConfigurations.homelab;
-              rasp-configuration = (import ./nix/nixosConfigurations.nix { inherit inputs; }).nixosConfigurations.rasp;
-            })
           ];
           checks = builtins.mapAttrs (_system: deployLib: deployLib.deployChecks self.deploy) inputs.deploy-rs.lib;
         };

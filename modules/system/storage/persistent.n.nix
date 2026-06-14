@@ -18,7 +18,6 @@
         "/var/lib/systemd/timers"
       ];
       files = [
-        "/etc/adjtime"
         "/etc/machine-id"
       ];
     };

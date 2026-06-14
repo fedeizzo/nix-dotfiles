@@ -123,6 +123,17 @@
       '';
     in
     {
+      imports = [
+        (inputs.nixpkgs-unstable + "/nixos/modules/services/networking/llama-swap.nix")
+      ];
+      nixpkgs.overlays = [
+        (_: _: {
+          inherit (inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}) llama-swap llama-rocm;
+        })
+      ];
+      disabledModules = [
+        "services/networking/llama-swap.nix"
+      ];
       services.llama-swap = {
         enable = true;
         port = 11435;

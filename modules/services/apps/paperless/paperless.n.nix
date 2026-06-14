@@ -1,5 +1,16 @@
 {
-  flake.modules.nixos.paperless = { config, lib, pkgs, ... }: {
+  flake.modules.nixos.paperless = { config, lib, pkgs, inputs, ... }: {
+    imports = [
+      (inputs.nixpkgs-unstable + "/nixos/modules/services/misc/paperless.nix")
+    ];
+    nixpkgs.overlays = [
+      (_: _: {
+        inherit (inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}) paperless;
+      })
+    ];
+    disabledModules = [
+      "services/misc/paperless.nix"
+    ];
     services.paperless = {
       enable = true;
       address = "0.0.0.0";

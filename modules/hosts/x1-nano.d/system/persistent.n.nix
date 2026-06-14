@@ -5,6 +5,7 @@
         "/var/lib/bluetooth"
         "/var/lib/libvirt"
         "/var/lib/fprint"
+        "/var/lib/tailscale"
         "/var/lib/dms-greeter"
       ];
       files = [
