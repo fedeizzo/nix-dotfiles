@@ -12,10 +12,10 @@
     inputs.self.modules.nixos.environment
     inputs.self.modules.nixos.hardware
     inputs.self.modules.nixos.misc
-    ./system/networking.nix
+    inputs.self.modules.nixos.networking
     inputs.self.modules.nixos.persistent
     inputs.self.modules.nixos.power
-    ./system/security.nix
+    inputs.self.modules.nixos.security
     inputs.self.modules.nixos.user
     inputs.self.modules.nixos.media
     inputs.self.modules.nixos.fish
