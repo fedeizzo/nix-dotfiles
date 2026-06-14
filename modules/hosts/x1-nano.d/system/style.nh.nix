@@ -6,9 +6,8 @@
   flake.modules.nixos.x1-nano = { inputs, pkgs,  ... }:
     let
       myFonts = [
-        pkgs.nerd-fonts.ubuntu
-        pkgs.nerd-fonts.jetbrains-mono
-        pkgs.nerd-fonts.ubuntu-sans
+        pkgs.inter
+        pkgs.fira-code
         pkgs.font-awesome
         pkgs.joypixels
         pkgs.emacs-all-the-icons-fonts
@@ -22,7 +21,7 @@
       stylix = {
         enable = true;
         autoEnable = false;
-        base16Scheme = "${pkgs.base16-schemes}/share/themes/nord.yaml";
+        base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-frappe.yaml";
         image = ../../../../assets/wallpaper.png;
         fonts = {
           packages = myFonts;
@@ -33,16 +32,16 @@
             terminal = 12;
           };
           serif = {
-            package = pkgs.nerd-fonts.ubuntu;
-            name = "Ubuntu Nerd Font";
+            package = pkgs.inter;
+            name = "Inter Variable";
           };
           monospace = {
-            package = pkgs.nerd-fonts.jetbrains-mono;
-            name = "JetBrainsMono Nerd Font";
+            package = pkgs.fira-code;
+            name = "Fira Code";
           };
           sansSerif = {
-            package = pkgs.nerd-fonts.ubuntu-sans;
-            name = "UbuntuSans Nerd Font";
+            package = pkgs.inter;
+            name = "Inter Variable";
           };
         };
         targets = {

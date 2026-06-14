@@ -33,7 +33,7 @@
         "zed-react-ts-snippets"
         "rust"
         "rust-snippets"
-        "nord"
+        "catppuccin"
         "bearded-icon-theme"
       ];
       userSettings = {

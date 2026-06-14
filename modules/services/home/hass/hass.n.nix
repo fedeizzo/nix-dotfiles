@@ -37,20 +37,20 @@
         ];
         customComponents = with pkgs; [
           pkgs-unstable.home-assistant-custom-components.garmin_connect
-          (pkgs.home-assistant.python.pkgs.callPackage ({ buildHomeAssistantComponent, fetchFromGitHub, cloudscraper, beautifulsoup4, ... }:
+          (pkgs.python314Packages.callPackage ({ buildHomeAssistantComponent, fetchFromGitHub, cloudscraper, beautifulsoup4, ... }:
             buildHomeAssistantComponent rec {
               owner = "greghesp";
               domain = "bambu_lab";
               version = "2.1.17";
-              src = fetchFromGitHub { inherit owner; repo = "ha-bambulab"; tag = "v\${version}"; hash = "sha256-6yKwPZcp29BAlOcqN1n+rSEkohuVgwa7xJW4H/5MsxM="; };
+              src = fetchFromGitHub { inherit owner; repo = "ha-bambulab"; tag = "v${version}"; hash = "sha256-6yKwPZcp29BAlOcqN1n+rSEkohuVgwa7xJW4H/5MsxM="; };
               dependencies = [ cloudscraper beautifulsoup4 ];
             }) { })
-          (pkgs.home-assistant.python.pkgs.callPackage ({ buildHomeAssistantComponent, fetchFromGitHub, ... }:
+          (pkgs.python314Packages.callPackage ({ buildHomeAssistantComponent, fetchFromGitHub, ... }:
             buildHomeAssistantComponent rec {
               owner = "cavefire";
               domain = "openid";
               version = "1.1.8";
-              src = fetchFromGitHub { inherit owner; repo = "hass-\${domain}"; tag = "\${version}"; hash = "sha256-aHb/zXi+p/hWcOtoZ8orF/MmPQrSqidk2mtPqxc9o8I="; };
+              src = fetchFromGitHub { inherit owner; repo = "hass-${domain}"; tag = "${version}"; hash = "sha256-aHb/zXi+p/hWcOtoZ8orF/MmPQrSqidk2mtPqxc9o8I="; };
               dependencies = [ ];
             }) { })
 

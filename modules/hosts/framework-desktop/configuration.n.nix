@@ -10,7 +10,7 @@ let
 in
 {
   flake-file.inputs.hermes-agent.url             = "github:NousResearch/hermes-agent";
-  flake.nixosConfigurations.homelab = inputs.nixpkg.lib.nixosSystem rec {
+  flake.nixosConfigurations.homelab = inputs.nixpkgs.lib.nixosSystem rec {
     system = "x86_64-linux";
 
     specialArgs = {
