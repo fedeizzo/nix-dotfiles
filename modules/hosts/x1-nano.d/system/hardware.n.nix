@@ -14,8 +14,20 @@
         wireless.enable = true;
         wireless.enableGraphical = true;
       };
+      graphics = {
+        extraPackages = [
+          pkgs.intel-media-driver
+          pkgs.libva-vdpau-driver
+          pkgs.libvdpau-va-gl
+        ];
+      };
     };
 
+    environment.sessionVariables = { LIBVA_DRIVER_NAME = "iHD"; }; # Force intel-media-driver
+    programs.light.enable = true;
+
+    powerManagement.powertop.enable = true;
+    powerManagement.cpuFreqGovernor = "powersave";
     zramSwap.enable = true;
 
     # https://nicholaslyz.com/blog/2024/04/29/how-to-undervolt-a-laptop-with-nixos/
