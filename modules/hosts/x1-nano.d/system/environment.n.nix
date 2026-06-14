@@ -1,7 +1,5 @@
-{ pkgs, ... }:
-
 {
-  flake.modules.nixos.x1-nano = {
+  flake.modules.nixos.x1-nano = { pkgs, ... }: {
     programs.localsend = {
       enable = true;
       openFirewall = true;

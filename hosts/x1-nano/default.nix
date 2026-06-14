@@ -16,7 +16,7 @@
     inputs.self.modules.nixos.hardware
     inputs.self.modules.nixos.misc
     ./system/networking.nix
-    ./system/persistent.nix
+    inputs.self.modules.nixos.persistent
     ./system/powerThermal.nix
     ./system/security.nix
     ./system/user.nix

@@ -8,6 +8,8 @@
       nix-ld.enable = true;
     };
 
+    documentation.man.generateCaches = false;
+
     environment = {
       shells = [ pkgs.bash ];
       variables = {
