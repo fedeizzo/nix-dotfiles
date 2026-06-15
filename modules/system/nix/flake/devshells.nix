@@ -128,6 +128,7 @@
         gopls
         mdbook
         python3
+        just
       ] ++ config.pre-commit.settings.enabledPackages;
 
       devshell.startup.pre-commit-hooks.text = config.pre-commit.installationScript;

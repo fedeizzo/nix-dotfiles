@@ -24,3 +24,11 @@ docs/book/
 .think/
 .think
 .antigravitycli
+
+# pan
+**/pan.log
+**/.env
+**/.matrix-data
+modules/services/pan/pan
+modules/services/ai-workflows/pan/pan
+config.yaml

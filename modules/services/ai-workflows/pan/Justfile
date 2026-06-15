@@ -1,0 +1,33 @@
+# The default recipe
+default: build
+
+# Build the project
+build:
+	go build -tags goolm -o pan .
+
+# Run the project
+run:
+	go run -tags goolm main.go
+
+# Run tests
+test:
+	go test -tags goolm ./...
+
+# Start Jaeger locally via Docker with Dark Mode
+jaeger:
+	docker run -d --rm --name jaeger \
+		-p 16686:16686 \
+		-p 4317:4317 \
+		-p 4318:4318 \
+		-p 5778:5778 \
+		-p 9411:9411 \
+		jaegertracing/jaeger:latest
+
+
+# Stop and remove the Jaeger container
+jaeger-stop:
+	docker stop jaeger || true
+
+# Tidy Go modules
+tidy:
+	go mod tidy

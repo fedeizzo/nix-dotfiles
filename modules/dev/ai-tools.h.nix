@@ -18,6 +18,7 @@
       annot
       agent-deck
       tuicr
+      codegraph
     ];
   };
 }

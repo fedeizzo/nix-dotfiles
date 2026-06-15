@@ -21,6 +21,12 @@
             systemctl kill -s HUP auditd
           '';
         };
+        "/var/log/pan/pan.log" = {
+          size = "10M";
+          rotate = 5;
+          missingok = true;
+          notifempty = true;
+        };
       };
     };
   };

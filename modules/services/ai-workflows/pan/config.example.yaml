@@ -1,0 +1,58 @@
+# Sample Configuration for Pan
+
+models:
+  name: "qwen"
+  openai_api_key: "placeholder"
+  openai_base_url: "https://llama.fedeizzo.dev/v1"
+
+fastmail:
+  api_file: ""
+
+lunchmoney:
+  api_file: ""
+
+fusion:
+  endpoint: ""
+  password_file: ""
+
+interface:
+  type: ""
+
+matrix:
+  homeserver: ""
+  user: ""
+  password_file: ""
+  allowed_user: ""
+  allowed_room: ""
+  data_dir: ""
+  notification_room: ""
+  message_retention: "" # e.g. "24h" or "168h" (optional, leave empty to disable)
+
+log:
+  path: "pan.log"
+  level: "info"
+
+telemetry:
+  port: "8080"
+
+hindsight:
+  url: "path"
+  api_key: ""
+  bank_id: "pan"
+
+jobs:
+  - name: "morning_email"
+    spec: "0 8 * * *"
+    condition: "fastmail:has_unread"
+    runner: "email"
+    prompt: "Good morning! Please check my unread emails and provide a brief summary of anything urgent."
+  - name: "transaction_review"
+    spec: "*/5 10-17 * * *"
+    condition: "lunchmoney:has_unreviewed"
+    runner: "lunchmoney"
+    prompt: "Get latest lunchmoney transaction and review it."
+  - name: "fusion_triage"
+    spec: "0 8 * * *"
+    condition: "fusion:has_unread"
+    runner: "fusion"
+    prompt: "Please fetch my latest unread RSS feeds, triage them, and present a summary."

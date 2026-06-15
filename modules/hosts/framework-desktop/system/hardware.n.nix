@@ -1,14 +1,12 @@
 {
   flake-file.inputs.nixos-hardware.url = "github:NixOS/nixos-hardware/master";
-  flake-file.inputs.nix-amd-ai.url     = "github:noamsto/nix-amd-ai";
+  flake-file.inputs.nix-amd-ai.url = "github:noamsto/nix-amd-ai";
 
   flake.modules.nixos.framework-desktop = { inputs, pkgs, lib, config, pkgs-unstable, ... }: {
     imports = [
       inputs.nixos-hardware.nixosModules.framework-desktop-amd-ai-max-300-series
     ];
 
-    systemd.services.jellyfin.environment.LIBVA_DRIVER_NAME = "iHD"; # Or "i965" if using older driver
-    environment.sessionVariables = { LIBVA_DRIVER_NAME = "iHD"; }; # Same here
     hardware = {
       bluetooth = {
         enable = false;
