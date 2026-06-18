@@ -30,6 +30,7 @@
         zen
         zed
         profile-work
+        ai-tools
       ];
 
       home.packages = with pkgs; [ pngpaste ];
