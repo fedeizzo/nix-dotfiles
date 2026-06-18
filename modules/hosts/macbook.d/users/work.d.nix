@@ -4,6 +4,7 @@
       nix-core
       fonts
       home-manager
+      ai-tools
     ];
 
     programs.zsh.enable = true;
