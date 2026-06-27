@@ -145,14 +145,14 @@
 
           models = {
             "qwen36-35b-a3b" = {
-              env = [ "LLAMA_CACHE=/persist/models" ];
+              env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
               cmd = ''${llama-server} --port ''${PORT} -hf unsloth/Qwen3.6-35B-A3B-MTP-GGUF:UD-Q4_K_XL ${commonFlags} --spec-type draft-mtp --spec-draft-n-max 3 --spec-draft-p-min 0.75 --temp 0.6 --top-p 0.95 --top-k 20 --min-p 0.00 --presence-penalty 0.0 --repeat-penalty 1.0'';
               aliases = [ "coding" "q3-m" "qwen" ];
               filters.setParamsByID."qwen-nothink".chat_template_kwargs.enable_thinking = false;
             };
 
             "qwen27" = {
-              env = [ "HSA_OVERRIDE_GFX_VERSION=11.5.1" "GGML_HIP_ENABLE_UNIFIED_MEMORY=1" ];
+              env = [ "HSA_OVERRIDE_GFX_VERSION=11.5.1" "GGML_HIP_ENABLE_UNIFIED_MEMORY=1" "GPU_MAX_HW_QUEUES=1" ];
               cmd = ''
                 ${rocmfp4-llama-server} \
                   -m /persist/models/Qwopus3.6/Qwopus3.6-27B-v2-MTP-BF16-to-ROCmFP4-STRIX_LEAN.gguf \
@@ -186,24 +186,25 @@
             };
 
             "qwen3-embedding" = {
-              env = [ "LLAMA_CACHE=/persist/models" ];
+              env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
               cmd = ''${llama-server} --port ''${PORT} -hf Qwen/Qwen3-Embedding-8B-GGUF --embedding --pooling last -ub 8192'';
             };
 
             "bge-m3" = {
-              env = [ "LLAMA_CACHE=/persist/models" ];
+              env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
               cmd = ''${llama-server} --port ''${PORT} -hf ggml-org/bge-m3-Q8_0-GGUF --embedding -ub 8192'';
               aliases = [ "embedding" ];
             };
 
             "qwen36-27b-realtime" = {
-              env = [ "LLAMA_CACHE=/persist/models" ];
+              env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
               cmd = ''${llama-server} --port ''${PORT} -hf unsloth/Qwen3.6-27B-GGUF:UD-Q4_K_XL -hfd unsloth/Qwen3.5-0.8B-GGUF:UD-Q4_K_XL --temp 1.0 --top-p 0.95 --min-p 0.0 --top-k 20 ${commonFlags} --presence-penalty 1.5 --frequency-penalty 1.0'';
               aliases = [ "realtime" "q4-xl" ];
               timeouts.responseHeader = 600;
             };
 
             "ds4" = {
+              env = [ "GPU_MAX_HW_QUEUES=1" ];
               cmd = ''${ds4-server} --port ''${PORT} -m /persist/models/DeepSeek-V4-Flash/DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix.gguf --ctx 262144 --kv-disk-dir /tmp/ds4-kv --kv-disk-space-mb 8192'';
               checkEndpoint = "/v1/models";
               aliases = [ "ds4" ];
@@ -233,7 +234,10 @@
       };
 
       systemd.services.llama-swap = {
-        environment.LLAMA_CACHE = "/persist/models";
+        environment = {
+          LLAMA_CACHE = "/persist/models";
+          GPU_MAX_HW_QUEUES = "1";
+        };
         serviceConfig.ReadWritePaths = "/persist/models";
       };
 
