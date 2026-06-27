@@ -13,28 +13,28 @@
 - Rule:
   - MouseGesture: Mouse Up
   - KeyPress:
-    - [Super_L, Page_Up]
+    - [Super_L, j]
     - click
 - Rule:
   - MouseGesture: Mouse Down
   - KeyPress:
-    - [Super_L, Page_Down]
+    - [Super_L, k]
     - click
 - Rule:
   - MouseGesture: []
   - KeyPress:
-    - [Super_L, w]
+    - [Super_L, o]
     - click
 ...
 ---
 - Test: [thumb_wheel_up, 10]
 - KeyPress:
-  - XF86_AudioRaiseVolume
+  - [Super_J, k]
   - click
 ...
 ---
 - Test: [thumb_wheel_down, 10]
 - KeyPress:
-  - XF86_AudioLowerVolume
+  - [Super_J, j]
   - click
 ...

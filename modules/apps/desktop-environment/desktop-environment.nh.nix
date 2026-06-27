@@ -1,6 +1,6 @@
 {
-  flake-file.inputs.niri.url                = "github:sodiboo/niri-flake";
-  flake-file.inputs.dms.url                 = "github:AvengeMedia/DankMaterialShell/stable";
+  flake-file.inputs.niri.url = "github:sodiboo/niri-flake";
+  flake-file.inputs.dms.url = "github:AvengeMedia/DankMaterialShell/stable";
   flake-file.inputs.dms-plugin-registry.url = "github:AvengeMedia/dms-plugin-registry";
 
   flake.modules.nixos.desktop-environment = { inputs, pkgs, ... }: {
@@ -97,7 +97,8 @@
         binds = with config.lib.niri.actions; {
           "Super+Shift+Slash".action = show-hotkey-overlay;
           "Super+Return".action.spawn = "kitty";
-          "Super+I".action.spawn = [ "dms" "ipc" "call" "plugins" "toggle" "aiAssistant" ];
+          "Super+y".action.spawn = [ "dms" "ipc" "call" "plugins" "toggle" "aiAssistant" ];
+          "Super+P".action.screenshot = { };
 
           # Display management
           "XF86Display".action.spawn = [
@@ -121,24 +122,36 @@
           "Super+O".repeat = false;
           "Super+Left".action = focus-column-left;
           "Super+H".action = focus-column-left;
-          "Super+Down".action = focus-window-down;
-          "Super+J".action = focus-window-down;
+          "Super+M".action = focus-column-left;
+          "Super+Down".action = focus-workspace-down;
+          "Super+J".action = focus-workspace-down;
+          "Super+N".action = focus-workspace-down;
           "Super+Right".action = focus-column-right;
           "Super+L".action = focus-column-right;
-          "Super+Up".action = focus-window-up;
-          "Super+K".action = focus-window-up;
+          "Super+I".action = focus-column-right;
+          "Super+Up".action = focus-workspace-up;
+          "Super+K".action = focus-workspace-up;
+          "Super+E".action = focus-workspace-up;
           "Super+Shift+Left".action = move-column-left;
           "Super+Shift+H".action = move-column-left;
+          "Super+Shift+M".action = move-column-left;
           "Super+Shift+Down".action = move-window-down;
           "Super+Shift+J".action = move-window-down;
           "Super+Shift+Right".action = move-column-right;
           "Super+Shift+L".action = move-column-right;
+          "Super+Shift+I".action = move-column-right;
           "Super+Shift+Up".action = move-window-up;
           "Super+Shift+K".action = move-window-up;
+
           "Super+F".action = maximize-column;
           "Super+Shift+F".action = fullscreen-window;
           "Super+Ctrl+F".action = expand-column-to-available-width;
           "Super+T".action = toggle-window-floating;
+
+          "Super+U".action.set-window-width = "+10";
+          "Super+Equal".action.set-window-width = "+10";
+          "Super+Minus".action.set-window-width = "-10";
+          "Super+Comma".action.set-window-width = "-10";
         };
 
         # Startup
