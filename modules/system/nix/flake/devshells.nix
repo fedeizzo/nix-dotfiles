@@ -124,11 +124,15 @@
       packages = with pkgs; [
         sops
         deploy-rs
-        go
-        gopls
         mdbook
         python3
         just
+        
+        go
+        gopls
+        go-mockery
+        gotestsum
+        gotestdox
       ] ++ config.pre-commit.settings.enabledPackages;
 
       devshell.startup.pre-commit-hooks.text = config.pre-commit.installationScript;
