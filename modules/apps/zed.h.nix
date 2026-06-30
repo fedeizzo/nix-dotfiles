@@ -40,6 +40,9 @@
         icon_theme = "Bearded Icon Theme";
         ui_font_size = 13;
         buffer_font_size = 13;
+        project_panel = {
+          dock = "left";
+        };
         theme = {
           mode = "dark";
           light = "One Light";
@@ -78,25 +81,27 @@
         };
         lsp = {
           gopls = {
-            binary.path_lookup = true;
             initialization_options = {
               codelenses = {
-                generate = true; regenerate_cgo = true;
-                run_govulncheck = false; tidy = true;
-                upgrade_dependency = true; vendor = true;
+                generate = true;
+                regenerate_cgo = true;
+                run_govulncheck = false;
+                tidy = true;
+                upgrade_dependency = true;
+                vendor = true;
               };
               hints = {
-                assignVariableTypes = true; compositeLiteralFields = true;
-                compositeLiteralTypes = true; constantValues = true;
-                functionTypeParameters = true; parameterNames = true;
+                assignVariableTypes = true;
+                compositeLiteralFields = true;
+                compositeLiteralTypes = true;
+                constantValues = true;
+                functionTypeParameters = true;
+                parameterNames = true;
                 rangeVariableTypes = true;
               };
               analyses = { shadow = true; };
             };
           };
-          pylsp = { binary.path_lookup = true; };
-          rust-analyzer = { binary = { path_lookup = true; }; };
-          package-version-server = { binary = { path_lookup = true; }; };
           ruff = { initialization_options = { settings = { lineLength = 120; }; }; };
           nil = {
             binary.path = lib.getExe pkgs-unstable.nil;
@@ -116,23 +121,28 @@
           };
           Nix = { language_servers = [ "nil" "!nixd" "..." ]; };
         };
-        assistant = { version = "2"; default_model = { provider = "ollama"; model = "qwen3.5:35b-a3b"; }; };
-        agent = {
-          default_model = { provider = "ollama"; model = "qwen3.5:35b-a3b"; };
-          inline_assistant_model = { provider = "ollama"; model = "qwen3.5:35b-a3b"; };
-        };
-        language_models = {
-          ollama = {
-            api_url = "https://ollama.fedeizzo.dev";
-            available_models = [
-              {
-                name = "qwen3.5:35b-a3b"; display_name = "qwen3.5:35b-a3b";
-                max_tokens = 202752; keep_alive = "15m";
-                supports_tools = true; supports_thinking = false; supports_images = false;
-              }
-            ];
-          };
-        };
+        # assistant = { version = "2"; default_model = { provider = "ollama"; model = "qwen3.5:35b-a3b"; }; };
+        # agent = {
+        #   default_model = { provider = "ollama"; model = "qwen3.5:35b-a3b"; };
+        # inline_assistant_model = { provider = "ollama"; model = "qwen3.5:35b-a3b"; };
+        # };
+        # language_models = {
+        #   ollama = {
+        #     api_url = "https://ollama.fedeizzo.dev";
+        #     available_models = [
+        #       {
+        #         name = "qwen3.5:35b-a3b";
+        #         display_name = "qwen3.5:35b-a3b";
+        #         max_tokens = 202752;
+        #         keep_alive = "15m";
+        #         supports_tools = true;
+        #         supports_thinking = false;
+        #         supports_images = false;
+        #       }
+        #     ];
+        #   };
+        # };
+
       };
     };
   };

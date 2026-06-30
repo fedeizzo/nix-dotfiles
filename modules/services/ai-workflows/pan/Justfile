@@ -11,7 +11,7 @@ run:
 
 # Run tests
 test:
-	go test -tags goolm ./...
+	gotestsum --format testdox -- -tags goolm
 
 # Start Jaeger locally via Docker with Dark Mode
 jaeger:

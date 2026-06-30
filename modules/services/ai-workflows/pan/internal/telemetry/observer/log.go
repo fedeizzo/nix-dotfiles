@@ -33,4 +33,8 @@ func SetupLogging(bus *events.Bus) {
 			slog.Error("Tool failed", args...)
 		}
 	})
+
+	events.Subscribe(bus, func(e fastmail.GetTagsEvent) {
+		slog.Info("fastmail tags fetched", "tags_count", len(e.Tags))
+	})
 }

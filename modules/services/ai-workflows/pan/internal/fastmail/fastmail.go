@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"log/slog"
 	"strings"
+	
+	"pan/internal/events"
 
 	"git.sr.ht/~rockorager/go-jmap"
 	"git.sr.ht/~rockorager/go-jmap/mail"
@@ -43,6 +45,12 @@ type fastmail struct {
 	id     jmap.ID
 }
 
+type GetTagsEvent struct {
+	Tags []Tag
+}
+
+func (e GetTagsEvent) Name() string { return "GetTagsEvent" }
+
 func New(client *jmap.Client) fastmail {
 	// Get the account ID of the primary mail account
 	id := client.Session.PrimaryAccounts[mail.URI]
@@ -53,7 +61,6 @@ func (f *fastmail) GetTags(ctx context.Context) ([]Tag, error) {
 	_, span := otel.Tracer("pan.service.fastmail").Start(ctx, "GetTags")
 	defer span.End()
 
-	slog.Info("Fetching all tags/mailboxes...", "component", "Fastmail")
 	req := &jmap.Request{}
 	req.Invoke(&mailbox.Get{Account: f.id})
 
@@ -78,7 +85,8 @@ func (f *fastmail) GetTags(ctx context.Context) ([]Tag, error) {
 		}
 	}
 
-	slog.Info("Successfully fetched tags", "count", len(tags), "component", "Fastmail")
+	events.Publish(GetTagsEvent{Tags: tags})
+
 	return tags, nil
 }
 
