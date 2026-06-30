@@ -2,8 +2,8 @@ package lunchmoney
 
 import (
 	_ "embed"
-	"fmt"
 
+	"github.com/samber/oops"
 	"google.golang.org/adk/agent"
 	"google.golang.org/adk/agent/llmagent"
 	"google.golang.org/adk/model"
@@ -17,13 +17,20 @@ import (
 //go:embed prompt.md
 var prompt string
 
-func New(llmModel model.LLM, lmToolset lmtool.LunchMoneyToolset) (agent.Agent, error) {
+type LunchMoneyToolset interface {
+	GetLatestUnreviewedTransaction(ctx tool.Context, input lmtool.GetLatestUnreviewedTransactionInput) (lmtool.GetLatestUnreviewedTransactionOutput, error)
+	GetCategories(ctx tool.Context, input lmtool.GetCategoriesInput) (lmtool.GetCategoriesOutput, error)
+	GetTags(ctx tool.Context, input lmtool.GetTagsInput) (lmtool.GetTagsOutput, error)
+	UpdateTransaction(ctx tool.Context, input lmtool.UpdateTransactionInput) (lmtool.UpdateTransactionOutput, error)
+}
+
+func New(llmModel model.LLM, lmToolset LunchMoneyToolset) (agent.Agent, error) {
 	getTxnTool, err := functiontool.New(functiontool.Config{
 		Name:        "get_latest_unreviewed_transaction",
 		Description: "Fetches the most recent unreviewed transaction from LunchMoney.",
 	}, lmToolset.GetLatestUnreviewedTransaction)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create get_latest_unreviewed_transaction tool: %w", err)
+		return nil, oops.In("agent").Wrapf(err, "failed to create get_latest_unreviewed_transaction tool")
 	}
 
 	getCategoriesTool, err := functiontool.New(functiontool.Config{
@@ -31,7 +38,7 @@ func New(llmModel model.LLM, lmToolset lmtool.LunchMoneyToolset) (agent.Agent, e
 		Description: "Fetches all available categories in LunchMoney.",
 	}, lmToolset.GetCategories)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create get_categories tool: %w", err)
+		return nil, oops.In("agent").Wrapf(err, "failed to create get_categories tool")
 	}
 
 	getTagsTool, err := functiontool.New(functiontool.Config{
@@ -39,7 +46,7 @@ func New(llmModel model.LLM, lmToolset lmtool.LunchMoneyToolset) (agent.Agent, e
 		Description: "Fetches all available tags in LunchMoney.",
 	}, lmToolset.GetTags)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create get_tags tool: %w", err)
+		return nil, oops.In("agent").Wrapf(err, "failed to create get_tags tool")
 	}
 
 	updateTxnTool, err := functiontool.New(functiontool.Config{
@@ -48,7 +55,7 @@ func New(llmModel model.LLM, lmToolset lmtool.LunchMoneyToolset) (agent.Agent, e
 		RequireConfirmation: true,
 	}, lmToolset.UpdateTransaction)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create update_transaction tool: %w", err)
+		return nil, oops.In("agent").Wrapf(err, "failed to create update_transaction tool")
 	}
 
 	a, err := llmagent.New(llmagent.Config{
@@ -64,13 +71,13 @@ func New(llmModel model.LLM, lmToolset lmtool.LunchMoneyToolset) (agent.Agent, e
 		},
 	})
 	if err != nil {
-		return nil, fmt.Errorf("failed to create agent: %w", err)
+		return nil, oops.In("agent").Wrapf(err, "failed to create agent")
 	}
 
 	return a, nil
 }
 
-func NewLunchMoneyTool(llmModel model.LLM, lmToolset lmtool.LunchMoneyToolset) (tool.Tool, error) {
+func NewLunchMoneyTool(llmModel model.LLM, lmToolset LunchMoneyToolset) (tool.Tool, error) {
 	a, err := New(llmModel, lmToolset)
 	if err != nil {
 		return nil, err

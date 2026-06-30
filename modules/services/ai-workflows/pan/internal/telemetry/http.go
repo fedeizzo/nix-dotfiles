@@ -10,7 +10,7 @@ import (
 // It should be run as a goroutine.
 func StartHTTP(addr string) {
 	mux := http.NewServeMux()
-	
+
 	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)

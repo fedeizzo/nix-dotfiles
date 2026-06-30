@@ -9,6 +9,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/samber/oops"
 	"google.golang.org/adk/agent"
 	"google.golang.org/adk/runner"
 	"google.golang.org/adk/session"
@@ -38,7 +39,7 @@ func (c *cliBot) Start() error {
 	for {
 		input, err := c.readInput(reader)
 		if err != nil {
-			return fmt.Errorf("failed to read from stdin: %w", err)
+			return oops.In("bot").Wrapf(err, "failed to read from stdin")
 		}
 
 		if input == "" {
@@ -127,7 +128,7 @@ func (c *cliBot) handleAgentEvent(sessionID string, ev *session.Event) {
 		if part.FunctionCall != nil && part.FunctionCall.Name == "adk_request_confirmation" {
 			c.handleToolConfirmation(sessionID, part.FunctionCall)
 		}
-		
+
 		if part.Text != "" {
 			c.printText(part)
 		}

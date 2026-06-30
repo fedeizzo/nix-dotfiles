@@ -1,12 +1,12 @@
 all: true # generate mocks for all interfaces
-dir: "{{.InterfaceDir}}"
-filename: mocks_test.go
+dir: "{{.InterfaceDir}}/mocks"
+filename: "mock_{{.InterfaceName}}.go"
 force-file-write: true
 formatter: goimports
 include-auto-generated: false
 log-level: info
-structname: "{{.Mock}}{{.InterfaceName}}"
-pkgname: "{{.SrcPackageName}}"
+structname: "Mock{{.InterfaceName}}"
+pkgname: "mocks"
 recursive: false
 require-template-schema-exists: true
 template: testify
@@ -14,3 +14,7 @@ template-schema: "{{.Template}}.schema.json"
 packages:
   pan/internal/fastmail:
   pan/internal/fusion:
+  pan/internal/lunchmoney:
+  pan/internal/agent/lunchmoney:
+  pan/internal/tool/email:
+  pan/internal/tool/fusion:

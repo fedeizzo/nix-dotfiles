@@ -14,14 +14,14 @@ import (
 	"pan/internal/bot/cli"
 	"pan/internal/bot/matrix"
 	"pan/internal/config"
-	"pan/internal/events"
 	"pan/internal/fastmail"
+	"pan/internal/fusion"
+	"pan/internal/lunchmoney"
 	"pan/internal/memory/hindsight"
 	"pan/internal/scheduler"
 	"pan/internal/telemetry"
 	"pan/internal/telemetry/observer"
 	"pan/internal/tool/email"
-	"pan/internal/fusion"
 	fusiontool "pan/internal/tool/fusion"
 	lmtool "pan/internal/tool/lunchmoney"
 
@@ -29,6 +29,7 @@ import (
 	lm "github.com/Cidan/lunchmoney-go"
 	genaiopenai "github.com/achetronic/adk-utils-go/genai/openai"
 	"github.com/joho/godotenv"
+	"github.com/samber/ro"
 	hindsightSDK "github.com/vectorize-io/hindsight/hindsight-clients/go"
 	"google.golang.org/adk/agent"
 	"google.golang.org/adk/cmd/launcher"
@@ -70,7 +71,11 @@ func main() {
 	ctx := context.Background()
 	_ = godotenv.Load()
 
-	cfg := config.Load(*configPath)
+	cfg, err := config.Load(*configPath)
+	if err != nil {
+		slog.Error("Failed to load configuration", "error", err)
+		os.Exit(1)
+	}
 
 	// Start telemetry background services
 	go telemetry.StartProcessor()
@@ -104,8 +109,9 @@ func main() {
 	}))
 	slog.SetDefault(logger)
 
-	observer.SetupMetrics(events.DefaultBus)
-	observer.SetupLogging(events.DefaultBus)
+	appStream := ro.NewPublishSubject[any]()
+	observer.SetupMetrics(appStream)
+	observer.SetupLogging(appStream)
 
 	client := &jmap.Client{
 		SessionEndpoint: "https://api.fastmail.com/jmap/session",
@@ -156,7 +162,7 @@ func main() {
 		return false, nil
 	})
 
-	fusionSvc := fusion.NewFusionService(cfg.Fusion.Endpoint, cfg.Fusion.Password)
+	fusionSvc := fusion.New(cfg.Fusion.Endpoint, cfg.Fusion.Password)
 	evalRegistry.Register("fusion:has_unread", func(ctx context.Context) (bool, error) {
 		feeds, err := fusionSvc.GetUnreadFeeds(ctx, 1)
 		if err != nil {
@@ -174,7 +180,7 @@ func main() {
 	configuration.AddDefaultHeader("Authorization", "Bearer "+cfg.Hindsight.APIKey)
 	hsClient := hindsightSDK.NewAPIClient(configuration)
 	m := hindsight.NewService(hsClient, cfg.Hindsight.BankID)
-	emailToolset, err := email.New(&fastmailService)
+	emailToolset, err := email.New(fastmailService, appStream)
 	if err != nil {
 		slog.Error("Failed to initialize email toolset", "error", err)
 		os.Exit(1)
@@ -192,7 +198,8 @@ func main() {
 		os.Exit(1)
 	}
 
-	lunchmoneyToolset, err := lmtool.New(lmClient)
+	lmService := lunchmoney.New(lmClient)
+	lunchmoneyToolset, err := lmtool.New(lmService, appStream)
 	if err != nil {
 		slog.Error("Failed to initialize lunchmoney toolset", "error", err)
 		os.Exit(1)
@@ -204,7 +211,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	fusionToolset, err := fusiontool.New(fusionSvc)
+	fusionToolset, err := fusiontool.New(fusionSvc, appStream)
 	if err != nil {
 		slog.Error("Failed to create fusion toolset", "error", err)
 		os.Exit(1)

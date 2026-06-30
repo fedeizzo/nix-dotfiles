@@ -31,4 +31,5 @@ docs/book/
 **/.matrix-data
 modules/services/pan/pan
 modules/services/ai-workflows/pan/pan
+modules/services/ai-workflows/pan/coverage.out
 config.yaml

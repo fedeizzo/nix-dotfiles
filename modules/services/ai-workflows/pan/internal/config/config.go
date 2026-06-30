@@ -1,23 +1,23 @@
 package config
 
 import (
-	"log"
 	"os"
 	"strings"
 	"time"
 
+	"github.com/samber/oops"
 	"github.com/spf13/viper"
 )
 
 type Config struct {
-	Models    ModelsConfig    `mapstructure:"models"`
-	Fastmail  FastmailConfig  `mapstructure:"fastmail"`
-	Interface InterfaceConfig `mapstructure:"interface"`
-	Matrix    MatrixConfig    `mapstructure:"matrix"`
-	Jobs      []JobConfig     `mapstructure:"jobs"`
-	Log       LogConfig       `mapstructure:"log"`
-	Hindsight HindsightConfig `mapstructure:"hindsight"`
-	Telemetry TelemetryConfig `mapstructure:"telemetry"`
+	Models     ModelsConfig     `mapstructure:"models"`
+	Fastmail   FastmailConfig   `mapstructure:"fastmail"`
+	Interface  InterfaceConfig  `mapstructure:"interface"`
+	Matrix     MatrixConfig     `mapstructure:"matrix"`
+	Jobs       []JobConfig      `mapstructure:"jobs"`
+	Log        LogConfig        `mapstructure:"log"`
+	Hindsight  HindsightConfig  `mapstructure:"hindsight"`
+	Telemetry  TelemetryConfig  `mapstructure:"telemetry"`
 	LunchMoney LunchMoneyConfig `mapstructure:"lunchmoney"`
 	Fusion     FusionConfig     `mapstructure:"fusion"`
 }
@@ -83,25 +83,26 @@ type MatrixConfig struct {
 	MessageRetention time.Duration `mapstructure:"message_retention"`
 }
 
-func Load(configPath string) *Config {
-	viper.SetDefault("models.name", "qwen")
-	viper.SetDefault("models.openai_api_key", "placeholder")
-	viper.SetDefault("models.openai_base_url", "https://llama.fedeizzo.dev/v1")
-	viper.SetDefault("log.path", "pan.log")
-	viper.SetDefault("log.level", "info")
-	viper.SetDefault("telemetry.port", "8080")
+func Load(configPath string) (*Config, error) {
+	v := viper.New()
+	v.SetDefault("models.name", "qwen27")
+	v.SetDefault("models.openai_api_key", "placeholder")
+	v.SetDefault("models.openai_base_url", "https://llama.fedeizzo.dev/v1")
+	v.SetDefault("log.path", "pan.log")
+	v.SetDefault("log.level", "info")
+	v.SetDefault("telemetry.port", "8080")
 
 	// Set up config file reading
 	if configPath != "" {
-		viper.SetConfigFile(configPath)
+		v.SetConfigFile(configPath)
 	} else {
-		viper.SetConfigName("config")
-		viper.SetConfigType("yaml")
-		viper.AddConfigPath(".")
+		v.SetConfigName("config")
+		v.SetConfigType("yaml")
+		v.AddConfigPath(".")
 	}
 
 	// Support environment variables
-	viper.AutomaticEnv()
+	v.AutomaticEnv()
 
 	// Map explicit viper keys to environment variables
 	envBindings := map[string]string{
@@ -130,27 +131,27 @@ func Load(configPath string) *Config {
 	}
 
 	for key, env := range envBindings {
-		if err := viper.BindEnv(key, env); err != nil {
-			log.Printf("error binding env var %s: %v", env, err)
+		if err := v.BindEnv(key, env); err != nil {
+			return nil, oops.In("config").Wrapf(err, "error binding env var %s", env)
 		}
 	}
 
 	// Read config file if it exists
-	if err := viper.ReadInConfig(); err != nil {
+	if err := v.ReadInConfig(); err != nil {
 		if _, ok := err.(viper.ConfigFileNotFoundError); !ok {
-			log.Printf("error reading config file: %v", err)
+			return nil, oops.In("config").Wrapf(err, "error reading config file")
 		}
 	}
 
 	var cfg Config
-	if err := viper.Unmarshal(&cfg); err != nil {
-		log.Fatalf("unable to decode into config struct, %v", err)
+	if err := v.Unmarshal(&cfg); err != nil {
+		return nil, oops.In("config").Wrapf(err, "unable to decode into config struct")
 	}
 
 	if cfg.Fastmail.APIFile != "" {
 		b, err := os.ReadFile(cfg.Fastmail.APIFile)
 		if err != nil {
-			log.Fatalf("failed to read fastmail api file at %s: %v", cfg.Fastmail.APIFile, err)
+			return nil, oops.In("config").Wrapf(err, "failed to read fastmail api file at %s", cfg.Fastmail.APIFile)
 		}
 		cfg.Fastmail.API = strings.TrimSpace(string(b))
 	}
@@ -158,7 +159,7 @@ func Load(configPath string) *Config {
 	if cfg.Matrix.PasswordFile != "" {
 		b, err := os.ReadFile(cfg.Matrix.PasswordFile)
 		if err != nil {
-			log.Fatalf("failed to read matrix password file at %s: %v", cfg.Matrix.PasswordFile, err)
+			return nil, oops.In("config").Wrapf(err, "failed to read matrix password file at %s", cfg.Matrix.PasswordFile)
 		}
 		cfg.Matrix.Password = strings.TrimSpace(string(b))
 	}
@@ -166,7 +167,7 @@ func Load(configPath string) *Config {
 	if cfg.LunchMoney.APIFile != "" {
 		b, err := os.ReadFile(cfg.LunchMoney.APIFile)
 		if err != nil {
-			log.Fatalf("failed to read lunchmoney api file at %s: %v", cfg.LunchMoney.APIFile, err)
+			return nil, oops.In("config").Wrapf(err, "failed to read lunchmoney api file at %s", cfg.LunchMoney.APIFile)
 		}
 		cfg.LunchMoney.API = strings.TrimSpace(string(b))
 	}
@@ -174,10 +175,10 @@ func Load(configPath string) *Config {
 	if cfg.Fusion.PasswordFile != "" {
 		b, err := os.ReadFile(cfg.Fusion.PasswordFile)
 		if err != nil {
-			log.Fatalf("failed to read fusion password file at %s: %v", cfg.Fusion.PasswordFile, err)
+			return nil, oops.In("config").Wrapf(err, "failed to read fusion password file at %s", cfg.Fusion.PasswordFile)
 		}
 		cfg.Fusion.Password = strings.TrimSpace(string(b))
 	}
 
-	return &cfg
+	return &cfg, nil
 }

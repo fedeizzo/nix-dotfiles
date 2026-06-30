@@ -5,7 +5,10 @@ import (
 	"strings"
 	"time"
 
-	"pan/internal/events"
+	pantool "pan/internal/tool"
+
+	"github.com/samber/oops"
+	"github.com/samber/ro"
 
 	"github.com/dgraph-io/ristretto"
 	"go.opentelemetry.io/otel"
@@ -16,20 +19,21 @@ import (
 )
 
 type EmailToolset struct {
-	service fastmail.FastmailService
+	service fastmail.Service
 	cache   *ristretto.Cache
+	stream  ro.Subject[any]
 }
 
-func New(service fastmail.FastmailService) (EmailToolset, error) {
+func New(service fastmail.Service, stream ro.Subject[any]) (EmailToolset, error) {
 	cache, err := ristretto.NewCache(&ristretto.Config{
 		NumCounters: 1e7,     // number of keys to track frequency of (10M).
 		MaxCost:     1 << 30, // maximum cost of cache (1GB).
 		BufferItems: 64,      // number of keys per Get buffer.
 	})
 	if err != nil {
-		return EmailToolset{}, fmt.Errorf("failed to initialize ristretto cache: %w", err)
+		return EmailToolset{}, oops.In("email-toolset").Wrapf(err, "failed to initialize ristretto cache")
 	}
-	return EmailToolset{service: service, cache: cache}, nil
+	return EmailToolset{service: service, cache: cache, stream: stream}, nil
 }
 
 type SuggestTriageInput struct {
@@ -63,7 +67,7 @@ func (e *EmailToolset) SuggestTriage(ctx tool.Context, input SuggestTriageInput)
 	_, span := otel.Tracer("pan.agent.email").Start(ctx, "SuggestTriage")
 	defer span.End()
 
-	events.Publish(events.ToolInvokedEvent{
+	e.stream.Next(pantool.InvokedEvent{
 		ToolName:   "SuggestTriage",
 		Attributes: map[string]any{"component": "AgentTool"},
 	})
@@ -78,7 +82,7 @@ func (e *EmailToolset) SuggestTriage(ctx tool.Context, input SuggestTriageInput)
 		}
 	}
 
-	events.Publish(events.ToolCompletedEvent{
+	e.stream.Next(pantool.CompletedEvent{
 		ToolName:   "SuggestTriage",
 		Success:    true,
 		Attributes: map[string]any{"priority": input.Priority, "component": "AgentTool"},
@@ -94,14 +98,14 @@ func (e *EmailToolset) GetUnreadEmail(ctx tool.Context, input GetUnreadEmailInpu
 	span.SetAttributes(attribute.String("mailbox", input.TagName))
 	defer span.End()
 
-	events.Publish(events.ToolInvokedEvent{
+	e.stream.Next(pantool.InvokedEvent{
 		ToolName:   "GetUnreadEmail",
 		Attributes: map[string]any{"mailbox": input.TagName, "component": "AgentTool"},
 	})
 
 	tags, err := e.service.GetTags(ctxTr)
 	if err != nil {
-		events.Publish(events.ToolCompletedEvent{ToolName: "GetUnreadEmail", Success: false, Error: err})
+		e.stream.Next(pantool.CompletedEvent{ToolName: "GetUnreadEmail", Success: false, Error: err})
 		return GetUnreadEmailOutput{}, err
 	}
 	var targetTag fastmail.Tag
@@ -112,22 +116,22 @@ func (e *EmailToolset) GetUnreadEmail(ctx tool.Context, input GetUnreadEmailInpu
 		}
 	}
 	if targetTag.ID == "" {
-		err := fmt.Errorf("tag %q not found", input.TagName)
-		events.Publish(events.ToolCompletedEvent{ToolName: "GetUnreadEmail", Success: false, Error: err})
+		err := oops.In("email-toolset").Errorf("tag %q not found", input.TagName)
+		e.stream.Next(pantool.CompletedEvent{ToolName: "GetUnreadEmail", Success: false, Error: err})
 		return GetUnreadEmailOutput{}, err
 	}
 	mail, err := e.service.GetUnreadEmailForTag(ctxTr, targetTag)
 	if err == nil && mail != nil {
 		threadID, ok := ctx.Value("matrix_thread_id").(string)
 		if !ok || threadID == "" {
-			return GetUnreadEmailOutput{}, fmt.Errorf("failed to extract matrix_thread_id from context")
+			return GetUnreadEmailOutput{}, oops.In("email-toolset").Errorf("failed to extract matrix_thread_id from context")
 		}
 		sessionID := threadID
 		cacheKey := fmt.Sprintf("active_email_%s", sessionID)
 		e.cache.SetWithTTL(cacheKey, mail.ID, 1, 24*time.Hour)
 	}
 
-	events.Publish(events.ToolCompletedEvent{
+	e.stream.Next(pantool.CompletedEvent{
 		ToolName:   "GetUnreadEmail",
 		Success:    err == nil,
 		Error:      err,
@@ -151,7 +155,7 @@ func (e *EmailToolset) MarkEmailAsSeen(ctx tool.Context, input MarkEmailAsSeenIn
 
 	threadID, ok := ctx.Value("matrix_thread_id").(string)
 	if !ok || threadID == "" {
-		return MarkEmailAsSeenOutput{Success: false, Message: "failed to extract matrix_thread_id from context"}, fmt.Errorf("failed to extract matrix_thread_id from context")
+		return MarkEmailAsSeenOutput{Success: false, Message: "failed to extract matrix_thread_id from context"}, oops.In("email-toolset").Errorf("failed to extract matrix_thread_id from context")
 	}
 	sessionID := threadID
 
@@ -162,18 +166,18 @@ func (e *EmailToolset) MarkEmailAsSeen(ctx tool.Context, input MarkEmailAsSeenIn
 	}
 
 	if emailID == "" {
-		return MarkEmailAsSeenOutput{Success: false, Message: "no email id found in cache"}, fmt.Errorf("no email id found in cache")
+		return MarkEmailAsSeenOutput{Success: false, Message: "no email id found in cache"}, oops.In("email-toolset").Errorf("no email id found in cache")
 	}
 
 	span.SetAttributes(attribute.String("emailID", emailID))
-	events.Publish(events.ToolInvokedEvent{
+	e.stream.Next(pantool.InvokedEvent{
 		ToolName:   "MarkEmailAsSeen",
 		Attributes: map[string]any{"emailID": emailID, "component": "AgentTool"},
 	})
 
 	err := e.service.MarkEmailAsSeen(ctxTr, emailID)
 
-	events.Publish(events.ToolCompletedEvent{
+	e.stream.Next(pantool.CompletedEvent{
 		ToolName:   "MarkEmailAsSeen",
 		Success:    err == nil,
 		Error:      err,
@@ -205,7 +209,7 @@ func (e *EmailToolset) AddTagToEmail(ctx tool.Context, input AddTagToEmailInput)
 
 	threadID, ok := ctx.Value("matrix_thread_id").(string)
 	if !ok || threadID == "" {
-		return AddTagToEmailOutput{Success: false, Message: "failed to extract matrix_thread_id from context"}, fmt.Errorf("failed to extract matrix_thread_id from context")
+		return AddTagToEmailOutput{Success: false, Message: "failed to extract matrix_thread_id from context"}, oops.In("email-toolset").Errorf("failed to extract matrix_thread_id from context")
 	}
 	sessionID := threadID
 
@@ -216,18 +220,18 @@ func (e *EmailToolset) AddTagToEmail(ctx tool.Context, input AddTagToEmailInput)
 	}
 
 	if emailID == "" {
-		return AddTagToEmailOutput{Success: false, Message: "no email id found in cache"}, fmt.Errorf("no email id found in cache")
+		return AddTagToEmailOutput{Success: false, Message: "no email id found in cache"}, oops.In("email-toolset").Errorf("no email id found in cache")
 	}
 
 	span.SetAttributes(attribute.String("emailID", emailID))
-	events.Publish(events.ToolInvokedEvent{
+	e.stream.Next(pantool.InvokedEvent{
 		ToolName:   "AddTagToEmail",
 		Attributes: map[string]any{"emailID": emailID, "tagName": input.TagName, "component": "AgentTool"},
 	})
 
 	tags, err := e.service.GetTags(ctxTr)
 	if err != nil {
-		events.Publish(events.ToolCompletedEvent{ToolName: "AddTagToEmail", Success: false, Error: err})
+		e.stream.Next(pantool.CompletedEvent{ToolName: "AddTagToEmail", Success: false, Error: err})
 		return AddTagToEmailOutput{Success: false, Message: "Failed to fetch tags"}, err
 	}
 
@@ -240,14 +244,14 @@ func (e *EmailToolset) AddTagToEmail(ctx tool.Context, input AddTagToEmailInput)
 	}
 
 	if targetTag.ID == "" {
-		err := fmt.Errorf("tag %q not found", input.TagName)
-		events.Publish(events.ToolCompletedEvent{ToolName: "AddTagToEmail", Success: false, Error: err})
+		err := oops.In("email-toolset").Errorf("tag %q not found", input.TagName)
+		e.stream.Next(pantool.CompletedEvent{ToolName: "AddTagToEmail", Success: false, Error: err})
 		return AddTagToEmailOutput{Success: false, Message: err.Error()}, err
 	}
 
 	err = e.service.AddTagToEmail(ctxTr, emailID, targetTag)
 
-	events.Publish(events.ToolCompletedEvent{
+	e.stream.Next(pantool.CompletedEvent{
 		ToolName:   "AddTagToEmail",
 		Success:    err == nil,
 		Error:      err,

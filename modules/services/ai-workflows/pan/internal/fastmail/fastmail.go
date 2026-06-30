@@ -5,13 +5,12 @@ import (
 	"fmt"
 	"log/slog"
 	"strings"
-	
-	"pan/internal/events"
 
 	"git.sr.ht/~rockorager/go-jmap"
 	"git.sr.ht/~rockorager/go-jmap/mail"
 	"git.sr.ht/~rockorager/go-jmap/mail/email"
 	"git.sr.ht/~rockorager/go-jmap/mail/mailbox"
+	"github.com/samber/oops"
 
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
@@ -33,28 +32,29 @@ type Email struct {
 	// TextBody string
 }
 
-type FastmailService interface {
+type Service interface {
 	GetTags(ctx context.Context) ([]Tag, error)
 	GetUnreadEmailForTag(ctx context.Context, tag Tag) (*Email, error)
 	AddTagToEmail(ctx context.Context, emailID string, tag Tag) error
 	MarkEmailAsSeen(ctx context.Context, emailID string) error
 }
 
+type JMAPClient interface {
+	Do(req *jmap.Request) (*jmap.Response, error)
+}
+
 type fastmail struct {
-	client *jmap.Client
+	client JMAPClient
 	id     jmap.ID
 }
 
-type GetTagsEvent struct {
-	Tags []Tag
-}
+// Compile-time interface check
+var _ Service = (*fastmail)(nil)
 
-func (e GetTagsEvent) Name() string { return "GetTagsEvent" }
-
-func New(client *jmap.Client) fastmail {
+func New(client *jmap.Client) *fastmail {
 	// Get the account ID of the primary mail account
 	id := client.Session.PrimaryAccounts[mail.URI]
-	return fastmail{client: client, id: id}
+	return &fastmail{client: client, id: id}
 }
 
 func (f *fastmail) GetTags(ctx context.Context) ([]Tag, error) {
@@ -66,7 +66,7 @@ func (f *fastmail) GetTags(ctx context.Context) ([]Tag, error) {
 
 	resp, err := f.client.Do(req)
 	if err != nil {
-		return nil, fmt.Errorf("error getting tags from fastmail: %w", err)
+		return nil, oops.In("fastmail").Wrapf(err, "error getting tags from fastmail")
 	}
 
 	var tags []Tag
@@ -74,18 +74,22 @@ func (f *fastmail) GetTags(ctx context.Context) ([]Tag, error) {
 	for _, inv := range resp.Responses {
 		switch r := inv.Args.(type) {
 		case *mailbox.GetResponse:
+			tags = make([]Tag, 0, len(r.List))
 			for _, mbox := range r.List {
 				tags = append(
 					tags,
-					Tag{ID: string(mbox.ID), Name: mbox.Name, Emails: uint(mbox.TotalEmails), Unread: uint(mbox.UnreadEmails)},
+					Tag{
+						ID:     string(mbox.ID),
+						Name:   mbox.Name,
+						Emails: uint(mbox.TotalEmails),
+						Unread: uint(mbox.UnreadEmails),
+					},
 				)
 			}
 		default:
-			return nil, fmt.Errorf("error while casting response from get tags")
+			return nil, oops.In("fastmail").Errorf("error while casting response from get tags")
 		}
 	}
-
-	events.Publish(GetTagsEvent{Tags: tags})
 
 	return tags, nil
 }
@@ -108,10 +112,10 @@ func (f *fastmail) GetUnreadEmailForTag(ctx context.Context, tag Tag) (*Email, e
 
 	resp, err := f.client.Do(req)
 	if err != nil {
-		return nil, fmt.Errorf("error querying emails: %w", err)
+		return nil, oops.In("fastmail").Wrapf(err, "error querying emails")
 	}
 
-	var emailIDs []jmap.ID
+	emailIDs := []jmap.ID{}
 	for _, inv := range resp.Responses {
 		if r, ok := inv.Args.(*email.QueryResponse); ok {
 			emailIDs = r.IDs
@@ -141,47 +145,50 @@ func (f *fastmail) getEmail(ctx context.Context, id jmap.ID) (*Email, error) {
 
 	resp, err := f.client.Do(req)
 	if err != nil {
-		return nil, fmt.Errorf("error getting email: %w", err)
+		return nil, oops.In("fastmail").Wrapf(err, "error getting email")
 	}
 
 	for _, inv := range resp.Responses {
-		if r, ok := inv.Args.(*email.GetResponse); ok {
-			for _, e := range r.List {
-				var fromStr string
-				if len(e.From) > 0 {
-					fromStr = e.From[0].String()
-				}
+		r, ok := inv.Args.(*email.GetResponse)
+		if !ok {
+			continue
+		}
 
-				var toStr string
-				if len(e.To) > 0 {
-					var tos []string
-					for _, t := range e.To {
-						tos = append(tos, t.String())
-					}
-					toStr = strings.Join(tos, ", ")
-				}
-
-				var textBodyBuilder strings.Builder
-				for _, part := range e.TextBody {
-					if bv, ok := e.BodyValues[part.PartID]; ok {
-						textBodyBuilder.WriteString(bv.Value)
-					}
-				}
-
-				slog.Info("Successfully fetched email content", "component", "Fastmail")
-				return &Email{
-					ID:      string(e.ID),
-					Subject: e.Subject,
-					From:    fromStr,
-					To:      toStr,
-					Preview: e.Preview,
-					// TextBody: textBodyBuilder.String(), omit text body for now to speed up development
-				}, nil
+		for _, e := range r.List {
+			var fromStr string
+			if len(e.From) > 0 {
+				fromStr = e.From[0].String()
 			}
+
+			var toStr string
+			if len(e.To) > 0 {
+				tos := make([]string, 0, len(e.To))
+				for _, t := range e.To {
+					tos = append(tos, t.String())
+				}
+				toStr = strings.Join(tos, ", ")
+			}
+
+			var textBodyBuilder strings.Builder
+			for _, part := range e.TextBody {
+				if bv, ok := e.BodyValues[part.PartID]; ok {
+					textBodyBuilder.WriteString(bv.Value)
+				}
+			}
+
+			slog.Info("Successfully fetched email content", "component", "Fastmail")
+			return &Email{
+				ID:      string(e.ID),
+				Subject: e.Subject,
+				From:    fromStr,
+				To:      toStr,
+				Preview: e.Preview,
+				// TextBody: textBodyBuilder.String(), omit text body for now to speed up development
+			}, nil
 		}
 	}
 
-	return nil, fmt.Errorf("email not found")
+	return nil, oops.In("fastmail").Errorf("email not found")
 }
 
 func (f *fastmail) AddTagToEmail(ctx context.Context, emailID string, tag Tag) error {
@@ -203,21 +210,25 @@ func (f *fastmail) AddTagToEmail(ctx context.Context, emailID string, tag Tag) e
 
 	resp, err := f.client.Do(req)
 	if err != nil {
-		return fmt.Errorf("error adding tag to email: %w", err)
+		return oops.In("fastmail").Wrapf(err, "error adding tag to email")
 	}
 
 	for _, inv := range resp.Responses {
-		if r, ok := inv.Args.(*email.SetResponse); ok {
-			if len(r.NotUpdated) > 0 {
-				if setErr, ok := r.NotUpdated[jmap.ID(emailID)]; ok {
-					desc := ""
-					if setErr.Description != nil {
-						desc = *setErr.Description
-					}
-					return fmt.Errorf("failed to add tag: %s - %s", setErr.Type, desc)
-				}
-			}
+		r, ok := inv.Args.(*email.SetResponse)
+		if !ok || len(r.NotUpdated) == 0 {
+			continue
 		}
+
+		setErr, ok := r.NotUpdated[jmap.ID(emailID)]
+		if !ok {
+			continue
+		}
+
+		desc := ""
+		if setErr.Description != nil {
+			desc = *setErr.Description
+		}
+		return oops.In("fastmail").Errorf("failed to add tag: %s - %s", setErr.Type, desc)
 	}
 
 	return nil
@@ -242,21 +253,25 @@ func (f *fastmail) MarkEmailAsSeen(ctx context.Context, emailID string) error {
 
 	resp, err := f.client.Do(req)
 	if err != nil {
-		return fmt.Errorf("error marking email as seen: %w", err)
+		return oops.In("fastmail").Wrapf(err, "error marking email as seen")
 	}
 
 	for _, inv := range resp.Responses {
-		if r, ok := inv.Args.(*email.SetResponse); ok {
-			if len(r.NotUpdated) > 0 {
-				if setErr, ok := r.NotUpdated[jmap.ID(emailID)]; ok {
-					desc := ""
-					if setErr.Description != nil {
-						desc = *setErr.Description
-					}
-					return fmt.Errorf("failed to mark email as seen: %s - %s", setErr.Type, desc)
-				}
-			}
+		r, ok := inv.Args.(*email.SetResponse)
+		if !ok || len(r.NotUpdated) == 0 {
+			continue
 		}
+
+		setErr, ok := r.NotUpdated[jmap.ID(emailID)]
+		if !ok {
+			continue
+		}
+
+		desc := ""
+		if setErr.Description != nil {
+			desc = *setErr.Description
+		}
+		return oops.In("fastmail").Errorf("failed to mark email as seen: %s - %s", setErr.Type, desc)
 	}
 
 	return nil

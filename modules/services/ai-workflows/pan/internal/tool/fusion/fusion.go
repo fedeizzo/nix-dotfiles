@@ -4,8 +4,11 @@ import (
 	"fmt"
 	"time"
 
-	"pan/internal/events"
 	fusionsvc "pan/internal/fusion"
+	pantool "pan/internal/tool"
+
+	"github.com/samber/oops"
+	"github.com/samber/ro"
 
 	"github.com/dgraph-io/ristretto"
 	"go.opentelemetry.io/otel"
@@ -13,20 +16,21 @@ import (
 )
 
 type FusionToolset struct {
-	service fusionsvc.FusionService
+	service fusionsvc.Service
 	cache   *ristretto.Cache
+	stream  ro.Subject[any]
 }
 
-func New(service fusionsvc.FusionService) (FusionToolset, error) {
+func New(service fusionsvc.Service, stream ro.Subject[any]) (FusionToolset, error) {
 	cache, err := ristretto.NewCache(&ristretto.Config{
 		NumCounters: 1e7,
 		MaxCost:     1 << 30,
 		BufferItems: 64,
 	})
 	if err != nil {
-		return FusionToolset{}, fmt.Errorf("failed to initialize cache: %w", err)
+		return FusionToolset{}, oops.In("fusion-toolset").Wrapf(err, "failed to initialize cache")
 	}
-	return FusionToolset{service: service, cache: cache}, nil
+	return FusionToolset{service: service, cache: cache, stream: stream}, nil
 }
 
 type GetUnreadFeedsInput struct {
@@ -53,7 +57,7 @@ func (f *FusionToolset) GetUnreadFeeds(ctx tool.Context, input GetUnreadFeedsInp
 	ctxTr, span := otel.Tracer("pan.agent.fusion").Start(ctx, "GetUnreadFeeds")
 	defer span.End()
 
-	events.Publish(events.ToolInvokedEvent{
+	f.stream.Next(pantool.InvokedEvent{
 		ToolName:   "GetUnreadFeeds",
 		Attributes: map[string]any{"component": "AgentTool"},
 	})
@@ -93,19 +97,19 @@ func (f *FusionToolset) GetUnreadFeeds(ctx tool.Context, input GetUnreadFeedsInp
 	if err == nil && len(result) > 0 {
 		threadID, ok := ctx.Value("matrix_thread_id").(string)
 		if !ok || threadID == "" {
-			return GetUnreadFeedsOutput{}, fmt.Errorf("failed to extract matrix_thread_id from context")
+			return GetUnreadFeedsOutput{}, oops.In("fusion-toolset").Errorf("failed to extract matrix_thread_id from context")
 		}
-		
+
 		var feedIDs []int
 		for _, feed := range result {
 			feedIDs = append(feedIDs, feed.ID)
 		}
-		
+
 		cacheKey := fmt.Sprintf("active_feeds_%s", threadID)
 		f.cache.SetWithTTL(cacheKey, feedIDs, 1, 24*time.Hour)
 	}
 
-	events.Publish(events.ToolCompletedEvent{
+	f.stream.Next(pantool.CompletedEvent{
 		ToolName:   "GetUnreadFeeds",
 		Success:    err == nil,
 		Error:      err,
@@ -129,7 +133,7 @@ func (f *FusionToolset) MarkFeedsAsRead(ctx tool.Context, input MarkFeedsAsReadI
 
 	threadID, ok := ctx.Value("matrix_thread_id").(string)
 	if !ok || threadID == "" {
-		return MarkFeedsAsReadOutput{Success: false, Message: "failed to extract matrix_thread_id from context"}, fmt.Errorf("failed to extract matrix_thread_id from context")
+		return MarkFeedsAsReadOutput{Success: false, Message: "failed to extract matrix_thread_id from context"}, oops.In("fusion-toolset").Errorf("failed to extract matrix_thread_id from context")
 	}
 
 	cacheKey := fmt.Sprintf("active_feeds_%s", threadID)
@@ -137,20 +141,20 @@ func (f *FusionToolset) MarkFeedsAsRead(ctx tool.Context, input MarkFeedsAsReadI
 	if !found || val == nil {
 		return MarkFeedsAsReadOutput{Success: true, Message: "Feeds already marked as read or cache expired"}, nil
 	}
-	
+
 	feedIDs, ok := val.([]int)
 	if !ok {
-		return MarkFeedsAsReadOutput{Success: false, Message: "invalid cache type"}, fmt.Errorf("invalid cache type")
+		return MarkFeedsAsReadOutput{Success: false, Message: "invalid cache type"}, oops.In("fusion-toolset").Errorf("invalid cache type")
 	}
 
-	events.Publish(events.ToolInvokedEvent{
+	f.stream.Next(pantool.InvokedEvent{
 		ToolName:   "MarkFeedsAsRead",
 		Attributes: map[string]any{"feedCount": len(feedIDs), "component": "AgentTool"},
 	})
 
 	err := f.service.MarkFeedsAsRead(ctxTr, feedIDs)
 
-	events.Publish(events.ToolCompletedEvent{
+	f.stream.Next(pantool.CompletedEvent{
 		ToolName:   "MarkFeedsAsRead",
 		Success:    err == nil,
 		Error:      err,

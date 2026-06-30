@@ -2,39 +2,47 @@ package observer
 
 import (
 	"log/slog"
-	"pan/internal/events"
+	"pan/internal/fastmail"
+	"pan/internal/stream"
+	"pan/internal/telemetry"
+	pantool "pan/internal/tool"
+
+	"github.com/samber/ro"
 )
 
-// SetupLogging registers structured logging to the event bus.
-func SetupLogging(bus *events.Bus) {
-	events.Subscribe(bus, func(e events.SystemErrorEvent) {
-		slog.Error("System error occurred", "component", e.Component, "error", e.Error)
-	})
+// SetupLogging registers structured logging to the app event stream.
+func SetupLogging(appStream ro.Observable[any]) {
+	logger := slog.Default()
 
-	events.Subscribe(bus, func(e events.ToolInvokedEvent) {
-		args := []any{"tool", e.ToolName}
-		for k, v := range e.Attributes {
-			args = append(args, k, v)
-		}
-		slog.Info("Tool invoked", args...)
-	})
+	stream.OfType[telemetry.SystemErrorEvent](appStream).Subscribe(ro.OnNext(
+		func(e telemetry.SystemErrorEvent) {
+			logger.Error("System error", "component", e.Component, "error", e.Error)
+		},
+	))
 
-	events.Subscribe(bus, func(e events.ToolCompletedEvent) {
-		args := []any{"tool", e.ToolName, "success", e.Success}
-		if e.Error != nil {
-			args = append(args, "error", e.Error)
-		}
-		for k, v := range e.Attributes {
-			args = append(args, k, v)
-		}
-		if e.Success {
-			slog.Info("Tool completed", args...)
-		} else {
-			slog.Error("Tool failed", args...)
-		}
-	})
+	stream.OfType[pantool.InvokedEvent](appStream).Subscribe(ro.OnNext(
+		func(e pantool.InvokedEvent) {
+			args := []any{"tool", e.ToolName}
+			for k, v := range e.Attributes {
+				args = append(args, k, v)
+			}
+			logger.Info("Tool invoked", args...)
+		},
+	))
 
-	events.Subscribe(bus, func(e fastmail.GetTagsEvent) {
-		slog.Info("fastmail tags fetched", "tags_count", len(e.Tags))
-	})
+	stream.OfType[pantool.CompletedEvent](appStream).Subscribe(ro.OnNext(
+		func(e pantool.CompletedEvent) {
+			args := []any{"tool", e.ToolName, "success", e.Success}
+			for k, v := range e.Attributes {
+				args = append(args, k, v)
+			}
+			logger.Info("Tool completed", args...)
+		},
+	))
+
+	stream.OfType[fastmail.EmailProcessedEvent](appStream).Subscribe(ro.OnNext(
+		func(e fastmail.EmailProcessedEvent) {
+			logger.Info("Email processed", "success", e.Success)
+		},
+	))
 }

@@ -2,8 +2,8 @@ package email
 
 import (
 	_ "embed"
-	"fmt"
 
+	"github.com/samber/oops"
 	"google.golang.org/adk/agent"
 	"google.golang.org/adk/agent/llmagent"
 	"google.golang.org/adk/model"
@@ -23,7 +23,7 @@ func New(llmModel model.LLM, emailToolset emailtool.EmailToolset) (agent.Agent, 
 		Description: "Suggests the triage evaluation for an email based on its content.",
 	}, emailToolset.SuggestTriage)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create triage tool: %w", err)
+		return nil, oops.In("agent").Wrapf(err, "failed to create triage tool")
 	}
 
 	getUnreadTool, err := functiontool.New(functiontool.Config{
@@ -31,7 +31,7 @@ func New(llmModel model.LLM, emailToolset emailtool.EmailToolset) (agent.Agent, 
 		Description: "Fetches one unread email for a given tag/mailbox (e.g., 'Inbox')",
 	}, emailToolset.GetUnreadEmail)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create get_unread_email tool: %w", err)
+		return nil, oops.In("agent").Wrapf(err, "failed to create get_unread_email tool")
 	}
 
 	markSeenTool, err := functiontool.New(functiontool.Config{
@@ -40,7 +40,7 @@ func New(llmModel model.LLM, emailToolset emailtool.EmailToolset) (agent.Agent, 
 		RequireConfirmation: true,
 	}, emailToolset.MarkEmailAsSeen)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create mark_email_as_seen tool: %w", err)
+		return nil, oops.In("agent").Wrapf(err, "failed to create mark_email_as_seen tool")
 	}
 
 	addTagTool, err := functiontool.New(functiontool.Config{
@@ -49,7 +49,7 @@ func New(llmModel model.LLM, emailToolset emailtool.EmailToolset) (agent.Agent, 
 		RequireConfirmation: true,
 	}, emailToolset.AddTagToEmail)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create add_tag_to_email tool: %w", err)
+		return nil, oops.In("agent").Wrapf(err, "failed to create add_tag_to_email tool")
 	}
 
 	a, err := llmagent.New(llmagent.Config{
@@ -65,7 +65,7 @@ func New(llmModel model.LLM, emailToolset emailtool.EmailToolset) (agent.Agent, 
 		},
 	})
 	if err != nil {
-		return nil, fmt.Errorf("failed to create agent: %w", err)
+		return nil, oops.In("agent").Wrapf(err, "failed to create agent")
 	}
 
 	return a, nil

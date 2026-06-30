@@ -2,8 +2,8 @@ package fusion
 
 import (
 	_ "embed"
-	"fmt"
 
+	"github.com/samber/oops"
 	"google.golang.org/adk/agent"
 	"google.golang.org/adk/agent/llmagent"
 	"google.golang.org/adk/model"
@@ -23,7 +23,7 @@ func New(llmModel model.LLM, fusionToolset fusiontool.FusionToolset) (agent.Agen
 		Description: "Fetches a batch of unread RSS feeds from Fusion.",
 	}, fusionToolset.GetUnreadFeeds)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create get_unread_feeds tool: %w", err)
+		return nil, oops.In("agent").Wrapf(err, "failed to create get_unread_feeds tool")
 	}
 
 	markFeedsAsReadTool, err := functiontool.New(functiontool.Config{
@@ -32,7 +32,7 @@ func New(llmModel model.LLM, fusionToolset fusiontool.FusionToolset) (agent.Agen
 		RequireConfirmation: true,
 	}, fusionToolset.MarkFeedsAsRead)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create mark_feeds_as_read tool: %w", err)
+		return nil, oops.In("agent").Wrapf(err, "failed to create mark_feeds_as_read tool")
 	}
 
 	a, err := llmagent.New(llmagent.Config{
@@ -46,7 +46,7 @@ func New(llmModel model.LLM, fusionToolset fusiontool.FusionToolset) (agent.Agen
 		},
 	})
 	if err != nil {
-		return nil, fmt.Errorf("failed to create agent: %w", err)
+		return nil, oops.In("agent").Wrapf(err, "failed to create agent")
 	}
 
 	return a, nil

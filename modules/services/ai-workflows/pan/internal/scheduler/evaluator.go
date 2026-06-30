@@ -2,7 +2,8 @@ package scheduler
 
 import (
 	"context"
-	"fmt"
+
+	"github.com/samber/oops"
 )
 
 type ConditionFunc func(ctx context.Context) (bool, error)
@@ -24,7 +25,7 @@ func (r *EvaluatorRegistry) Register(name string, fn ConditionFunc) {
 func (r *EvaluatorRegistry) Evaluate(ctx context.Context, condition string) (bool, error) {
 	fn, ok := r.evaluators[condition]
 	if !ok {
-		return false, fmt.Errorf("unknown condition: %s", condition)
+		return false, oops.In("scheduler").Errorf("unknown condition: %s", condition)
 	}
 	return fn(ctx)
 }

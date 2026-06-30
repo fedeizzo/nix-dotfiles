@@ -15,6 +15,7 @@ import (
 	"pan/internal/config"
 
 	_ "github.com/mattn/go-sqlite3"
+	"github.com/samber/oops"
 	"google.golang.org/adk/agent"
 	"google.golang.org/adk/runner"
 	"google.golang.org/adk/session"
@@ -33,8 +34,8 @@ var (
 )
 
 type matrixBot struct {
-	client      *mautrix.Client
-	r           *runner.Runner
+	client           *mautrix.Client
+	r                *runner.Runner
 	allowedUser      id.UserID
 	allowedRoom      id.RoomID
 	startTime        int64
@@ -55,7 +56,7 @@ func New(cfg *config.Config, r *runner.Runner) (*matrixBot, error) {
 	}
 
 	if err := os.MkdirAll(dataDir, 0700); err != nil {
-		return nil, fmt.Errorf("failed to create data dir: %w", err)
+		return nil, oops.In("bot").Wrapf(err, "failed to create data dir")
 	}
 
 	var accessToken string
@@ -181,7 +182,7 @@ func (b *matrixBot) cleanupRoomMessages(ctx context.Context, roomID id.RoomID) {
 			}
 
 			if evt.Timestamp < cutoff {
-				// Is it already redacted? 
+				// Is it already redacted?
 				if evt.Unsigned.RedactedBecause != nil {
 					consecutiveRedacted++
 					if consecutiveRedacted >= 50 {
@@ -193,12 +194,12 @@ func (b *matrixBot) cleanupRoomMessages(ctx context.Context, roomID id.RoomID) {
 					_, err := b.client.RedactEvent(ctx, roomID, evt.ID, mautrix.ReqRedact{
 						Reason: "Configured message retention policy",
 					})
-					
+
 					// Handle Rate Limiting
 					if err != nil && (strings.Contains(err.Error(), "M_LIMIT_EXCEEDED") || strings.Contains(err.Error(), "429")) {
 						slog.Warn("Rate limited by homeserver, backing off for 60 seconds", "event_id", evt.ID)
 						time.Sleep(60 * time.Second)
-						
+
 						// Retry once after backoff
 						_, err = b.client.RedactEvent(ctx, roomID, evt.ID, mautrix.ReqRedact{
 							Reason: "Configured message retention policy",
@@ -210,7 +211,7 @@ func (b *matrixBot) cleanupRoomMessages(ctx context.Context, roomID id.RoomID) {
 					} else {
 						slog.Debug("Redacted old message", "event_id", evt.ID)
 					}
-					
+
 					// Sleep 10 seconds between redactions to be gentler on the homeserver
 					time.Sleep(10 * time.Second)
 				}
@@ -492,7 +493,7 @@ func authenticate(client *mautrix.Client, password, userID, dataDir string) (*ma
 			StoreCredentials:         true,
 		})
 		if err != nil {
-			return nil, fmt.Errorf("matrix login failed: %w", err)
+			return nil, oops.In("bot").Wrapf(err, "matrix login failed")
 		}
 
 		tokenPath := filepath.Join(dataDir, "access-token")
@@ -503,7 +504,7 @@ func authenticate(client *mautrix.Client, password, userID, dataDir string) (*ma
 
 		slog.Info("Logged into Matrix and saved credentials to dataDir", "device_id", resp.DeviceID)
 	} else {
-		return nil, fmt.Errorf("no password provided and no saved token found")
+		return nil, oops.In("bot").Errorf("no password provided and no saved token found")
 	}
 	return client, nil
 }
@@ -513,7 +514,7 @@ func initCryptography(client *mautrix.Client, dataDir string) (*mautrix.Client, 
 		dataDir = "."
 	}
 	if err := os.MkdirAll(dataDir, 0700); err != nil {
-		return nil, fmt.Errorf("failed to create MATRIX_DATA_DIR: %w", err)
+		return nil, oops.In("bot").Wrapf(err, "failed to create MATRIX_DATA_DIR")
 	}
 
 	dbPath := filepath.Join(dataDir, "matrix-crypto.db")
@@ -521,11 +522,11 @@ func initCryptography(client *mautrix.Client, dataDir string) (*mautrix.Client, 
 	// The helper reads client.DeviceID and client.AccessToken perfectly here
 	helper, err := cryptohelper.NewCryptoHelper(client, []byte("pan-agent-crypto-key"), dbPath)
 	if err != nil {
-		return nil, fmt.Errorf("failed to init cryptohelper: %w", err)
+		return nil, oops.In("bot").Wrapf(err, "failed to init cryptohelper")
 	}
 
 	if err = helper.Init(context.Background()); err != nil {
-		return nil, fmt.Errorf("failed to init crypto: %w", err)
+		return nil, oops.In("bot").Wrapf(err, "failed to init crypto")
 	}
 	client.Crypto = helper
 

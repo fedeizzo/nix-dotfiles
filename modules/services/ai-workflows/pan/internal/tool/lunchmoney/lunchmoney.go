@@ -10,26 +10,35 @@ import (
 	"go.opentelemetry.io/otel/attribute"
 	"google.golang.org/adk/tool"
 
-	"pan/internal/events"
+	"pan/internal/lunchmoney"
+	pantool "pan/internal/tool"
+
+	"github.com/samber/oops"
+	"github.com/samber/ro"
 
 	lm "github.com/Cidan/lunchmoney-go"
 )
 
 type LunchMoneyToolset struct {
-	client *lm.Client
-	cache  *ristretto.Cache
+	service lunchmoney.Service
+	cache   *ristretto.Cache
+	stream  ro.Subject[any]
 }
 
-func New(client *lm.Client) (LunchMoneyToolset, error) {
+func New(service lunchmoney.Service, stream ro.Subject[any]) (*LunchMoneyToolset, error) {
 	cache, err := ristretto.NewCache(&ristretto.Config{
 		NumCounters: 1e7,
 		MaxCost:     1 << 30,
 		BufferItems: 64,
 	})
 	if err != nil {
-		return LunchMoneyToolset{}, fmt.Errorf("failed to initialize ristretto cache: %w", err)
+		return nil, oops.In("lunchmoney-toolset").Wrapf(err, "failed to create cache")
 	}
-	return LunchMoneyToolset{client: client, cache: cache}, nil
+	return &LunchMoneyToolset{
+		service: service,
+		cache:   cache,
+		stream:  stream,
+	}, nil
 }
 
 type GetLatestUnreviewedTransactionInput struct{}
@@ -52,20 +61,27 @@ func (t *LunchMoneyToolset) GetLatestUnreviewedTransaction(ctx tool.Context, inp
 	ctxTr, span := otel.Tracer("pan.agent.lunchmoney").Start(ctx, "GetLatestUnreviewedTransaction")
 	defer span.End()
 
-	events.Publish(events.ToolInvokedEvent{
+	t.stream.Next(pantool.InvokedEvent{
 		ToolName:   "GetLatestUnreviewedTransaction",
 		Attributes: map[string]any{"component": "AgentTool"},
 	})
 
 	st := lm.TransactionStatus("unreviewed")
 	limit := int32(1)
-	resp, err := t.client.Transactions.List(ctxTr, &lm.ListTransactionsParams{
+	resp, err := t.service.ListTransactions(ctxTr, &lm.ListTransactionsParams{
 		Status: &st,
 		Limit:  &limit,
 	})
 
 	if err != nil {
-		events.Publish(events.ToolCompletedEvent{ToolName: "GetLatestUnreviewedTransaction", Success: false, Error: err})
+		err = oops.
+			In("lunchmoney-toolset").
+			Tags("api", "transactions", "read").
+			With("status", st).
+			With("limit", limit).
+			Wrapf(err, "failed to list unreviewed transactions")
+
+		t.stream.Next(pantool.CompletedEvent{ToolName: "GetLatestUnreviewedTransaction", Success: false, Error: err})
 		return GetLatestUnreviewedTransactionOutput{}, err
 	}
 
@@ -75,9 +91,9 @@ func (t *LunchMoneyToolset) GetLatestUnreviewedTransaction(ctx tool.Context, inp
 
 		var category *string
 		if txn.CategoryId != nil {
-			categoryResp, err := t.client.Categories.Get(ctx, *txn.CategoryId)
+			categoryResp, err := t.service.GetCategory(ctx, *txn.CategoryId)
 			if err != nil {
-				events.Publish(events.ToolCompletedEvent{ToolName: "GetLatestUnreviewedTransaction", Success: false, Error: err})
+				t.stream.Next(pantool.CompletedEvent{ToolName: "GetLatestUnreviewedTransaction", Success: false, Error: err})
 				return GetLatestUnreviewedTransactionOutput{}, err
 			}
 			category = &categoryResp.Name
@@ -106,7 +122,7 @@ func (t *LunchMoneyToolset) GetLatestUnreviewedTransaction(ctx tool.Context, inp
 		}
 	}
 
-	events.Publish(events.ToolCompletedEvent{
+	t.stream.Next(pantool.CompletedEvent{
 		ToolName:   "GetLatestUnreviewedTransaction",
 		Success:    true,
 		Attributes: map[string]any{"found": txnSummary != nil, "component": "AgentTool"},
@@ -132,14 +148,14 @@ func (t *LunchMoneyToolset) GetCategories(ctx tool.Context, input GetCategoriesI
 	ctxTr, span := otel.Tracer("pan.agent.lunchmoney").Start(ctx, "GetCategories")
 	defer span.End()
 
-	events.Publish(events.ToolInvokedEvent{
+	t.stream.Next(pantool.InvokedEvent{
 		ToolName:   "GetCategories",
 		Attributes: map[string]any{"component": "AgentTool"},
 	})
 
-	resp, err := t.client.Categories.List(ctxTr, nil)
+	resp, err := t.service.ListCategories(ctxTr, nil)
 
-	events.Publish(events.ToolCompletedEvent{
+	t.stream.Next(pantool.CompletedEvent{
 		ToolName:   "GetCategories",
 		Success:    err == nil,
 		Error:      err,
@@ -183,14 +199,14 @@ func (t *LunchMoneyToolset) GetTags(ctx tool.Context, input GetTagsInput) (GetTa
 	ctxTr, span := otel.Tracer("pan.agent.lunchmoney").Start(ctx, "GetTags")
 	defer span.End()
 
-	events.Publish(events.ToolInvokedEvent{
+	t.stream.Next(pantool.InvokedEvent{
 		ToolName:   "GetTags",
 		Attributes: map[string]any{"component": "AgentTool"},
 	})
 
-	resp, err := t.client.Tags.List(ctxTr)
+	resp, err := t.service.ListTags(ctxTr)
 
-	events.Publish(events.ToolCompletedEvent{
+	t.stream.Next(pantool.CompletedEvent{
 		ToolName:   "GetTags",
 		Success:    err == nil,
 		Error:      err,
@@ -235,7 +251,7 @@ func (t *LunchMoneyToolset) UpdateTransaction(ctx tool.Context, input UpdateTran
 
 	threadID, ok := ctx.Value("matrix_thread_id").(string)
 	if !ok || threadID == "" {
-		return UpdateTransactionOutput{Success: false, Message: "failed to extract matrix_thread_id from context"}, fmt.Errorf("failed to extract matrix_thread_id from context")
+		return UpdateTransactionOutput{Success: false, Message: "failed to extract matrix_thread_id from context"}, oops.In("lunchmoney-toolset").Errorf("failed to extract matrix_thread_id from context")
 	}
 
 	var txnID int64
@@ -245,11 +261,11 @@ func (t *LunchMoneyToolset) UpdateTransaction(ctx tool.Context, input UpdateTran
 	}
 
 	if txnID == 0 {
-		return UpdateTransactionOutput{Success: false, Message: "no active transaction found. Please call GetLatestUnreviewedTransaction first."}, fmt.Errorf("no transaction id found in cache")
+		return UpdateTransactionOutput{Success: false, Message: "no active transaction found. Please call GetLatestUnreviewedTransaction first."}, oops.In("lunchmoney-toolset").Errorf("no transaction id found in cache")
 	}
 
 	span.SetAttributes(attribute.Int64("transactionID", txnID))
-	events.Publish(events.ToolInvokedEvent{
+	t.stream.Next(pantool.InvokedEvent{
 		ToolName:   "UpdateTransaction",
 		Attributes: map[string]any{"transactionID": txnID, "component": "AgentTool"},
 	})
@@ -275,9 +291,9 @@ func (t *LunchMoneyToolset) UpdateTransaction(ctx tool.Context, input UpdateTran
 	b, _ := json.Marshal(pb)
 	_ = json.Unmarshal(b, &body)
 
-	_, err := t.client.Transactions.UpdateTransaction(ctxTr, txnID, body)
+	_, err := t.service.UpdateTransaction(ctxTr, txnID, body)
 
-	events.Publish(events.ToolCompletedEvent{
+	t.stream.Next(pantool.CompletedEvent{
 		ToolName:   "UpdateTransaction",
 		Success:    err == nil,
 		Error:      err,
