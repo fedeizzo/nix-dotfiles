@@ -10,7 +10,7 @@
         src = lib.cleanSource ./.;
 
         tags = [ "goolm" ];
-        vendorHash = "sha256-6EJ8XREKsrBz+LszzYPJ0y6v6OlFOYR0A31EmX91cZI=";
+        vendorHash = "sha256-VUJTpvRWLzDW0JptnPbYzdnVtFS4eYTx3c60kepKJQ0=";
       };
     in
     {
