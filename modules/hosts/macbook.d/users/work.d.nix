@@ -31,6 +31,8 @@
         zen
         zed
         ghostty
+        # claude
+        # antigravity
         profile-work
         ai-tools
       ];

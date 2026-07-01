@@ -37,16 +37,16 @@
         "bearded-icon-theme"
       ];
       userSettings = {
-        icon_theme = "Bearded Icon Theme";
+        icon_theme = "Catppuccin Macchiato";
+        theme = {
+          mode = "system";
+          dark = "Catppuccin Macchiato";
+          light = "Catppuccin Latte";
+        };
         ui_font_size = 13;
         buffer_font_size = 13;
         project_panel = {
           dock = "left";
-        };
-        theme = {
-          mode = "dark";
-          light = "One Light";
-          dark = "One Dark";
         };
         active_pane_modifiers = {
           inactive_opacity = 0.9;

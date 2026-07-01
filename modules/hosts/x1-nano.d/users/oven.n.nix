@@ -22,30 +22,31 @@
       ];
 
       users.${username} = {
-        imports = [
-          inputs.self.modules.homeManager.bottom
-          inputs.self.modules.homeManager.cli-packages
-          inputs.self.modules.homeManager.direnv
-          inputs.self.modules.homeManager.jujutsu
-          inputs.self.modules.homeManager.desktop-environment
-          inputs.self.modules.homeManager.zen
-          inputs.self.modules.homeManager.fish
-          inputs.self.modules.homeManager.git
-          inputs.self.modules.homeManager.starship
-          inputs.self.modules.homeManager.languages
-          inputs.self.modules.homeManager.nix-index
-          inputs.self.modules.homeManager.jail-pi
-          inputs.self.modules.homeManager.misc
-          inputs.self.modules.homeManager.nextcloud
-          inputs.self.modules.homeManager.ssh
-          inputs.self.modules.homeManager.nix-registry
-          inputs.self.modules.homeManager.solaar
-          inputs.self.modules.homeManager.stylix
-          inputs.self.modules.homeManager.zathura
-          inputs.self.modules.homeManager.zed
-          inputs.self.modules.homeManager.profile-personal
+        imports = with inputs.self.modules.homeManager; [
+          bottom
+          cli-packages
+          direnv
+          jujutsu
+          desktop-environment
+          zen
+          fish
+          git
+          starship
+          languages
+          nix-index
+          jail-pi
+          misc
+          nextcloud
+          ssh
+          nix-registry
+          solaar
+          stylix
+          zathura
+          zed
+          profile-personal
 
-          inputs.self.modules.homeManager.ghostty
+          ghostty
+          # antigravity
         ];
         programs.home-manager.enable = true;
 

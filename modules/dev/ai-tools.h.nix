@@ -19,6 +19,7 @@
       agent-deck
       tuicr
       codegraph
+      skills
     ];
   };
 }
