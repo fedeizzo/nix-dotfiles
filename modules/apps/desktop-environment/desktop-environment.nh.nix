@@ -96,7 +96,7 @@
         # Binds
         binds = with config.lib.niri.actions; {
           "Super+Shift+Slash".action = show-hotkey-overlay;
-          "Super+Return".action.spawn = "kitty";
+          "Super+Return".action.spawn = "ghostty";
           "Super+y".action.spawn = [ "dms" "ipc" "call" "plugins" "toggle" "aiAssistant" ];
           "Super+P".action.screenshot = { };
 

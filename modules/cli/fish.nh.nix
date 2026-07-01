@@ -20,7 +20,7 @@
         lf = "lfrun";
         gotop = "gotop -l kitchensink";
         scp = "rsync -Pavzh -e \"ssh\"";
-        hg = "kitty +kitten hyperlinked_grep";
+        hg = "rg";
         colorpicker = "grim -g (slurp -p) -t ppm - | convert - -format '%[pixel:p{0,0}]' txt:-";
         er = "systemctl --user restart emacs.service";
       };
@@ -40,7 +40,7 @@
         set XDG_CONFIG_HOME "$HOME/.config"
         set XDG_CACHE_HOME "$HOME/.cache"
         set XDG_DATA_HOME "$HOME/.local/share"
-        set TERMINAL "kitty"
+        set TERMINAL "ghostty"
         set PATH $PATH ( find $HOME/.sources/ -type d -printf ":%p" )
         set PATH $PATH /home/fedeizzo/.nimble/bin
         set PIPENV_CACHE_DIR "$XDG_CACHE_HOME"/pipenv

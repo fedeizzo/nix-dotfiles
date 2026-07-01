@@ -30,6 +30,7 @@
         git
         zen
         zed
+        ghostty
         profile-work
         ai-tools
       ];

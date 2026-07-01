@@ -19,7 +19,7 @@
       variables = {
         "READER" = "zathura";
         "CODEEDITOR" = "vim";
-        "TERMINAL" = "kitty";
+        "TERMINAL" = "ghostty";
         "BROWSER" = "zen";
         "COLORTERM" = "truecolor";
       };

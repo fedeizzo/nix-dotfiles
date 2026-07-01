@@ -45,7 +45,7 @@
           inputs.self.modules.homeManager.zed
           inputs.self.modules.homeManager.profile-personal
 
-          inputs.self.modules.homeManager.kitty
+          inputs.self.modules.homeManager.ghostty
         ];
         programs.home-manager.enable = true;
 
