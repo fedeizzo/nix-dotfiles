@@ -14,7 +14,7 @@
           save = 10000;
           size = 10000;
         };
-        historySubstringSearch.enable = false;
+        historySubstringSearch.enable = true;
         initContent = ''
           source ~/.dd-zshrc
           source ~/.sdkman-zshrc
@@ -48,8 +48,22 @@
           plugins = [
             "git"
             "aliases"
+            "eza"
+            "gh"
+            "jj"
           ];
         };
+        plugins = [
+          {
+            name = "fzf-tab";
+            src = pkgs.fetchFromGitHub {
+              owner = "Aloxaf";
+              repo = "fzf-tab";
+              rev = "v1.2.0";
+              sha256 = "sha256-q26XVS/LcyZPRqDNwKKA9exgBByE0muyuNb0Bbar2lY=";
+            };
+          }
+        ];
       };
 
       fzf = {
