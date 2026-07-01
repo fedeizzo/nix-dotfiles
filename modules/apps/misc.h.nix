@@ -28,8 +28,6 @@
       # pkgs-unstable.pi-coding-agent
 
       art
-
-      pkgs.llm-agents.antigravity-cli
     ];
   };
 }

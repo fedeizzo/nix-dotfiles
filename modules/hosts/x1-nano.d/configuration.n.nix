@@ -54,6 +54,7 @@ in
       inputs.self.modules.nixos.sops
       inputs.self.modules.nixos.tailscale
       inputs.self.modules.nixos.wireguard
+      inputs.self.modules.nixos.ai-tools
     ];
 
     system.stateVersion = "25.05";

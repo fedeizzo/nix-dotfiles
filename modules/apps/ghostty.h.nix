@@ -2,17 +2,19 @@
   flake.modules.homeManager.ghostty = { pkgs, ... }:
     let
       mod = if pkgs.stdenv.isDarwin then "cmd" else "ctrl";
+      package = if pkgs.stdenv.isDarwin then pkgs.ghostty-bin else pkgs.ghostty;
     in
     {
       programs.ghostty = {
         enable = true;
-        package = pkgs.ghostty-bin;
+        inherit package;
         settings = {
           auto-update = "off";
           mouse-hide-while-typing = true;
           theme = "catppuccin-macchiato";
           window-width = 100;
           window-height = 27;
+          font-size = 10;
           quick-terminal-position = "top";
           quick-terminal-screen = "main";
           quick-terminal-space-behavior = "remain";

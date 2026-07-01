@@ -41,7 +41,6 @@
         set XDG_CACHE_HOME "$HOME/.cache"
         set XDG_DATA_HOME "$HOME/.local/share"
         set TERMINAL "ghostty"
-        set PATH $PATH ( find $HOME/.sources/ -type d -printf ":%p" )
         set PATH $PATH /home/fedeizzo/.nimble/bin
         set PIPENV_CACHE_DIR "$XDG_CACHE_HOME"/pipenv
         set WPM_COUNTER 0

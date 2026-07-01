@@ -46,7 +46,8 @@
           profile-personal
 
           ghostty
-          # antigravity
+          ai-tools
+          antigravity
         ];
         programs.home-manager.enable = true;
 
