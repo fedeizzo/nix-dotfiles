@@ -6,12 +6,12 @@
     };
 
     environment = {
-      shells = [ pkgs.fish ];
+      shells = [ pkgs.zsh ];
       sessionVariables = {
         "GTK_USE_PORTAL" = "1";
       };
       pathsToLink = [
-        "/share/fish"
+        "/share/zsh"
         # to fix xournal problem
         "/share/icons"
         "/share/mime"

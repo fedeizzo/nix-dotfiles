@@ -47,7 +47,7 @@ in
       inputs.self.modules.nixos.security
       inputs.self.modules.nixos.user
       inputs.self.modules.nixos.media
-      inputs.self.modules.nixos.fish
+      inputs.self.modules.nixos.zsh
       inputs.self.modules.nixos.nh
       inputs.self.modules.nixos.nix
       inputs.self.modules.nixos.solaar

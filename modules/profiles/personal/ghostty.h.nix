@@ -1,5 +1,5 @@
 {
   flake.modules.homeManager.profile-personal = {
-    programs.ghostty.settings.shell-integration = "fish";
+    programs.ghostty.settings.shell-integration = "zsh";
   };
 }

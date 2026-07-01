@@ -48,6 +48,7 @@
           ".config/libreoffice"
           ".config/niri"
           ".config/tailscale"
+          ".config/zsh"
 
           # Cache
           ".cargo"

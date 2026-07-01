@@ -15,7 +15,7 @@
       ddcutil
 
       # 3d printing
-      pkgs-unstable.orca-slicer
+      orca-slicer
       freecad
       openscad
 

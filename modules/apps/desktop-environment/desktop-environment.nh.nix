@@ -32,6 +32,9 @@
       };
     };
     programs.dconf.enable = true;
+    environment.systemPackages = with pkgs; [
+      xwayland-satellite # xwayland support
+    ];
     environment.pathsToLink = [ "/share/applications" "/share/xdg-desktop-portal" ];
     programs.niri = {
       enable = true;

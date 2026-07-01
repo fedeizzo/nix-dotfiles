@@ -29,7 +29,7 @@
           jujutsu
           desktop-environment
           zen
-          fish
+          zsh
           git
           starship
           languages
@@ -93,7 +93,7 @@
           "keys" # required to have read access to /run/secrets.d (sops-nix)
           "greeter"
         ];
-        shell = pkgs.fish;
+        shell = pkgs.zsh;
         hashedPasswordFile = config.sops.secrets."${username}-path".path;
       };
       root = {

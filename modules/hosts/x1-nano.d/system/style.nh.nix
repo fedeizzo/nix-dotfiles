@@ -64,7 +64,6 @@
     targets = {
       firefox.enable = true;
       firefox.profileNames = [ "fedeizzo" ];
-      fish.enable = true;
       fzf.enable = true;
       gtk.enable = true;
       dank-material-shell.enable = true;
