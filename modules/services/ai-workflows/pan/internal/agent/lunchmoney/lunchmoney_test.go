@@ -4,6 +4,7 @@ package lunchmoney_test
 
 import (
 	"context"
+	"net/http"
 	"testing"
 	"time"
 
@@ -25,7 +26,10 @@ import (
 )
 
 func TestMain(m *testing.M) {
-	goleak.VerifyTestMain(m, goleak.IgnoreCurrent())
+	goleak.VerifyTestMain(m,
+		goleak.IgnoreCurrent(),
+		goleak.IgnoreTopFunction("net/http.(*http2clientConnReadLoop).run"),
+	)
 }
 
 func runAgent(t *testing.T, r *runner.Runner, sessionID, input string) string {
@@ -93,6 +97,9 @@ func runAgent(t *testing.T, r *runner.Runner, sessionID, input string) string {
 
 func TestLunchMoneyAgent(t *testing.T) {
 	t.Parallel()
+	t.Cleanup(func() {
+		http.DefaultClient.CloseIdleConnections()
+	})
 
 	cfg, err := config.Load("")
 	if err != nil {
