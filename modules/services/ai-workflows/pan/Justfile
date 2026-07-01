@@ -3,11 +3,10 @@ default: build
 
 # Build the project
 build:
-    go build -tags goolm -o pan .
+    go build -tags goolm -o pan ./cmd/pan
 
-# Run the project
 run:
-    go run -tags goolm main.go
+    go run -tags goolm ./cmd/pan
 
 # Run tests
 test:
@@ -23,6 +22,9 @@ coverage:
 # Run E2E tests (hits local LLM model)
 e2e-test:
     gotestsum --format testdox -- -tags "goolm,e2e" ./...
+
+optimize agent:
+    go run -tags goolm ./cmd/pan optimize {{ agent }}
 
 # Watch for file changes, generate mocks, and run tests automatically
 watch:

@@ -9,7 +9,7 @@ import (
 )
 
 func TestExtractToolName(t *testing.T) {
-	c := New(&runner.Runner{})
+	c := New(nil, &runner.Runner{}, "")
 
 	tests := []struct {
 		name     string
@@ -63,7 +63,7 @@ func TestExtractToolName(t *testing.T) {
 }
 
 func TestBuildMessage(t *testing.T) {
-	c := New(&runner.Runner{})
+	c := New(nil, &runner.Runner{}, "")
 
 	t.Run("normal message", func(t *testing.T) {
 		msg := c.buildMessage("session-1", "hello world")
@@ -107,7 +107,7 @@ func TestBuildMessage(t *testing.T) {
 }
 
 func TestHandleToolConfirmation(t *testing.T) {
-	c := New(&runner.Runner{})
+	c := New(nil, &runner.Runner{}, "")
 
 	funcCall := &genai.FunctionCall{
 		ID:   "call-789",

@@ -17,14 +17,18 @@ import (
 )
 
 type cliBot struct {
+	sessSvc              session.Service
 	r                    *runner.Runner
 	pendingConfirmations map[string]string // sessionID -> funcCallID
+	conversationPath     string
 }
 
-func New(r *runner.Runner) *cliBot {
+func New(sessSvc session.Service, r *runner.Runner, convPath string) *cliBot {
 	return &cliBot{
+		sessSvc:              sessSvc,
 		r:                    r,
 		pendingConfirmations: make(map[string]string),
+		conversationPath:     convPath,
 	}
 }
 
@@ -63,6 +67,29 @@ func (c *cliBot) Start() error {
 				continue
 			}
 			c.handleAgentEvent(sessionID, ev)
+		}
+
+		if c.conversationPath != "" {
+			getReq := &session.GetRequest{
+				AppName:   "pan",
+				UserID:    userID,
+				SessionID: sessionID,
+			}
+			if sessResp, err := c.sessSvc.Get(ctx, getReq); err == nil && sessResp.Session != nil {
+				var events []*session.Event
+				for ev := range sessResp.Session.Events().All() {
+					events = append(events, ev)
+				}
+				if b, err := json.MarshalIndent(events, "", "  "); err == nil {
+					if err := os.WriteFile(c.conversationPath, b, 0644); err != nil {
+						slog.Error("Failed to write conversation file", "error", err)
+					}
+				} else {
+					slog.Error("Failed to marshal conversation events", "error", err)
+				}
+			} else {
+				slog.Error("Failed to get session for saving", "error", err)
+			}
 		}
 	}
 

@@ -74,6 +74,52 @@ func TestLoad(t *testing.T) {
 		cfg, err := Load(tmpFile)
 		require.Error(t, err)
 		require.Nil(t, cfg)
-		assert.Contains(t, err.Error(), "failed to read fastmail api file")
+		assert.Contains(t, err.Error(), "fastmail secret error")
+	})
+
+	t.Run("returns error when both file and cmd are specified", func(t *testing.T) {
+		os.Clearenv()
+
+		t.Setenv("FASTMAIL_API_FILE", "somefile.txt")
+		t.Setenv("FASTMAIL_API_CMD", "echo 'secret'")
+
+		tmpFile := filepath.Join(t.TempDir(), "config.yaml")
+		os.WriteFile(tmpFile, []byte{}, 0644)
+
+		cfg, err := Load(tmpFile)
+		require.Error(t, err)
+		require.Nil(t, cfg)
+		assert.Contains(t, err.Error(), "mutually exclusive")
+	})
+}
+
+func TestResolveSecret(t *testing.T) {
+	t.Run("Mutually Exclusive Error", func(t *testing.T) {
+		_, err := resolveSecret("somefile.txt", "echo hello")
+		assert.Error(t, err)
+		assert.Contains(t, err.Error(), "mutually exclusive")
+	})
+
+	t.Run("Reads From File", func(t *testing.T) {
+		tmpDir := t.TempDir()
+		filePath := filepath.Join(tmpDir, "secret.txt")
+		err := os.WriteFile(filePath, []byte("  secret-from-file \n"), 0644)
+		require.NoError(t, err)
+
+		val, err := resolveSecret(filePath, "")
+		require.NoError(t, err)
+		assert.Equal(t, "secret-from-file", val)
+	})
+
+	t.Run("Reads From Command", func(t *testing.T) {
+		val, err := resolveSecret("", "echo '  secret-from-cmd '")
+		require.NoError(t, err)
+		assert.Equal(t, "secret-from-cmd", val)
+	})
+
+	t.Run("Both Empty Returns Empty", func(t *testing.T) {
+		val, err := resolveSecret("", "")
+		require.NoError(t, err)
+		assert.Equal(t, "", val)
 	})
 }

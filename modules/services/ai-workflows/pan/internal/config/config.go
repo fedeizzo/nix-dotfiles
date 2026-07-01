@@ -1,7 +1,9 @@
 package config
 
 import (
+	"fmt"
 	"os"
+	"os/exec"
 	"strings"
 	"time"
 
@@ -13,6 +15,7 @@ type Config struct {
 	Models     ModelsConfig     `mapstructure:"models"`
 	Fastmail   FastmailConfig   `mapstructure:"fastmail"`
 	Interface  InterfaceConfig  `mapstructure:"interface"`
+	CLI        CLIConfig        `mapstructure:"cli"`
 	Matrix     MatrixConfig     `mapstructure:"matrix"`
 	Jobs       []JobConfig      `mapstructure:"jobs"`
 	Log        LogConfig        `mapstructure:"log"`
@@ -20,6 +23,10 @@ type Config struct {
 	Telemetry  TelemetryConfig  `mapstructure:"telemetry"`
 	LunchMoney LunchMoneyConfig `mapstructure:"lunchmoney"`
 	Fusion     FusionConfig     `mapstructure:"fusion"`
+}
+
+type CLIConfig struct {
+	ConversationPath string `mapstructure:"conversation_path"`
 }
 
 type TelemetryConfig struct {
@@ -53,17 +60,20 @@ type ModelsConfig struct {
 
 type FastmailConfig struct {
 	APIFile string `mapstructure:"api_file"`
+	APICmd  string `mapstructure:"api_cmd"`
 	API     string `mapstructure:"-"`
 }
 
 type LunchMoneyConfig struct {
 	APIFile string `mapstructure:"api_file"`
+	APICmd  string `mapstructure:"api_cmd"`
 	API     string `mapstructure:"-"`
 }
 
 type FusionConfig struct {
 	Endpoint     string `mapstructure:"endpoint"`
 	PasswordFile string `mapstructure:"password_file"`
+	PasswordCmd  string `mapstructure:"password_cmd"`
 	Password     string `mapstructure:"-"`
 }
 
@@ -75,12 +85,34 @@ type MatrixConfig struct {
 	Homeserver       string        `mapstructure:"homeserver"`
 	User             string        `mapstructure:"user"`
 	PasswordFile     string        `mapstructure:"password_file"`
+	PasswordCmd      string        `mapstructure:"password_cmd"`
 	Password         string        `mapstructure:"-"`
 	AllowedUser      string        `mapstructure:"allowed_user"`
 	AllowedRoom      string        `mapstructure:"allowed_room"`
 	DataDir          string        `mapstructure:"data_dir"`
 	NotificationRoom string        `mapstructure:"notification_room"`
 	MessageRetention time.Duration `mapstructure:"message_retention"`
+}
+
+func resolveSecret(file, cmd string) (string, error) {
+	if file != "" && cmd != "" {
+		return "", fmt.Errorf("both file and cmd provided, they are mutually exclusive")
+	}
+	if file != "" {
+		b, err := os.ReadFile(file)
+		if err != nil {
+			return "", fmt.Errorf("failed to read file at %s: %w", file, err)
+		}
+		return strings.TrimSpace(string(b)), nil
+	}
+	if cmd != "" {
+		out, err := exec.Command("/bin/sh", "-c", cmd).Output()
+		if err != nil {
+			return "", fmt.Errorf("failed to execute cmd %q: %w", cmd, err)
+		}
+		return strings.TrimSpace(string(out)), nil
+	}
+	return "", nil
 }
 
 func Load(configPath string) (*Config, error) {
@@ -126,8 +158,12 @@ func Load(configPath string) (*Config, error) {
 		"hindsight.bank_id":        "HINDSIGHT_BANK_ID",
 		"telemetry.port":           "TELEMETRY_PORT",
 		"lunchmoney.api_file":      "LUNCHMONEY_API_FILE",
+		"lunchmoney.api_cmd":       "LUNCHMONEY_API_CMD",
 		"fusion.endpoint":          "FUSION_ENDPOINT",
 		"fusion.password_file":     "FUSION_PASSWORD_FILE",
+		"fusion.password_cmd":      "FUSION_PASSWORD_CMD",
+		"fastmail.api_cmd":         "FASTMAIL_API_CMD",
+		"matrix.password_cmd":      "MATRIX_PASSWORD_CMD",
 	}
 
 	for key, env := range envBindings {
@@ -148,36 +184,28 @@ func Load(configPath string) (*Config, error) {
 		return nil, oops.In("config").Wrapf(err, "unable to decode into config struct")
 	}
 
-	if cfg.Fastmail.APIFile != "" {
-		b, err := os.ReadFile(cfg.Fastmail.APIFile)
-		if err != nil {
-			return nil, oops.In("config").Wrapf(err, "failed to read fastmail api file at %s", cfg.Fastmail.APIFile)
-		}
-		cfg.Fastmail.API = strings.TrimSpace(string(b))
+	if val, err := resolveSecret(cfg.Fastmail.APIFile, cfg.Fastmail.APICmd); err != nil {
+		return nil, oops.In("config").Wrapf(err, "fastmail secret error")
+	} else if val != "" {
+		cfg.Fastmail.API = val
 	}
 
-	if cfg.Matrix.PasswordFile != "" {
-		b, err := os.ReadFile(cfg.Matrix.PasswordFile)
-		if err != nil {
-			return nil, oops.In("config").Wrapf(err, "failed to read matrix password file at %s", cfg.Matrix.PasswordFile)
-		}
-		cfg.Matrix.Password = strings.TrimSpace(string(b))
+	if val, err := resolveSecret(cfg.Matrix.PasswordFile, cfg.Matrix.PasswordCmd); err != nil {
+		return nil, oops.In("config").Wrapf(err, "matrix secret error")
+	} else if val != "" {
+		cfg.Matrix.Password = val
 	}
 
-	if cfg.LunchMoney.APIFile != "" {
-		b, err := os.ReadFile(cfg.LunchMoney.APIFile)
-		if err != nil {
-			return nil, oops.In("config").Wrapf(err, "failed to read lunchmoney api file at %s", cfg.LunchMoney.APIFile)
-		}
-		cfg.LunchMoney.API = strings.TrimSpace(string(b))
+	if val, err := resolveSecret(cfg.LunchMoney.APIFile, cfg.LunchMoney.APICmd); err != nil {
+		return nil, oops.In("config").Wrapf(err, "lunchmoney secret error")
+	} else if val != "" {
+		cfg.LunchMoney.API = val
 	}
 
-	if cfg.Fusion.PasswordFile != "" {
-		b, err := os.ReadFile(cfg.Fusion.PasswordFile)
-		if err != nil {
-			return nil, oops.In("config").Wrapf(err, "failed to read fusion password file at %s", cfg.Fusion.PasswordFile)
-		}
-		cfg.Fusion.Password = strings.TrimSpace(string(b))
+	if val, err := resolveSecret(cfg.Fusion.PasswordFile, cfg.Fusion.PasswordCmd); err != nil {
+		return nil, oops.In("config").Wrapf(err, "fusion secret error")
+	} else if val != "" {
+		cfg.Fusion.Password = val
 	}
 
 	return &cfg, nil

@@ -7,21 +7,28 @@ models:
 
 fastmail:
   api_file: ""
+  api_cmd: "" # Mutually exclusive with api_file
 
 lunchmoney:
   api_file: ""
+  api_cmd: "" # Mutually exclusive with api_file
 
 fusion:
   endpoint: ""
   password_file: ""
+  password_cmd: "" # Mutually exclusive with password_file
 
 interface:
   type: ""
+
+cli:
+  conversation_path: "conversation.json"
 
 matrix:
   homeserver: ""
   user: ""
   password_file: ""
+  password_cmd: "" # Mutually exclusive with password_file
   allowed_user: ""
   allowed_room: ""
   data_dir: ""
