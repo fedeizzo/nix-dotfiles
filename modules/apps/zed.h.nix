@@ -48,6 +48,7 @@
         project_panel = {
           dock = "left";
         };
+        title_bar = { show_sign_in = false; };
         active_pane_modifiers = {
           inactive_opacity = 0.9;
           border_size = 1;
@@ -121,28 +122,23 @@
           };
           Nix = { language_servers = [ "nil" "!nixd" "..." ]; };
         };
-        # assistant = { version = "2"; default_model = { provider = "ollama"; model = "qwen3.5:35b-a3b"; }; };
-        # agent = {
-        #   default_model = { provider = "ollama"; model = "qwen3.5:35b-a3b"; };
-        # inline_assistant_model = { provider = "ollama"; model = "qwen3.5:35b-a3b"; };
-        # };
-        # language_models = {
-        #   ollama = {
-        #     api_url = "https://ollama.fedeizzo.dev";
-        #     available_models = [
-        #       {
-        #         name = "qwen3.5:35b-a3b";
-        #         display_name = "qwen3.5:35b-a3b";
-        #         max_tokens = 202752;
-        #         keep_alive = "15m";
-        #         supports_tools = true;
-        #         supports_thinking = false;
-        #         supports_images = false;
-        #       }
-        #     ];
-        #   };
-        # };
 
+        # AI features
+        show_edit_predictions = true;
+        edit_predictions = {
+          mode = "eager";
+          provider = "open_ai_compatible_api";
+          open_ai_compatible_api = {
+            model = "qwen";
+            max_output_tokens = 128;
+            api_url = "https://llama.fedeizzo.dev/v1/completions";
+          };
+        };
+        language_models = {
+          open_ai_compatible_api = {
+            api_url = "https://llama.fedeizzo.dev/v1/completions";
+          };
+        };
       };
     };
   };

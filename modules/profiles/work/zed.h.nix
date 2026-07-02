@@ -1,7 +1,24 @@
 {
-  flake.modules.homeManager.profile-work = {
+  flake.modules.homeManager.profile-work = { lib, ... }: {
     programs.zed-editor.userSettings.lsp.gopls.initialization_options = {
       directoryFilters = [ "-" "+domains/synthetics" "+synthetics" ];
+    };
+    programs.zed-editor.userSettings = {
+      show_edit_predictions = true;
+      edit_predictions = lib.mkForce {
+        mode = "eager";
+        provider = "ollama";
+        ollama = {
+          model = "qwen2.5-coder:7b";
+          max_output_tokens = 128;
+          api_url = "https://ai-devx-ide.us1.prod.dog/internal/ide/ollama";
+        };
+      };
+      language_models = lib.mkForce {
+        ollama = {
+          api_url = "https://ai-devx-ide.us1.prod.dog/internal/ide/ollama";
+        };
+      };
     };
 
     xdg.configFile."zed/tasks.json".text = builtins.toJSON [
