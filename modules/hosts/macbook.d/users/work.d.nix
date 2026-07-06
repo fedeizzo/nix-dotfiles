@@ -5,6 +5,7 @@
       fonts
       home-manager
       ai-tools
+      brew
     ];
 
     programs.zsh.enable = true;
@@ -13,6 +14,12 @@
       shell = pkgs.zsh;
     };
 
+    system.primaryUser = username;
+    security.pam.services.sudo_local = {
+      enable = true;
+      reattach = true;
+      touchIdAuth = true;
+    };
     home-manager.users.${username} = {
       home = {
         inherit username;
