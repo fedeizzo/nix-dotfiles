@@ -65,6 +65,8 @@
       url = "github:nix-community/stylix/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    vicinae.url = "github:vicinaehq/vicinae";
+    vicinae-extensions.url = "github:vicinaehq/extensions";
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
   };
 }

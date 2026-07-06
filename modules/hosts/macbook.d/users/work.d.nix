@@ -6,6 +6,7 @@
       home-manager
       ai-tools
       brew
+      vicinae
     ];
 
     programs.zsh.enable = true;

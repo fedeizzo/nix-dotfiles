@@ -14,6 +14,10 @@ result
 **/.DS_Store
 .pre-commit-config.yaml
 
+# vicinae
+node_modules
+vicinae-env.d.ts
+
 # mdbook output
 book/html/
 book/book.toml.bak
