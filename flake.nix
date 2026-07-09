@@ -31,6 +31,7 @@
     import-tree.url = "github:vic/import-tree";
     jail-nix.url = "sourcehut:~alexdavid/jail.nix";
     llm-agents.url = "github:numtide/llm-agents.nix";
+    mac-app-util.url = "github:hraban/mac-app-util";
     nh.url = "github:nix-community/nh";
     niri.url = "github:sodiboo/niri-flake";
     nix-amd-ai.url = "github:noamsto/nix-amd-ai";
