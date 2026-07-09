@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # @vicinae.schemaVersion 1
-# @vicinae.title github-search
+# @vicinae.title confluence-search
 # @vicinae.mode inline
 # @vicinae.exec ["/bin/bash"]
 # @vicinae.argument1 { "type": "text", "placeholder": "query" }
 
-open "https://github.com/search?q=${1}&type=code"
+open "https://datadoghq.atlassian.net/wiki/search?text=${1}&product=confluence"
