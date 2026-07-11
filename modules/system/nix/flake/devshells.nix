@@ -18,13 +18,13 @@
         {
           help = "🔄 Switch and update the current system configuration using nh.";
           name = "update";
-          command = "doas nh os switch -R";
+          command = "nh os switch";
           category = "🔧 System administration";
         }
         {
           help = "🧹 Garbage collect old NixOS generations and clean the store.";
           name = "clean";
-          command = "doas nh clean all -R";
+          command = "nh clean all";
           category = "🔧 System administration";
           package = inputs.nh.packages.${pkgs.system}.default;
         }
