@@ -1,0 +1,105 @@
+{ lib
+, python3Packages
+, fetchFromGitHub
+}:
+
+let
+
+  sentencex = python3Packages.buildPythonPackage rec {
+    pname = "sentencex";
+    version = "0.6.1";
+    src = python3Packages.fetchPypi {
+      inherit pname version;
+      hash = "sha256-R2Xs4Al2D2PQ+MPCrvCPVziA5dDcSl/OYPYiGdGrQss=";
+    };
+    format = "pyproject";
+    nativeBuildInputs = [ python3Packages.hatchling python3Packages.setuptools ];
+    doCheck = false;
+  };
+
+  gradio_log = python3Packages.buildPythonPackage rec {
+    pname = "gradio_log";
+    version = "0.0.8";
+    src = python3Packages.fetchPypi {
+      inherit pname version;
+      hash = "sha256-Q9eusmUfs7BYP2wgW9q8Tt5QtHtTEygXTbmwymPMzww=";
+    };
+    format = "pyproject";
+    nativeBuildInputs = [ python3Packages.hatchling python3Packages.hatch-requirements-txt python3Packages.hatch-fancy-pypi-readme ];
+    doCheck = false;
+    postPatch = ''
+      substituteInPlace pyproject.toml --replace-warn 'gradio>=4.0,<6.0' 'gradio'
+      cat << 'EOF' >> backend/gradio_log/log.py
+
+    def preprocess(self, payload: Any) -> Any:
+        return payload
+
+    def postprocess(self, value: Any) -> Any:
+        return value
+EOF
+    '';
+    propagatedBuildInputs = [ python3Packages.gradio ];
+  };
+
+in python3Packages.buildPythonApplication {
+  pname = "epub_to_audiobook";
+  version = "0.8.7";
+
+  src = fetchFromGitHub {
+    owner = "p0n1";
+    repo = "epub_to_audiobook";
+    rev = "v0.8.7";
+    sha256 = "16q5ay4w98p94h26afnkz1cmbx6psag901fncllynivjr9qqqxcd";
+  };
+
+  format = "other";
+
+  postPatch = ''
+    substituteInPlace audiobook_generator/tts_providers/openai_tts_provider.py \
+      --replace-fail "instructions=self.config.instructions," "**({'instructions': self.config.instructions} if self.config.instructions else {}),"
+  '';
+
+  installPhase = ''
+    runHook preInstall
+
+    mkdir -p $out/bin
+    mkdir -p $out/${python3Packages.python.sitePackages}
+    
+    # Copy the core library
+    cp -r audiobook_generator $out/${python3Packages.python.sitePackages}/
+    cp main.py $out/${python3Packages.python.sitePackages}/main.py
+    
+    # Install CLI
+    echo "#!/usr/bin/env python" > $out/bin/epub_to_audiobook
+    cat main.py >> $out/bin/epub_to_audiobook
+    chmod +x $out/bin/epub_to_audiobook
+
+    # Install UI
+    echo "#!/usr/bin/env python" > $out/bin/epub_to_audiobook_ui
+    cat main_ui.py >> $out/bin/epub_to_audiobook_ui
+    chmod +x $out/bin/epub_to_audiobook_ui
+
+    runHook postInstall
+  '';
+
+  propagatedBuildInputs = with python3Packages; [
+    beautifulsoup4
+    ebooklib
+    mutagen
+    openai
+    requests
+    edge-tts
+    pydub
+    wyoming
+    gradio
+    docker
+    sentencex
+    gradio_log
+  ];
+  
+  meta = with lib; {
+    description = "Convert text book to audiobook";
+    mainProgram = "epub_to_audiobook";
+    license = licenses.mit;
+  };
+}

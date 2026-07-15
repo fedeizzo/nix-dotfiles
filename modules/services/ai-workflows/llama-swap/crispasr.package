@@ -1,0 +1,90 @@
+{ lib
+, stdenv
+, fetchFromGitHub
+, cmake
+, pkg-config
+, curl
+, opus
+, lame
+, ffmpeg
+, darwin
+# Feature flags for different backends
+, useVulkan ? false
+, vulkan-loader ? null
+, vulkan-headers ? null
+, vulkan-tools ? null
+, shaderc ? null
+, useROCm ? false
+, rocmPackages ? null
+, useCuda ? false
+, cudaPackages ? null
+, ...
+}:
+
+stdenv.mkDerivation rec {
+  pname = "crispasr";
+  version = "0.8.12";
+
+  src = fetchFromGitHub {
+    owner = "CrispStrobe";
+    repo = "CrispASR";
+    # Update this to the specific tag or commit you want to package
+    rev = "v${version}"; 
+    # Use lib.fakeHash to let Nix tell you the actual hash on the first build,
+    # or replace with the actual SRI hash if known.
+    hash = "sha256-lp8i0AtCdZnEajOot/PeQcMd109TIresw9Bo2FiGGfY=";
+    
+    # This automatically clones ggml and any other submodules so you don't 
+    # need to manually wire up the flake inputs for submodules anymore!
+    fetchSubmodules = true;
+  };
+
+  nativeBuildInputs = [
+    cmake
+    pkg-config
+  ];
+
+  buildInputs = [
+    curl
+    opus
+    lame
+    ffmpeg
+  ] ++ lib.optionals stdenv.isDarwin [
+    darwin.apple_sdk.frameworks.Accelerate
+    darwin.apple_sdk.frameworks.Metal
+    darwin.apple_sdk.frameworks.Foundation
+    darwin.apple_sdk.frameworks.MetalKit
+  ] ++ lib.optionals useVulkan [
+    vulkan-loader
+    vulkan-headers
+    vulkan-tools
+    shaderc
+  ] ++ lib.optionals useROCm (with rocmPackages; [
+    clr
+    hipblas
+    rocblas
+  ]) ++ lib.optionals useCuda (with cudaPackages; [
+    cudatoolkit
+    cublas
+  ]);
+
+  cmakeFlags = [
+    "-DCRISPASR_CURL=ON"
+    "-DCRISPASR_BUILD_SERVER=ON"
+    "-DCRISPASR_BUILD_EXAMPLES=ON"
+    "-DCRISPASR_BUILD_TESTS=OFF"
+    "-DBUILD_SHARED_LIBS=OFF"
+  ] ++ lib.optional useVulkan "-DGGML_VULKAN=ON"
+    ++ lib.optionals useROCm [
+      "-DGGML_HIP=ON"
+      "-DAMDGPU_TARGETS=gfx1151"
+    ]
+    ++ lib.optional useCuda "-DGGML_CUDA=ON";
+
+  meta = with lib; {
+    description = "One C++ binary, 43 ASR backends + 48 TTS engines, zero Python dependencies";
+    homepage = "https://github.com/CrispStrobe/CrispASR";
+    license = licenses.mit;
+    mainProgram = "crispasr";
+  };
+}

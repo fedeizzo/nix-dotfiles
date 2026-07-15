@@ -52,7 +52,7 @@ in
       inputs.self.modules.nixos.authentik
       inputs.self.modules.nixos.backrest
       inputs.self.modules.nixos.blocky
-      inputs.self.modules.nixos.calibre
+      inputs.self.modules.nixos.books
       inputs.self.modules.nixos.fedeizzo-dev
       inputs.self.modules.nixos.fi-services
       inputs.self.modules.nixos.fusion

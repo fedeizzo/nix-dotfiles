@@ -1,10 +1,10 @@
 {
-  flake.modules.nixos.wireguard = { ... }: {
-    networking.wireguard.interfaces.wg0.peers = [
+  flake.modules.nixos.wireguard = { lib, hostname, ... }: {
+    networking.wireguard.interfaces.wg0.peers = lib.mkIf (hostname != "homelab") [
       {
         name = "homelab";
         publicKey = "Ug1P6UzLyQ0BFbrfi0G9KLJBNBs+IOisRn3uiLoR5yU=";
-        allowedIPs = [ "192.168.7.1/32" "192.168.1.67/32" ];
+        allowedIPs = [ "192.168.7.1/32" "192.168.1.254/32" ];
         endpoint = "vpn.fedeizzo.dev:51821";
         persistentKeepalive = 25;
       }
@@ -21,7 +21,7 @@
       wg0 = {
         postSetup = ''
           WAN_IFACE="eth0"
-          DESKTOP_PC="192.168.1.67"
+          DESKTOP_PC="192.168.1.254"
 
           ${pkgs.iptables}/bin/iptables -A FORWARD -i wg0 -d $DESKTOP_PC -j ACCEPT
           ${pkgs.iptables}/bin/iptables -t nat -A POSTROUTING -o $WAN_IFACE -d $DESKTOP_PC -j MASQUERADE
@@ -29,7 +29,7 @@
 
         postShutdown = ''
           WAN_IFACE="eth0"
-          DESKTOP_PC="192.168.1.50"
+          DESKTOP_PC="192.168.1.254"
 
           ${pkgs.iptables}/bin/iptables -D FORWARD -i wg0 -d $DESKTOP_PC -j ACCEPT
           ${pkgs.iptables}/bin/iptables -t nat -D POSTROUTING -o $WAN_IFACE -d $DESKTOP_PC -j MASQUERADE

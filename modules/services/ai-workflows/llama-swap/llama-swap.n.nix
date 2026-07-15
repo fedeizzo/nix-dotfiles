@@ -3,97 +3,18 @@
 
   flake.modules.nixos.llama-swap = { pkgs-unstable, lib, inputs, pkgs, config, ... }:
     let
-      rocmfp4-llama = pkgs.callPackage ({ pkgs, ... }:
-        let
-          src = pkgs.fetchFromGitHub {
-            owner = "charlie12345";
-            repo = "rocmfp4-llama";
-            rev = "c5bfb0d8db45bf81e7bd67e95d83f18a6d5ecc76";
-            hash = "sha256-8vuxlYf3yjaZE/kiTsLGBMH9SHKywdaeIi5gHjWX8Ds="; # Note: Run nix-build to get actual hash
-          };
-
-          rocmBuildInputs = with pkgs.rocmPackages; [
-            clr
-            hipblas
-            rocblas
-          ];
-
-          vulkanBuildInputs = with pkgs; [
-            vulkan-headers
-            vulkan-loader
-            shaderc
-            spirv-headers
-          ];
-
-        in
-        pkgs.stdenv.mkDerivation {
-          pname = "rocmfp4-llama-strix";
-          version = "0.0.0";
-
-          inherit src;
-
-          nativeBuildInputs = [
-            pkgs.cmake
-            pkgs.ninja
-            pkgs.pkg-config
-            pkgs.git
-          ];
-
-          buildInputs = rocmBuildInputs ++ vulkanBuildInputs ++ [ pkgs.openssl ];
-
-          # Set up the essential ROCm environment from .devops/nix/package.nix
-          ROCM_PATH = "${pkgs.rocmPackages.clr}";
-          HIP_DEVICE_LIB_PATH = "${pkgs.rocmPackages.rocm-device-libs}/amdgcn/bitcode";
-
-          # The original derivation defines the CMAKE_HIP_COMPILER flag;
-          # Since we are using the script directly, we inject it into the environment
-          # so that if cmake needs it, it can potentially find the clang binaries.
-          CC = "${pkgs.rocmPackages.llvm.clang}/bin/clang";
-          CXX = "${pkgs.rocmPackages.llvm.clang}/bin/clang++";
-
-          # Disable default configurePhase so we stay in the source root
-          dontConfigure = true;
-
-          # We overwrite the build/install phases to run the script literally
-          buildPhase = ''
-            # Make sure we use the script's intended parallelism and patch it for the nix sandbox
-            patchShebangs scripts/build-strix-rocmfp4-mtp.sh
-            export JOBS=$NIX_BUILD_CORES
-
-            # We must append CMAKE_HIP_COMPILER manually here just in case because
-            # scripts/build-strix-rocmfp4-mtp.sh doesn't explicitly pass it like package.nix does.
-            sed -i 's|cmake -S|cmake -DCMAKE_HIP_COMPILER=${pkgs.rocmPackages.llvm.clang}/bin/clang -DBUILD_SHARED_LIBS=OFF -S|' scripts/build-strix-rocmfp4-mtp.sh
-
-            bash ./scripts/build-strix-rocmfp4-mtp.sh
-          '';
-
-          installPhase = ''
-            mkdir -p $out/bin
-
-            # The script builds to build-strix-rocmfp4/bin/
-            cp build-strix-rocmfp4/bin/llama-cli $out/bin/
-            cp build-strix-rocmfp4/bin/llama-server $out/bin/
-            cp build-strix-rocmfp4/bin/llama-completion $out/bin/
-            cp build-strix-rocmfp4/bin/llama-quantize $out/bin/
-            cp build-strix-rocmfp4/bin/llama-bench $out/bin/
-            cp build-strix-rocmfp4/bin/test-backend-ops $out/bin/
-            cp build-strix-rocmfp4/bin/test-quantize-fns $out/bin/
-            cp build-strix-rocmfp4/bin/test-quantize-perf $out/bin/
-          '';
-        }
-      ) { };
-      llama-cpp =
+       llama-cpp =
         (pkgs-unstable.llama-cpp.override {
           rocmSupport = true;
           rocmGpuTargets = [ "gfx1151" ];
         }).overrideAttrs
           (oldAttrs: rec {
-            version = "9186";
+            version = "9925";
             src = pkgs-unstable.fetchFromGitHub {
               owner = "ggml-org";
               repo = "llama.cpp";
               tag = "b${version}";
-              hash = "sha256-mkdZl/yReMMbls6neFmyD5gOZYR2wsafipxlRXcDPYM=";
+              hash = "sha256-yX8BrHA0fIgIozBGOXnN72KlfqIcR/mnO5ttUBLvxZE=";
 
               leaveDotGit = true;
 
@@ -103,7 +24,7 @@
               '';
             };
             npmRoot = "tools/ui";
-            npmDepsHash = "sha256-WaEePrEZ7O/7deP2KJhe0AwiSKYA8HOqETmMHUkmBe0=";
+            npmDepsHash = "sha256-6s9skw1wzEfm9QKktTqea3J+oudQAsS6O2VnZEMXAdw=";
             cmakeFlags = (oldAttrs.cmakeFlags or [ ]) ++ [
               "-DLLAMA_HIP_UMA=ON" # unified memory
             ];
@@ -112,8 +33,8 @@
             ];
           });
       llama-server = lib.getExe' llama-cpp "llama-server";
-      rocmfp4-llama-server = lib.getExe' rocmfp4-llama "llama-server";
       ds4-server = lib.getExe' inputs.ds4.packages.${pkgs.system}.default "ds4-server";
+      crispasr = pkgs.callPackage ./crispasr.package { useROCm = true; rocmPackages = pkgs-unstable.rocmPackages; };
 
       commonFlags = ''
         -ngl 999 \
@@ -151,40 +72,6 @@
               filters.setParamsByID."qwen-nothink".chat_template_kwargs.enable_thinking = false;
             };
 
-            "qwen27" = {
-              env = [ "HSA_OVERRIDE_GFX_VERSION=11.5.1" "GGML_HIP_ENABLE_UNIFIED_MEMORY=1" "GPU_MAX_HW_QUEUES=1" ];
-              cmd = ''
-                ${rocmfp4-llama-server} \
-                  -m /persist/models/Qwopus3.6/Qwopus3.6-27B-v2-MTP-BF16-to-ROCmFP4-STRIX_LEAN.gguf \
-                  --mmproj /persist/models/Qwopus3.6/mmproj-F32.mmproj \
-                  --port ''${PORT} \
-                  --jinja \
-                  -c 262144 \
-                  -ngl 999 \
-                  -fa on \
-                  -dev ROCm0 \
-                  -b 512 \
-                  -ub 512 \
-                  -t 16 \
-                  -tb 32 \
-                  -ctk q4_0 \
-                  -ctv q4_0 \
-                  --spec-type draft-mtp \
-                  --spec-draft-device ROCm0 \
-                  --spec-draft-ngl all \
-                  --spec-draft-type-k q4_0 \
-                  --spec-draft-type-v q4_0 \
-                  --spec-draft-n-max 4 \
-                  --spec-draft-n-min 0 \
-                  --spec-draft-p-min 0.0 \
-                  --spec-draft-p-split 0.10 \
-                  --parallel 1 \
-                  --metrics \
-                  --no-mmap
-              '';
-              filters.setParamsByID."qwen27-nothink".chat_template_kwargs.enable_thinking = false;
-            };
-
             "qwen3-embedding" = {
               env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
               cmd = ''${llama-server} --port ''${PORT} -hf Qwen/Qwen3-Embedding-8B-GGUF --embedding --pooling last -ub 8192'';
@@ -196,10 +83,19 @@
               aliases = [ "embedding" ];
             };
 
-            "qwen36-27b-realtime" = {
+            "whisper-v3-turbo" = {
+              env = [
+                "FLM_MODEL_PATH=/persist/models/flm"
+              ];
+              cmd = ''${pkgs.fastflowlm}/bin/flm serve --port ''${PORT} -a 1'';
+              aliases = [ "whisper" "transcription" ];
+              checkEndpoint = "/v1/models";
+            };
+
+            "qwen36-27b" = {
               env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
-              cmd = ''${llama-server} --port ''${PORT} -hf unsloth/Qwen3.6-27B-GGUF:UD-Q4_K_XL -hfd unsloth/Qwen3.5-0.8B-GGUF:UD-Q4_K_XL --temp 1.0 --top-p 0.95 --min-p 0.0 --top-k 20 ${commonFlags} --presence-penalty 1.5 --frequency-penalty 1.0'';
-              aliases = [ "realtime" "q4-xl" ];
+              cmd = ''${llama-server} --port ''${PORT} -hf unsloth/Qwen3.6-27B-MTP-GGUF:UD-Q4_K_XL ${commonFlags} --spec-type draft-mtp --spec-draft-n-max 3 --spec-draft-p-min 0.75 --temp 0.6 --top-p 0.95 --top-k 20 --min-p 0.00 --presence-penalty 0.0 --repeat-penalty 1.0'';
+              aliases = [ "realtime" "q4-xl" "qwen27" ];
               timeouts.responseHeader = 600;
             };
 
@@ -211,21 +107,27 @@
               timeouts.responseHeader = 600;
               filters.setParamsByID."ds4-nothink".chat_template_kwargs.enable_thinking = false;
             };
+
+            "voxtral" = {
+              env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" "HSA_ENABLE_SDMA=0" ];
+              cmd = ''${crispasr}/bin/crispasr --server --port ''${PORT} --backend voxtral-tts -m /persist/models/voxtral-4b-tts-f16.gguf --cache-dir /persist/models --no-flash-attn'';
+              aliases = [ "tts" "voxtral" ];
+            };
           };
 
           matrix = {
             vars = {
-              "qr" = "qwen36-27b-realtime";
-              "qc" = "qwen36-35b-a3b";
+              "q35" = "qwen36-35b-a3b";
               "e" = "bge-m3";
               "ds4" = "ds4";
-              "qrr" = "qwen27";
+              "q27" = "qwen36-27b";
+              "ws" = "whisper-v3-turbo";
+              "vx" = "voxtral";
             };
 
             sets = {
-              standard = "qr & qc & e";
-              ds4 = "ds4 & qc & e";
-              qrr = "qrr & qc & e";
+              standard = "q27 & q35 & e & ws & vx";
+              ds4 = "ds4 & q35 & e & ws & vx";
             };
           };
 
@@ -237,8 +139,16 @@
         environment = {
           LLAMA_CACHE = "/persist/models";
           GPU_MAX_HW_QUEUES = "1";
+          # fastflow npu
+          FLM_MODEL_PATH = "/persist/models/flm";
+          XILINX_XRT = config.environment.sessionVariables.XILINX_XRT or "";
+          XRT_PATH = config.environment.sessionVariables.XRT_PATH or "";
+          FLM_DISABLE_UPDATE_CHECK = "1";
+          LD_LIBRARY_PATH = "${config.environment.sessionVariables.XILINX_XRT or ""}/lib";
         };
         serviceConfig.ReadWritePaths = "/persist/models";
+        serviceConfig.LimitMEMLOCK = "infinity"; # fastflowlm with npu support
+        serviceConfig.SupplementaryGroups = [ "video" "render" ];
       };
 
       fi.services = [
