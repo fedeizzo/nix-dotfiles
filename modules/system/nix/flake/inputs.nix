@@ -12,4 +12,9 @@
 
   # ── Misc / no better home ─────────────────────────────────────────────
   flake-file.inputs.nixos-pikvm.url = "github:hatch01/nixos-pikvm"; # no module yet
+  
+  flake-file.inputs.rust-overlay = {
+    url = "github:oxalica/rust-overlay";
+    inputs.nixpkgs.follows = "nixpkgs";
+  };
 }
