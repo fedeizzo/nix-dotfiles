@@ -10,6 +10,7 @@
       enableROCm = false; # ROCm GPU backends (llamacpp + sd-cpp)
       enableVulkan = false; # Vulkan GPU backends (llamacpp + whispercpp)
       enableImageGen = false; # default true; set false to drop sd-cpp from closure
+      
 
       lemonade = {
         user = "root";

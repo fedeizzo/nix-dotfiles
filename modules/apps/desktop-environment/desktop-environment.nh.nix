@@ -96,6 +96,17 @@
           theme = "Bibata Modern Eyes";
         };
 
+        window-rules = [
+          {
+            matches = [
+              { title = "^OpenTypeless Capsule$"; }
+              { title = "^OpenTypeless Ask$"; }
+            ];
+            border.enable = false;
+            focus-ring.enable = false;
+          }
+        ];
+
         # Binds
         binds = with config.lib.niri.actions; {
           "Super+Shift+Slash".action = show-hotkey-overlay;

@@ -1,39 +1,11 @@
 {
-  flake-file.inputs.ds4.url = "github:fedeizzo/ds4";
+  flake-file.inputs.audio-cpp.url = "github:fedeizzo/audio.cpp/fedeizzo/add-flake-lock";
 
   flake.modules.nixos.llama-swap = { pkgs-unstable, lib, inputs, pkgs, config, ... }:
     let
-       llama-cpp =
-        (pkgs-unstable.llama-cpp.override {
-          rocmSupport = true;
-          rocmGpuTargets = [ "gfx1151" ];
-        }).overrideAttrs
-          (oldAttrs: rec {
-            version = "9925";
-            src = pkgs-unstable.fetchFromGitHub {
-              owner = "ggml-org";
-              repo = "llama.cpp";
-              tag = "b${version}";
-              hash = "sha256-yX8BrHA0fIgIozBGOXnN72KlfqIcR/mnO5ttUBLvxZE=";
-
-              leaveDotGit = true;
-
-              postFetch = ''
-                git -C "$out" rev-parse --short HEAD > $out/COMMIT
-                find "$out" -name .git -print0 | xargs -0 rm -rf
-              '';
-            };
-            npmRoot = "tools/ui";
-            npmDepsHash = "sha256-6s9skw1wzEfm9QKktTqea3J+oudQAsS6O2VnZEMXAdw=";
-            cmakeFlags = (oldAttrs.cmakeFlags or [ ]) ++ [
-              "-DLLAMA_HIP_UMA=ON" # unified memory
-            ];
-            cmakeFlagsArray = (oldAttrs.cmakeFlagsArray or [ ]) ++ [
-              "-DCMAKE_HIP_FLAGS=--rocm-path=${pkgs-unstable.rocmPackages.clr} -mllvm --amdgpu-unroll-threshold-local=600"
-            ];
-          });
+      llama-cpp = (pkgs-unstable.llama-cpp.override { rocmSupport = true; rocmGpuTargets = [ "gfx1151" ]; });
       llama-server = lib.getExe' llama-cpp "llama-server";
-      ds4-server = lib.getExe' inputs.ds4.packages.${pkgs.system}.default "ds4-server";
+      ds4-server = lib.getExe' inputs.nix-amd-ai.packages.${pkgs.system}.ds4 "ds4-server";
       crispasr = pkgs.callPackage ./crispasr.package { useROCm = true; rocmPackages = pkgs-unstable.rocmPackages; };
 
       commonFlags = ''
@@ -83,11 +55,11 @@
               aliases = [ "embedding" ];
             };
 
-            "whisper-v3-turbo" = {
+            "gemma4-it:e4b" = {
               env = [
                 "FLM_MODEL_PATH=/persist/models/flm"
               ];
-              cmd = ''${pkgs.fastflowlm}/bin/flm serve --port ''${PORT} -a 1'';
+              cmd = ''${pkgs.fastflowlm}/bin/flm serve gemma4-it:e4b --port ''${PORT} --ctx-len 128000 --pmode turbo --asr 1'';
               aliases = [ "whisper" "transcription" ];
               checkEndpoint = "/v1/models";
             };
@@ -121,13 +93,13 @@
               "e" = "bge-m3";
               "ds4" = "ds4";
               "q27" = "qwen36-27b";
-              "ws" = "whisper-v3-turbo";
               "vx" = "voxtral";
+              "g" = "gemma4-it:e4b";
             };
 
             sets = {
-              standard = "q27 & q35 & e & ws & vx";
-              ds4 = "ds4 & q35 & e & ws & vx";
+              standard = "q27 & q35 & e & vx & g";
+              ds4 = "ds4 & q35 & e & vx & g";
             };
           };
 
@@ -150,6 +122,8 @@
         serviceConfig.LimitMEMLOCK = "infinity"; # fastflowlm with npu support
         serviceConfig.SupplementaryGroups = [ "video" "render" ];
       };
+
+      environment.systemPackages = [ inputs.audio-cpp.packages.${pkgs.system}.vulkan ];
 
       fi.services = [
         {

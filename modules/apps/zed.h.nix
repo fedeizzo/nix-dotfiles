@@ -121,6 +121,14 @@
             ];
           };
           Nix = { language_servers = [ "nil" "!nixd" "..." ]; };
+          Svelte = {
+            language_servers = [ "svelte-language-server" "vtsls" "..." ];
+            formatter = "prettier";
+          };
+          TypeScript = {
+            language_servers = [ "vtsls" "..." ];
+            formatter = "prettier";
+          };
         };
 
         # AI features

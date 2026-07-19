@@ -6,6 +6,7 @@
   outputs = inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } (inputs.import-tree ./modules);
 
   inputs = {
+    audio-cpp.url = "github:fedeizzo/audio.cpp/fedeizzo/add-flake-lock";
     authentik-nix.url = "github:nix-community/authentik-nix";
     deploy-rs.url = "github:serokell/deploy-rs";
     devshell.url = "github:numtide/devshell";
@@ -15,7 +16,6 @@
     };
     dms.url = "github:AvengeMedia/DankMaterialShell/stable";
     dms-plugin-registry.url = "github:AvengeMedia/dms-plugin-registry";
-    ds4.url = "github:fedeizzo/ds4";
     flake-file.url = "github:vic/flake-file";
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
