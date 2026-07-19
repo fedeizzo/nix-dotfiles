@@ -1,13 +1,15 @@
 default:
     @just --list
 
-# Format the code to standard Rust idioms
+# Format the code (Rust + Svelte/TS)
 fmt:
     cargo fmt
+    cd frontend && npm run format
 
-# Run the aggressive clippy linter
+# Run linters (Clippy + ESLint)
 lint:
     cargo clippy -- -W clippy::pedantic
+    cd frontend && npm run lint
 
 # Run all tests using standard cargo test
 test:
@@ -25,13 +27,31 @@ watch:
 coverage:
     cargo tarpaulin
 
-# Build the binary
+# Build the frontend and the Rust binary
 build:
+    cd frontend && npm run build
     cargo build
 
-# Run the application (e.g. `just run --config config.yml`)
+# Run the application (builds frontend first)
 run *ARGS:
+    cd frontend && npm run build
     cargo run -- {{ARGS}}
 
-# Run format, lint, and test (Run this before you commit!)
-check: fmt lint nextest
+# Run the frontend dev server (Vite hot-reload)
+dev-front:
+    cd frontend && npm run dev
+
+# Run Svelte type checking
+check-front:
+    cd frontend && npm run check
+
+# Run the backend dev server (Rust hot-reload)
+dev-back:
+    cargo watch -x run
+
+# Run BOTH frontend and backend dev servers with hot-reload!
+dev:
+    npx concurrently -c "green,blue" -n "SVELTE,RUST" "cd frontend && npm run dev" "cargo watch -x run"
+
+# Run all formatting, linting, and tests (Run this before you commit!)
+check: fmt lint check-front nextest

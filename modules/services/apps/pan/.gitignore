@@ -29,3 +29,11 @@ target/
 
 # logs
 *.log
+
+# Frontend (Node.js/Svelte)
+node_modules/
+frontend/node_modules/
+dist/
+frontend/dist/
+.env.local
+.env.*.local

@@ -77,7 +77,15 @@ async fn main() -> Result<()> {
     )
     .context("Failed to initialize the rig")?;
 
-    cli::run_chat_loop(&rig).await?;
+    let app_state = interface::api::AppState {
+        rig: Arc::new(rig),
+    };
+
+    let app = interface::api::create_router(app_state);
+
+    let addr = tokio::net::TcpListener::bind("127.0.0.1:3000").await?;
+    tracing::info!("Server running on http://127.0.0.1:3000");
+    axum::serve(addr, app).await?;
 
     Ok(())
 }

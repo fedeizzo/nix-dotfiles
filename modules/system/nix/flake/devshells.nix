@@ -151,6 +151,11 @@
           gotestsum
           gotestdox
           gotools
+
+          nodejs_26
+          typescript
+          typescript-language-server
+          svelte-language-server
         ] ++ config.pre-commit.settings.enabledPackages;
 
         devshell.startup.pre-commit-hooks.text = config.pre-commit.installationScript;
