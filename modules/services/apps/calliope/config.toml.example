@@ -1,0 +1,13 @@
+[llm]
+base_url = "https://test/v1"
+model = "qwen"
+emotion_strategy = "inline"
+
+[tts]
+engine = "openai"
+base_url = "http://localhost:8080/v1"
+model = "qwen3-tts"
+
+[tts.voices]
+"narrator" = "narrator_ita"
+"Rand" = "rand_ita"
