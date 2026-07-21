@@ -16,6 +16,13 @@
           "/var/volumes"
 
           {
+            directory = "/home/mixer";
+            user = "mixer";
+            group = "users";
+            mode = "u=rwx,g=,o=";
+          }
+
+          {
             directory = "/var/lib/garmindb";
             user = "garmindb";
             group = "garmindb";

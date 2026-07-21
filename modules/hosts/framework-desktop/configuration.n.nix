@@ -31,6 +31,7 @@ in
       inputs.nix-topology.nixosModules.default
       inputs.authentik-nix.nixosModules.default
       inputs.hermes-agent.nixosModules.default
+      inputs.home-manager.nixosModules.home-manager
 
       inputs.self.modules.nixos.misc
       inputs.self.modules.nixos.nix
@@ -39,6 +40,7 @@ in
       inputs.self.modules.nixos.power
       inputs.self.modules.nixos.hardware
       inputs.self.modules.nixos.boot
+      inputs.self.modules.nixos.zsh
 
       inputs.self.modules.nixos.networking
       inputs.self.modules.nixos.wireguard

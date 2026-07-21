@@ -7,6 +7,7 @@
       llama-server = lib.getExe' llama-cpp "llama-server";
       ds4-server = lib.getExe' inputs.nix-amd-ai.packages.${pkgs.system}.ds4 "ds4-server";
       crispasr = pkgs.callPackage ./crispasr.package { useROCm = true; rocmPackages = pkgs-unstable.rocmPackages; };
+      audio-cpp = lib.getExe' inputs.audio-cpp.packages.${pkgs.system}.vulkan "audiocpp_server";
 
       commonFlags = ''
         -ngl 999 \
@@ -85,6 +86,21 @@
               cmd = ''${crispasr}/bin/crispasr --server --port ''${PORT} --backend voxtral-tts -m /persist/models/voxtral-4b-tts-f16.gguf --cache-dir /persist/models --no-flash-attn'';
               aliases = [ "tts" "voxtral" ];
             };
+
+            "qwen3-tts" = {
+              cmd = ''${audio-cpp} --config /persist/models/audio.cpp/qwen-tts.json --port ''${PORT}'';
+              # aliases = [ "tts" "voxtral" ];
+            };
+            
+            "qwen3_asr" = {
+              cmd = ''${audio-cpp} --config /persist/models/audio.cpp/qwen-asr.json --port ''${PORT}'';
+              # aliases = [ "tts" "voxtral" ];
+            };
+            
+            "supertonic" = {
+              cmd = ''${audio-cpp} --config /persist/models/audio.cpp/supertonic.json --port ''${PORT}'';
+              # aliases = [ "tts" "voxtral" ];
+            };
           };
 
           matrix = {
@@ -94,12 +110,15 @@
               "ds4" = "ds4";
               "q27" = "qwen36-27b";
               "vx" = "voxtral";
+              "qtts" = "qwen3-tts";
+              "qasr" = "qwen3_asr";
+              "st" = "supertonic";
               "g" = "gemma4-it:e4b";
             };
 
             sets = {
-              standard = "q27 & q35 & e & vx & g";
-              ds4 = "ds4 & q35 & e & vx & g";
+              standard = "q27 & q35 & e & vx & g & qtts & qasr & st";
+              ds4 = "ds4 & q35 & e & vx & g & qtts & qasr & st";
             };
           };
 
@@ -110,6 +129,8 @@
       systemd.services.llama-swap = {
         environment = {
           LLAMA_CACHE = "/persist/models";
+          XDG_CACHE_HOME = "/persist/models/.cache"; # Fix Vulkan shader cache
+          HOME = "/persist/models"; # Fallback for any engine looking for ~
           GPU_MAX_HW_QUEUES = "1";
           # fastflow npu
           FLM_MODEL_PATH = "/persist/models/flm";

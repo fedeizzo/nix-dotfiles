@@ -9,6 +9,10 @@
           hostname = "homelab";
           user = "root";
         };
+        mixer = {
+          hostname = "homelab";
+          user = "mixer";
+        };
         pikvm = {
           hostname = "kvm.lan";
           user = "root";

@@ -8,10 +8,12 @@
         extra-substituters = [
           "https://vicinae.cachix.org"
           "https://nix-amd-ai.cachix.org"
+          "https://cache.numtide.com"
         ];
         extra-trusted-public-keys = [
           "vicinae.cachix.org-1:1kDrfienkGHPYbkpNj1mWTr7Fm1+zcenzgTizIcI3oc="
           "nix-amd-ai.cachix.org-1:F4OU4vw/lV2oiG6SBHZ+nqjl4EFJuqI4X9A7pvaBmhQ="
+          "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
         ];
       };
       extraOptions = ''
