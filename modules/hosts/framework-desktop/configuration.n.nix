@@ -63,7 +63,7 @@ in
       inputs.self.modules.nixos.glance
       inputs.self.modules.nixos.grafana
       inputs.self.modules.nixos.hass
-      inputs.self.modules.nixos.hermes
+      # inputs.self.modules.nixos.hermes
       inputs.self.modules.nixos.immich
       inputs.self.modules.nixos.influxdb
       inputs.self.modules.nixos.lemonade
@@ -81,6 +81,7 @@ in
       inputs.self.modules.nixos.postgres
       inputs.self.modules.nixos.prometheus
       inputs.self.modules.nixos.searx
+      inputs.self.modules.nixos.sparkyfitness
       inputs.self.modules.nixos.streaming
       inputs.self.modules.nixos.traefik
     ];

@@ -1,0 +1,45 @@
+{ config, lib, pkgs, ... }:
+
+with lib;
+
+let
+  cfg = config.services.sparkyfitness-garmin;
+  sparkyfitness-garmin = pkgs.callPackage ./sparkyfitness-garmin.default.nix {};
+in {
+  options.services.sparkyfitness-garmin = {
+    enable = mkEnableOption "SparkyFitness Garmin Backend";
+    port = mkOption {
+      type = types.port;
+      default = 8000;
+      description = "Port to bind the API to.";
+    };
+    host = mkOption {
+      type = types.str;
+      default = "0.0.0.0";
+      description = "Host to bind the API to.";
+    };
+  };
+
+  config = mkIf cfg.enable {
+    systemd.services.sparkyfitness-garmin = {
+      description = "SparkyFitness Garmin Backend API";
+      wantedBy = [ "multi-user.target" ];
+      after = [ "network.target" ];
+      
+      environment = {
+        REQUESTS_CA_BUNDLE = "/etc/ssl/certs/ca-certificates.crt";
+      };
+
+      serviceConfig = {
+        ExecStart = "${sparkyfitness-garmin}/bin/sparkyfitness-garmin --host ${cfg.host} --port ${toString cfg.port}";
+        ExecStartPre = "${pkgs.coreutils}/bin/mkdir -p mock_data";
+        User = "daemon";
+        Group = "daemon";
+        WorkingDirectory = "/var/lib/sparkyfitness-garmin";
+        StateDirectory = "sparkyfitness-garmin";
+        Restart = "always";
+        RestartSec = "5";
+      };
+    };
+  };
+}

@@ -1,0 +1,69 @@
+{ lib
+, python3
+, fetchFromGitHub
+}:
+
+let
+  ua-generator = python3.pkgs.buildPythonPackage rec {
+    pname = "ua-generator";
+    version = "2.0.25";
+    format = "setuptools";
+
+    src = python3.pkgs.fetchPypi {
+      pname = "ua_generator";
+      inherit version;
+      sha256 = "105sks1y6rhhpjgr7hnywi1b3kg6g91wdbrf72f2xa18p66gr1vm";
+    };
+
+    doCheck = false;
+  };
+
+in
+python3.pkgs.buildPythonApplication rec {
+  pname = "sparkyfitness-garmin";
+  version = "unstable";
+
+  src = fetchFromGitHub {
+    owner = "CodeWithCJ";
+    repo = "SparkyFitness";
+    rev = "b40c63b987fd354adfdf2a36b59801a4a3d4a042";
+    sha256 = "1dxymbsxblzaj4jwfyvpmhhd1r1x0i8x33v1acj84i3xgw13pf0n";
+  };
+
+  sourceRoot = "${src.name}/SparkyFitnessGarmin";
+
+  format = "other";
+
+  propagatedBuildInputs = with python3.pkgs; [
+    fastapi
+    uvicorn
+    garminconnect
+    curl-cffi
+    ua-generator
+    python-dotenv
+  ];
+
+  installPhase = ''
+    runHook preInstall
+    
+    mkdir -p $out/lib/sparkyfitness-garmin
+    cp -r * $out/lib/sparkyfitness-garmin
+    
+    mkdir -p $out/bin
+    cat > $out/bin/sparkyfitness-garmin <<EOF
+    #!/bin/sh
+    export PYTHONPATH=$out/lib/sparkyfitness-garmin:\$PYTHONPATH
+    exec ${python3.interpreter} -m uvicorn main:app "\$@"
+    EOF
+    chmod +x $out/bin/sparkyfitness-garmin
+    
+    runHook postInstall
+  '';
+
+  meta = with lib; {
+    description = "SparkyFitnessGarmin backend";
+    homepage = "https://github.com/CodeWithCJ/SparkyFitness";
+    license = licenses.mit;
+    maintainers = [ ];
+  };
+}

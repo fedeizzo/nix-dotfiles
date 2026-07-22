@@ -1,7 +1,7 @@
 {
-  "lastChangelogVersion": "0.78.0",
+  "lastChangelogVersion": "0.79.3",
   "defaultProvider": "llamaswap",
-  "defaultModel": "qwen27",
+  "defaultModel": "laguna",
   "defaultThinkingLevel": "medium",
   "hideThinkingBlock": false,
   "quietStartup": false,

@@ -3,7 +3,52 @@
 
   flake.modules.nixos.llama-swap = { pkgs-unstable, lib, inputs, pkgs, config, ... }:
     let
-      llama-cpp = (pkgs-unstable.llama-cpp.override { rocmSupport = true; rocmGpuTargets = [ "gfx1151" ]; });
+      # llama-cpp =
+      #   (pkgs-unstable.llama-cpp.override {
+      #     rocmSupport = true;
+      #     rocmGpuTargets = [ "gfx1151" ];
+      #   }).overrideAttrs
+      #     (oldAttrs: rec {
+      #       version = "10087";
+      #       src = pkgs.fetchFromGitHub {
+      #         owner = "ggml-org";
+      #         repo = "llama.cpp";
+      #         tag = "b${version}";
+      #         hash = "sha256-O0zeMEPQyXky9wSWARrUZvtlu2fhddfPsJeq6Aybi8U=";
+      #         leaveDotGit = true;
+      #         postFetch = ''
+      #           git -C "$out" rev-parse --short HEAD > $out/COMMIT
+      #           find "$out" -name .git -print0 | xargs -0 rm -rf
+      #         '';
+      #       };
+      #       npmRoot = "tools/ui";
+      #       npmDepsHash = "sha256-B7uEynAG70a3xauBKc20RuFa9cnWaWzVBCh+LPLBnIM=";
+
+      #       cmakeFlags = (oldAttrs.cmakeFlags or [ ]) ++ [
+      #         "-DLLAMA_HIP_UMA=ON" # unified memory
+      #       ];
+
+      #       # Mirror the Strix Halo toolbox HIP tuning: pin the ROCm path explicitly and
+      #       # raise the local unroll threshold for gfx1151 kernels.
+      #       cmakeFlagsArray = (oldAttrs.cmakeFlagsArray or [ ]) ++ [
+      #         "-DCMAKE_HIP_FLAGS=--rocm-path=${pkgs.rocmPackages.clr} -mllvm --amdgpu-unroll-threshold-local=600"
+      #       ];
+      #     });
+      llama-cpp =
+        (pkgs.llama-cpp.override {
+          rocmSupport = true;
+          rocmGpuTargets = [ "gfx1151" ];
+        }).overrideAttrs
+          (oldAttrs: rec {
+            cmakeFlags = (oldAttrs.cmakeFlags or [ ]) ++ [
+              "-DLLAMA_HIP_UMA=ON" # unified memory
+            ];
+            # Mirror the Strix Halo toolbox HIP tuning: pin the ROCm path explicitly and
+            # raise the local unroll threshold for gfx1151 kernels.
+            cmakeFlagsArray = (oldAttrs.cmakeFlagsArray or [ ]) ++ [
+              "-DCMAKE_HIP_FLAGS=--rocm-path=${pkgs.rocmPackages.clr} -mllvm --amdgpu-unroll-threshold-local=600"
+            ];
+          });
       llama-server = lib.getExe' llama-cpp "llama-server";
       ds4-server = lib.getExe' inputs.nix-amd-ai.packages.${pkgs.system}.ds4 "ds4-server";
       crispasr = pkgs.callPackage ./crispasr.package { useROCm = true; rocmPackages = pkgs-unstable.rocmPackages; };
@@ -45,6 +90,13 @@
               filters.setParamsByID."qwen-nothink".chat_template_kwargs.enable_thinking = false;
             };
 
+            "gemma" = {
+              env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
+              cmd = ''${llama-server} --port ''${PORT} -hf unsloth/gemma-4-26B-A4B-it-GGUF:UD-Q4_K_XL ${commonFlags} --temp 1.0 --top-p 0.95 --top-k 64'';
+              aliases = [ ];
+              filters.setParamsByID."gemma-nothink".chat_template_kwargs.enable_thinking = false;
+            };
+
             "qwen3-embedding" = {
               env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
               cmd = ''${llama-server} --port ''${PORT} -hf Qwen/Qwen3-Embedding-8B-GGUF --embedding --pooling last -ub 8192'';
@@ -72,6 +124,14 @@
               timeouts.responseHeader = 600;
             };
 
+            "laguna" = {
+              env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
+              cmd = ''${llama-server} --port ''${PORT} -hf  unsloth/Laguna-S-2.1-GGUF:Q4_K_XL -ngl all  -fa 1  --no-mmap --no-webui  --kv-unified  -c 262144 --jinja'';
+              aliases = [ ];
+              timeouts.responseHeader = 600;
+              filters.setParamsByID."laguna-nothink".chat_template_kwargs.enable_thinking = false;
+            };
+
             "ds4" = {
               env = [ "GPU_MAX_HW_QUEUES=1" ];
               cmd = ''${ds4-server} --port ''${PORT} -m /persist/models/DeepSeek-V4-Flash/DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix.gguf --ctx 262144 --kv-disk-dir /tmp/ds4-kv --kv-disk-space-mb 8192'';
@@ -91,12 +151,12 @@
               cmd = ''${audio-cpp} --config /persist/models/audio.cpp/qwen-tts.json --port ''${PORT}'';
               # aliases = [ "tts" "voxtral" ];
             };
-            
+
             "qwen3_asr" = {
               cmd = ''${audio-cpp} --config /persist/models/audio.cpp/qwen-asr.json --port ''${PORT}'';
               # aliases = [ "tts" "voxtral" ];
             };
-            
+
             "supertonic" = {
               cmd = ''${audio-cpp} --config /persist/models/audio.cpp/supertonic.json --port ''${PORT}'';
               # aliases = [ "tts" "voxtral" ];
@@ -114,11 +174,11 @@
               "qasr" = "qwen3_asr";
               "st" = "supertonic";
               "g" = "gemma4-it:e4b";
+              "gg" = "gemma";
             };
 
             sets = {
-              standard = "q27 & q35 & e & vx & g & qtts & qasr & st";
-              ds4 = "ds4 & q35 & e & vx & g & qtts & qasr & st";
+              standard = "q27 & q35 & e & vx & g & qtts & qasr & st & gg";
             };
           };
 

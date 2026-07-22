@@ -34,6 +34,7 @@
 
       config = lib.mkIf cfg.enable {
         systemd.services.pan = {
+          enable = false;
           description = "Pan Service";
           wantedBy = [ "multi-user.target" ];
           after = [ "network.target" ];

@@ -27,7 +27,7 @@
           "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 }
         },
         {
-          "id": "ds4",
+          "id": "laguna",
           "reasoning": true,
           "input": ["text"],
           "contextWindow": 100000,
