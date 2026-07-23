@@ -4,18 +4,27 @@
     programs.ssh = {
       enable = true;
       addKeysToAgent = "yes";
-      matchBlocks = {
+      settings = {
         homelab = {
-          hostname = "homelab";
-          user = "root";
+          Hostname = "homelab";
+          User = "root";
+          SetEnv = {
+            TERM = "xterm-256color";
+          };
         };
         mixer = {
-          hostname = "homelab";
-          user = "mixer";
+          Hostname = "homelab";
+          User = "mixer";
+          SetEnv = {
+            TERM = "xterm-256color";
+          };
         };
         pikvm = {
-          hostname = "kvm.lan";
-          user = "root";
+          Hostname = "kvm.lan";
+          User = "root";
+          SetEnv = {
+            TERM = "xterm-256color";
+          };
         };
       };
     };

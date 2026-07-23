@@ -17,8 +17,14 @@
           rotate = 5;
           missingok = true;
           notifempty = true;
+          frequency = "hourly";
+          # 2. Use copytruncate so auditd doesn't lose its file handle,
+          # OR send the correct SIGUSR1 signal. copytruncate is much safer
+          # when external tools manage audit logs.
+          copytruncate = true;
           postrotate = ''
-            systemctl kill -s HUP auditd
+            # Send SIGUSR1 if you prefer not to use copytruncate
+            # systemctl kill -s USR1 auditd
           '';
         };
         "/var/log/pan/pan.log" = {

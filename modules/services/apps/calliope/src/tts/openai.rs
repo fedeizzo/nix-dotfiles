@@ -58,14 +58,14 @@ impl TtsEngine for OpenAiTtsEngine {
                         if retries >= max_retries {
                             return Err(anyhow::anyhow!("TTS API error {}: {}", status, error_text));
                         }
-                        println!("  [Retry {}/{}] TTS API error {}: {}", retries + 1, max_retries, status, error_text);
+                        crate::log_info!("  [Retry {}/{}] TTS API error {}: {}", retries + 1, max_retries, status, error_text);
                     }
                 },
                 Err(e) => {
                     if retries >= max_retries {
                         return Err(anyhow::anyhow!("TTS request failed: {}", e));
                     }
-                    println!("  [Retry {}/{}] TTS request failed: {}", retries + 1, max_retries, e);
+                    crate::log_info!("  [Retry {}/{}] TTS request failed: {}", retries + 1, max_retries, e);
                 }
             }
             retries += 1;

@@ -453,6 +453,10 @@
           "clock"
           "weather"
           "markets"
+          {
+            id = "voxtype";
+            enabled = true;
+          }
         ];
         rightWidgets = [
           "systemTray"

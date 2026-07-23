@@ -1,5 +1,5 @@
 {
-  flake-file.inputs.audio-cpp.url = "github:fedeizzo/audio.cpp/fedeizzo/add-flake-lock";
+  flake-file.inputs.audio-cpp.url = "github:fedeizzo/audio.cpp/fedeizzo/improve-vulkan";
 
   flake.modules.nixos.llama-swap = { pkgs-unstable, lib, inputs, pkgs, config, ... }:
     let
@@ -57,7 +57,7 @@
       commonFlags = ''
         -ngl 999 \
         --no-mmap -fa 1 \
-        --no-webui \
+        --no-ui \
         --kv-unified \
         -c 262144 \
         -t 2
@@ -85,7 +85,7 @@
           models = {
             "qwen36-35b-a3b" = {
               env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
-              cmd = ''${llama-server} --port ''${PORT} -hf unsloth/Qwen3.6-35B-A3B-MTP-GGUF:UD-Q4_K_XL ${commonFlags} --spec-type draft-mtp --spec-draft-n-max 3 --spec-draft-p-min 0.75 --temp 0.6 --top-p 0.95 --top-k 20 --min-p 0.00 --presence-penalty 0.0 --repeat-penalty 1.0'';
+              cmd = ''${llama-server} --port ''${PORT} -hf unsloth/Qwen3.6-35B-A3B-MTP-GGUF:UD-Q4_K_XL ${commonFlags} --spec-type draft-mtp --spec-draft-n-max 3 --spec-draft-p-min 0.75 --temp 0.6 --top-p 0.95 --top-k 20 --min-p 0.00 --presence-penalty 0.0 --repeat-penalty 1.0 --ubatch-size 2048 --batch-size 4096 --chat-template-kwargs '{"preserve_thinking": true}' '';
               aliases = [ "coding" "q3-m" "qwen" ];
               filters.setParamsByID."qwen-nothink".chat_template_kwargs.enable_thinking = false;
             };
@@ -119,7 +119,7 @@
 
             "qwen36-27b" = {
               env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
-              cmd = ''${llama-server} --port ''${PORT} -hf unsloth/Qwen3.6-27B-MTP-GGUF:UD-Q4_K_XL ${commonFlags} --spec-type draft-mtp --spec-draft-n-max 3 --spec-draft-p-min 0.75 --temp 0.6 --top-p 0.95 --top-k 20 --min-p 0.00 --presence-penalty 0.0 --repeat-penalty 1.0'';
+              cmd = ''${llama-server} --port ''${PORT} -hf unsloth/Qwen3.6-27B-MTP-GGUF:UD-Q4_K_XL ${commonFlags} --spec-type draft-mtp --spec-draft-n-max 3 --spec-draft-p-min 0.75 --temp 0.6 --top-p 0.95 --top-k 20 --min-p 0.00 --presence-penalty 0.0 --repeat-penalty 1.0 --ubatch-size 2048 --batch-size 4096 --chat-template-kwargs '{"preserve_thinking": true}' '';
               aliases = [ "realtime" "q4-xl" "qwen27" ];
               timeouts.responseHeader = 600;
             };
@@ -147,18 +147,21 @@
               aliases = [ "tts" "voxtral" ];
             };
 
-            "qwen3-tts" = {
-              cmd = ''${audio-cpp} --config /persist/models/audio.cpp/qwen-tts.json --port ''${PORT}'';
-              # aliases = [ "tts" "voxtral" ];
+            "tts" = {
+              env = [
+                "GPU_MAX_HW_QUEUES=1"
+                "HSA_ENABLE_SDMA=0"
+                "GGML_VK_FORCE_INTEGER_DOT_PRODUCT=1"
+                "OMP_PROC_BIND=TRUE"
+                "OMP_PLACES=cores"
+              ];
+              cmd = ''${audio-cpp} --config /persist/models/audio.cpp/tts.json --port ''${PORT}'';
+              aliases = [ "qwen-tts" "qwen3-tts-small" "supertonic" "chatterbox" ];
+              timeouts.responseHeader = 600;
             };
 
             "qwen3_asr" = {
               cmd = ''${audio-cpp} --config /persist/models/audio.cpp/qwen-asr.json --port ''${PORT}'';
-              # aliases = [ "tts" "voxtral" ];
-            };
-
-            "supertonic" = {
-              cmd = ''${audio-cpp} --config /persist/models/audio.cpp/supertonic.json --port ''${PORT}'';
               # aliases = [ "tts" "voxtral" ];
             };
           };
@@ -170,15 +173,14 @@
               "ds4" = "ds4";
               "q27" = "qwen36-27b";
               "vx" = "voxtral";
-              "qtts" = "qwen3-tts";
+              "tts" = "tts";
               "qasr" = "qwen3_asr";
-              "st" = "supertonic";
               "g" = "gemma4-it:e4b";
               "gg" = "gemma";
             };
 
             sets = {
-              standard = "q27 & q35 & e & vx & g & qtts & qasr & st & gg";
+              standard = "q27 & q35 & e & vx & g & tts & qasr & gg";
             };
           };
 

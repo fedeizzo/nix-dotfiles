@@ -17,7 +17,26 @@
         (persist-home persistName)
         (notifications)
         (set-hostname "pi-jail")
-        (add-pkg-deps (with pkgs; [ gnugrep findutils git fd ripgrep nodejs python3 jujutsu nix direnv go golangci-lint gcc curl gnused ] ++ [ pi-coding-agent ]))
+        (add-pkg-deps (with pkgs; [
+          gnugrep
+          findutils
+          git
+          fd
+          ripgrep
+          nodejs
+          python3
+          jujutsu
+          nix
+          direnv
+          go
+          golangci-lint
+          gcc
+          curl
+          gnused
+          gnumake
+          pkgs.llm-agents.codegraph
+          pkgs.llm-agents.semble
+        ] ++ [ pi-coding-agent ]))
         (try-fwd-env "LANG")
         (try-fwd-env "LC_ALL")
         (readwrite "/home/${username}/.pi")

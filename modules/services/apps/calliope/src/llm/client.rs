@@ -79,7 +79,7 @@ impl LlmClient {
                             if retries >= max_retries {
                                 return Err(anyhow::anyhow!("Failed to parse LLM JSON response body"));
                             }
-                            println!("  [Retry {}/{}] Failed to parse LLM JSON response body", retries + 1, max_retries);
+                            crate::log_info!("  [Retry {}/{}] Failed to parse LLM JSON response body", retries + 1, max_retries);
                         }
                     } else {
                         let status = response.status();
@@ -87,14 +87,14 @@ impl LlmClient {
                         if retries >= max_retries {
                             return Err(anyhow::anyhow!("LLM API error {}: {}", status, text));
                         }
-                        println!("  [Retry {}/{}] LLM API error {}: {}", retries + 1, max_retries, status, text);
+                        crate::log_info!("  [Retry {}/{}] LLM API error {}: {}", retries + 1, max_retries, status, text);
                     }
                 },
                 Err(e) => {
                     if retries >= max_retries {
                         return Err(anyhow::anyhow!("LLM request failed: {}", e));
                     }
-                    println!("  [Retry {}/{}] LLM request failed: {}", retries + 1, max_retries, e);
+                    crate::log_info!("  [Retry {}/{}] LLM request failed: {}", retries + 1, max_retries, e);
                 }
             }
             retries += 1;

@@ -8,7 +8,7 @@ pub struct MockTtsEngine;
 
 impl TtsEngine for MockTtsEngine {
     async fn generate_audio(&self, line: &AnnotatedLine) -> Result<Vec<u8>> {
-        println!("  [Mock TTS] Generating audio for speaker {:?}...", line.speaker.0);
+        crate::log_info!("  [Mock TTS] Generating audio for speaker {:?}...", line.speaker.0);
         // Return a dummy 44-byte WAV header (empty audio)
         Ok(vec![
             0x52, 0x49, 0x46, 0x46, 0x24, 0x00, 0x00, 0x00, 0x57, 0x41, 0x56, 0x45, 0x66, 0x6d, 0x74, 0x20,

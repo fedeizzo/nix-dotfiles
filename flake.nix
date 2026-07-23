@@ -6,7 +6,7 @@
   outputs = inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } (inputs.import-tree ./modules);
 
   inputs = {
-    audio-cpp.url = "github:fedeizzo/audio.cpp/fedeizzo/add-flake-lock";
+    audio-cpp.url = "github:fedeizzo/audio.cpp/fedeizzo/improve-vulkan";
     authentik-nix.url = "github:nix-community/authentik-nix";
     deploy-rs.url = "github:serokell/deploy-rs";
     devshell.url = "github:numtide/devshell";
@@ -73,6 +73,7 @@
     };
     vicinae.url = "github:vicinaehq/vicinae";
     vicinae-extensions.url = "github:vicinaehq/extensions";
+    voxtype.url = "github:peteonrails/voxtype/v1.0.0-rc1";
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
   };
 }

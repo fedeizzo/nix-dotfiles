@@ -3,7 +3,7 @@
   flake-file.inputs.dms.url = "github:AvengeMedia/DankMaterialShell/stable";
   flake-file.inputs.dms-plugin-registry.url = "github:AvengeMedia/dms-plugin-registry";
 
-  flake.modules.nixos.desktop-environment = { inputs, pkgs, ... }: {
+  flake.modules.nixos.desktop-environment = { inputs, pkgs, lib, ... }: {
     imports = [
       inputs.dms.nixosModules.greeter
     ];
@@ -42,7 +42,7 @@
     };
   };
 
-  flake.modules.homeManager.desktop-environment = { pkgs, config, username, pkgs-unstable, ... }: {
+  flake.modules.homeManager.desktop-environment = { pkgs, config, username, pkgs-unstable, lib, ... }: {
     programs.niri = {
       enable = true;
       package = pkgs.niri-unstable;
@@ -113,6 +113,7 @@
           "Super+Return".action.spawn = "ghostty";
           "Super+y".action.spawn = [ "dms" "ipc" "call" "plugins" "toggle" "aiAssistant" ];
           "Super+P".action.screenshot = { };
+          "Super+Shift+D".action.spawn = [ "voxtype" "record" "toggle" ];
 
           # Display management
           "XF86Display".action.spawn = [
@@ -215,6 +216,10 @@
 
       plugins = {
         # nord.enable = true;
+        voxtype = {
+          enable = true;
+          src = lib.mkDefault ./VoxtypeWidget;
+        };
         aiAssistant = {
           enable = true;
 

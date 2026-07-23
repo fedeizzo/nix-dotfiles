@@ -1,0 +1,12 @@
+{
+  "id": "voxtype",
+  "name": "Voxtype Status",
+  "description": "Displays the real-time recording and transcription status of Voxtype in the DMS bar.",
+  "version": "1.0.0",
+  "author": "Federico Izzo",
+  "icon": "mic",
+  "type": "widget",
+  "capabilities": ["bar"],
+  "firstParty": false,
+  "component": "./Voxtype.qml"
+}

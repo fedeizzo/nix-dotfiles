@@ -3,22 +3,21 @@
 
   flake.modules.darwin.ai-tools = { pkgs, lib, inputs, config, username, ... }: {
     nixpkgs.overlays = [
-      inputs.llm-agents.overlays.default
+      inputs.llm-agents.overlays.shared-nixpkgs
     ];
   };
 
   flake.modules.nixos.ai-tools = { pkgs, lib, inputs, config, username, ... }: {
     nixpkgs.overlays = [
-      inputs.llm-agents.overlays.default
+      inputs.llm-agents.overlays.shared-nixpkgs
     ];
   };
 
   flake.modules.homeManager.ai-tools = { pkgs, lib, inputs, config, username, ... }: {
     home.packages = with pkgs.llm-agents; [
-      agent-deck
-      tuicr
       codegraph
       skills
+      semble
     ];
   };
 }

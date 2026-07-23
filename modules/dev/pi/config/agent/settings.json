@@ -1,8 +1,8 @@
 {
-  "lastChangelogVersion": "0.79.3",
+  "lastChangelogVersion": "0.81.1",
   "defaultProvider": "llamaswap",
-  "defaultModel": "laguna",
-  "defaultThinkingLevel": "medium",
+  "defaultModel": "qwen36-35b-a3b",
+  "defaultThinkingLevel": "minimal",
   "hideThinkingBlock": false,
   "quietStartup": false,
   "treeFilterMode": "all",
@@ -16,12 +16,16 @@
     "npm:pi-direnv",
     "npm:@juicesharp/rpiv-i18n",
     "npm:@juicesharp/rpiv-web-tools",
-    "npm:@juicesharp/rpiv-args"
+    "npm:@juicesharp/rpiv-args",
+    "npm:context-mode",
+    "npm:@vndv/pi-codegraph",
+    "npm:pi-diet-semble"
   ],
   "compaction": {
     "enabled": true,
     "reserveTokens": 8192,
     "keepRecentTokens": 28000
   },
-  "powerline": "default"
+  "powerline": "default",
+  "theme": "dark"
 }
