@@ -10,6 +10,7 @@
       extraSpecialArgs = {
         inherit inputs;
         inherit pkgs-unstable;
+        username = "mixer";
       };
       backupFileExtension = "to_delete";
 
@@ -28,6 +29,7 @@
           languages
           nix-index
           profile-personal
+          jail-pi
         ];
         home = {
           stateVersion = "25.05";
