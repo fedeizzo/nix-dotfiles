@@ -12,6 +12,7 @@
         { user = "hindsight"; db = "hindsight"; }
         { user = "sparkyfitness"; db = "sparkyfitness"; }
         { user = "sparky_app"; db = "sparkyfitness"; }
+        { user = "dawarich"; db = "dawarich"; }
       ];
       authenticationEntry = user: db: "host " + db + " " + user + " samehost md5";
       passwordDeclarationEntry = user: "DECLARE " + user + "_password TEXT;";
@@ -52,6 +53,7 @@
           "affine"
           "hindsight"
           "sparkyfitness"
+          "dawarich"
         ];
         ensureUsers = [
           { name = "networth"; ensureDBOwnership = true; }
@@ -62,6 +64,7 @@
           { name = "affine"; ensureDBOwnership = true; }
           { name = "hindsight"; ensureDBOwnership = true; }
           { name = "sparkyfitness"; ensureDBOwnership = true; }
+          { name = "dawarich"; ensureDBOwnership = true; }
         ];
         authentication = pkgs.lib.mkForce ''
           # TYPE  DATABASE        USER            ADDRESS                 METHOD    ARGS
