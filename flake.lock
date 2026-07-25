@@ -2142,11 +2142,11 @@
         "nixpkgs": "nixpkgs_24"
       },
       "locked": {
-        "lastModified": 1784689905,
-        "narHash": "sha256-Frg7An99RIIkU2GP0VEEPeTQIKx3e8clkerT1fWqvrc=",
+        "lastModified": 1784977810,
+        "narHash": "sha256-zRpkP3d30M6XJ0q+tSCCJ27OQhSbsr1iUqnwrgh4uIA=",
         "owner": "CodeWithCJ",
         "repo": "SparkyFitness",
-        "rev": "b40c63b987fd354adfdf2a36b59801a4a3d4a042",
+        "rev": "aaf05bfea2b204bc5583d211cebfc3b888c1e360",
         "type": "github"
       },
       "original": {

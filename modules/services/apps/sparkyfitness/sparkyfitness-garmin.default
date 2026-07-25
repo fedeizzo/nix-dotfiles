@@ -4,10 +4,10 @@
 }:
 
 let
-  ua-generator = python3.pkgs.buildPythonPackage rec {
+  ua-generator = python3.pkgs.ua-generator or (python3.pkgs.buildPythonPackage rec {
     pname = "ua-generator";
     version = "2.0.25";
-    format = "setuptools";
+    format = "pyproject";
 
     src = python3.pkgs.fetchPypi {
       pname = "ua_generator";
@@ -15,8 +15,22 @@ let
       sha256 = "105sks1y6rhhpjgr7hnywi1b3kg6g91wdbrf72f2xa18p66gr1vm";
     };
 
+    build-system = with python3.pkgs; [
+      setuptools
+      wheel
+    ];
+
     doCheck = false;
-  };
+  });
+
+  pythonEnv = python3.withPackages (ps: with ps; [
+    fastapi
+    uvicorn
+    garminconnect
+    curl-cffi
+    ua-generator
+    python-dotenv
+  ]);
 
 in
 python3.pkgs.buildPythonApplication rec {
@@ -34,13 +48,8 @@ python3.pkgs.buildPythonApplication rec {
 
   format = "other";
 
-  propagatedBuildInputs = with python3.pkgs; [
-    fastapi
-    uvicorn
-    garminconnect
-    curl-cffi
-    ua-generator
-    python-dotenv
+  propagatedBuildInputs = [
+    pythonEnv
   ];
 
   installPhase = ''
@@ -53,7 +62,7 @@ python3.pkgs.buildPythonApplication rec {
     cat > $out/bin/sparkyfitness-garmin <<EOF
     #!/bin/sh
     export PYTHONPATH=$out/lib/sparkyfitness-garmin:\$PYTHONPATH
-    exec ${python3.interpreter} -m uvicorn main:app "\$@"
+    exec ${pythonEnv.interpreter} -m uvicorn main:app "\$@"
     EOF
     chmod +x $out/bin/sparkyfitness-garmin
     
