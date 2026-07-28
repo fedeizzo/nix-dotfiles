@@ -43,6 +43,7 @@
         # antigravity
         profile-work
         ai-tools
+        nono
       ];
 
       home.packages = with pkgs; [ pngpaste ];

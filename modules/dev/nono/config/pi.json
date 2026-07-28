@@ -1,0 +1,57 @@
+{
+  "extends": "always-further/pi",
+  "meta": {
+    "name": "pi"
+  },
+  "groups": {
+    "include": [],
+    "exclude": []
+  },
+  "commands": {
+    "allow": [],
+    "deny": []
+  },
+  "workdir": {
+    "access": "readwrite"
+  },
+  "filesystem": {
+    "allow": [
+      "~/dd",
+      "~/nix-dotfiles",
+      "~/.pi",
+      "~/.npm",
+      "~/.volta",
+      "~/.config/ddtool"
+    ],
+    "read": ["~/.config/git", "~/Library/Keychains"],
+    "write": [],
+    "allow_file": [
+      "~/.vault",
+      "~/.config/gitsign/gitconfig",
+      "~/.config/datadog/git/config"
+    ],
+    "read_file": [],
+    "write_file": [],
+    "deny": [],
+    "bypass_protection": ["~/Library/Keychains"],
+    "suppress_save_prompt": []
+  },
+  "open_urls": {
+    "allow_origins": ["https://accounts.google.com"],
+    "allow_localhost": true
+  },
+  "network": {
+    "block": false,
+    "allow_domain": [],
+    "credentials": [],
+    "open_port": [],
+    "listen_port": [],
+    "custom_credentials": {}
+  },
+  "env_credentials": {},
+  "hooks": {},
+  "rollback": {
+    "exclude_patterns": [],
+    "exclude_globs": []
+  }
+}
