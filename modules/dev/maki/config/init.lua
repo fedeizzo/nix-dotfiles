@@ -1,4 +1,4 @@
-maki.setup({
+local config = {
     ui = {
         theme = "catppuccin_macchiato",
         splash_animation = false,
@@ -14,4 +14,10 @@ maki.setup({
             insert_lines = true,
         },
     },
-})
+}
+
+if type(maki_profile_setup) == "function" then
+    maki_profile_setup(config)
+end
+
+maki.setup(config)

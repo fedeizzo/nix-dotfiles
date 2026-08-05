@@ -1,0 +1,7 @@
+# Capabilities required by the declarative common Maki plugins.
+[permissions]
+fs_read = false
+fs_write = false
+net = false
+run = false
+env = false
