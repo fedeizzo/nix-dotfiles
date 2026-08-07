@@ -53,6 +53,12 @@
             category = "📡 Remote administration";
           }
           {
+            help = "🐶 Bootstrap Nix and deploy Home Manager to the Datadog workspace.";
+            name = "deploy-datadog-workspace";
+            command = builtins.readFile ../../../../scripts/bootstrap-datadog-workspace.sh;
+            category = "📡 Remote administration";
+          }
+          {
             help = "👢 Deploy the homelab configuration and activate it on the next boot.";
             name = "deploy-homelab-boot";
             command = "deploy --skip-checks --boot .#homelab";

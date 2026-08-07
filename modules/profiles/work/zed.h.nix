@@ -4,6 +4,14 @@
       directoryFilters = [ "-" "+domains/synthetics" "+synthetics" ];
     };
     programs.zed-editor.userSettings = {
+      ssh_connections = [
+        {
+          host = "workspace-federico-izzo";
+          projects = [
+            { paths = [ "~/dd/dd-source" "~/dd/dd-go" ]; }
+          ];
+        }
+      ];
       show_edit_predictions = true;
       edit_predictions = lib.mkForce {
         mode = "eager";
