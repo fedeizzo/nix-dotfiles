@@ -14,7 +14,7 @@
 
         nextcloud = {
           enable = true;
-          package = pkgs.nextcloud32;
+          package = pkgs.nextcloud34;
           home = "/var/lib/nextcloud";
 
           hostName = "nextcloud.fedeizzo.dev";
