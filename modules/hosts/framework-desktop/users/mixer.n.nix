@@ -17,7 +17,7 @@
       users.mixer = {
         imports = with inputs.self.modules.homeManager; [
           aichat
-          nono
+          # nono
           fence
           antigravity
           cli-packages
@@ -30,6 +30,7 @@
           nix-index
           profile-personal
           jail-pi
+          herdr
         ];
         home = {
           stateVersion = "25.05";
