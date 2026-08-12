@@ -1,5 +1,6 @@
 {
   flake-file.inputs.audio-cpp.url = "github:fedeizzo/audio.cpp/fedeizzo/improve-vulkan";
+  flake-file.inputs.ds4.url = "github:francescobozzo/ds4/rocm-strix-halo-release";
 
   flake.modules.nixos.llama-swap = { pkgs-unstable, lib, inputs, pkgs, config, ... }:
     let
@@ -50,8 +51,7 @@
             ];
           });
       llama-server = lib.getExe' llama-cpp "llama-server";
-      ds4-server = lib.getExe' inputs.nix-amd-ai.packages.${pkgs.system}.ds4 "ds4-server";
-      crispasr = pkgs.callPackage ./crispasr.package { useROCm = true; rocmPackages = pkgs-unstable.rocmPackages; };
+      ds4-server = lib.getExe' inputs.ds4.packages.${pkgs.system}.default "ds4-server";
       audio-cpp = lib.getExe' inputs.audio-cpp.packages.${pkgs.system}.vulkan "audiocpp_server";
 
       commonFlags = ''
@@ -80,7 +80,7 @@
         port = 11435;
         listenAddress = "0.0.0.0";
         settings = {
-          healthCheckTimeout = 60;
+          healthCheckTimeout = 600;
 
           models = {
             "qwen36-35b-a3b" = {
@@ -134,17 +134,17 @@
 
             "ds4" = {
               env = [ "GPU_MAX_HW_QUEUES=1" ];
-              cmd = ''${ds4-server} --port ''${PORT} -m /persist/models/DeepSeek-V4-Flash/DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix.gguf --ctx 262144 --kv-disk-dir /tmp/ds4-kv --kv-disk-space-mb 8192'';
+              cmd = ''${ds4-server} --port ''${PORT} -m /persist/models/DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-0731.gguf --ctx 262144 --kv-disk-dir /tmp/ds4-kv --kv-disk-space-mb 8192'';
               checkEndpoint = "/v1/models";
               aliases = [ "ds4" ];
               timeouts.responseHeader = 600;
-              filters.setParamsByID."ds4-nothink".chat_template_kwargs.enable_thinking = false;
-            };
-
-            "voxtral" = {
-              env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" "HSA_ENABLE_SDMA=0" ];
-              cmd = ''${crispasr}/bin/crispasr --server --port ''${PORT} --backend voxtral-tts -m /persist/models/voxtral-4b-tts-f16.gguf --cache-dir /persist/models --no-flash-attn'';
-              aliases = [ "tts" "voxtral" ];
+              filters.setParamsByID = {
+                "ds4".temperature = 0;
+                "ds4-nothink" = {
+                  temperature = 0;
+                  chat_template_kwargs.enable_thinking = false;
+                };
+              };
             };
 
             "tts" = {
@@ -190,7 +190,6 @@
               "e" = "bge-m3";
               "ds4" = "ds4";
               "q27" = "qwen36-27b";
-              "vx" = "voxtral";
               "tts" = "tts";
               "qasr" = "qwen3_asr";
               "g" = "gemma4-it:e4b";
@@ -198,7 +197,7 @@
             };
 
             sets = {
-              standard = "q27 & q35 & e & vx & g & tts & qasr & gg";
+              standard = "q27 & q35 & e & g & tts & qasr & gg";
             };
           };
 

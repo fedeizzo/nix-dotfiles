@@ -16,6 +16,7 @@
     };
     dms.url = "github:AvengeMedia/DankMaterialShell/stable";
     dms-plugin-registry.url = "github:AvengeMedia/dms-plugin-registry";
+    ds4.url = "github:francescobozzo/ds4/rocm-strix-halo-release";
     flake-file.url = "github:vic/flake-file";
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
