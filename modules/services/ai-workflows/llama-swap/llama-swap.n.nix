@@ -166,6 +166,24 @@
             };
           };
 
+          peers = {
+            openrouter = {
+              proxy = "https://openrouter.ai/api";
+              apiKey = ''''${env.OPENROUTER_API_KEY}'';
+              models = [
+                "deepseek/deepseek-v4-flash-0731"
+              ];
+              filters = {
+                setParams = {
+                  provider = {
+                    order = [ "streamlake" ];
+                    allow_fallbacks = false;
+                  };
+                };
+              };
+            };
+          };
+
           matrix = {
             vars = {
               "q35" = "qwen36-35b-a3b";
@@ -190,8 +208,8 @@
 
       systemd.services.llama-swap = {
         environment = {
-          LLAMA_CACHE = "/persist/models";
-          XDG_CACHE_HOME = "/persist/models/.cache"; # Fix Vulkan shader cache
+          LLAMA_CACHE = lib.mkForce "/persist/models";
+          XDG_CACHE_HOME = lib.mkForce "/persist/models/.cache"; # Fix Vulkan shader cache
           HOME = "/persist/models"; # Fallback for any engine looking for ~
           GPU_MAX_HW_QUEUES = "1";
           # fastflow npu
@@ -201,12 +219,22 @@
           FLM_DISABLE_UPDATE_CHECK = "1";
           LD_LIBRARY_PATH = "${config.environment.sessionVariables.XILINX_XRT or ""}/lib";
         };
-        serviceConfig.ReadWritePaths = "/persist/models";
-        serviceConfig.LimitMEMLOCK = "infinity"; # fastflowlm with npu support
-        serviceConfig.SupplementaryGroups = [ "video" "render" ];
+        serviceConfig = {
+          EnvironmentFile = config.sops.secrets.openrouter-api-key.path;
+          ReadWritePaths = "/persist/models";
+          LimitMEMLOCK = "infinity"; # fastflowlm with npu support
+          SupplementaryGroups = [ "video" "render" ];
+        };
       };
 
       environment.systemPackages = [ inputs.audio-cpp.packages.${pkgs.system}.vulkan ];
+
+      sops.secrets.openrouter-api-key = lib.mkIf config.services.llama-swap.enable {
+        format = "yaml";
+        mode = "0400";
+        restartUnits = [ "llama-swap.service" ];
+        sopsFile = ./llama-swap-homelab-secrets.yaml;
+      };
 
       fi.services = [
         {
