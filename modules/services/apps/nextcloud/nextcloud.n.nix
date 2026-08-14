@@ -47,7 +47,7 @@
           # push notification for nextcloud-client
           notify_push = {
             enable = true;
-            package = pkgs-unstable.nextcloud-notify_push;
+            package = pkgs.nextcloud-notify_push;
             nextcloudUrl = "http://127.0.0.1:8180";
           };
 

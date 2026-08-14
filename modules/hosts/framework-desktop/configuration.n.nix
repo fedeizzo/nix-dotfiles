@@ -71,13 +71,13 @@ in
       inputs.self.modules.nixos.lemonade
       inputs.self.modules.nixos.llama-swap
       inputs.self.modules.nixos.logrotate
-      inputs.self.modules.nixos.n8n
-      inputs.self.modules.nixos.neo4j
+      # inputs.self.modules.nixos.n8n
+      # inputs.self.modules.nixos.neo4j
       inputs.self.modules.nixos.net-worth
       inputs.self.modules.nixos.nextcloud
       inputs.self.modules.nixos.nix-dotfiles-docs
       inputs.self.modules.nixos.ntfy
-      inputs.self.modules.nixos.open-webui
+      # inputs.self.modules.nixos.open-webui
       inputs.self.modules.nixos.pan
       inputs.self.modules.nixos.paperless
       inputs.self.modules.nixos.postgres

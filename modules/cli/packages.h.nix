@@ -37,6 +37,7 @@
       playerctl
       mpd-mpris
       flac
+      gh
       (makeDesktopItem {
         name = "reboot";
         exec = "reboot";

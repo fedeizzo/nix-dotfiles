@@ -117,10 +117,17 @@
               checkEndpoint = "/v1/models";
             };
 
-            "qwen36-27b" = {
+            # "qwen36-27b" = {
+            #   env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
+            #   cmd = ''${llama-server} --port ''${PORT} -hf unsloth/Qwen3.6-27B-MTP-GGUF:UD-Q4_K_XL ${commonFlags} --spec-type draft-mtp --spec-draft-n-max 3 --spec-draft-p-min 0.75 --temp 0.6 --top-p 0.95 --top-k 20 --min-p 0.00 --presence-penalty 0.0 --repeat-penalty 1.0 --ubatch-size 2048 --batch-size 4096 --chat-template-kwargs '{"preserve_thinking": true}' '';
+            #   aliases = [ "realtime" "q4-xl" "qwen27" ];
+            #   timeouts.responseHeader = 600;
+            # };
+
+            "qwen38-27b" = {
               env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
-              cmd = ''${llama-server} --port ''${PORT} -hf unsloth/Qwen3.6-27B-MTP-GGUF:UD-Q4_K_XL ${commonFlags} --spec-type draft-mtp --spec-draft-n-max 3 --spec-draft-p-min 0.75 --temp 0.6 --top-p 0.95 --top-k 20 --min-p 0.00 --presence-penalty 0.0 --repeat-penalty 1.0 --ubatch-size 2048 --batch-size 4096 --chat-template-kwargs '{"preserve_thinking": true}' '';
-              aliases = [ "realtime" "q4-xl" "qwen27" ];
+              cmd = ''${llama-server} --port ''${PORT} -hf unsloth/Qwen3.8-27B-GGUF:UD-Q4_K_XL ${commonFlags} --spec-type draft-mtp --spec-draft-n-max 3 --spec-draft-p-min 0.75 --temp 1.0 --top-p 0.95 --top-k 20 --min-p 0.00 --presence-penalty 0.0 --repeat-penalty 1.0 --ubatch-size 2048 --batch-size 4096 --chat-template-kwargs '{"preserve_thinking": true, "reasoning_effort": "medium"}' '';
+              aliases = [ "qwen27" ];
               timeouts.responseHeader = 600;
             };
 
@@ -134,7 +141,7 @@
 
             "ds4" = {
               env = [ "GPU_MAX_HW_QUEUES=1" ];
-              cmd = ''${ds4-server} --port ''${PORT} -m /persist/models/DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-0731.gguf --ctx 262144 --kv-disk-dir /tmp/ds4-kv --kv-disk-space-mb 8192'';
+              cmd = ''${ds4-server} --port ''${PORT} -m /persist/models/DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-0731.gguf --ctx 100000 --kv-disk-dir /tmp/ds4-kv --kv-disk-space-mb 8192'';
               checkEndpoint = "/v1/models";
               aliases = [ "ds4" ];
               timeouts.responseHeader = 600;
@@ -172,11 +179,13 @@
               apiKey = ''''${env.OPENROUTER_API_KEY}'';
               models = [
                 "deepseek/deepseek-v4-flash-0731"
+                "z-ai/glm-5.2"
+                "stealth/ox-alpha"
               ];
               filters = {
                 setParams = {
                   provider = {
-                    order = [ "streamlake" ];
+                    order = [ "deepseek" "baidu" ];
                     allow_fallbacks = false;
                   };
                 };
@@ -189,7 +198,7 @@
               "q35" = "qwen36-35b-a3b";
               "e" = "bge-m3";
               "ds4" = "ds4";
-              "q27" = "qwen36-27b";
+              "q27" = "qwen38-27b";
               "tts" = "tts";
               "qasr" = "qwen3_asr";
               "g" = "gemma4-it:e4b";

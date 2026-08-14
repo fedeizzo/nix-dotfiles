@@ -16,9 +16,9 @@
 
       users.mixer = {
         imports = with inputs.self.modules.homeManager; [
-          aichat
+          # aichat
           # nono
-          fence
+          # fence
           antigravity
           cli-packages
           direnv
@@ -31,6 +31,7 @@
           profile-personal
           jail-pi
           herdr
+          maki
         ];
         home = {
           stateVersion = "25.05";
@@ -58,7 +59,7 @@
         isNormalUser = true;
         createHome = true;
         description = "Mixer";
-        extraGroups = [ "networkmanager" "wheel" "docker" ];
+        extraGroups = [ "networkmanager" "wheel" "docker" "render" "video" ];
         shell = pkgs.zsh;
         hashedPassword = "$y$j9T$tH3Iu/T7QJDOwQY4H/.vR1$Ub3s.9LSZrJ8BBZU1Rn00pbZufmwO2mit4LBVCCbf7A";
         openssh.authorizedKeys.keys = [

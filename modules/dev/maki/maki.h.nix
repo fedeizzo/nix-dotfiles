@@ -12,7 +12,6 @@
         "maki/init.lua".text = ''
           ${builtins.readFile ./config/init.lua}
 
-          ${builtins.readFile ./config/plugins/long-horizon-worker.lua}
         '';
         "maki/AGENTS.md".source = ./config/AGENTS.md;
         "maki/permissions.toml".source = ./config/permissions.toml;

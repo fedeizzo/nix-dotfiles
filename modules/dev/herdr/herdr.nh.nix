@@ -68,6 +68,7 @@
 
           if [[ -f "$config_dir/.env" ]]; then
             set -a
+            # shellcheck disable=SC1091
             source "$config_dir/.env"
             set +a
           fi

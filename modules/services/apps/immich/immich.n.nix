@@ -41,6 +41,7 @@
     fi.services = [
       {
         name = "immich";
+        isExposed = true;
         subdomain = "photo"; inherit (config.services.immich) port; dashboardSection = "Media";
         toPersist = [
           {

@@ -1,8 +1,8 @@
 {
   "lastChangelogVersion": "0.81.1",
   "defaultProvider": "llamaswap",
-  "defaultModel": "qwen36-35b-a3b",
-  "defaultThinkingLevel": "minimal",
+  "defaultModel": "qwen27",
+  "defaultThinkingLevel": "high",
   "hideThinkingBlock": false,
   "quietStartup": false,
   "treeFilterMode": "all",
@@ -19,7 +19,8 @@
     "npm:@juicesharp/rpiv-args",
     "npm:context-mode",
     "npm:@vndv/pi-codegraph",
-    "npm:pi-diet-semble"
+    "npm:pi-diet-semble",
+    "npm:pi-effort"
   ],
   "compaction": {
     "enabled": true,
