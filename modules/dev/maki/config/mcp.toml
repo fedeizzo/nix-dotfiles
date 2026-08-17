@@ -1,0 +1,2 @@
+# Maki MCP server definitions.
+# Reference credentials through environment variables rather than storing them here.

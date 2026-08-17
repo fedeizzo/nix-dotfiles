@@ -1,0 +1,5 @@
+[fedeizzo]
+display_name = "Fedeizzo LLM"
+protocol = "openai"
+base_url = "https://llama.fedeizzo.dev/v1"
+discover_models = true

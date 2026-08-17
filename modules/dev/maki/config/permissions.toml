@@ -1,0 +1,76 @@
+# Ask before running any gated operation that does not match an explicit rule.
+default = "prompt"
+
+[bash]
+allow = [
+  # Read-only Jujutsu commands.
+  "jj version*",
+  "jj status*",
+  "jj diff*",
+  "jj log*",
+  "jj show*",
+  "jj file list*",
+  "jj bookmark list*",
+  "jj tag list*",
+  "jj workspace list*",
+  "jj operation log*",
+
+  # Read-only Git commands for fallback and user-requested workflows.
+  "git status*",
+  "git diff*",
+  "git log*",
+  "git show*",
+  "git branch --list*",
+  "git remote -v*",
+  "git ls-files*",
+  "git rev-parse*",
+
+  # Nix formatting, evaluation, checks, and builds.
+  "nix fmt*",
+  "nix flake check*",
+  "nix flake show*",
+  "nix flake metadata*",
+  "nix eval*",
+  "nix build*",
+  "nixfmt*",
+
+  # Common test, lint, and formatting commands.
+  "go test*",
+  "gofmt*",
+  "cargo test*",
+  "cargo nextest*",
+  "cargo fmt*",
+  "cargo clippy*",
+  "npm test*",
+  "pnpm test*",
+  "bun test*",
+  "pytest*",
+  "ruff check*",
+  "ruff format*",
+  "prettier*",
+]
+
+deny = [
+  # Privilege escalation.
+  "sudo*",
+  "doas*",
+
+  # Broad destructive deletion.
+  "rm -rf *",
+  "rm -fr *",
+  "rm --recursive --force *",
+  "rm --force --recursive *",
+
+  # Destructive Git operations.
+  "git reset --hard*",
+  "git clean -f*",
+  "git push --force*",
+  "git push -f*",
+  "git checkout -- *",
+
+  # Downloading and piping scripts directly into a shell.
+  "curl *|*sh*",
+  "curl *|*bash*",
+  "wget *|*sh*",
+  "wget *|*bash*",
+]
