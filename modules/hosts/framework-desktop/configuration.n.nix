@@ -64,6 +64,7 @@ in
       inputs.self.modules.nixos.glance
       inputs.self.modules.nixos.grafana
       inputs.self.modules.nixos.hass
+      inputs.self.modules.nixos.herdr
       # inputs.self.modules.nixos.hermes
       inputs.self.modules.nixos.immich
       inputs.self.modules.nixos.influxdb

@@ -1,6 +1,17 @@
 {
   flake-file.inputs.llm-agents.url = "github:numtide/llm-agents.nix";
 
+  flake.modules.nixos.herdr = {
+    fi.services = [
+      {
+        name = "collie";
+        port = 8787;
+        dashboardSection = "Tools";
+        authType = "none";
+      }
+    ];
+  };
+
   flake.modules.homeManager.herdr = { pkgs, lib, ... }:
     let
       herdr = pkgs.llm-agents.herdr;
@@ -10,11 +21,15 @@
         "jeffarese/herdr-bar"
         "smarzban/herdr-file-viewer"
         "mroth/herdr-jj-status"
+        "AltanS/collie"
       ];
 
       herdrWithPlugins = pkgs.writeShellApplication {
         name = "herdr";
-        runtimeInputs = [ pkgs.jq ];
+        runtimeInputs = [
+          pkgs.bun
+          pkgs.jq
+        ];
         text = ''
           if [[ -z "''${HERDR_SKIP_PLUGIN_BOOTSTRAP:-}" ]]; then
             export HERDR_SKIP_PLUGIN_BOOTSTRAP=1
@@ -40,9 +55,42 @@
         '';
       };
 
+      collie = pkgs.writeShellApplication {
+        name = "collie";
+        runtimeInputs = [
+          pkgs.bun
+          pkgs.git
+          pkgs.jq
+        ];
+        text = ''
+          config_home="''${XDG_CONFIG_HOME:-$HOME/.config}"
+          config_dir="$config_home/herdr/plugins/config/herdr.collie"
+
+          if [[ -f "$config_dir/.env" ]]; then
+            set -a
+            source "$config_dir/.env"
+            set +a
+          fi
+
+          export HERDR_PLUGIN_CONFIG_DIR="$config_dir"
+          export HERDR_SOCKET_PATH="''${HERDR_SOCKET_PATH:-$config_home/herdr/herdr.sock}"
+
+          plugin_root="$(
+            ${herdrWithPlugins}/bin/herdr plugin list --json \
+              | jq -er 'first(.result.plugins[]? | select(.plugin_id == "herdr.collie") | .plugin_root)'
+          )"
+
+          cd "$plugin_root"
+          exec bun run "$plugin_root/bridge/index.ts"
+        '';
+      };
+
       herdrUpdatePlugins = pkgs.writeShellApplication {
         name = "herdr-update-plugins";
-        runtimeInputs = [ pkgs.jq ];
+        runtimeInputs = [
+          pkgs.bun
+          pkgs.jq
+        ];
         text = ''
           installed_plugins="$(${herdr}/bin/herdr plugin list --json)"
           github_plugins="$(
@@ -142,6 +190,32 @@
         pkgs.bat
       ];
 
-      xdg.configFile."herdr/config.toml".source = config;
+      xdg.configFile = {
+        "herdr/config.toml".source = config;
+        "herdr/plugins/config/herdr.collie/.env".text = ''
+          COLLIE_SKIP_SERVE=1
+          COLLIE_PORT=8787
+          COLLIE_PUBLIC_HOSTS=collie.fedeizzo.dev
+          COLLIE_ALLOWED_ORIGINS=https://collie.fedeizzo.dev
+          COLLIE_PUBLIC_URL=https://collie.fedeizzo.dev
+        '';
+      };
+
+      systemd.user.services.collie = lib.mkIf pkgs.stdenv.isLinux {
+        Unit = {
+          Description = "Collie Herdr web bridge";
+          Wants = [ "network-online.target" ];
+          After = [ "network-online.target" ];
+        };
+        Service = {
+          Type = "simple";
+          ExecStart = "${collie}/bin/collie";
+          Restart = "on-failure";
+          RestartSec = 5;
+          NoNewPrivileges = true;
+          PrivateTmp = true;
+        };
+        Install.WantedBy = [ "default.target" ];
+      };
     };
 }
