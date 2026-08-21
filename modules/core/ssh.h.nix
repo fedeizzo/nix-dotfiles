@@ -1,9 +1,13 @@
 {
-  flake.modules.homeManager.ssh = {
+  flake.modules.homeManager.ssh-agent = {
     services.ssh-agent.enable = true;
+    programs.ssh.enable = true;
+    programs.ssh.addKeysToAgent = "yes";
+  };
+
+  flake.modules.homeManager.ssh = { lib, ... }: {
     programs.ssh = {
-      enable = true;
-      addKeysToAgent = "yes";
+      enable = lib.mkDefault true;
       settings = {
         homelab = {
           Hostname = "homelab";

@@ -38,6 +38,7 @@
           misc
           nextcloud
           ssh
+          ssh-agent
           nix-registry
           solaar
           stylix

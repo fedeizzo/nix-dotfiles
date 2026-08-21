@@ -31,6 +31,7 @@
           profile-personal
           pi
           herdr
+          ssh-agent
         ];
         home = {
           stateVersion = "25.05";
