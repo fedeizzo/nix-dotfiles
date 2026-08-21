@@ -32,10 +32,10 @@
         port = "\${PORT}";
 
         # Server
-        sessions = 5;
-        maxConnections = 16;
-        maxRequestBytes = 8388608;
-        verbose = false;
+        # sessions = 5;
+        # maxConnections = 16;
+        # maxRequestBytes = 8388608;
+        # verbose = false;
 
         # Model
         servedModelName = "qwen3.8-27b";
@@ -44,7 +44,7 @@
         # Speculative Decoding (DFlash-2)
         speculative = "dflash2";
         draftTokens = 7;
-        draftPolicy = "auto";
+        # draftPolicy = "auto";
         minDraftTokens = 1;
         specDraftPMin = 0.0;
 
@@ -76,9 +76,9 @@
         preserveThinking = "auto";
 
         # Cache
-        cacheDisk = "/var/cache/gufo";
-        cacheDiskBytes = 4294967296;
-        cacheDiskStagingBytes = 536870912;
+        # cacheDisk = "/var/cache/gufo";
+        # cacheDiskBytes = 4294967296;
+        # cacheDiskStagingBytes = 536870912;
 
         # Hardware
         cpu = false;
@@ -92,10 +92,10 @@
         port = "\${PORT}";
 
         # Server
-        sessions = 2;
-        maxConnections = 16;
-        maxRequestBytes = 8388608;
-        verbose = false;
+        # sessions = 2;
+        # maxConnections = 16;
+        # maxRequestBytes = 8388608;
+        # verbose = false;
 
         # Model
         servedModelName = "ds4";
@@ -127,9 +127,9 @@
         presencePenalty = 0.0;
 
         # Cache
-        cacheDisk = "/var/cache/gufo-ds4";
-        cacheDiskBytes = 4294967296;
-        cacheDiskStagingBytes = 536870912;
+        # cacheDisk = "/var/cache/gufo-ds4";
+        # cacheDiskBytes = 4294967296;
+        # cacheDiskStagingBytes = 536870912;
 
         # Hardware
         cpu = false;
