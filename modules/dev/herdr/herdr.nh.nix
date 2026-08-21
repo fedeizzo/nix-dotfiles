@@ -177,6 +177,11 @@
             ]
           ];
 
+          sidebar.agents.rows = [
+            [ "state_icon" "workspace" "tab" ]
+            [ "agent" "state_text" ]
+          ];
+
           sound.enabled = false;
           toast.delivery = "system";
         };

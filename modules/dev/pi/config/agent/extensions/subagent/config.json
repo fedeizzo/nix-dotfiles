@@ -1,0 +1,5 @@
+{
+  "asyncByDefault": false,
+  "defaultSubagentContext": "fork",
+  "singleRunOutputBaseDir": "~/.pi/subagent-outputs"
+}
