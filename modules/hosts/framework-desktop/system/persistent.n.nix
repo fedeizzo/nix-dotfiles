@@ -103,7 +103,6 @@
 
           # App single-file state
           "/var/lib/private/dns-updater/cache.json"
-          "/var/lib/logrotate.status"
 
           # ssh
           "/etc/ssh/ssh_host_ed25519_key"

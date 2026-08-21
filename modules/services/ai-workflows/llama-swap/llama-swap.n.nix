@@ -84,39 +84,90 @@
         cpu = false;
       };
 
-        gufoQwenTTSCmd = inputs.gufo.lib.${pkgs.system}.mkGufoServe {
-           modality = "audio";
+      gufoDs4 = inputs.gufo.lib.${pkgs.system}.mkGufoServe {
+        modality = "llm";
 
-           ttsModel = "/persist/models/audio/Qwen3-TTS-12Hz-1.7B-Base";
-           ttsContext = 4096;
+        model = "/persist/models/DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-0731.gguf";
+        host = "0.0.0.0";
+        port = "\${PORT}";
 
-           asrModel = "/persist/models/audio/Qwen3-ASR-1.7B";
-           asrContext = 1024;
+        # Server
+        sessions = 2;
+        maxConnections = 16;
+        maxRequestBytes = 8388608;
+        verbose = false;
 
-           voices = {
-             narrator_eng = {
-               wav      = "/persist/models/audio/clear-english-voice.wav";
-               text     = "It is said with truth that every building is constructed stone by stone, and the same may be said of knowledge. Extract.";
-               language = "english";
-             };
+        # Model
+        servedModelName = "ds4";
+        context = 131072;
 
-             narrator_ita = {
-               wav      = "/persist/models/audio/clear-italian-voice.wav";
-               text     = "Questo racconto è cresciuto nel corso della narrazione fino a diventare una storia della Grande Guerra dell'Anello, e ha in.";
-               language = "italian";
-             };
+        # Speculative decoding: see note below — DSpark is not available in serve
+        speculative = "off";
 
-             me = {
-               wav      = "/persist/models/audio/me.wav";
-               text     = "ciao il mio nome è Federico sono un ingegnere informatico vivo a Parigi e nel tempo libero mi piace arrampicare";
-               language = "italian";
-             };
-           };
+        # Scheduling
+        prefillChunk = 512;
+        maxPending = 16;
+        maxPendingPerClient = 4;
+        requestTimeoutMs = 0;
+        maxOutputBytes = 1048576;
+        maxBufferedOutputBytes = 65536;
+        maxBufferedOutputTotal = 262144;
 
-           host = "0.0.0.0";
-           port = "\${PORT}";
-           maxRequestBytes = 33554432;
-         };
+        # Sampling
+        temp = 0.6;
+        maxTokens = 8192;
+        topP = 0.95;
+        topK = 0;
+        minP = 0.0;
+        minKeep = 0;
+        seed = -1;
+        repeatPenalty = 1.0;
+        repeatLastN = 64;
+        frequencyPenalty = 0.0;
+        presencePenalty = 0.0;
+
+        # Cache
+        cacheDisk = "/var/cache/gufo-ds4";
+        cacheDiskBytes = 4294967296;
+        cacheDiskStagingBytes = 536870912;
+
+        # Hardware
+        cpu = false;
+      };
+
+      gufoQwenTTSCmd = inputs.gufo.lib.${pkgs.system}.mkGufoServe {
+        modality = "audio";
+
+        ttsModel = "/persist/models/audio/Qwen3-TTS-12Hz-1.7B-Base";
+        ttsContext = 4096;
+
+        asrModel = "/persist/models/audio/Qwen3-ASR-1.7B";
+        asrContext = 1024;
+
+        voices = {
+          narrator_eng = {
+            wav = "/persist/models/audio/clear-english-voice.wav";
+            text = "It is said with truth that every building is constructed stone by stone, and the same may be said of knowledge. Extract.";
+            language = "english";
+          };
+
+          narrator_ita = {
+            wav = "/persist/models/audio/clear-italian-voice.wav";
+            text = "Questo racconto è cresciuto nel corso della narrazione fino a diventare una storia della Grande Guerra dell'Anello, e ha in.";
+            language = "italian";
+          };
+
+          me = {
+            wav = "/persist/models/audio/me.wav";
+            text = "ciao il mio nome è Federico sono un ingegnere informatico vivo a Parigi e nel tempo libero mi piace arrampicare";
+            language = "italian";
+          };
+        };
+
+        host = "0.0.0.0";
+        port = "\${PORT}";
+        maxRequestBytes = 33554432;
+      };
 
       commonFlags = ''
         -ngl 999 \
@@ -170,6 +221,13 @@
               cmd = "${gufoQwen27}";
               timeouts.responseHeader = 600;
               aliases = [ "Qwen3.8-27B" ];
+            };
+
+            "ds4" = {
+              env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
+              cmd = "${gufoDs4}";
+              timeouts.responseHeader = 600;
+              aliases = [ ];
             };
 
             "qwen3-tts" = {
