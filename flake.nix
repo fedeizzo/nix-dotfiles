@@ -6,7 +6,6 @@
   outputs = inputs: inputs.flake-parts.lib.mkFlake { inherit inputs; } (inputs.import-tree ./modules);
 
   inputs = {
-    audio-cpp.url = "github:fedeizzo/audio.cpp/fedeizzo/improve-vulkan";
     authentik-nix.url = "github:nix-community/authentik-nix";
     deploy-rs.url = "github:serokell/deploy-rs";
     devshell.url = "github:numtide/devshell";
@@ -16,13 +15,16 @@
     };
     dms.url = "github:AvengeMedia/DankMaterialShell/stable";
     dms-plugin-registry.url = "github:AvengeMedia/dms-plugin-registry";
-    ds4.url = "github:francescobozzo/ds4/rocm-strix-halo-release";
     flake-file.url = "github:vic/flake-file";
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
       inputs.nixpkgs-lib.follows = "nixpkgs";
     };
     git-hooks-nix.url = "github:cachix/git-hooks.nix";
+    gufo = {
+      type = "git";
+      url = "ssh://git@github.com/gufo-org/gufo.git";
+    };
     hermes-agent.url = "github:NousResearch/hermes-agent";
     home-manager = {
       url = "github:nix-community/home-manager/release-26.05";

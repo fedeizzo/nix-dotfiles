@@ -7,5 +7,7 @@
         lib.filterAttrs (_: type: type == "directory") (builtins.readDir ../../.agents/skills)
       );
     };
+
+    home.packages = with pkgs.llm-agents; [ codex claude-code pkgs.nodejs-slim ];
   };
 }

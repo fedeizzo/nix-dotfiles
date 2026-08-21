@@ -5,8 +5,15 @@
       listenAddress = "127.0.0.1";
       listenPort = 35557;
       spaceDir = "/var/lib/nextcloud/data/fedeizzo/files/wiki";
-      user = "silverbullet";
-      group = "silverbullet";
+      user = "nextcloud";
+      group = "nextcloud";
+    };
+
+    systemd.services.silverbullet = {
+      preStart = lib.mkForce "${pkgs.coreutils}/bin/mkdir -p '${config.services.silverbullet.spaceDir}'";
+      serviceConfig = {
+        StateDirectory = lib.mkForce "";
+      };
     };
 
     fi.services = [
@@ -18,8 +25,8 @@
         toPersist = [
           {
             directory = config.services.silverbullet.spaceDir;
-            user = "silverbullet";
-            group = "silverbullet";
+            user = "nextcloud";
+            group = "nextcloud";
             mode = "u=rwx,g=rx,o=";
           }
         ];
@@ -28,12 +35,5 @@
         ];
       }
     ];
-
-    users.users.silverbullet = {
-      uid = 984;
-      group = "silverbullet";
-      extraGroups = [ "nextcloud" ];
-    };
-    users.groups.silverbullet.gid = 977;
   };
 }

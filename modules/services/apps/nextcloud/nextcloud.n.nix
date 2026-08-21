@@ -65,7 +65,7 @@
           extraApps = {
             inherit (pkgs.nextcloud32Packages.apps) calendar contacts richdocuments tasks deck user_oidc;
           };
-          autoUpdateApps.enable = true;
+          autoUpdateApps.enable = false;
         };
 
         collabora-online = {

@@ -94,8 +94,8 @@
 
     networking.firewall.interfaces.eth0.allowedTCPPorts = [ 52914 44533 ];
 
-    environment.systemPackages = [(pkgs.callPackage ./epub_to_audiobook.package {})];
-    networking.firewall.interfaces.wg0.allowedTCPPorts = [1010];
+    environment.systemPackages = [ (pkgs.callPackage ./epub_to_audiobook.package { }) ];
+    networking.firewall.interfaces.wg0.allowedTCPPorts = [ 1010 ];
 
     # Dashboard & Persistence
     fi.services = [
@@ -119,6 +119,7 @@
         name = "audiobookshelf";
         port = config.services.audiobookshelf.port;
         dashboardSection = "Media";
+        isExposed = true;
         toPersist = [
           {
             directory = "/var/lib/audiobookshelf";

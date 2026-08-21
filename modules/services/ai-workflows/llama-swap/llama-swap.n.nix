@@ -1,40 +1,12 @@
 {
-  flake-file.inputs.audio-cpp.url = "github:fedeizzo/audio.cpp/fedeizzo/improve-vulkan";
-  flake-file.inputs.ds4.url = "github:francescobozzo/ds4/rocm-strix-halo-release";
+  flake-file.inputs.gufo = {
+    type = "git";
+    url = "ssh://git@github.com/gufo-org/gufo.git";
+    flake = true; # Set to false if gufo doesn't have its own flake.nix
+  };
 
   flake.modules.nixos.llama-swap = { pkgs-unstable, lib, inputs, pkgs, config, ... }:
     let
-      # llama-cpp =
-      #   (pkgs-unstable.llama-cpp.override {
-      #     rocmSupport = true;
-      #     rocmGpuTargets = [ "gfx1151" ];
-      #   }).overrideAttrs
-      #     (oldAttrs: rec {
-      #       version = "10087";
-      #       src = pkgs.fetchFromGitHub {
-      #         owner = "ggml-org";
-      #         repo = "llama.cpp";
-      #         tag = "b${version}";
-      #         hash = "sha256-O0zeMEPQyXky9wSWARrUZvtlu2fhddfPsJeq6Aybi8U=";
-      #         leaveDotGit = true;
-      #         postFetch = ''
-      #           git -C "$out" rev-parse --short HEAD > $out/COMMIT
-      #           find "$out" -name .git -print0 | xargs -0 rm -rf
-      #         '';
-      #       };
-      #       npmRoot = "tools/ui";
-      #       npmDepsHash = "sha256-B7uEynAG70a3xauBKc20RuFa9cnWaWzVBCh+LPLBnIM=";
-
-      #       cmakeFlags = (oldAttrs.cmakeFlags or [ ]) ++ [
-      #         "-DLLAMA_HIP_UMA=ON" # unified memory
-      #       ];
-
-      #       # Mirror the Strix Halo toolbox HIP tuning: pin the ROCm path explicitly and
-      #       # raise the local unroll threshold for gfx1151 kernels.
-      #       cmakeFlagsArray = (oldAttrs.cmakeFlagsArray or [ ]) ++ [
-      #         "-DCMAKE_HIP_FLAGS=--rocm-path=${pkgs.rocmPackages.clr} -mllvm --amdgpu-unroll-threshold-local=600"
-      #       ];
-      #     });
       llama-cpp =
         (pkgs.llama-cpp.override {
           rocmSupport = true;
@@ -51,8 +23,100 @@
             ];
           });
       llama-server = lib.getExe' llama-cpp "llama-server";
-      ds4-server = lib.getExe' inputs.ds4.packages.${pkgs.system}.default "ds4-server";
-      audio-cpp = lib.getExe' inputs.audio-cpp.packages.${pkgs.system}.vulkan "audiocpp_server";
+      gufoQwen27 = inputs.gufo.lib.${pkgs.system}.mkGufoServe {
+        modality = "llm";
+
+        model = "/persist/models/models--unsloth--Qwen3.8-27B-GGUF/snapshots/4ca720788d1e01f1bff70c033e0d0028fd02e502/Qwen3.8-27B-UD-Q8_K_L.gguf";
+        draftModel = "/persist/models/Qwen3.8-27B-DFlash2-Q8_0.gguf";
+        host = "0.0.0.0";
+        port = "\${PORT}";
+
+        # Server
+        sessions = 5;
+        maxConnections = 16;
+        maxRequestBytes = 8388608;
+        verbose = false;
+
+        # Model
+        servedModelName = "qwen3.8-27b";
+        context = 250000;
+
+        # Speculative Decoding (DFlash-2)
+        speculative = "dflash2";
+        draftTokens = 7;
+        draftPolicy = "auto";
+        minDraftTokens = 1;
+        specDraftPMin = 0.0;
+
+        # Scheduling
+        prefillChunk = 512;
+        maxPending = 16;
+        maxPendingPerClient = 4;
+        requestTimeoutMs = 0;
+        maxOutputBytes = 1048576;
+        maxBufferedOutputBytes = 65536;
+        maxBufferedOutputTotal = 262144;
+
+        # Sampling — Qwen3.8 official thinking-mode preset
+        temp = 0.8;
+        maxTokens = 8192;
+        topP = 0.95;
+        topK = 20;
+        minP = 0.0;
+        minKeep = 0;
+        seed = -1;
+        repeatPenalty = 1.0;
+        repeatLastN = 64;
+        frequencyPenalty = 0.0;
+        presencePenalty = 0.0;
+
+        # Reasoning
+        think = "on";
+        reasoningEffort = "medium";
+        preserveThinking = "auto";
+
+        # Cache
+        cacheDisk = "/var/cache/gufo";
+        cacheDiskBytes = 4294967296;
+        cacheDiskStagingBytes = 536870912;
+
+        # Hardware
+        cpu = false;
+      };
+
+        gufoQwenTTSCmd = inputs.gufo.lib.${pkgs.system}.mkGufoServe {
+           modality = "audio";
+
+           ttsModel = "/persist/models/audio/Qwen3-TTS-12Hz-1.7B-Base";
+           ttsContext = 4096;
+
+           asrModel = "/persist/models/audio/Qwen3-ASR-1.7B";
+           asrContext = 1024;
+
+           voices = {
+             narrator_eng = {
+               wav      = "/persist/models/audio/clear-english-voice.wav";
+               text     = "It is said with truth that every building is constructed stone by stone, and the same may be said of knowledge. Extract.";
+               language = "english";
+             };
+
+             narrator_ita = {
+               wav      = "/persist/models/audio/clear-italian-voice.wav";
+               text     = "Questo racconto è cresciuto nel corso della narrazione fino a diventare una storia della Grande Guerra dell'Anello, e ha in.";
+               language = "italian";
+             };
+
+             me = {
+               wav      = "/persist/models/audio/me.wav";
+               text     = "ciao il mio nome è Federico sono un ingegnere informatico vivo a Parigi e nel tempo libero mi piace arrampicare";
+               language = "italian";
+             };
+           };
+
+           host = "0.0.0.0";
+           port = "\${PORT}";
+           maxRequestBytes = 33554432;
+         };
 
       commonFlags = ''
         -ngl 999 \
@@ -90,13 +154,6 @@
               filters.setParamsByID."qwen-nothink".chat_template_kwargs.enable_thinking = false;
             };
 
-            "gemma" = {
-              env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
-              cmd = ''${llama-server} --port ''${PORT} -hf unsloth/gemma-4-26B-A4B-it-GGUF:UD-Q4_K_XL ${commonFlags} --temp 1.0 --top-p 0.95 --top-k 64'';
-              aliases = [ ];
-              filters.setParamsByID."gemma-nothink".chat_template_kwargs.enable_thinking = false;
-            };
-
             "qwen3-embedding" = {
               env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
               cmd = ''${llama-server} --port ''${PORT} -hf Qwen/Qwen3-Embedding-8B-GGUF --embedding --pooling last -ub 8192'';
@@ -108,68 +165,18 @@
               aliases = [ "embedding" ];
             };
 
-            "gemma4-it:e4b" = {
-              env = [
-                "FLM_MODEL_PATH=/persist/models/flm"
-              ];
-              cmd = ''${pkgs.fastflowlm}/bin/flm serve gemma4-it:e4b --port ''${PORT} --ctx-len 128000 --pmode turbo --asr 1'';
-              aliases = [ "whisper" "transcription" ];
-              checkEndpoint = "/v1/models";
-            };
-
-            # "qwen36-27b" = {
-            #   env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
-            #   cmd = ''${llama-server} --port ''${PORT} -hf unsloth/Qwen3.6-27B-MTP-GGUF:UD-Q4_K_XL ${commonFlags} --spec-type draft-mtp --spec-draft-n-max 3 --spec-draft-p-min 0.75 --temp 0.6 --top-p 0.95 --top-k 20 --min-p 0.00 --presence-penalty 0.0 --repeat-penalty 1.0 --ubatch-size 2048 --batch-size 4096 --chat-template-kwargs '{"preserve_thinking": true}' '';
-            #   aliases = [ "realtime" "q4-xl" "qwen27" ];
-            #   timeouts.responseHeader = 600;
-            # };
-
-            "qwen38-27b" = {
+            "qwen3.8-27b" = {
               env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
-              cmd = ''${llama-server} --port ''${PORT} -hf unsloth/Qwen3.8-27B-GGUF:UD-Q4_K_XL ${commonFlags} --spec-type draft-mtp --spec-draft-n-max 3 --spec-draft-p-min 0.75 --temp 1.0 --top-p 0.95 --top-k 20 --min-p 0.00 --presence-penalty 0.0 --repeat-penalty 1.0 --ubatch-size 2048 --batch-size 4096 --chat-template-kwargs '{"preserve_thinking": true, "reasoning_effort": "medium"}' '';
-              aliases = [ "qwen27" ];
+              cmd = "${gufoQwen27}";
               timeouts.responseHeader = 600;
+              aliases = [ "Qwen3.8-27B" ];
             };
 
-            "laguna" = {
+            "qwen3-tts" = {
               env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
-              cmd = ''${llama-server} --port ''${PORT} -hf  unsloth/Laguna-S-2.1-GGUF:Q4_K_XL -ngl all  -fa 1  --no-mmap --no-webui  --kv-unified  -c 262144 --jinja'';
-              aliases = [ ];
+              cmd = "${gufoQwenTTSCmd}";
               timeouts.responseHeader = 600;
-              filters.setParamsByID."laguna-nothink".chat_template_kwargs.enable_thinking = false;
-            };
-
-            "ds4" = {
-              env = [ "GPU_MAX_HW_QUEUES=1" ];
-              cmd = ''${ds4-server} --port ''${PORT} -m /persist/models/DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-0731.gguf --ctx 100000 --kv-disk-dir /tmp/ds4-kv --kv-disk-space-mb 8192'';
-              checkEndpoint = "/v1/models";
-              aliases = [ "ds4" ];
-              timeouts.responseHeader = 600;
-              filters.setParamsByID = {
-                "ds4".temperature = 0;
-                "ds4-nothink" = {
-                  temperature = 0;
-                  chat_template_kwargs.enable_thinking = false;
-                };
-              };
-            };
-
-            "tts" = {
-              env = [
-                "GPU_MAX_HW_QUEUES=1"
-                "HSA_ENABLE_SDMA=0"
-                "GGML_VK_FORCE_INTEGER_DOT_PRODUCT=1"
-                "OMP_PROC_BIND=TRUE"
-                "OMP_PLACES=cores"
-              ];
-              cmd = ''${audio-cpp} --config /persist/models/audio.cpp/tts.json --port ''${PORT}'';
-              aliases = [ "qwen-tts" "qwen3-tts-small" "supertonic" "chatterbox" ];
-              timeouts.responseHeader = 600;
-            };
-
-            "qwen3_asr" = {
-              cmd = ''${audio-cpp} --config /persist/models/audio.cpp/qwen-asr.json --port ''${PORT}'';
-              # aliases = [ "tts" "voxtral" ];
+              aliases = [ "qwen3-asr" ];
             };
           };
 
@@ -178,7 +185,7 @@
               proxy = "https://openrouter.ai/api";
               apiKey = ''''${env.OPENROUTER_API_KEY}'';
               models = [
-                "deepseek/deepseek-v4-flash-0731"
+                "deepseek/deepseek-v4-flash-vision-exp"
                 "z-ai/glm-5.2"
                 "stealth/ox-alpha"
               ];
@@ -197,16 +204,12 @@
             vars = {
               "q35" = "qwen36-35b-a3b";
               "e" = "bge-m3";
-              "ds4" = "ds4";
-              "q27" = "qwen38-27b";
-              "tts" = "tts";
-              "qasr" = "qwen3_asr";
-              "g" = "gemma4-it:e4b";
-              "gg" = "gemma";
+              "q27" = "qwen3.8-27b";
+              "audio" = "qwen3-tts";
             };
 
             sets = {
-              standard = "q27 & q35 & e & g & tts & qasr & gg";
+              standard = "q27 & q35 & e & audio";
             };
           };
 
@@ -235,7 +238,7 @@
         };
       };
 
-      environment.systemPackages = [ inputs.audio-cpp.packages.${pkgs.system}.vulkan ];
+      environment.systemPackages = [ ];
 
       sops.secrets.openrouter-api-key = lib.mkIf config.services.llama-swap.enable {
         format = "yaml";
