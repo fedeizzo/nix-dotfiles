@@ -1,7 +1,6 @@
 {
   flake.modules.nixos.x1-nano = { username, pkgs, inputs, config, pkgs-unstable, ... }: {
     nixpkgs.overlays = [
-      inputs.llm-agents.overlays.shared-nixpkgs
       inputs.niri.overlays.niri
     ];
     home-manager = {

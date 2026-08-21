@@ -11,7 +11,7 @@
 
     programs.pi-coding-agent = {
       enable = true;
-      package = pkgs.llm-agents.pi;
+      package = inputs.llm-agents.packages.${pkgs.system}.pi;
       extraPackages = with pkgs; [
         gnugrep
         findutils
@@ -29,8 +29,8 @@
         curl
         gnused
         gnumake
-        pkgs.llm-agents.codegraph
-        pkgs.llm-agents.semble
+        inputs.llm-agents.packages.${pkgs.system}.codegraph
+        inputs.llm-agents.packages.${pkgs.system}.semble
       ];
       settings = {
         lastChangelogVersion = "0.81.1";

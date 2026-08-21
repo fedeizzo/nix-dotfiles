@@ -12,9 +12,9 @@
     ];
   };
 
-  flake.modules.homeManager.herdr = { pkgs, lib, ... }:
+  flake.modules.homeManager.herdr = { pkgs, lib, inputs, ... }:
     let
-      herdr = pkgs.llm-agents.herdr;
+      herdr = inputs.llm-agents.packages.${pkgs.system}.herdr;
 
       plugins = [
         "persiyanov/herdr-reviewr"

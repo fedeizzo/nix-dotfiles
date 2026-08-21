@@ -5,6 +5,7 @@
       enable = true;
       settings = {
         experimental-features = "nix-command flakes";
+        trusted-users = [ "root" "@admin" ];
         extra-substituters = [
           "https://vicinae.cachix.org"
           "https://nix-amd-ai.cachix.org"

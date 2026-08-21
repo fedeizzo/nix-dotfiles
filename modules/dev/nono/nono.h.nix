@@ -1,12 +1,12 @@
 {
   flake-file.inputs.llm-agents.url = "github:numtide/llm-agents.nix";
 
-  flake.modules.homeManager.nono = { pkgs, lib, config, ... }: {
+  flake.modules.homeManager.nono = { pkgs, lib, config, inputs, ... }: {
     home.packages = [
-      pkgs.llm-agents.nono
-      pkgs.llm-agents.pi
+      inputs.llm-agents.packages.${pkgs.system}.nono
+      inputs.llm-agents.packages.${pkgs.system}.pi
       (pkgs.writeShellScriptBin "jailed-pi" ''
-        exec ${pkgs.llm-agents.nono}/bin/nono run --profile pi --allow-cwd -- ${pkgs.llm-agents.pi}/bin/pi "$@"
+        exec ${inputs.llm-agents.packages.${pkgs.system}.nono}/bin/nono run --profile pi --allow-cwd -- ${inputs.llm-agents.packages.${pkgs.system}.pi}/bin/pi "$@"
       '')
     ];
 
