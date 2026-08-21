@@ -29,9 +29,8 @@
           languages
           nix-index
           profile-personal
-          jail-pi
+          pi
           herdr
-          maki
         ];
         home = {
           stateVersion = "25.05";

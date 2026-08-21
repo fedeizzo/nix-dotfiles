@@ -1,10 +1,5 @@
 {
   flake.modules.homeManager.misc = { pkgs, pkgs-unstable, ... }: {
-    programs.jail-pi = {
-      enable = true;
-      persistName = "pi";
-      allowNetwork = true;
-    };
     home.packages = with pkgs; [
       gcc
       moonlight-qt

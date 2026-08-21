@@ -7,7 +7,5 @@
         lib.filterAttrs (_: type: type == "directory") (builtins.readDir ../../.agents/skills)
       );
     };
-
-    home.packages = [ pkgs.llm-agents.codex ];
   };
 }

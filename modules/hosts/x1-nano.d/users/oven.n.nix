@@ -34,7 +34,7 @@
           starship
           languages
           nix-index
-          jail-pi
+          pi
           misc
           nextcloud
           ssh

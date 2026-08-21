@@ -45,7 +45,6 @@
         ai-tools
         nono
         herdr
-        maki
       ];
 
       home.packages = with pkgs; [ pngpaste ];
