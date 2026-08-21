@@ -21,6 +21,7 @@ pub struct GetUserTool<P: FinanceProvider> {
 }
 
 impl<P: FinanceProvider> GetUserTool<P> {
+    #[must_use]
     pub fn new(service: crate::application::finance::FinanceService<P>) -> Self {
         Self { service }
     }
@@ -60,6 +61,7 @@ pub struct GetAccountsTool<P: FinanceProvider> {
 }
 
 impl<P: FinanceProvider> GetAccountsTool<P> {
+    #[must_use]
     pub fn new(service: crate::application::finance::FinanceService<P>) -> Self {
         Self { service }
     }
@@ -96,6 +98,7 @@ pub struct CalculateNetWorthTool<P: FinanceProvider> {
 }
 
 impl<P: FinanceProvider> CalculateNetWorthTool<P> {
+    #[must_use]
     pub fn new(service: crate::application::finance::FinanceService<P>) -> Self {
         Self { service }
     }
@@ -142,6 +145,7 @@ pub struct GetCategoriesTool<P: FinanceProvider> {
 }
 
 impl<P: FinanceProvider> GetCategoriesTool<P> {
+    #[must_use]
     pub fn new(service: crate::application::finance::FinanceService<P>) -> Self {
         Self { service }
     }
@@ -183,6 +187,7 @@ pub struct GetTagsTool<P: FinanceProvider> {
 }
 
 impl<P: FinanceProvider> GetTagsTool<P> {
+    #[must_use]
     pub fn new(service: crate::application::finance::FinanceService<P>) -> Self {
         Self { service }
     }
@@ -222,6 +227,7 @@ pub struct GetUnreviewedTransactionsTool<P: FinanceProvider> {
 }
 
 impl<P: FinanceProvider> GetUnreviewedTransactionsTool<P> {
+    #[must_use]
     pub fn new(service: crate::application::finance::FinanceService<P>) -> Self {
         Self { service }
     }
@@ -247,7 +253,9 @@ impl<P: FinanceProvider + Send + Sync> Tool for GetUnreviewedTransactionsTool<P>
 
     async fn call(&self, _args: Self::Args) -> Result<Self::Output, Self::Error> {
         match self.service.get_unreviewed_transactions().await {
-            Ok(transactions) => serde_json::to_string(&transactions).map_err(|e| ToolError(e.to_string())),
+            Ok(transactions) => {
+                serde_json::to_string(&transactions).map_err(|e| ToolError(e.to_string()))
+            }
             Err(e) => Err(ToolError(e.to_string())),
         }
     }

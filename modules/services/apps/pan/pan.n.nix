@@ -10,16 +10,12 @@
         };
 
         fastmail = {
+          session_url = "https://api.fastmail.com/jmap/session";
           api_file = config.sops.secrets.pan-fastmail.path;
         };
         lunchmoney = {
           api_file = config.sops.secrets.pan-lunchmoney.path;
         };
-        fusion = {
-          endpoint = "https://fusion.fedeizzo.dev/api";
-          password_file = config.sops.secrets.pan-fusion.path;
-        };
-
         interface = {
           type = "matrix";
         };
@@ -40,37 +36,26 @@
           level = "info";
         };
 
-        telemetry = {
-          port = "35556";
-        };
-
-        hindsight = {
-          url = "path";
-          api_key = "placeholder";
-          bank_id = "pan";
-        };
-
         jobs = [
           {
             name = "transaction";
             spec = "*/5 10-20 * * *";
             condition = "lunchmoney:has_unreviewed";
-            prompt = "Get latest lunchmoney transaction and review it.";
+            prompt = "Review the latest Lunch Money transaction.";
             runner = "lunchmoney";
           }
-          {
-            name = "fusion_triage";
-            spec = "0 8 * * *";
-            condition = "fusion:has_unread";
-            prompt = "Please fetch my latest unread RSS feeds and present a summary.";
-            runner = "fusion";
-          }
         ];
+
       };
     };
 
-    # We reuse the secrets defined in the old pan configuration, or we could duplicate them.
-    # We will assume they are defined globally or we can define them here if the old pan is disabled.
+    sops.secrets = lib.genAttrs [ "pan-fastmail" "pan-matrix" "pan-lunchmoney" ] (name: {
+      format = "yaml";
+      mode = "0440";
+      owner = config.systemd.services.apps-pan.serviceConfig.User;
+      group = config.systemd.services.apps-pan.serviceConfig.Group;
+      sopsFile = ./pan-homelab-secrets.yaml;
+    });
 
     fi.services = [
       {

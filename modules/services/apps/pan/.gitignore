@@ -30,6 +30,10 @@ target/
 # logs
 *.log
 
+# Local runtime state
+pan-workflows.sqlite3*
+workflows.sqlite3*
+
 # Frontend (Node.js/Svelte)
 node_modules/
 frontend/node_modules/

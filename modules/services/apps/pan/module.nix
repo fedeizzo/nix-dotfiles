@@ -7,7 +7,21 @@
       package = pkgs.rustPlatform.buildRustPackage {
         pname = "pan";
         version = "0.1.0";
-        src = lib.cleanSource ./.;
+        src = lib.cleanSourceWith {
+          src = ./.;
+          filter = path: type:
+            let
+              name = baseNameOf path;
+            in
+              !builtins.elem name [
+                ".agents"
+                "config.yaml"
+                "frontend"
+                "pan-homelab-secrets.yaml"
+                "pan.log"
+                "target"
+              ];
+        };
 
         cargoLock = {
           lockFile = ./Cargo.lock;
@@ -18,6 +32,13 @@
     {
       options.services.apps-pan = {
         enable = lib.mkEnableOption "Pan service (Rust)";
+
+        package = lib.mkOption {
+          type = lib.types.package;
+          default = package;
+          defaultText = lib.literalExpression "the bundled Pan Rust package";
+          description = "Pan package to execute.";
+        };
 
         settings = lib.mkOption {
           type = format.type;
@@ -41,7 +62,7 @@
           after = [ "network.target" ];
 
           serviceConfig = {
-            ExecStart = "${package}/bin/pan --config ${format.generate "pan-config.yaml" cfg.settings}";
+            ExecStart = "${cfg.package}/bin/pan --config ${format.generate "pan-config.yaml" cfg.settings}";
             WorkingDirectory = cfg.dataDir;
             StateDirectory = "pan-rust";
             User = "pan-rust";
@@ -75,7 +96,7 @@
             UMask = "0077";
           };
         };
-        
+
         users.users.pan-rust = {
           uid = 952;
           group = "pan-rust";

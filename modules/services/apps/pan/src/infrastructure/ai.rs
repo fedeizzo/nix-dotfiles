@@ -15,6 +15,10 @@ pub struct Rig {
 
 impl Rig {
     /// Initializes the API client and builds the agent with injected tools
+    ///
+    /// # Errors
+    ///
+    /// Returns an error when the model client configuration is invalid.
     pub fn new(
         base_url: &str,
         api_key: &str,

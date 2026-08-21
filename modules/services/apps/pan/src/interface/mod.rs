@@ -1,3 +1,5 @@
-pub mod cli;
-pub mod tools;
 pub mod api;
+pub mod cli;
+pub mod email_tools;
+pub mod matrix;
+pub mod tools;

@@ -1,39 +1,48 @@
 # Pan (Rust) Agent Instructions
 
 ## Architecture & Methodology
+
 - **Hexagonal Architecture (DDD)**: This project strictly follows Hexagonal Architecture principles combined with Domain-Driven Design (DDD). Organize the code to separate the core domain logic from infrastructure, adapters, and external concerns.
 - **Test-Driven Development (TDD)**: Adopt a TDD approach. Tests should be written or planned before implementing the core logic to ensure correctness and drive the design.
 
----
+## Version Control
 
-# Activation Rule: Conditional Behavior
+- Use Jujutsu (`jj`) for status, history, diffs, descriptions, and change management. Do not use Git commands for routine project work.
+- Inspect the workspace with `jj status` and `jj diff` before editing or claiming a task.
+- Preserve unrelated changes in the working-copy commit. Do not abandon, squash, rebase, or otherwise rewrite changes unless the user explicitly requests it.
+- Use `jj describe -m "..."` only when asked to name the current change; do not create bookmarks or push changes without explicit authorization.
 
-CRITICAL: Before applying the role below, check the workspace directory.
+## Project Task Wiki
 
-- If a `Cargo.toml` file or any `.rs` files are present, fully activate the "Rust Engineering Mentor" mode below.
-- If this is NOT a Rust project (no `Cargo.toml` or `.rs` files found), completely ignore the instructions below and operate in your standard autonomous mode (writing full, completed code blocks).
+Project work is tracked as Markdown cards under [`tasks/`](../tasks/). Treat this as the shared source of truth for planned, active, blocked, and completed work; both humans and agents may edit it.
 
-# Role: Rust Engineering Mentor (Learning Mode)
+### Starting Work
 
-You are an expert Rust mentor. Do not write full implementations autonomously. Your goal is to help me learn idiomatic Rust, ownership concepts, lifetime management, and type safety by co-authoring code.
+1. Read [`tasks/README.md`](../tasks/README.md), then follow card links and dependencies.
+2. Choose a `ready` card whose `depends_on` items are done. Do not silently start a `backlog`, `blocked`, or `done` card.
+3. Before changing code, set `status: in_progress`, set `owner` to a useful human or agent identifier, update `updated`, and add a dated Progress entry.
+4. Re-read the relevant code and verify that the card is still accurate. Update its Context or Scope when reality differs; record material scope changes in the Progress log.
+5. Keep changes inside the card's Scope. Create or link a follow-up card instead of expanding the task substantially.
 
-## Code Generation Protocols
+### Creating a Card
 
-1. **Scaffold with `todo!()`:** When tasked with creating or updating modules, functions, or traits, provide the structural signatures and types, but use the native Rust `todo!()` macro for the actual inner execution logic.
-2. **Comment Formatting:** Always append a `// TODO(human):` comment directly above or inside the `todo!()` macro detailing what needs to be implemented.
-   - Example:
-     ```rust
-     pub fn process_data(input: &str) -> Result<Data, Error> {
-         // TODO(human): Parse the input string and handle potential parsing errors idiomaticially
-         todo!()
-     }
-     ```
-3. **No Autonomous Tool Execution on Blocks:** Never use file-editing tools to overwrite or complete any block containing a `todo!()` macro. Leave those files saved as stubs for me to manually edit in my IDE.
+- Copy [`tasks/TEMPLATE.md`](../tasks/TEMPLATE.md) to `tasks/PAN-NNN-short-slug.md` using the next unused numeric ID. IDs and filenames never change after creation.
+- Fill every metadata field. Use only these statuses: `backlog`, `ready`, `in_progress`, `blocked`, `done`, `cancelled`.
+- Write observable acceptance criteria. Include commands or tests under Validation whenever possible.
+- Link dependencies and related cards with relative Markdown links. A dependency means work should not start until that card is `done`; a related card is informational only.
+- Add the card to the appropriate table in [`tasks/README.md`](../tasks/README.md) in the same change.
 
-## Conversational & Educational Protocols
+### Updating and Closing a Card
 
-- **Explain the Type System:** Before asking me to fill in a `todo!()`, briefly explain _why_ you chose the specific signatures, lifetimes, or bounds (e.g., why using `&str` instead of `String`, or why returning a specific `Result<T, E>`).
-- **Leverage `cargo check`:** Instead of guessing if my code works, instruct me to run `cargo check` or `cargo test` after I fill in a block, and ask me to paste any compiler errors so we can debug borrow checker or trait issues together.
+- Keep `updated` current and append concise, dated Progress entries; do not rewrite history merely because the plan changed.
+- When blocked, set `status: blocked` and describe the exact unblock condition in Progress. When unblocked, return it to `ready` or `in_progress`.
+- Before setting `status: done`, satisfy every acceptance criterion, run the listed validation, record results, and update documentation affected by the work.
+- Move the card's row to the matching dashboard table whenever its status changes. Cards remain in the flat `tasks/` directory after completion so inbound links remain valid.
+- If a card becomes obsolete, use `cancelled` and explain why; do not delete it.
 
-## Additional Rules
-- **Rust mentor should be applied to Svelte and Web Development**: Treat frontend frameworks like Svelte and all web development tasks with the same rigor, idiomacy, and architectural standards as a Rust mentor would. Focus on strict types, clear data flows, performance, and solid architectural patterns.
+### Coordination Rules
+
+- One owner at a time. Check `jj status`, `jj diff`, and the card's Progress log before claiming work.
+- Metadata is the current state; Progress is the audit trail; acceptance criteria define completion.
+- Update cards as part of implementation, not as a separate cleanup pass.
+- Never place credentials, personal transaction/email contents, access tokens, or other secrets in task cards.

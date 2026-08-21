@@ -12,24 +12,31 @@ pub struct AppConfig {
     pub models: ModelsConfig,
     pub fastmail: FastMailConfig,
     pub lunchmoney: LunchmoneyConfig,
-    pub fusion: Fusion,
+    #[serde(default)]
+    pub fusion: Option<Fusion>,
     pub interface: InterfaceConfig,
-    pub cli: CliConfig,
+    #[serde(default)]
+    pub cli: Option<CliConfig>,
     pub matrix: Option<MatrixConfig>,
     pub log: LogConfig,
-    pub telemetry: TelemetryConfig,
-    pub hindsight: HindsightConfig,
+    #[serde(default)]
+    pub telemetry: Option<TelemetryConfig>,
+    #[serde(default)]
+    pub hindsight: Option<HindsightConfig>,
     #[serde(default)]
     pub jobs: Vec<JobConfig>,
 }
 
 impl AppConfig {
     /// Validates cross-field dependencies and business rules
+    ///
+    /// # Errors
+    ///
+    /// Returns an error when required credentials or interface settings conflict.
     pub fn validate(&self) -> Result<()> {
         self.validate_interface()?;
         self.validate_fastmail()?;
         self.validate_lunchmoney()?;
-        self.validate_fusion()?;
         self.validate_matrix()?;
 
         Ok(())
@@ -76,18 +83,6 @@ impl AppConfig {
         }
     }
 
-    fn validate_fusion(&self) -> Result<()> {
-        match (&self.fusion.password_file, &self.fusion.password_cmd) {
-            (Some(_), Some(_)) => {
-                bail!("password_file and password_cmd are mutually exclusive in fusion")
-            }
-            (None, None) => {
-                bail!("you must provide either password_file or password_cmd in fusion")
-            }
-            _ => Ok(()),
-        }
-    }
-
     fn validate_matrix(&self) -> Result<()> {
         // Matrix is optional, so we only validate it if it exists
         if let Some(matrix) = &self.matrix {
@@ -119,27 +114,41 @@ pub struct LunchmoneyConfig {
 }
 
 impl LunchmoneyConfig {
+    /// Loads the configured Lunch Money API key.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error when the file or command fails or returns an empty secret.
     pub fn get_api_key(&self) -> Result<String> {
-        match (&self.api_file, &self.api_cmd) {
-            (None, Some(cmd)) => {
-                // We use 'sh -c' so that users can pass complex commands with arguments
-                let output = Command::new("sh").arg("-c").arg(cmd).output()?;
-                let api_key = String::from_utf8(output.stdout)?;
-                Ok(api_key.trim().to_string())
-            }
-            (Some(path), None) => {
-                let api_key = fs::read_to_string(path)?;
-                Ok(api_key.trim().to_string())
-            }
-            _ => bail!("Neither api_file nor api_cmd specified"),
-        }
+        read_secret(
+            self.api_file.as_ref(),
+            self.api_cmd.as_ref(),
+            "Lunch Money API key",
+        )
     }
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct FastMailConfig {
+    #[serde(default = "default_fastmail_session_url")]
+    pub session_url: String,
     pub api_file: Option<String>,
     pub api_cmd: Option<String>,
+}
+
+impl FastMailConfig {
+    /// Loads the configured Fastmail API key.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error when the file or command fails or returns an empty secret.
+    pub fn get_api_key(&self) -> Result<String> {
+        read_secret(
+            self.api_file.as_ref(),
+            self.api_cmd.as_ref(),
+            "Fastmail API key",
+        )
+    }
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -149,7 +158,7 @@ pub struct Fusion {
     pub password_cmd: Option<String>,
 }
 
-#[derive(Debug, Deserialize, Serialize, PartialEq)]
+#[derive(Clone, Copy, Debug, Deserialize, Serialize, PartialEq, Eq)]
 #[serde(rename_all = "lowercase")]
 pub enum InterfaceType {
     Matrix,
@@ -167,7 +176,7 @@ pub struct CliConfig {
     pub conversation_path: String,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct MatrixConfig {
     pub homeserver: String,
     pub user: String,
@@ -178,6 +187,45 @@ pub struct MatrixConfig {
     pub data_dir: String,
     pub notification_room: String,
     pub message_retention: Option<String>,
+}
+
+impl MatrixConfig {
+    /// Loads the configured Matrix password.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error when the file or command fails or returns an empty secret.
+    pub fn get_password(&self) -> Result<String> {
+        read_secret(
+            self.password_file.as_ref(),
+            self.password_cmd.as_ref(),
+            "Matrix password",
+        )
+    }
+}
+
+fn read_secret(file: Option<&String>, command: Option<&String>, name: &str) -> Result<String> {
+    let secret = match (file, command) {
+        (Some(path), None) => fs::read_to_string(path)?,
+        (None, Some(command)) => {
+            let output = Command::new("sh").arg("-c").arg(command).output()?;
+            if !output.status.success() {
+                bail!("command for {name} exited with {}", output.status);
+            }
+            String::from_utf8(output.stdout)?
+        }
+        _ => bail!("exactly one file or command must be configured for {name}"),
+    };
+    let secret = secret.trim();
+    if secret.is_empty() {
+        bail!("{name} is empty");
+    }
+
+    Ok(secret.to_owned())
+}
+
+fn default_fastmail_session_url() -> String {
+    "https://api.fastmail.com/jmap/session".to_owned()
 }
 
 #[derive(Debug, Deserialize, Serialize, PartialEq)]
@@ -209,7 +257,7 @@ pub struct HindsightConfig {
     pub bank_id: String,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct JobConfig {
     pub name: String,
     pub spec: String,
@@ -218,7 +266,7 @@ pub struct JobConfig {
     pub prompt: String,
 }
 
-/// Represents any errors that can occur during configuration loading.
+/// Represents errors that can occur during configuration loading.
 #[derive(Debug, Error)]
 pub enum Error {
     #[error("I/O error: {0}")]
@@ -227,6 +275,11 @@ pub enum Error {
     YamlError(#[from] serde_yaml::Error),
 }
 
+/// Loads a YAML configuration file.
+///
+/// # Errors
+///
+/// Returns an error when the file cannot be read or contains invalid YAML.
 pub fn load_config(path: &str) -> Result<AppConfig, Error> {
     let config = fs::read_to_string(path)?;
     Ok(serde_yaml::from_str::<AppConfig>(config.as_str())?)
@@ -246,6 +299,7 @@ mod tests {
                 openai_base_url: "http://test".into(),
             },
             fastmail: FastMailConfig {
+                session_url: default_fastmail_session_url(),
                 api_file: Some("Cargo.toml".into()),
                 api_cmd: None,
             },
@@ -253,17 +307,17 @@ mod tests {
                 api_file: Some("Cargo.toml".into()),
                 api_cmd: None,
             },
-            fusion: Fusion {
+            fusion: Some(Fusion {
                 endpoint: "http://test".into(),
                 password_file: Some("Cargo.toml".into()),
                 password_cmd: None,
-            },
+            }),
             interface: InterfaceConfig {
                 interface_type: InterfaceType::Cli,
             },
-            cli: CliConfig {
+            cli: Some(CliConfig {
                 conversation_path: "test.json".into(),
-            },
+            }),
             matrix: Some(MatrixConfig {
                 homeserver: "https://matrix.org".to_string(),
                 user: "@pan_agent:matrix.org".to_string(),
@@ -280,14 +334,14 @@ mod tests {
                 path: "test.log".into(),
                 level: LogLevel::Info,
             },
-            telemetry: TelemetryConfig {
+            telemetry: Some(TelemetryConfig {
                 port: "8080".into(),
-            },
-            hindsight: HindsightConfig {
+            }),
+            hindsight: Some(HindsightConfig {
                 url: "http://test".into(),
                 api_key: "test".into(),
                 bank_id: "test".into(),
-            },
+            }),
             jobs: vec![],
         }
     }
@@ -342,23 +396,6 @@ mod tests {
         config.lunchmoney.api_cmd = api_cmd;
 
         assert_eq!(config.validate_lunchmoney().is_ok(), expected_to_pass);
-    }
-
-    #[rstest]
-    #[case::only_password_file(Some("Cargo.toml".to_string()), None, true)]
-    #[case::only_password_cmd(None, Some("echo key".to_string()), true)]
-    #[case::both_provided_fails(Some("Cargo.toml".to_string()), Some("echo key".to_string()), false)]
-    #[case::missing_both_fails(None, None, false)]
-    fn test_fusion_validation(
-        #[case] password_file: Option<String>,
-        #[case] password_cmd: Option<String>,
-        #[case] expected_to_pass: bool,
-    ) {
-        let mut config = base_config();
-        config.fusion.password_file = password_file;
-        config.fusion.password_cmd = password_cmd;
-
-        assert_eq!(config.validate_fusion().is_ok(), expected_to_pass);
     }
 
     #[rstest]

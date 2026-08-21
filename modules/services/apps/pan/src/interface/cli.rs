@@ -2,6 +2,11 @@ use crate::domain::chat::ChatProvider;
 use anyhow::Result;
 use std::io::{self, Write};
 
+/// Runs an interactive terminal chat session.
+///
+/// # Errors
+///
+/// Returns an error when terminal I/O or the chat provider fails.
 pub async fn run_chat_loop(provider: &impl ChatProvider) -> Result<()> {
     println!("Type 'exit' or 'quit' to leave the chat.");
     let mut input = String::new();

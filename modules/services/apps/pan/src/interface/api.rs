@@ -1,9 +1,6 @@
-use axum::{
-    routing::post,
-    Router, Json, extract::State,
-};
-use std::sync::Arc;
+use axum::{Json, Router, extract::State, routing::post};
 use serde::{Deserialize, Serialize};
+use std::sync::Arc;
 use tower_http::services::{ServeDir, ServeFile};
 
 use crate::domain::chat::ChatProvider;
@@ -28,7 +25,10 @@ pub struct ChatResponse {
 pub fn create_router(state: AppState) -> Router {
     Router::new()
         .route("/api/chat", post(chat_handler))
-        .fallback_service(ServeDir::new("frontend/dist").not_found_service(ServeFile::new("frontend/dist/index.html")))
+        .fallback_service(
+            ServeDir::new("frontend/dist")
+                .not_found_service(ServeFile::new("frontend/dist/index.html")),
+        )
         .with_state(state)
 }
 
@@ -36,10 +36,18 @@ async fn chat_handler(
     State(state): State<AppState>,
     Json(payload): Json<ChatRequest>,
 ) -> Json<ChatResponse> {
-    let conversation_id = payload.conversation_id.unwrap_or_else(|| uuid::Uuid::new_v4().to_string());
+    let conversation_id = payload
+        .conversation_id
+        .unwrap_or_else(|| uuid::Uuid::new_v4().to_string());
 
     match state.rig.prompt(&conversation_id, &payload.message).await {
-        Ok(response) => Json(ChatResponse { response, conversation_id }),
-        Err(e) => Json(ChatResponse { response: format!("Error: {}", e), conversation_id }),
+        Ok(response) => Json(ChatResponse {
+            response,
+            conversation_id,
+        }),
+        Err(e) => Json(ChatResponse {
+            response: format!("Error: {e}"),
+            conversation_id,
+        }),
     }
 }
