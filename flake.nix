@@ -21,10 +21,7 @@
       inputs.nixpkgs-lib.follows = "nixpkgs";
     };
     git-hooks-nix.url = "github:cachix/git-hooks.nix";
-    gufo = {
-      type = "git";
-      url = "ssh://git@github.com/gufo-org/gufo.git";
-    };
+    gufo.url = "github:gufo-org/gufo";
     hermes-agent.url = "github:NousResearch/hermes-agent";
     home-manager = {
       url = "github:nix-community/home-manager/release-26.05";

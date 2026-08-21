@@ -5,7 +5,7 @@
         {
           host = "mixer";
           projects = [
-            { paths = [ "~/audio.cpp" "~/.config/fence" "~/strix-halo.cpp" ]; }
+            { paths = [ "~/gufo" ]; }
           ];
         }
       ];

@@ -1,8 +1,6 @@
 {
   flake-file.inputs.gufo = {
-    type = "git";
-    url = "ssh://git@github.com/gufo-org/gufo.git";
-    flake = true; # Set to false if gufo doesn't have its own flake.nix
+    url = "github:gufo-org/gufo";
   };
 
   flake.modules.nixos.llama-swap = { pkgs-unstable, lib, inputs, pkgs, config, ... }:
@@ -27,7 +25,7 @@
         modality = "llm";
 
         model = "/persist/models/models--unsloth--Qwen3.8-27B-GGUF/snapshots/4ca720788d1e01f1bff70c033e0d0028fd02e502/Qwen3.8-27B-UD-Q8_K_L.gguf";
-        draftModel = "/persist/models/Qwen3.8-27B-DFlash2-Q8_0.gguf";
+        dflashModel = "/persist/models/Qwen3.8-27B-DFlash2-Q8_0.gguf";
         host = "0.0.0.0";
         port = "\${PORT}";
 
@@ -39,14 +37,13 @@
 
         # Model
         servedModelName = "qwen3.8-27b";
-        context = 250000;
+        context = 256000;
 
         # Speculative Decoding (DFlash-2)
         speculative = "dflash2";
         draftTokens = 7;
         # draftPolicy = "auto";
         minDraftTokens = 1;
-        specDraftPMin = 0.0;
 
         # Scheduling
         prefillChunk = 512;
@@ -58,7 +55,7 @@
         maxBufferedOutputTotal = 262144;
 
         # Sampling — Qwen3.8 official thinking-mode preset
-        temp = 0.8;
+        temperature = 0.8;
         maxTokens = 8192;
         topP = 0.95;
         topK = 20;
@@ -79,11 +76,7 @@
         # cacheDisk = "/var/cache/gufo";
         # cacheDiskBytes = 4294967296;
         # cacheDiskStagingBytes = 536870912;
-
-        # Hardware
-        cpu = false;
       };
-
       gufoDs4 = inputs.gufo.lib.${pkgs.system}.mkGufoServe {
         modality = "llm";
 
@@ -92,7 +85,9 @@
         port = "\${PORT}";
 
         # Server
-        # sessions = 2;
+        # DS4 batches up to 8 sessions. DSpark per-user gain: C2 ~1.8x, C4 ~1.35x,
+        # C6+ ~none. Use 1 for solo, 2 for shared.
+        sessions = 4;
         # maxConnections = 16;
         # maxRequestBytes = 8388608;
         # verbose = false;
@@ -100,11 +95,12 @@
         # Model
         servedModelName = "ds4";
         context = 131072;
+        # sampled requests fall back to autoregressive decode. See gufo#232.
+        speculative = "dspark";
+        dsparkModel = "/persist/models/DeepSeek-V4-Flash-DSpark-support-0731.gguf";
+        # draftTokens = 3;  # optional ceiling; model-owned adaptive width otherwise
 
-        # Speculative decoding: see note below — DSpark is not available in serve
-        speculative = "off";
-
-        # Scheduling
+        # Scheduling (all defaults)
         prefillChunk = 512;
         maxPending = 16;
         maxPendingPerClient = 4;
@@ -114,7 +110,7 @@
         maxBufferedOutputTotal = 262144;
 
         # Sampling
-        temp = 0.6;
+        temperature = 0.0; # 0.0 to get DSpark on default requests
         maxTokens = 8192;
         topP = 0.95;
         topK = 0;
@@ -127,22 +123,65 @@
         presencePenalty = 0.0;
 
         # Cache
-        # cacheDisk = "/var/cache/gufo-ds4";
-        # cacheDiskBytes = 4294967296;
-        # cacheDiskStagingBytes = 536870912;
-
-        # Hardware
-        cpu = false;
+        cacheDisk = "/var/cache/llama-swap/gufo-ds4";
+        cacheDiskBytes = 4294967296;
+        cacheDiskStagingBytes = 536870912;
       };
 
+      gufoQwenNext = inputs.gufo.lib.${pkgs.system}.mkGufoServe {
+        modality = "llm";
+        model = "/persist/models/qwen38-flash-next/Qwen3.8-Flash-Next-UD-Q4_K_XL-00001-of-00004.gguf";
+        host = "0.0.0.0";
+        port = "\${PORT}";
+        verbose = true;
+
+        # Requests run serially on this model (no batching plan); each session
+        # holds its own state (~24 KiB/token of context).
+        sessions = 2;
+
+        servedModelName = "qwen-flash";
+        context = 260000;
+        # Greedy verification: only temperature-0 requests take multi-token steps.
+        speculative = "mtp";
+        mtpModel = "/persist/models/qwen38-flash-next/mtp-Qwen3.8-Flash-Next-shared-Q8_0.gguf";
+        # draftTokens = 3;
+
+        # 2048-token chunks keep the expert GEMMs on the matrix-core route.
+        prefillChunk = 2048;
+        maxPending = 16;
+        maxPendingPerClient = 4;
+        requestTimeoutMs = 0;
+        maxOutputBytes = 1048576;
+        maxBufferedOutputBytes = 65536;
+        maxBufferedOutputTotal = 262144;
+
+        temperature = 1.0;
+        maxTokens = 8192;
+        topP = 0.95;
+        topK = 20;
+        minP = 0.0;
+        minKeep = 0;
+        seed = -1;
+        repeatPenalty = 1.0;
+        repeatLastN = 64;
+        frequencyPenalty = 0.0;
+        presencePenalty = 0.0;
+
+        # Prompt-end snapshots (~50 KiB/token + 111 MiB): a 100k prompt is
+        # ~5 GiB, so 32 GiB holds about six long conversations. Staging must
+        # fit one whole payload; 8 GiB covers prompts up to ~160k tokens.
+        # cacheDisk = "/var/cache/llama-swap/gufo-qwen-flash";
+        # cacheDiskBytes = 34359738368;       # 32 GiB
+        # cacheDiskStagingBytes = 8589934592; # 8 GiB
+      };
+
+
       gufoQwenTTSCmd = inputs.gufo.lib.${pkgs.system}.mkGufoServe {
-        modality = "audio";
+        modality = "tts";
 
-        ttsModel = "/persist/models/audio/Qwen3-TTS-12Hz-1.7B-Base";
-        ttsContext = 4096;
-
-        asrModel = "/persist/models/audio/Qwen3-ASR-1.7B";
-        asrContext = 1024;
+        model = "/persist/models/audio/Qwen3-TTS-12Hz-1.7B-Base";
+        servedModelName = "qwen3-tts";
+        context = 4096;
 
         voices = {
           narrator_eng = {
@@ -163,6 +202,18 @@
             language = "italian";
           };
         };
+
+        host = "0.0.0.0";
+        port = "\${PORT}";
+        maxRequestBytes = 33554432;
+      };
+
+      gufoQwenASRCmd = inputs.gufo.lib.${pkgs.system}.mkGufoServe {
+        modality = "asr";
+
+        model = "/persist/models/audio/Qwen3-ASR-1.7B";
+        servedModelName = "qwen3-asr";
+        context = 1024;
 
         host = "0.0.0.0";
         port = "\${PORT}";
@@ -223,6 +274,13 @@
               aliases = [ "Qwen3.8-27B" ];
             };
 
+            "qwen-flash" = {
+              env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
+              cmd = "${gufoQwenNext}";
+              timeouts.responseHeader = 600;
+              aliases = [ ];
+            };
+
             "ds4" = {
               env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
               cmd = "${gufoDs4}";
@@ -234,7 +292,14 @@
               env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
               cmd = "${gufoQwenTTSCmd}";
               timeouts.responseHeader = 600;
-              aliases = [ "qwen3-asr" ];
+              aliases = [];
+            };
+
+            "qwen3-asr" = {
+              env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
+              cmd = "${gufoQwenASRCmd}";
+              timeouts.responseHeader = 600;
+              aliases = [];
             };
           };
 
@@ -263,11 +328,13 @@
               "q35" = "qwen36-35b-a3b";
               "e" = "bge-m3";
               "q27" = "qwen3.8-27b";
-              "audio" = "qwen3-tts";
+              "tts" = "qwen3-tts";
+              "asr" = "qwen3-asr";
+              "god" = "qwen-flash";
             };
 
             sets = {
-              standard = "q27 & q35 & e & audio";
+              standard = "q27 & q35 & e & tts & asr & god";
             };
           };
 
@@ -293,6 +360,7 @@
           ReadWritePaths = "/persist/models";
           LimitMEMLOCK = "infinity"; # fastflowlm with npu support
           SupplementaryGroups = [ "video" "render" ];
+          CacheDirectory = "llama-swap";
         };
       };
 

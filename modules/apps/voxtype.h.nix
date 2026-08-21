@@ -29,8 +29,8 @@
         whisper = {
           mode = "remote";
           remote_endpoint = "https://llama.fedeizzo.dev";
-          remote_model = "qwen3_asr";
-          model = "qwen3_asr";
+          remote_model = "qwen3-asr";
+          model = "qwen3-asr";
         };
         output = {
           mode = "type";
