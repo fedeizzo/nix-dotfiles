@@ -4,10 +4,11 @@ use chrono::Utc;
 use serde::{Deserialize, Serialize};
 use tokio::sync::Mutex;
 
-use crate::domain::email::{Email, EmailProvider, Mailbox};
+use crate::domain::email::{Email, EmailProvider, Mailbox, TriageSuggestion};
 use crate::domain::workflow::{WorkflowKind, WorkflowRepository, WorkflowState};
 
 const WORKFLOW_KIND: WorkflowKind = WorkflowKind::FastmailEmail;
+const MAX_TRIAGE_FIELD_CHARS: usize = 512;
 
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
@@ -39,6 +40,35 @@ pub enum ReplyOutcome {
 struct ActiveEmail {
     email: Email,
     mailboxes: Vec<Mailbox>,
+}
+
+/// An unread message claimed for a deterministic triage workflow.
+#[derive(Clone)]
+pub struct PreparedEmail {
+    email: Email,
+    mailboxes: Vec<Mailbox>,
+    mailbox_name: String,
+}
+
+impl PreparedEmail {
+    #[must_use]
+    pub fn message(&self) -> String {
+        format_email(&self.email, &self.mailbox_name)
+    }
+
+    #[must_use]
+    pub fn email_id(&self) -> &str {
+        &self.email.id
+    }
+
+    #[must_use]
+    pub fn suggestions(&self) -> Vec<TriageSuggestion> {
+        vec![TriageSuggestion {
+            kind: "mark_seen".to_owned(),
+            value: "yes".to_owned(),
+            requires_confirmation: true,
+        }]
+    }
 }
 
 pub struct EmailTriageService<P> {
@@ -78,53 +108,99 @@ impl<P: EmailProvider> EmailTriageService<P> {
                 "This Matrix thread already has an active email.".to_owned(),
             ));
         }
-        let mailboxes = self.provider.get_mailboxes().await?;
-        let mailbox = unique_mailbox(mailbox_name, &mailboxes)?;
-        let mailbox_id = mailbox.id.clone();
-        let mailbox_name = mailbox.name.clone();
-        let Some(email) = self.provider.get_unread_email(&mailbox_id).await? else {
+        let Some(prepared) = self.prepare(mailbox_name).await? else {
+            let mailboxes = self.provider.get_mailboxes().await?;
+            let mailbox = unique_mailbox(mailbox_name, &mailboxes)?;
+            if self.provider.get_unread_email(&mailbox.id).await?.is_some() {
+                return Ok(StartOutcome::AlreadyActive(
+                    "All unread emails in that mailbox are already being handled.".to_owned(),
+                ));
+            }
             return Ok(StartOutcome::NoUnread(format!(
-                "No unread email was found in {mailbox_name}."
+                "No unreserved unread email was found in {mailbox_name}."
             )));
         };
+        let message = prepared.message();
+        self.track(room_id, thread_id, prepared).await?;
 
-        let claimed = self
-            .repository
-            .claim(
-                WORKFLOW_KIND,
-                email.id.clone(),
-                Utc::now() + chrono::Duration::hours(24),
-            )
-            .await?;
-        if !claimed {
-            return Ok(StartOutcome::AlreadyActive(
-                "That email is already being handled in another Matrix thread.".to_owned(),
-            ));
+        Ok(StartOutcome::Started(message))
+    }
+
+    /// Claims the next available unread message in a mailbox without delivering it.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error when Fastmail or durable workflow state cannot be read.
+    pub async fn prepare(&self, mailbox_name: &str) -> Result<Option<PreparedEmail>, Error> {
+        let mailboxes = self.provider.get_mailboxes().await?;
+        let mailbox = unique_mailbox(mailbox_name, &mailboxes)?;
+        let mailbox_name = mailbox.name.clone();
+        for email in self.provider.get_unread_emails(&mailbox.id, 25).await? {
+            let claimed = self
+                .repository
+                .claim(
+                    WORKFLOW_KIND,
+                    email.id.clone(),
+                    Utc::now() + chrono::Duration::hours(24),
+                )
+                .await?;
+            if claimed {
+                return Ok(Some(PreparedEmail {
+                    email,
+                    mailboxes,
+                    mailbox_name,
+                }));
+            }
         }
+        Ok(None)
+    }
+
+    /// Binds a claimed email to the Matrix root event that delivered it.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error when the durable conversation association cannot be stored.
+    pub async fn track(
+        &self,
+        room_id: String,
+        thread_id: String,
+        prepared: PreparedEmail,
+    ) -> Result<(), Error> {
         if let Err(error) = self
             .repository
             .bind_conversation(
                 WORKFLOW_KIND,
-                email.id.clone(),
+                prepared.email.id.clone(),
                 room_id.clone(),
                 thread_id.clone(),
             )
             .await
         {
             self.repository
-                .release(WORKFLOW_KIND, email.id.clone())
+                .release(WORKFLOW_KIND, prepared.email.id)
                 .await?;
             return Err(error.into());
         }
         self.active.lock().await.insert(
             (room_id, thread_id),
             ActiveEmail {
-                email: email.clone(),
-                mailboxes,
+                email: prepared.email,
+                mailboxes: prepared.mailboxes,
             },
         );
+        Ok(())
+    }
 
-        Ok(StartOutcome::Started(format_email(&email, &mailbox_name)))
+    /// Releases a claimed email when it could not be delivered.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error when durable workflow state cannot be updated.
+    pub async fn release(&self, email_id: &str) -> Result<(), Error> {
+        self.repository
+            .release(WORKFLOW_KIND, email_id.to_owned())
+            .await
+            .map_err(Error::from)
     }
 
     /// Applies explicitly confirmed Fastmail actions for an active Matrix thread.
@@ -379,6 +455,12 @@ fn unique_mailbox<'a>(name: &str, mailboxes: &'a [Mailbox]) -> Result<&'a Mailbo
 }
 
 fn format_email(email: &Email, mailbox: &str) -> String {
+    let suggestions = serde_json::to_string(&[TriageSuggestion {
+        kind: "mark_seen".to_owned(),
+        value: "yes".to_owned(),
+        requires_confirmation: true,
+    }])
+    .expect("triage suggestions are serializable");
     format!(
         "## Fastmail triage\n\n\
          - **Mailbox:** {mailbox}\n\
@@ -386,6 +468,7 @@ fn format_email(email: &Email, mailbox: &str) -> String {
          - **To:** {}\n\
          - **Subject:** {}\n\
          - **Preview:** {}\n\n\
+         Suggestions (not applied): `{suggestions}`\n\n\
          Reply in this thread with explicit actions:\n\n\
          ```text\n\
          confirm\n\
@@ -393,8 +476,24 @@ fn format_email(email: &Email, mailbox: &str) -> String {
          mark seen: yes\n\
          ```\n\n\
          Omit either action if it should not be applied, or reply `cancel` to abandon the triage. This request expires after 24 hours.",
-        email.from, email.to, email.subject, email.preview
+        limit_field(&email.from),
+        limit_field(&email.to),
+        limit_field(&email.subject),
+        limit_field(&email.preview)
     )
+}
+
+fn limit_field(value: &str) -> String {
+    let mut characters = value.chars();
+    let limited = characters
+        .by_ref()
+        .take(MAX_TRIAGE_FIELD_CHARS)
+        .collect::<String>();
+    if characters.next().is_some() {
+        format!("{limited}…")
+    } else {
+        limited
+    }
 }
 
 #[cfg(test)]
@@ -446,6 +545,23 @@ mod tests {
                 to: "me@example.com".to_owned(),
                 preview: "Thank you".to_owned(),
             }))
+        }
+
+        async fn get_unread_emails(
+            &self,
+            _mailbox_id: &str,
+            _limit: u32,
+        ) -> Result<Vec<Email>, crate::domain::email::Error> {
+            Ok(["email-1", "email-2"]
+                .into_iter()
+                .map(|id| Email {
+                    id: id.to_owned(),
+                    subject: "Receipt".to_owned(),
+                    from: "shop@example.com".to_owned(),
+                    to: "me@example.com".to_owned(),
+                    preview: "Thank you".to_owned(),
+                })
+                .collect())
         }
 
         async fn get_email(&self, email_id: &str) -> Result<Email, crate::domain::email::Error> {
@@ -510,7 +626,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn email_is_shared_and_reserved_across_threads() {
+    async fn email_selection_advances_past_a_reserved_message() {
         let (_directory, repository) = repository().await;
         let service = EmailTriageService::new(Arc::new(FakeProvider::default()), repository);
         service
@@ -523,7 +639,7 @@ mod tests {
             .await
             .unwrap();
 
-        assert!(matches!(outcome, StartOutcome::AlreadyActive(_)));
+        assert!(matches!(outcome, StartOutcome::Started(_)));
     }
 
     #[tokio::test]
@@ -569,5 +685,82 @@ mod tests {
 
         assert!(matches!(outcome, ReplyOutcome::Updated(_)));
         assert_eq!(*provider.calls.lock().unwrap(), ["seen:email-1:false"]);
+    }
+
+    #[tokio::test]
+    async fn recovery_marks_an_inflight_fastmail_mutation_for_manual_retry() {
+        let provider = Arc::new(FakeProvider::default());
+        let (_directory, repository) = repository().await;
+        repository
+            .claim(
+                WORKFLOW_KIND,
+                "email-1".to_owned(),
+                Utc::now() + chrono::Duration::hours(1),
+            )
+            .await
+            .unwrap();
+        repository
+            .bind_conversation(
+                WORKFLOW_KIND,
+                "email-1".to_owned(),
+                "room".to_owned(),
+                "thread".to_owned(),
+            )
+            .await
+            .unwrap();
+        repository
+            .begin_operation(
+                WORKFLOW_KIND,
+                "email-1".to_owned(),
+                "operation".to_owned(),
+                r#"{"mailbox_id":"archive","mark_seen":true}"#.to_owned(),
+            )
+            .await
+            .unwrap();
+        let service = EmailTriageService::new(provider, Arc::clone(&repository));
+
+        let recovered = service.recover().await.unwrap();
+        let claim = repository
+            .find_by_conversation(WORKFLOW_KIND, "room".to_owned(), "thread".to_owned())
+            .await
+            .unwrap()
+            .unwrap();
+
+        assert_eq!(recovered, 1);
+        assert_eq!(claim.state, WorkflowState::Failed);
+        assert_eq!(
+            claim.last_error.as_deref(),
+            Some("Fastmail mutation outcome is ambiguous; manual confirmation required")
+        );
+    }
+
+    #[test]
+    fn triage_rendering_limits_untrusted_message_fields() {
+        let email = Email {
+            id: "email-1".to_owned(),
+            subject: "x".repeat(MAX_TRIAGE_FIELD_CHARS + 1),
+            from: "from@example.com".to_owned(),
+            to: "to@example.com".to_owned(),
+            preview: "preview".to_owned(),
+        };
+
+        let message = format_email(&email, "Inbox");
+
+        assert!(message.contains(&format!("{}…", "x".repeat(MAX_TRIAGE_FIELD_CHARS))));
+        assert!(!message.contains(&"x".repeat(MAX_TRIAGE_FIELD_CHARS + 1)));
+    }
+
+    #[test]
+    fn triage_suggestions_are_structured_and_require_confirmation() {
+        let suggestion = TriageSuggestion {
+            kind: "mark_seen".to_owned(),
+            value: "yes".to_owned(),
+            requires_confirmation: true,
+        };
+
+        assert_eq!(
+            serde_json::to_string(&suggestion).unwrap(),
+            r#"{"kind":"mark_seen","value":"yes","requires_confirmation":true}"#
+        );
     }
 }

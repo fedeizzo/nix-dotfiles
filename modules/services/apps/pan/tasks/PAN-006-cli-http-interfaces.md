@@ -1,11 +1,11 @@
 ---
 id: PAN-006
 title: Complete CLI and HTTP interfaces
-status: ready
+status: done
 priority: P2
-owner: unassigned
+owner: codex
 created: 2026-09-12
-updated: 2026-09-12
+updated: 2026-09-14
 labels:
   - cli
   - http
@@ -40,11 +40,11 @@ Make deterministic workflows testable and operable outside Matrix, and either ex
 
 ## Acceptance Criteria
 
-- [ ] Lunch Money preview can run without connecting to Fastmail, Matrix, or the LLM.
-- [ ] A CLI mutation requires an explicit, transaction-bound confirmation.
-- [ ] Exit codes distinguish success, no work, configuration errors, and provider failures.
-- [ ] The HTTP interface is either fully wired and authenticated or cleanly removed.
-- [ ] Help output and example commands are documented and tested.
+- [x] Lunch Money preview can run without connecting to Fastmail, Matrix, or the LLM.
+- [x] A CLI mutation requires an explicit, transaction-bound confirmation.
+- [x] Exit codes distinguish success, no work, configuration errors, and provider failures.
+- [x] The HTTP interface is either fully wired and authenticated or cleanly removed.
+- [x] Help output and example commands are documented and tested.
 
 ## Implementation Notes
 
@@ -61,3 +61,8 @@ CARGO_BUILD_JOBS=2 cargo clippy --all-targets --all-features -- -D warnings
 ## Progress
 
 - 2026-09-12 — Card created from CLI and unwired HTTP gaps.
+- 2026-09-14 — Claimed by Codex. The unauthenticated, unwired HTTP prototype is being removed; deterministic CLI workflow commands remain the supported non-Matrix interface.
+- 2026-09-14 — Removed the unwired unauthenticated HTTP endpoint and its module export. Full CLI confirmation, status commands, and exit-code work remains.
+- 2026-09-14 — Added `review-transaction --json` and `apply-transaction ID --confirm`. These commands initialize and validate Lunch Money only, and the mutation binds the confirmation to the supplied transaction ID. Validation: all tests, strict Clippy, and `pan --help` passed.
+- 2026-09-14 — Documented supported CLI examples in `docs/cli.md`; `pan --help` validates the command surface.
+- 2026-09-14 — Added explicit exit codes: success (0), configuration (2), no work (3), and provider (4), with unit coverage for error classification. Validation: all tests, strict Clippy, and `pan --help` pass in the devshell.

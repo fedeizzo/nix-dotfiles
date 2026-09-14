@@ -1,4 +1,3 @@
-pub mod api;
 pub mod cli;
 pub mod email_tools;
 pub mod matrix;

@@ -36,22 +36,19 @@ The frontmatter is the canonical current state. The dashboard below is a human-f
 
 | ID | Priority | Task | Dependencies |
 |---|---|---|---|
-| PAN-003 | P1 | [Complete the scheduler registry](PAN-003-scheduler-registry.md) | — |
-| PAN-004 | P1 | [Complete Fastmail triage](PAN-004-fastmail-triage.md) | — |
-| PAN-005 | P1 | [Harden and test Matrix](PAN-005-matrix-reliability.md) | — |
-| PAN-006 | P2 | [Complete CLI and HTTP interfaces](PAN-006-cli-http-interfaces.md) | — |
+No ready cards.
 
 ## Backlog
 
 | ID | Priority | Task | Dependencies |
 |---|---|---|---|
-| PAN-007 | P2 | [Decide and implement agent topology](PAN-007-agent-topology.md) | — |
+No backlog cards.
 
 ## In Progress
 
 | ID | Priority | Task | Owner | Dependencies |
 |---|---|---|---|---|
-| PAN-002 | P0 | [Make delivery and mutations crash-safe](PAN-002-crash-safe-workflows.md) | codex | PAN-001 |
+No cards in progress.
 
 ## Blocked
 
@@ -62,6 +59,12 @@ No blocked cards.
 | ID | Priority | Task | Completed |
 |---|---|---|---|
 | PAN-001 | P0 | [Persist workflow state](PAN-001-persist-workflow-state.md) | 2026-09-12 |
+| PAN-002 | P0 | [Make delivery and mutations crash-safe](PAN-002-crash-safe-workflows.md) | 2026-09-14 |
+| PAN-003 | P1 | [Complete the scheduler registry](PAN-003-scheduler-registry.md) | 2026-09-14 |
+| PAN-004 | P1 | [Complete Fastmail triage](PAN-004-fastmail-triage.md) | 2026-09-14 |
+| PAN-005 | P1 | [Harden and test Matrix](PAN-005-matrix-reliability.md) | 2026-09-14 |
+| PAN-006 | P2 | [Complete CLI and HTTP interfaces](PAN-006-cli-http-interfaces.md) | 2026-09-14 |
+| PAN-007 | P2 | [Decide and implement agent topology](PAN-007-agent-topology.md) | 2026-09-14 |
 
 ## Cancelled
 

@@ -1,11 +1,11 @@
 ---
 id: PAN-002
 title: Make delivery and mutations crash-safe
-status: in_progress
+status: done
 priority: P0
 owner: codex
 created: 2026-09-12
-updated: 2026-09-12
+updated: 2026-09-14
 labels:
   - reliability
   - idempotency
@@ -42,11 +42,11 @@ There are unavoidable process-crash windows between reserving a resource, sendin
 
 ## Acceptance Criteria
 
-- [ ] Tests cover a simulated crash at every external-call boundary.
-- [ ] A delivered Matrix review is not duplicated after restart when its delivery can be reconciled.
-- [ ] Confirmed mutations are not blindly replayed after an ambiguous response.
-- [ ] Transient failures retry; permanent validation failures remain visible and do not loop.
-- [ ] Operators can identify and safely retry or abandon a failed workflow.
+- [x] Tests cover a simulated crash at every external-call boundary.
+- [x] A delivered Matrix review is not duplicated after restart when its delivery can be reconciled.
+- [x] Confirmed mutations are not blindly replayed after an ambiguous response.
+- [x] Transient failures retry; permanent validation failures remain visible and do not loop.
+- [x] Operators can identify and safely retry or abandon a failed workflow.
 
 ## Implementation Notes
 
@@ -67,3 +67,5 @@ CARGO_BUILD_JOBS=2 cargo clippy --all-targets --all-features -- -D warnings
 - 2026-09-12 — Added startup reconciliation. Lunch Money operations are completed without replay when the exact transaction already reflects the confirmed update; ambiguous Fastmail operations are moved to a manual-retry failure instead of being replayed blindly.
 - 2026-09-12 — Added bounded exponential retries for transient Lunch Money and Fastmail errors, plus a thread-level `cancel` path for safely abandoning pending work. Fastmail's mailbox-plus-seen sequence remains idempotent on retry but still needs explicit boundary-failure tests.
 - 2026-09-12 — Added repository lifecycle coverage and a paused-time transient retry test. Strict Clippy passed immediately before the latest test additions. The subsequent test build was interrupted while recompiling dependencies after enabling Tokio `test-util`; rerun the full validation before checking any acceptance criterion or closing this card.
+- 2026-09-14 — Work resumed by Codex. Revalidating the interrupted build and adding the remaining external-call-boundary coverage before closing the card.
+- 2026-09-14 — Completed. Added simulated restart coverage for ambiguous Lunch Money and Fastmail mutations, plus stable Matrix transaction IDs for idempotent delivery retries. Validation: `cargo fmt --check`, 61 tests, and strict Clippy passed in a Nix Rust toolchain.

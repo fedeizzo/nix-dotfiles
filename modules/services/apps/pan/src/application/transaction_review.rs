@@ -171,6 +171,35 @@ impl<P: FinanceProvider> TransactionReviewService<P> {
         Ok(None)
     }
 
+    /// Claims and prepares one exact transaction for a non-Matrix workflow.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error when Lunch Money or durable workflow state cannot be read.
+    pub async fn prepare_by_id(
+        &self,
+        transaction_id: i64,
+    ) -> Result<Option<PreparedReview>, Error> {
+        let claimed = self
+            .repository
+            .claim(
+                WORKFLOW_KIND,
+                transaction_id.to_string(),
+                Utc::now() + chrono::Duration::hours(24),
+            )
+            .await?;
+        if !claimed {
+            return Ok(None);
+        }
+        match self.provider.get_transaction(transaction_id).await {
+            Ok(transaction) => self.hydrate(transaction).await.map(Some),
+            Err(error) => {
+                self.release(transaction_id).await?;
+                Err(Error::Provider(error))
+            }
+        }
+    }
+
     /// Associates a prepared transaction with the Matrix conversation that delivered it.
     ///
     /// # Errors
@@ -968,5 +997,54 @@ mod tests {
                 .unwrap()
                 .is_none()
         );
+    }
+
+    #[tokio::test]
+    async fn recovery_never_replays_an_ambiguous_lunch_money_mutation() {
+        let provider = Arc::new(FakeProvider::new());
+        let (_directory, repository) = repository().await;
+        repository
+            .claim(
+                WORKFLOW_KIND,
+                "42".to_owned(),
+                Utc::now() + chrono::Duration::hours(1),
+            )
+            .await
+            .unwrap();
+        repository
+            .bind_conversation(
+                WORKFLOW_KIND,
+                "42".to_owned(),
+                "room".to_owned(),
+                "thread".to_owned(),
+            )
+            .await
+            .unwrap();
+        repository
+            .begin_operation(
+                WORKFLOW_KIND,
+                "42".to_owned(),
+                "operation".to_owned(),
+                serde_json::to_string(&TransactionUpdate {
+                    category_id: None,
+                    tag_ids: Vec::new(),
+                    notes: Some("different".to_owned()),
+                })
+                .unwrap(),
+            )
+            .await
+            .unwrap();
+        let service = TransactionReviewService::new(Arc::clone(&provider), Arc::clone(&repository));
+
+        let recovered = service.recover().await.unwrap();
+        let claim = repository
+            .find_by_conversation(WORKFLOW_KIND, "room".to_owned(), "thread".to_owned())
+            .await
+            .unwrap()
+            .unwrap();
+
+        assert_eq!(recovered, 0);
+        assert_eq!(claim.state, WorkflowState::Failed);
+        assert!(provider.updates.lock().unwrap().is_empty());
     }
 }

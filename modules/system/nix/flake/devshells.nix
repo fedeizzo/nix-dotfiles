@@ -139,6 +139,7 @@
           deploy-rs
           mdbook
           python3
+          stdenv.cc
 
           just
           watchexec

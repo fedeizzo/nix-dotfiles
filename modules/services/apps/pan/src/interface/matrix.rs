@@ -11,7 +11,7 @@ use cron::Schedule;
 use matrix_sdk::{
     Client, Room, RoomState,
     authentication::matrix::MatrixSession,
-    config::SyncSettings,
+    config::{RequestConfig, SyncSettings},
     room::MessagesOptions,
     ruma::{
         RoomId,
@@ -37,6 +37,17 @@ use crate::{
     domain::{chat::ChatProvider, email::EmailProvider, finance::FinanceProvider},
     infrastructure::config::{JobConfig, MatrixConfig},
 };
+
+const MATRIX_SEND_RETRY_LIMIT: usize = 3;
+const MATRIX_SEND_RETRY_MAX: Duration = Duration::from_secs(30);
+
+fn matrix_request_config() -> RequestConfig {
+    // The SDK reads Matrix's `retry_after_ms` from M_LIMIT_EXCEEDED responses.
+    // These bounds make that server-directed delay finite for a bot delivery.
+    RequestConfig::new()
+        .retry_limit(MATRIX_SEND_RETRY_LIMIT)
+        .max_retry_time(MATRIX_SEND_RETRY_MAX)
+}
 
 pub struct MatrixBot<C, F, E> {
     chat: Arc<C>,
@@ -81,6 +92,7 @@ where
             .context("failed to create Matrix data directory")?;
         let client = Client::builder()
             .homeserver_url(&self.config.homeserver)
+            .request_config(matrix_request_config())
             .sqlite_store(data_dir.join("store"), None)
             .build()
             .await
@@ -115,7 +127,7 @@ where
             &client,
             self.chat,
             Arc::clone(&self.reviews),
-            self.email_triage,
+            Arc::clone(&self.email_triage),
             &self.config,
         );
         tracing::info!(user = %self.config.user, "Matrix bot is ready");
@@ -129,9 +141,10 @@ where
             .context("invalid Matrix message_retention duration")?;
         let retention_job =
             run_message_retention(client.clone(), self.config.allowed_room.clone(), retention);
-        let scheduler = run_transaction_scheduler(
+        let scheduler = run_scheduler(
             client.clone(),
             self.reviews,
+            self.email_triage,
             self.jobs,
             self.config.notification_room.clone(),
         );
@@ -345,11 +358,7 @@ fn register_message_handler<C, F, E>(
                 return;
             }
 
-            let thread_root = match event.content.relates_to.as_ref() {
-                Some(Relation::Thread(thread)) => thread.event_id.clone(),
-                Some(Relation::Reply(reply)) => reply.in_reply_to.event_id.clone(),
-                _ => event.event_id.clone(),
-            };
+            let thread_root = workflow_thread_root(&event);
             if handle_workflow_message(
                 &room,
                 &event.event_id,
@@ -453,37 +462,98 @@ async fn send_thread_reply(
     }
 }
 
-async fn run_transaction_scheduler<F: FinanceProvider + 'static>(
+async fn run_scheduler<F: FinanceProvider + 'static, E: EmailProvider + 'static>(
     client: Client,
     reviews: Arc<TransactionReviewService<F>>,
+    email_triage: Arc<EmailTriageService<E>>,
     jobs: Vec<JobConfig>,
     notification_room: String,
 ) -> Result<()> {
-    let transaction_jobs = jobs
-        .into_iter()
-        .filter(|job| job.runner == "lunchmoney")
-        .collect::<Vec<_>>();
-    if transaction_jobs.is_empty() {
+    if jobs.is_empty() {
         std::future::pending::<()>().await;
         return Ok(());
     }
 
     let mut tasks = tokio::task::JoinSet::new();
-    for job in transaction_jobs {
+    for job in jobs {
         let schedule = parse_cron_spec(&job.spec)?;
-        tasks.spawn(run_transaction_job(
-            client.clone(),
-            Arc::clone(&reviews),
-            job,
-            schedule,
-            notification_room.clone(),
-        ));
+        match job.runner.as_str() {
+            "lunchmoney" => tasks.spawn(run_transaction_job(
+                client.clone(),
+                Arc::clone(&reviews),
+                job,
+                schedule,
+                notification_room.clone(),
+            )),
+            "fastmail" => tasks.spawn(run_email_job(
+                client.clone(),
+                Arc::clone(&email_triage),
+                job,
+                schedule,
+                notification_room.clone(),
+            )),
+            runner => anyhow::bail!("unsupported scheduler runner `{runner}`"),
+        };
     }
 
     while let Some(result) = tasks.join_next().await {
         result.context("Lunch Money scheduler task panicked")??;
     }
     Ok(())
+}
+
+async fn run_email_job<E: EmailProvider + 'static>(
+    client: Client,
+    email_triage: Arc<EmailTriageService<E>>,
+    job: JobConfig,
+    schedule: Schedule,
+    notification_room: String,
+) -> Result<()> {
+    let room_id = RoomId::parse(&notification_room).context("invalid Matrix notification room")?;
+    tracing::info!(job = %job.name, schedule = %job.spec, "Fastmail triage job scheduled");
+    loop {
+        let next = schedule
+            .upcoming(Local)
+            .next()
+            .context("Fastmail schedule has no future occurrence")?;
+        tokio::time::sleep(delay_until(next, Local::now())).await;
+        let Some(room) = client.get_room(&room_id) else {
+            tracing::error!(job = %job.name, room = %room_id, "Matrix notification room is not known to the client");
+            continue;
+        };
+        let Some(email) = email_triage
+            .prepare(&job.mailbox)
+            .await
+            .map_err(anyhow::Error::from)?
+        else {
+            tracing::debug!(job = %job.name, "No unread Fastmail message found");
+            continue;
+        };
+        let email_id = email.email_id().to_owned();
+        match room
+            .send(RoomMessageEventContent::text_markdown(email.message()))
+            .await
+        {
+            Ok(response) => {
+                if let Err(error) = email_triage
+                    .track(
+                        room_id.to_string(),
+                        response.response.event_id.to_string(),
+                        email,
+                    )
+                    .await
+                {
+                    tracing::error!(job = %job.name, room = %room_id, email_id, %error, "Failed to persist delivered Fastmail triage");
+                }
+            }
+            Err(error) => {
+                if let Err(release_error) = email_triage.release(&email_id).await {
+                    tracing::error!(job = %job.name, email_id, %release_error, "Failed to release undelivered Fastmail triage");
+                }
+                tracing::error!(job = %job.name, room = %room_id, %error, "Failed to send Fastmail triage");
+            }
+        }
+    }
 }
 
 async fn run_transaction_job<F: FinanceProvider + 'static>(
@@ -501,7 +571,7 @@ async fn run_transaction_job<F: FinanceProvider + 'static>(
             .upcoming(Local)
             .next()
             .context("Lunch Money review schedule has no future occurrence")?;
-        let delay = (next - Local::now()).to_std().unwrap_or(Duration::ZERO);
+        let delay = delay_until(next, Local::now());
         tokio::time::sleep(delay).await;
         let Some(room) = client.get_room(&room_id) else {
             tracing::error!(job = %job.name, room = %room_id, "Matrix notification room is not known to the client");
@@ -526,6 +596,10 @@ async fn run_transaction_job<F: FinanceProvider + 'static>(
         let message = review.message();
         match room
             .send(RoomMessageEventContent::text_markdown(message))
+            // Matrix deduplicates retransmissions with a client transaction ID. The ID is
+            // stable for the durable Lunch Money claim, so a crash after the homeserver has
+            // accepted the message cannot create another review when the claim is retried.
+            .with_transaction_id(matrix_transaction_id(transaction_id).into())
             .await
         {
             Ok(response) => {
@@ -548,6 +622,22 @@ async fn run_transaction_job<F: FinanceProvider + 'static>(
             }
         }
     }
+}
+
+fn matrix_transaction_id(transaction_id: i64) -> String {
+    format!("pan-lunchmoney-{transaction_id}")
+}
+
+fn workflow_thread_root(event: &OriginalSyncRoomMessageEvent) -> matrix_sdk::ruma::OwnedEventId {
+    match event.content.relates_to.as_ref() {
+        Some(Relation::Thread(thread)) => thread.event_id.clone(),
+        Some(Relation::Reply(reply)) => reply.in_reply_to.event_id.clone(),
+        _ => event.event_id.clone(),
+    }
+}
+
+fn delay_until(next: chrono::DateTime<Local>, now: chrono::DateTime<Local>) -> Duration {
+    (next - now).to_std().unwrap_or(Duration::ZERO)
 }
 
 fn parse_cron_spec(spec: &str) -> Result<Schedule> {
@@ -574,9 +664,27 @@ fn message_is_allowed(
 
 #[cfg(test)]
 mod tests {
-    use rstest::rstest;
+    use std::{
+        sync::{
+            Arc,
+            atomic::{AtomicUsize, Ordering},
+        },
+        time::Instant,
+    };
 
-    use super::{message_is_allowed, parse_cron_spec};
+    use super::{
+        MATRIX_SEND_RETRY_LIMIT, MATRIX_SEND_RETRY_MAX, delay_until, matrix_request_config,
+        matrix_transaction_id, message_is_allowed, parse_cron_spec, workflow_thread_root,
+    };
+    use matrix_sdk::ruma::api::MatrixVersion;
+    use rstest::rstest;
+    use std::time::Duration;
+    use wiremock::{
+        Mock, MockServer, ResponseTemplate,
+        matchers::{method, path},
+    };
+
+    use chrono::{Duration as ChronoDuration, Local};
 
     #[rstest]
     #[case::allowed_user_and_room("@owner:example.org", "!room:example.org", true)]
@@ -608,5 +716,126 @@ mod tests {
     #[test]
     fn cron_parser_rejects_incomplete_spec() {
         assert!(parse_cron_spec("every morning").is_err());
+    }
+
+    #[test]
+    fn matrix_delivery_uses_a_stable_transaction_id_per_review() {
+        assert_eq!(matrix_transaction_id(42), "pan-lunchmoney-42");
+    }
+
+    #[test]
+    fn matrix_rate_limit_retries_are_bounded() {
+        let config = format!("{:?}", matrix_request_config());
+        assert!(config.contains(&format!("retry_limit: {MATRIX_SEND_RETRY_LIMIT}")));
+        assert!(config.contains(&format!("max_retry_time: {MATRIX_SEND_RETRY_MAX:?}")));
+    }
+
+    #[tokio::test]
+    async fn matrix_http_429_retries_after_the_server_delay() {
+        let server = MockServer::start().await;
+        let requests = Arc::new(AtomicUsize::new(0));
+        let request_times = Arc::new(std::sync::Mutex::new(Vec::<Instant>::new()));
+        let requests_for_response = Arc::clone(&requests);
+        let request_times_for_response = Arc::clone(&request_times);
+        Mock::given(method("POST"))
+            .and(path("/_matrix/client/r0/login"))
+            .respond_with(move |_: &wiremock::Request| {
+                request_times_for_response
+                    .lock()
+                    .expect("request timestamp lock")
+                    .push(Instant::now());
+                if requests_for_response.fetch_add(1, Ordering::SeqCst) == 0 {
+                    ResponseTemplate::new(429).set_body_json(serde_json::json!({
+                        "errcode": "M_LIMIT_EXCEEDED",
+                        "error": "slow down",
+                        "retry_after_ms": 20
+                    }))
+                } else {
+                    ResponseTemplate::new(200).set_body_json(serde_json::json!({
+                        "access_token": "token",
+                        "device_id": "PAN",
+                        "home_server": "example.org",
+                        "user_id": "@pan:example.org"
+                    }))
+                }
+            })
+            .mount(&server)
+            .await;
+
+        let client = matrix_sdk::Client::builder()
+            .homeserver_url(server.uri())
+            .server_versions([MatrixVersion::V1_0])
+            .request_config(matrix_request_config())
+            .build()
+            .await
+            .expect("build mock Matrix client");
+        client
+            .matrix_auth()
+            .login_username("pan", "secret")
+            .send()
+            .await
+            .expect("429 should be retried");
+
+        assert_eq!(requests.load(Ordering::SeqCst), 2);
+        let request_times = request_times.lock().expect("request timestamp lock");
+        assert!(
+            request_times[1].duration_since(request_times[0]) >= Duration::from_millis(20),
+            "the retry must honor Matrix's retry_after_ms"
+        );
+    }
+
+    #[test]
+    fn matrix_thread_events_bind_confirmations_to_the_root_event() {
+        let event: matrix_sdk::ruma::events::room::message::OriginalSyncRoomMessageEvent =
+            serde_json::from_value(serde_json::json!({
+                "type": "m.room.message",
+                "event_id": "$reply:example.org",
+                "sender": "@owner:example.org",
+                "origin_server_ts": 0,
+                "content": {
+                    "msgtype": "m.text",
+                    "body": "confirm",
+                    "m.relates_to": {
+                        "rel_type": "m.thread",
+                        "event_id": "$root:example.org",
+                        "is_falling_back": false,
+                        "m.in_reply_to": { "event_id": "$previous:example.org" }
+                    }
+                }
+            }))
+            .expect("valid Matrix thread event fixture");
+
+        assert_eq!(workflow_thread_root(&event).as_str(), "$root:example.org");
+    }
+
+    #[test]
+    fn matrix_reply_events_bind_confirmations_to_the_replied_root_event() {
+        let event: matrix_sdk::ruma::events::room::message::OriginalSyncRoomMessageEvent =
+            serde_json::from_value(serde_json::json!({
+                "type": "m.room.message",
+                "event_id": "$reply:example.org",
+                "sender": "@owner:example.org",
+                "origin_server_ts": 0,
+                "content": {
+                    "msgtype": "m.text",
+                    "body": "confirm",
+                    "m.relates_to": {
+                        "m.in_reply_to": { "event_id": "$root:example.org" }
+                    }
+                }
+            }))
+            .expect("valid Matrix reply event fixture");
+
+        assert_eq!(workflow_thread_root(&event).as_str(), "$root:example.org");
+    }
+
+    #[tokio::test(start_paused = true)]
+    async fn scheduler_delay_is_testable_without_wall_clock_waiting() {
+        let now = Local::now();
+        let sleeping = tokio::time::sleep(delay_until(now + ChronoDuration::seconds(5), now));
+        tokio::pin!(sleeping);
+
+        tokio::time::advance(Duration::from_secs(5)).await;
+        sleeping.await;
     }
 }

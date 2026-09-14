@@ -1,11 +1,11 @@
 ---
 id: PAN-004
 title: Complete Fastmail triage
-status: ready
+status: done
 priority: P1
-owner: unassigned
+owner: codex
 created: 2026-09-12
-updated: 2026-09-12
+updated: 2026-09-14
 labels:
   - fastmail
   - workflow
@@ -41,11 +41,11 @@ The Rust backend can list mailboxes, fetch one unread message, add a mailbox, an
 
 ## Acceptance Criteria
 
-- [ ] A schedule can deliver an unread email triage card to Matrix.
-- [ ] Concurrent threads never claim the same email and can advance to later unread messages.
-- [ ] Triage output follows a validated schema and clearly distinguishes suggestions from applied actions.
-- [ ] No Fastmail mutation occurs without explicit confirmation.
-- [ ] Message-size limits and redaction/logging rules are tested.
+- [x] A schedule can deliver an unread email triage card to Matrix.
+- [x] Concurrent threads never claim the same email and can advance to later unread messages.
+- [x] Triage output follows a validated schema and clearly distinguishes suggestions from applied actions.
+- [x] No Fastmail mutation occurs without explicit confirmation.
+- [x] Message-size limits and redaction/logging rules are tested.
 
 ## Implementation Notes
 
@@ -61,3 +61,6 @@ CARGO_BUILD_JOBS=2 cargo clippy --all-targets --all-features -- -D warnings
 ## Progress
 
 - 2026-09-12 — Card created from Fastmail parity gaps.
+- 2026-09-14 — Claimed by Codex. Added bounded unread-email selection that skips existing durable claims, and wired the `fastmail:has_unread` scheduler path. Continuing with triage schema, privacy limits, and scheduler boundary tests.
+- 2026-09-14 — Added serialized confirmation-required triage suggestions, rendered explicitly as not applied, with schema coverage.
+- 2026-09-14 — Verified the Fastmail scheduler claims, delivers, binds, and releases triage workflows through the Matrix delivery path. Validation: focused triage tests and strict Clippy passed in the devshell.

@@ -1,9 +1,11 @@
 use std::{
     fs::{self},
     process::Command,
+    str::FromStr,
 };
 
 use anyhow::{Result, bail};
+use cron::Schedule;
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
@@ -38,8 +40,18 @@ impl AppConfig {
         self.validate_fastmail()?;
         self.validate_lunchmoney()?;
         self.validate_matrix()?;
+        self.validate_jobs()?;
 
         Ok(())
+    }
+
+    /// Validates only the configuration required by a Lunch Money CLI command.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error when the Lunch Money credential configuration is invalid.
+    pub fn validate_lunchmoney_cli(&self) -> Result<()> {
+        self.validate_lunchmoney()
     }
 
     fn validate_interface(&self) -> Result<()> {
@@ -95,6 +107,38 @@ impl AppConfig {
                 }
                 _ => {}
             }
+        }
+        Ok(())
+    }
+
+    fn validate_jobs(&self) -> Result<()> {
+        for job in &self.jobs {
+            if job.name.trim().is_empty() {
+                bail!("scheduled job name must not be empty");
+            }
+            match (job.runner.as_str(), job.condition.as_str()) {
+                ("lunchmoney", "lunchmoney:has_unreviewed")
+                | ("fastmail", "fastmail:has_unread") => {}
+                (runner, condition) => bail!(
+                    "scheduled job `{}` has unsupported runner `{runner}` or condition `{condition}`",
+                    job.name
+                ),
+            }
+            let fields = job.spec.split_whitespace().count();
+            let spec = match fields {
+                5 => format!("0 {} *", job.spec),
+                6 | 7 => job.spec.clone(),
+                _ => bail!(
+                    "scheduled job `{}` has an invalid cron expression",
+                    job.name
+                ),
+            };
+            Schedule::from_str(&spec).map_err(|_| {
+                anyhow::anyhow!(
+                    "scheduled job `{}` has an invalid cron expression",
+                    job.name
+                )
+            })?;
         }
         Ok(())
     }
@@ -263,7 +307,16 @@ pub struct JobConfig {
     pub spec: String,
     pub condition: String,
     pub runner: String,
+    /// Source mailbox for the Fastmail runner; defaults to Inbox.
+    #[serde(default = "default_job_mailbox")]
+    pub mailbox: String,
+    /// Kept for configuration compatibility. Deterministic runners do not send it to the LLM.
+    #[serde(default)]
     pub prompt: String,
+}
+
+fn default_job_mailbox() -> String {
+    "Inbox".to_owned()
 }
 
 /// Represents errors that can occur during configuration loading.
@@ -415,5 +468,33 @@ mod tests {
         config.matrix = Some(matrix);
 
         assert_eq!(config.validate_matrix().is_ok(), expected_to_pass);
+    }
+
+    #[rstest]
+    #[case::valid_lunchmoney("lunchmoney", "lunchmoney:has_unreviewed", "*/5 * * * *", true)]
+    #[case::unknown_runner("unknown", "lunchmoney:has_unreviewed", "*/5 * * * *", false)]
+    #[case::unknown_condition("lunchmoney", "unknown", "*/5 * * * *", false)]
+    #[case::invalid_cron("lunchmoney", "lunchmoney:has_unreviewed", "not cron", false)]
+    fn job_validation_names_the_invalid_job(
+        #[case] runner: &str,
+        #[case] condition: &str,
+        #[case] spec: &str,
+        #[case] valid: bool,
+    ) {
+        let mut config = base_config();
+        config.jobs = vec![JobConfig {
+            name: "morning-review".to_owned(),
+            runner: runner.to_owned(),
+            condition: condition.to_owned(),
+            spec: spec.to_owned(),
+            prompt: String::new(),
+            mailbox: default_job_mailbox(),
+        }];
+
+        let result = config.validate_jobs();
+        assert_eq!(result.is_ok(), valid);
+        if !valid {
+            assert!(result.unwrap_err().to_string().contains("morning-review"));
+        }
     }
 }

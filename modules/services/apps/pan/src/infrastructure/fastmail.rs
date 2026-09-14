@@ -235,23 +235,36 @@ impl EmailProvider for FastmailClient {
 
     #[tracing::instrument(skip(self), err)]
     async fn get_unread_email(&self, mailbox_id: &str) -> Result<Option<Email>, email::Error> {
+        Ok(self
+            .get_unread_emails(mailbox_id, 1)
+            .await?
+            .into_iter()
+            .next())
+    }
+
+    #[tracing::instrument(skip(self), err)]
+    async fn get_unread_emails(
+        &self,
+        mailbox_id: &str,
+        limit: u32,
+    ) -> Result<Vec<Email>, email::Error> {
         let response = self
             .call(
                 "Email/query",
                 json!({
                     "accountId": self.account_id,
                     "filter": { "inMailbox": mailbox_id, "notKeyword": "$seen" },
-                    "limit": 1,
+                    "limit": limit,
                 }),
             )
             .await?;
         let response: QueryEmailResponse =
             serde_json::from_value(response).map_err(invalid_response)?;
-        let Some(email_id) = response.ids.first() else {
-            return Ok(None);
-        };
-
-        self.fetch_email(email_id).await.map(Some)
+        let mut emails = Vec::with_capacity(response.ids.len());
+        for email_id in response.ids {
+            emails.push(self.fetch_email(&email_id).await?);
+        }
+        Ok(emails)
     }
 
     #[tracing::instrument(skip(self), err)]

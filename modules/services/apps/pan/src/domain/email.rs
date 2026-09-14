@@ -19,6 +19,14 @@ pub struct Email {
     pub preview: String,
 }
 
+/// A non-mutating recommendation shown with a triage card.
+#[derive(Clone, Debug, PartialEq, Eq, Serialize)]
+pub struct TriageSuggestion {
+    pub kind: String,
+    pub value: String,
+    pub requires_confirmation: bool,
+}
+
 pub trait EmailProvider: Send + Sync {
     fn get_mailboxes(&self) -> impl Future<Output = Result<Vec<Mailbox>, Error>> + Send;
 
@@ -26,6 +34,22 @@ pub trait EmailProvider: Send + Sync {
         &self,
         mailbox_id: &str,
     ) -> impl Future<Output = Result<Option<Email>, Error>> + Send;
+
+    /// Lists a bounded set of unread messages, ordered by the provider.
+    fn get_unread_emails(
+        &self,
+        mailbox_id: &str,
+        limit: u32,
+    ) -> impl Future<Output = Result<Vec<Email>, Error>> + Send {
+        async move {
+            Ok(self
+                .get_unread_email(mailbox_id)
+                .await?
+                .into_iter()
+                .take(limit as usize)
+                .collect())
+        }
+    }
 
     fn get_email(&self, email_id: &str) -> impl Future<Output = Result<Email, Error>> + Send;
 

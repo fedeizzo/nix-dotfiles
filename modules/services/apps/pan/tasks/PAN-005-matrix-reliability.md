@@ -1,11 +1,11 @@
 ---
 id: PAN-005
 title: Harden and test Matrix
-status: ready
+status: done
 priority: P1
-owner: unassigned
+owner: codex
 created: 2026-09-12
-updated: 2026-09-12
+updated: 2026-09-14
 labels:
   - matrix
   - reliability
@@ -41,11 +41,11 @@ The current Matrix adapter persists encrypted SDK sessions, filters the configur
 
 ## Acceptance Criteria
 
-- [ ] Integration tests verify that transaction and email confirmations bind to the correct root event.
-- [ ] HTTP 429 responses honor the server retry delay within a configured maximum.
-- [ ] A failure in one room or event does not abort retention for all rooms.
-- [ ] Historical messages are not passed to the LLM after startup.
-- [ ] Logs identify job and room without exposing message bodies.
+- [x] Integration tests verify that transaction and email confirmations bind to the correct root event.
+- [x] HTTP 429 responses honor the server retry delay within a configured maximum.
+- [x] A failure in one room or event does not abort retention for all rooms.
+- [x] Historical messages are not passed to the LLM after startup.
+- [x] Logs identify job and room without exposing message bodies.
 
 ## Implementation Notes
 
@@ -61,3 +61,6 @@ CARGO_BUILD_JOBS=2 cargo clippy --all-targets --all-features -- -D warnings
 ## Progress
 
 - 2026-09-12 — Card created from the Matrix integration-test and retry gaps.
+- 2026-09-14 — Claimed by Codex. Adding protocol-boundary tests and explicit delivery/retention recovery behavior.
+- 2026-09-14 — Verified retention isolates pagination and redaction failures per room/event, logs the failure with room/event identifiers, and continues the outer room loop.
+- 2026-09-14 — Added Matrix protocol fixtures for thread and reply confirmation roots, plus a mock-homeserver 429 test. Delivery retries honor `retry_after_ms`, are limited to three attempts, and have a 30-second maximum retry window. Validation: `cargo test interface::matrix` and strict Clippy pass in the devshell.

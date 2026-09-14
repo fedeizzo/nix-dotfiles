@@ -1,11 +1,11 @@
 ---
 id: PAN-007
 title: Decide and implement agent topology
-status: backlog
+status: done
 priority: P2
-owner: unassigned
+owner: codex
 created: 2026-09-12
-updated: 2026-09-12
+updated: 2026-09-14
 labels:
   - llm
   - architecture
@@ -41,11 +41,11 @@ Decide whether Pan should retain its single general Rust agent or restore the Go
 
 ## Acceptance Criteria
 
-- [ ] The topology decision and rejected alternatives are documented.
-- [ ] Every tool has an owning component and an explicit read/mutate classification.
-- [ ] Mutation authorization cannot be manufactured by a model tool call.
-- [ ] Timeouts and maximum tool turns are covered by tests.
-- [ ] Evaluation cases demonstrate correct routing and refusal behavior.
+- [x] The topology decision and rejected alternatives are documented.
+- [x] Every tool has an owning component and an explicit read/mutate classification.
+- [x] Mutation authorization cannot be manufactured by a model tool call.
+- [x] Timeouts and maximum tool turns are covered by tests.
+- [x] Evaluation cases demonstrate correct routing and refusal behavior.
 
 ## Implementation Notes
 
@@ -61,3 +61,7 @@ CARGO_BUILD_JOBS=2 cargo clippy --all-targets --all-features -- -D warnings
 ## Progress
 
 - 2026-09-12 — Card created; decision intentionally deferred until core workflow durability is addressed.
+- 2026-09-14 — Claimed by Codex after workflow durability work. Documenting and testing the single read-only assistant topology.
+- 2026-09-14 — Added `docs/agent-topology.md` and a tool-access contract test. The assistant remains limited to five read-only tool turns; workflow boundaries own mutations.
+- 2026-09-14 — Added a 30-second assistant timeout with paused-time coverage and documented ownership/access for every exposed tool group.
+- 2026-09-14 — Added read-versus-mutation routing evaluation coverage; mutation access is refused by the assistant and directed to workflow confirmation.
