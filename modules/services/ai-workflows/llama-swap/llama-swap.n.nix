@@ -3,7 +3,7 @@
     url = "github:gufo-org/gufo";
   };
 
-  flake.modules.nixos.llama-swap = { pkgs-unstable, lib, inputs, pkgs, config, ... }:
+  flake.modules.nixos.llama-swap = { lib, inputs, pkgs, config, ... }:
     let
       llama-cpp =
         (pkgs.llama-cpp.override {
@@ -235,7 +235,7 @@
       ];
       nixpkgs.overlays = [
         (_: _: {
-          inherit (inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}) llama-swap llama-rocm;
+          inherit (inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}) llama-swap;
         })
       ];
       disabledModules = [

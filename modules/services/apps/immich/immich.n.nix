@@ -1,5 +1,16 @@
 {
-  flake.modules.nixos.immich = { lib, config, ... }: {
+  flake.modules.nixos.immich = { lib, config, pkgs, inputs, ... }: {
+    imports = [
+      (inputs.nixpkgs-unstable + "/nixos/modules/services/web-apps/immich.nix")
+    ];
+    nixpkgs.overlays = [
+      (_: _: {
+        inherit (inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}) immich;
+      })
+    ];
+    disabledModules = [
+      "services/web-apps/immich.nix"
+    ];
     services.immich = {
       enable = true;
       host = "localhost";
