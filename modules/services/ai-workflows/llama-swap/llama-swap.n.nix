@@ -133,7 +133,7 @@
         model = "/persist/models/qwen38-flash-next/Qwen3.8-Flash-Next-UD-Q4_K_XL-00001-of-00004.gguf";
         host = "0.0.0.0";
         port = "\${PORT}";
-        verbose = true;
+        verbose = false;
 
         # Requests run serially on this model (no batching plan); each session
         # holds its own state (~24 KiB/token of context).
