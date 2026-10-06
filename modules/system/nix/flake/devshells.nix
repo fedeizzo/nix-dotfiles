@@ -33,7 +33,7 @@
             name = "clean";
             command = "nh clean all";
             category = "🔧 System administration";
-            package = inputs.nh.packages.${pkgs.system}.default;
+            package = inputs.nh.packages.${pkgs.stdenv.hostPlatform.system}.default;
           }
           {
             help = "📥 Interactively select and update a specific flake.nix input.";

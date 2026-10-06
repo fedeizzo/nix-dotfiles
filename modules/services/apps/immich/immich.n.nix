@@ -5,7 +5,7 @@
     ];
     nixpkgs.overlays = [
       (_: _: {
-        inherit (inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}) immich;
+        inherit (inputs.nixpkgs-unstable.legacyPackages.${pkgs.stdenv.hostPlatform.system}) immich;
       })
     ];
     disabledModules = [

@@ -47,7 +47,7 @@
         targets = {
           nixos-icons.enable = true;
           grub.enable = true;
-          grub.useImage = true;
+          grub.useWallpaper = true;
         };
       };
 

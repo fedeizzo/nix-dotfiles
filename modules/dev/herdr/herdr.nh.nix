@@ -14,7 +14,7 @@
 
   flake.modules.homeManager.herdr = { pkgs, lib, inputs, ... }:
     let
-      herdr = inputs.llm-agents.packages.${pkgs.system}.herdr;
+      herdr = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.herdr;
 
       plugins = [
         "persiyanov/herdr-reviewr"

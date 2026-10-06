@@ -54,7 +54,7 @@
               dependencies = [ ];
             }) { })
 
-          # inputs.climbing-lab.packages.${pkgs.system}.homeassistant-component
+          # inputs.climbing-lab.packages.${pkgs.stdenv.hostPlatform.system}.homeassistant-component
         ];
         customLovelaceModules = with pkgs; [
           home-assistant-custom-lovelace-modules.zigbee2mqtt-networkmap
@@ -105,7 +105,6 @@
           dhcp = { };
 
           default_config = { };
-          lovelace.mode = "yaml";
 
           "automation ui" = "!include automations.yaml";
           # "scene" = "!include scenes.yaml";

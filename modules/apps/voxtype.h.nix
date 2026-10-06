@@ -20,7 +20,7 @@
 
     programs.voxtype = {
       enable = true;
-      package = inputs.voxtype.packages.${pkgs.system}.default;
+      package = inputs.voxtype.packages.${pkgs.stdenv.hostPlatform.system}.default;
       service.enable = true;
       settings = {
         hotkey = {

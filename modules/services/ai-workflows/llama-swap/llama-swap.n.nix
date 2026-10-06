@@ -21,7 +21,7 @@
             ];
           });
       llama-server = lib.getExe' llama-cpp "llama-server";
-      gufoQwen27 = inputs.gufo.lib.${pkgs.system}.mkGufoServe {
+      gufoQwen27 = inputs.gufo.lib.${pkgs.stdenv.hostPlatform.system}.mkGufoServe {
         modality = "llm";
 
         model = "/persist/models/models--unsloth--Qwen3.8-27B-GGUF/snapshots/4ca720788d1e01f1bff70c033e0d0028fd02e502/Qwen3.8-27B-UD-Q8_K_L.gguf";
@@ -77,7 +77,7 @@
         # cacheDiskBytes = 4294967296;
         # cacheDiskStagingBytes = 536870912;
       };
-      gufoDs4 = inputs.gufo.lib.${pkgs.system}.mkGufoServe {
+      gufoDs4 = inputs.gufo.lib.${pkgs.stdenv.hostPlatform.system}.mkGufoServe {
         modality = "llm";
 
         model = "/persist/models/DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-0731.gguf";
@@ -128,7 +128,7 @@
         cacheDiskStagingBytes = 536870912;
       };
 
-      gufoQwenNext = inputs.gufo.lib.${pkgs.system}.mkGufoServe {
+      gufoQwenNext = inputs.gufo.lib.${pkgs.stdenv.hostPlatform.system}.mkGufoServe {
         modality = "llm";
         model = "/persist/models/qwen38-flash-next/Qwen3.8-Flash-Next-UD-Q4_K_XL-00001-of-00004.gguf";
         host = "0.0.0.0";
@@ -176,7 +176,7 @@
       };
 
 
-      gufoQwenTTSCmd = inputs.gufo.lib.${pkgs.system}.mkGufoServe {
+      gufoQwenTTSCmd = inputs.gufo.lib.${pkgs.stdenv.hostPlatform.system}.mkGufoServe {
         modality = "tts";
 
         model = "/persist/models/audio/Qwen3-TTS-12Hz-1.7B-Base";
@@ -208,7 +208,7 @@
         maxRequestBytes = 33554432;
       };
 
-      gufoQwenASRCmd = inputs.gufo.lib.${pkgs.system}.mkGufoServe {
+      gufoQwenASRCmd = inputs.gufo.lib.${pkgs.stdenv.hostPlatform.system}.mkGufoServe {
         modality = "asr";
 
         model = "/persist/models/audio/Qwen3-ASR-1.7B";
@@ -235,7 +235,7 @@
       ];
       nixpkgs.overlays = [
         (_: _: {
-          inherit (inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}) llama-swap;
+          inherit (inputs.nixpkgs-unstable.legacyPackages.${pkgs.stdenv.hostPlatform.system}) llama-swap;
         })
       ];
       disabledModules = [

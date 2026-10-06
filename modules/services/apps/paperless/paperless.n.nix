@@ -5,7 +5,7 @@
     # ];
     # nixpkgs.overlays = [
     #   (_: _: {
-    #     inherit (inputs.nixpkgs-unstable.legacyPackages.${pkgs.system}) paperless;
+    #     inherit (inputs.nixpkgs-unstable.legacyPackages.${pkgs.stdenv.hostPlatform.system}) paperless;
     #   })
     # ];
     # disabledModules = [

@@ -58,11 +58,6 @@
           username = "${username}";
         };
 
-        nixpkgs.config = {
-          allowUnfree = true;
-          joypixels.acceptLicense = true;
-          permittedInsecurePackages = [ ];
-        };
         xdg.configFile."nixpkgs/config.nix".text = ''
           {
             allowUnfree = true;

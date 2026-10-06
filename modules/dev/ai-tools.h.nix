@@ -6,7 +6,7 @@
   flake.modules.nixos.ai-tools = { ... }: { };
 
   flake.modules.homeManager.ai-tools = { pkgs, inputs, ... }: {
-    home.packages = with inputs.llm-agents.packages.${pkgs.system}; [
+    home.packages = with inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}; [
       codegraph
       skills
       semble

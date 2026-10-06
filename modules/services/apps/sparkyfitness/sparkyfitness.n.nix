@@ -3,7 +3,7 @@
 
   flake.modules.nixos.sparkyfitness = { inputs, pkgs, config, lib, pkgs-unstable ? pkgs, ... }: {
     imports = [
-      inputs.sparkyfitness.nixosModules.sparkyfitness
+      inputs.sparkyfitness.nixosModules.default
     ];
 
     services.sparkyfitness = {
@@ -11,6 +11,8 @@
       port = 55221;
       user = "sparkyfitness";
       group = "sparkyfitness";
+      frontendPackage = inputs.sparkyfitness.packages.${pkgs.stdenv.hostPlatform.system}.sparkyfitness-frontend;
+      backendPackage = inputs.sparkyfitness.packages.${pkgs.stdenv.hostPlatform.system}.sparkyfitness-server;
       stateDir = "/var/lib/sparkyfitness";
 
       frontendUrl = "https://fitness.fedeizzo.dev";

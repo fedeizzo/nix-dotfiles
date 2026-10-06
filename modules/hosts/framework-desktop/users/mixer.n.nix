@@ -40,10 +40,6 @@
         };
         programs.home-manager.enable = true;
 
-        nixpkgs.config = {
-          allowUnfree = true;
-          permittedInsecurePackages = [ ];
-        };
         xdg.configFile."nixpkgs/config.nix".text = ''
           {
             allowUnfree = true;
