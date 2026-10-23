@@ -55,6 +55,7 @@ in
       inputs.self.modules.nixos.backrest
       inputs.self.modules.nixos.blocky
       inputs.self.modules.nixos.books
+      inputs.self.modules.nixos.comin
       inputs.self.modules.nixos.dawarich
       inputs.self.modules.nixos.fedeizzo-dev
       inputs.self.modules.nixos.fi-services

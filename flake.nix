@@ -7,6 +7,10 @@
 
   inputs = {
     authentik-nix.url = "github:nix-community/authentik-nix";
+    comin = {
+      url = "github:nlewo/comin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     deploy-rs.url = "github:serokell/deploy-rs";
     devshell.url = "github:numtide/devshell";
     disko = {
