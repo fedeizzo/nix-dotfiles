@@ -24,7 +24,7 @@
       gufoQwen27 = inputs.gufo.lib.${pkgs.stdenv.hostPlatform.system}.mkGufoServe {
         modality = "llm";
 
-        model = "/persist/models/models--unsloth--Qwen3.8-27B-GGUF/snapshots/4ca720788d1e01f1bff70c033e0d0028fd02e502/Qwen3.8-27B-UD-Q8_K_L.gguf";
+        model = "/persist/models/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-UD-Q4_K_XL.gguf";
         dflashModel = "/persist/models/Qwen3.8-27B-DFlash2-Q8_0.gguf";
         host = "0.0.0.0";
         port = "\${PORT}";
@@ -270,6 +270,7 @@
             "qwen3.8-27b" = {
               env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
               cmd = "${gufoQwen27}";
+              ttl = 600; # Unload after 10 minutes idle.
               timeouts.responseHeader = 600;
               aliases = [ "Qwen3.8-27B" ];
             };
@@ -277,6 +278,7 @@
             "qwen-flash" = {
               env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
               cmd = "${gufoQwenNext}";
+              ttl = 600; # Unload after 10 minutes idle.
               timeouts.responseHeader = 600;
               aliases = [ ];
             };
