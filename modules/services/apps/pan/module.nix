@@ -1,5 +1,5 @@
 {
-  flake.modules.nixos.apps-pan = { pkgs, config, lib, ... }:
+  flake.modules.nixos.apps-pan = { pkgs, config, lib, inputs, ... }:
     let
       cfg = config.services.apps-pan;
       format = pkgs.formats.yaml { };
@@ -30,6 +30,7 @@
       };
     in
     {
+      imports = [ inputs.self.modules.nixos.apps-pan-worker ];
       options.services.apps-pan = {
         enable = lib.mkEnableOption "Pan service (Rust)";
 
@@ -50,7 +51,7 @@
 
         dataDir = lib.mkOption {
           type = lib.types.str;
-          default = "/var/lib/pan-rust";
+          default = "/var/lib/pan";
           description = "Data directory for Pan, used as the working directory.";
         };
       };
@@ -62,9 +63,9 @@
           after = [ "network.target" ];
 
           serviceConfig = {
-            ExecStart = "${cfg.package}/bin/pan --config ${format.generate "pan-config.yaml" cfg.settings}";
+            ExecStart = "${cfg.package}/bin/pan --config ${format.generate "pan-config.yaml" cfg.settings} serve";
             WorkingDirectory = cfg.dataDir;
-            StateDirectory = "pan-rust";
+            StateDirectory = lib.removePrefix "/var/lib/" cfg.dataDir;
             User = "pan-rust";
             Group = "pan-rust";
             Restart = "on-failure";

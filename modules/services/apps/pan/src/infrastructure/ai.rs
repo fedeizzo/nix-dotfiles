@@ -6,7 +6,7 @@ use rig::client::CompletionClient;
 use rig::memory::InMemoryConversationMemory;
 use rig::prelude::Prompt;
 use rig::providers::openai;
-use rig::providers::openai::responses_api::GenericResponsesCompletionModel;
+use rig::providers::openai::completion::CompletionModel;
 
 use crate::domain::chat::ChatProvider;
 
@@ -41,7 +41,7 @@ pub const fn route_tool_access(access: ToolAccess) -> AssistantRoute {
 
 /// The Infrastructure Adapter that implements our `ChatProvider` port using `rig-core`
 pub struct Rig {
-    agent: Agent<GenericResponsesCompletionModel>,
+    agent: Agent<CompletionModel>,
     timeout: Duration,
 }
 
@@ -61,7 +61,8 @@ impl Rig {
         let client = openai::Client::builder()
             .base_url(base_url)
             .api_key(api_key)
-            .build()?;
+            .build()?
+            .completions_api();
 
         let agent = client
             .agent(model)
@@ -99,6 +100,32 @@ async fn within_timeout<T>(
 
 #[cfg(test)]
 mod tests {
+    #[tokio::test]
+    async fn local_model_uses_chat_completions_with_the_configured_model() {
+        use crate::domain::chat::ChatProvider;
+        use wiremock::{
+            Mock, MockServer, ResponseTemplate,
+            matchers::{body_partial_json, method, path},
+        };
+        let server = MockServer::start().await;
+        Mock::given(method("POST"))
+            .and(path("/v1/chat/completions"))
+            .and(body_partial_json(serde_json::json!({"model": "qwen-flash"})))
+            .respond_with(ResponseTemplate::new(200).set_body_json(serde_json::json!({
+                "id": "local-test", "object": "chat.completion", "created": 1, "model": "qwen-flash",
+                "choices": [{"index": 0, "message": {"role": "assistant", "content": "Flash ready"}, "finish_reason": "stop"}],
+                "usage": {"prompt_tokens": 1, "completion_tokens": 2, "total_tokens": 3}
+            }))).expect(1).mount(&server).await;
+        let rig = super::Rig::new(
+            &format!("{}/v1", server.uri()),
+            "placeholder",
+            "qwen-flash",
+            Duration::from_secs(5),
+            vec![],
+        )
+        .unwrap();
+        assert_eq!(rig.prompt("test", "hello").await.unwrap(), "Flash ready");
+    }
     use std::{future, time::Duration};
 
     use super::{

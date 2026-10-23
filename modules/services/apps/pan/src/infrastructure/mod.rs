@@ -1,6 +1,9 @@
 pub mod ai;
 pub mod config;
+pub mod development_store;
+pub mod development_worker;
 pub mod fastmail;
 pub mod logging;
 pub mod lunchmoney;
+pub mod pi;
 pub mod workflow_sqlite;

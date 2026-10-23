@@ -34,6 +34,20 @@ struct Args {
 
 #[derive(Debug, Subcommand)]
 enum PanCommand {
+    /// Run the assistant (also the default when no command is given).
+    Serve,
+    /// Run the isolated development worker using its own configuration.
+    Worker {
+        #[arg(long)]
+        worker_config: PathBuf,
+    },
+    /// Submit or inspect development jobs without loading personal integrations.
+    Dev {
+        #[arg(long, default_value = "/run/pan-dev/control.sock")]
+        socket: PathBuf,
+        #[command(subcommand)]
+        action: DevelopmentCommand,
+    },
     /// Resolve and print the next available Lunch Money review without changing it.
     ReviewTransaction {
         /// Emit machine-readable JSON.
@@ -47,6 +61,20 @@ enum PanCommand {
         /// Required acknowledgement for this exact transaction.
         #[arg(long)]
         confirm: bool,
+    },
+}
+
+#[derive(Debug, Subcommand)]
+enum DevelopmentCommand {
+    Submit {
+        repository: String,
+        instruction: String,
+    },
+    Status {
+        id: String,
+    },
+    Cancel {
+        id: String,
     },
 }
 
@@ -67,6 +95,41 @@ async fn main() -> ExitCode {
 )]
 async fn run() -> Result<ExitCode> {
     let args = Args::parse();
+    match &args.command {
+        Some(PanCommand::Worker { worker_config }) => {
+            tracing_subscriber::fmt()
+                .with_ansi(false)
+                .with_writer(std::io::stderr)
+                .init();
+            let config =
+                pan::infrastructure::development_worker::WorkerConfig::load(worker_config)?;
+            pan::infrastructure::development_worker::serve(config).await?;
+            return Ok(ExitCode::SUCCESS);
+        }
+        Some(PanCommand::Dev { socket, action }) => {
+            use pan::domain::development::{DevelopmentRequest, WorkerCommand};
+            let command = match action {
+                DevelopmentCommand::Submit {
+                    repository,
+                    instruction,
+                } => WorkerCommand::Submit {
+                    request: DevelopmentRequest {
+                        request_id: uuid::Uuid::new_v4().to_string(),
+                        conversation: None,
+                        repository: repository.clone(),
+                        instruction: instruction.clone(),
+                        origin: "cli".into(),
+                    },
+                },
+                DevelopmentCommand::Status { id } => WorkerCommand::Status { id: id.clone() },
+                DevelopmentCommand::Cancel { id } => WorkerCommand::Cancel { id: id.clone() },
+            };
+            let job = pan::infrastructure::development_worker::request(socket, &command).await?;
+            println!("{}", serde_json::to_string_pretty(&job)?);
+            return Ok(ExitCode::SUCCESS);
+        }
+        _ => {}
+    }
     let config = pan::infrastructure::config::load_config(&args.config)
         .context("Failed to load configuration file")?;
     if matches!(
@@ -204,6 +267,7 @@ async fn run() -> Result<ExitCode> {
                 matrix,
                 config.jobs,
             )
+            .with_development_socket(config.development.map(|development| development.socket))
             .run()
             .await?;
         }

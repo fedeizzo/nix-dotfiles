@@ -1,9 +1,9 @@
 ---
 id: PAN-008
 title: Integrate Pi as an isolated development worker
-status: ready
+status: in_progress
 priority: P1
-owner: unassigned
+owner: codex
 created: 2026-10-23
 updated: 2026-10-23
 labels:
@@ -90,5 +90,11 @@ Place conflicting settings and sentinel extensions in fixture personal/project P
 
 ## Progress
 
+- 2026-10-23 — Started implementation: one Pan binary with assistant/worker modes, a Unix socket, durable jobs, dedicated Pi configuration, and NixOS service isolation. First slice returns local review artifacts; publication remains outside this task.
+
 - 2026-10-23 — Created at the user's request after removing PAN-001 through PAN-007. Pi will provide the coding loop; Pan will own authorization, durable jobs, isolation, and review delivery.
 - 2026-10-23 — Clarified that Pan owns a dedicated Pi configuration independent of `modules/dev/pi/`. Added configurable behavior, controlled resource discovery, immutable worker policy, and tests for conflicting personal/project settings.
+- 2026-10-23 — Implemented the first local slice: `pan serve`, `pan worker`, and `pan dev` socket client; allowlisted requests, SQLite deduplication/queue/recovery, cancellation and deadlines, explicit Matrix commands, Bubblewrap workspaces with a model-only network bridge, and NixOS worker definitions. `nix run .#pan-dev-local` runs the same sandbox without systemd. Real Pi smoke tests with a fake model passed editing/patch capture, disabled project extensions, immutable settings, blocked host networking, and child-process cancellation. Rust tests and strict Clippy passed; the local Nix launcher built and worker services evaluated. The task remains in progress: automatic Matrix progress/follow-ups, independent validation, retention/disk quotas, richer protocol failure tests, and NixOS VM isolation tests are still outstanding. No deployment or GitHub publication was performed.
+
+- 2026-10-23 — Removed the local testing package from the flake at the user’s request. Local execution uses the worker CLI and explicitly prepared sandbox configuration; documentation no longer advertises a flake launcher.
+- 2026-10-23 — Wired the homelab to Rust Pan and its worker, selected Flash Next (`qwen-flash`) for both, and reused `/var/lib/pan` with an operator-managed reset instead of preserving Go state. Added durable Matrix terminal-result delivery, chunked patch transfer over the worker socket, thread-bound attachments, retry transaction IDs, and notification acknowledgement. Corrected the assistant to use chat completions with llama-swap. Added tests for API routing, notification recovery/migration, authorization, and bounded artifact transfer. Homelab service/secret/persistence evaluation passed; full NixOS build, activation, and real Matrix verification are documented operator steps and have not been performed.

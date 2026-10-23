@@ -36,7 +36,6 @@ The frontmatter is the canonical current state. The dashboard below is a human-f
 
 | ID | Priority | Task | Dependencies |
 |---|---|---|---|
-| PAN-008 | P1 | [Integrate Pi as an isolated development worker](PAN-008-pi-development-worker.md) | None |
 
 ## Backlog
 
@@ -48,7 +47,7 @@ The frontmatter is the canonical current state. The dashboard below is a human-f
 
 | ID | Priority | Task | Owner | Dependencies |
 |---|---|---|---|---|
-No cards in progress.
+| PAN-008 | P1 | [Integrate Pi as an isolated development worker](PAN-008-pi-development-worker.md) | codex | None |
 
 ## Blocked
 
