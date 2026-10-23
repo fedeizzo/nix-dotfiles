@@ -21,11 +21,9 @@ absolute paths for `socket`, `state_dir`, `sandbox_program`, `fetch_program`,
 `branch` values. The sandbox/fetch launchers must be prepared before running it;
 this is not a turnkey local setup.
 
-No systemd service or NixOS activation is required. The helper
-`scripts/dev-local.py` can manage a temporary state directory and model bridge
-when supplied the prepared launchers and executable paths. The
-`scripts/smoke-local.py` integration test accepts such a configured launcher via
-`--launcher`; it uses real Pi with a fake model and a small public repository.
+No systemd service or NixOS activation is required. Local testing requires
+manually prepared launchers and a model bridge; there is no bundled local test
+launcher.
 
 In another terminal, use the socket from the worker configuration:
 
@@ -41,9 +39,8 @@ PAN_BIN=./modules/services/apps/pan/target/debug/pan
 "$PAN_BIN" dev --socket "$PAN_SOCKET" cancel JOB_ID
 ```
 
-The optional Python helper's `--repository` and `--branch` arguments select a
-public HTTPS test repository. They configure the allowlist before starting the
-worker; requests cannot supply arbitrary repository URLs or executable paths.
+Set the public HTTPS test repository and branch in the worker's allowlist before
+starting it. Requests cannot supply arbitrary repository URLs or executable paths.
 
 Ctrl-C stops the local worker. Artifacts remain under the configured state directory:
 
@@ -185,8 +182,8 @@ filesystem/process/network restrictions are enforced outside the model.
 The preparation sandbox has network access only while running the trusted clone
 command, with no agent, inherited credentials, or host configuration. The coding
 sandbox has no host network. Its only network route is a local relay to the model
-server. The service bridge reaches local llama-swap; the local test bridge reaches
-the operator-selected model endpoint. Code and prompts are sent to that endpoint.
+server. The service bridge reaches local llama-swap. Code and prompts are sent to
+that endpoint.
 
 ## Current limits
 
