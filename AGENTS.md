@@ -2,6 +2,16 @@
 
 This document describes the flake module system for LLM/agent navigation.
 
+## Version Control (Jujutsu)
+
+- Use Jujutsu (`jj`) for status, history, diffs, commits, and change management. Do not use Git commands for routine repository work.
+- Run `jj status` and `jj diff` before editing to understand existing changes. Use `jj log` to inspect history.
+- Preserve unrelated working-copy changes. Do not abandon, squash, rebase, or otherwise rewrite existing changes unless explicitly requested.
+- Commit only when requested. Review the diff first, then use `jj commit -m "type(scope): short description"` with a one-line conventional commit message. Scope is optional.
+- Use `jj describe -m "..."` when asked to name or update the description of the current change without creating a new working-copy change.
+- Do not create or move bookmarks, push, or merge changes without authorization for that action. A request to commit does not authorize pushing.
+- After committing, check the resulting working-copy state and report the commit ID and description. Never claim a commit succeeded if the command failed.
+
 ## Top-Level Pattern
 
 Every module file under `modules/` declares:
