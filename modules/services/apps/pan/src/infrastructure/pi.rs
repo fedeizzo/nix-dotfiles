@@ -69,16 +69,16 @@ impl PiExecutor {
             }
             Ok(bytes)
         };
-        let drain = async {
-            tokio::io::copy(&mut BufReader::new(stderr), &mut tokio::io::sink())
-                .await
-                .map_err(execution)
-        };
-        let (bytes, _, status) = tokio::try_join!(output, drain, async {
-            child.wait().await.map_err(execution)
-        })?;
+        let (bytes, diagnostics, status) =
+            tokio::try_join!(output, read_diagnostics(stderr), async {
+                child.wait().await.map_err(execution)
+            })?;
         if !status.success() {
-            return Err(execution(format!("development tool exited with {status}")));
+            return Err(execution(format!(
+                "{} exited with {status}: {}",
+                program.display(),
+                String::from_utf8_lossy(&diagnostics).trim()
+            )));
         }
         String::from_utf8(bytes).map_err(execution)
     }
@@ -102,7 +102,7 @@ impl PiExecutor {
                 "--provider",
                 "pan-local",
                 "--model",
-                "qwen-flash",
+                "qwen3.8-27b",
                 "--thinking",
                 "medium",
                 "--tools",
@@ -211,6 +211,20 @@ impl DevelopmentExecutor for PiExecutor {
     }
 }
 
+// Retain a bounded prefix while draining the rest so noisy children cannot block.
+async fn read_diagnostics(mut reader: impl tokio::io::AsyncRead + Unpin) -> Result<Vec<u8>> {
+    let mut retained = Vec::new();
+    let mut buffer = [0; 4096];
+    loop {
+        let count = reader.read(&mut buffer).await.map_err(execution)?;
+        if count == 0 {
+            return Ok(retained);
+        }
+        let keep = count.min(4096 - retained.len());
+        retained.extend_from_slice(&buffer[..keep]);
+    }
+}
+
 fn execution(error: impl std::fmt::Display) -> Error {
     Error::Execution(error.to_string())
 }
@@ -275,6 +289,15 @@ async fn consume_protocol(reader: &mut (impl tokio::io::AsyncBufRead + Unpin)) -
 mod tests {
     use super::*;
     use std::fmt::Write;
+
+    #[tokio::test]
+    async fn diagnostics_are_bounded_and_fully_drained() {
+        let bytes = vec![b'x'; 20_000];
+        let mut reader = bytes.as_slice();
+        let diagnostics = read_diagnostics(&mut reader).await.unwrap();
+        assert_eq!(diagnostics, vec![b'x'; 4096]);
+        assert!(reader.is_empty());
+    }
 
     #[tokio::test]
     async fn acceptance_and_agent_end_are_not_completion() {

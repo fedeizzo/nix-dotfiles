@@ -95,7 +95,7 @@ services.apps-pan = {
 ```
 
 The homelab imports Rust Pan and enables both services. The assistant and Pi use
-Flash Next (`qwen-flash`); assistant requests have a 180-second deadline. The
+Qwen 27B (`qwen3.8-27b`); assistant requests have a 180-second deadline. The
 assistant uses `/var/lib/pan`, reusing the old Go service's directory with fresh
 state. Secrets are owned by `pan-rust`. The old Go service and its RSS schedule
 are no longer enabled.
@@ -170,7 +170,7 @@ Pan-owned settings, model configuration, and instructions from the Nix store.
 `services.apps-pan.development.instructions`. No personal Pi directory is copied,
 imported, or linked. Startup disables project trust, extensions, MCP, skills,
 templates, themes, context discovery, telemetry, and startup network operations.
-The launcher explicitly selects `pan-local/qwen-flash`.
+The launcher explicitly selects `pan-local/qwen3.8-27b`.
 
 Bubblewrap exposes only `/nix/store` read-only, a fresh `/proc`, minimal devices,
 temporary directories, the job checkout, and the model bridge socket. It gives Pi

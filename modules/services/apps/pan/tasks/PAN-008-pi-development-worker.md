@@ -5,7 +5,7 @@ status: in_progress
 priority: P1
 owner: codex
 created: 2026-10-23
-updated: 2026-10-23
+updated: 2026-10-24
 labels:
   - development
   - pi
@@ -100,3 +100,9 @@ Place conflicting settings and sentinel extensions in fixture personal/project P
 - 2026-10-23 — Wired the homelab to Rust Pan and its worker, selected Flash Next (`qwen-flash`) for both, and reused `/var/lib/pan` with an operator-managed reset instead of preserving Go state. Added durable Matrix terminal-result delivery, chunked patch transfer over the worker socket, thread-bound attachments, retry transaction IDs, and notification acknowledgement. Corrected the assistant to use chat completions with llama-swap. Added tests for API routing, notification recovery/migration, authorization, and bounded artifact transfer. Homelab service/secret/persistence evaluation passed; full NixOS build, activation, and real Matrix verification are documented operator steps and have not been performed.
 - 2026-10-23 — Removed the legacy Go implementation, its NixOS modules, duplicate encrypted secrets, Go dependencies, tests, and documentation from `modules/services/ai-workflows/pan` at the user's request. Rust Pan is the remaining implementation; the removal is included in the same pull request.
 - 2026-10-23 — Removed the local-only Python launcher and smoke-test scripts at the user's request, and cleaned their references from operator documentation. Rust unit tests and the NixOS worker configuration remain.
+
+- 2026-10-24 — Investigating the first homelab job failure. Switching assistant and worker to Qwen 27B and retaining bounded tool diagnostics so checkout/sandbox failures identify the failing command.
+- 2026-10-24 — All 98 Rust tests, strict Clippy, and formatting passed. Remote Nix build and deploy-homelab activation succeeded with Qwen 27B and bounded tool stderr. Awaiting a new Matrix development request to identify the original execution failure; no root cause confirmed yet.
+- 2026-10-24 — Homelab retry reported a procfs mount EPERM from Bubblewrap. Disabled ProtectKernelTunables only on the worker: its masked parent procfs conflicts with unprivileged child procfs mounts. Retained worker identity/capability limits and per-job PID/network/filesystem isolation; runtime confirmation is pending.
+- 2026-10-24 — Procfs compatibility change passed Nix parsing and the remote Nix build; deploy-homelab activation was confirmed. Awaiting operator retry of the Matrix development request to verify sandbox startup.
+- 2026-10-24 — User confirmed a real Matrix development request succeeded after the procfs fix and produced the requested change without pushing, merging, or deploying it. Recorded the conversational assistant vision in the README.

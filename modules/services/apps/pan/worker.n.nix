@@ -23,7 +23,7 @@ let
             supportsReasoningEffort = false;
           };
           models = [{
-            id = "qwen-flash";
+            id = "qwen3.8-27b";
             reasoning = true;
             contextWindow = 65536;
             maxTokens = 16384;
@@ -191,7 +191,9 @@ in
             ProtectHome = true;
             PrivateTmp = true;
             PrivateDevices = true;
-            ProtectKernelTunables = true;
+            # Masking the parent's /proc prevents an unprivileged Bubblewrap
+            # child from mounting procfs in its new PID namespace.
+            ProtectKernelTunables = false;
             ProtectKernelModules = true;
             ProtectControlGroups = true;
             RestrictSUIDSGID = true;

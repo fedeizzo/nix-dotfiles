@@ -27,6 +27,11 @@
           lockFile = ./Cargo.lock;
           allowBuiltinFetchGit = true;
         };
+
+        # HTTP clients load a CA bundle even when tests use local HTTP mocks.
+        preCheck = ''
+          export SSL_CERT_FILE=${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt
+        '';
       };
     in
     {

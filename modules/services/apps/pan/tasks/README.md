@@ -36,12 +36,14 @@ The frontmatter is the canonical current state. The dashboard below is a human-f
 
 | ID | Priority | Task | Dependencies |
 |---|---|---|---|
+| PAN-012 | P1 | [Evaluate and integrate OpenShell for development jobs](PAN-012-openshell-worker.md) | None |
 
 ## Backlog
 
 | ID | Priority | Task | Dependencies |
 |---|---|---|---|
 | PAN-010 | P1 | [Deploy reviewed infrastructure changes through signed Comin commits](PAN-010-signed-comin-deployments.md) | PAN-008 |
+| PAN-011 | P2 | [Accept Matrix voice messages through local ASR](PAN-011-matrix-voice-messages.md) | None |
 
 ## In Progress
 

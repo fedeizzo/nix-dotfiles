@@ -5,7 +5,7 @@
       development.enable = true;
       settings = {
         models = {
-          name = "qwen-flash";
+          name = "qwen3.8-27b";
           openai_api_key = "placeholder";
           openai_base_url = "https://llama.fedeizzo.dev/v1";
           timeout_seconds = 180;
