@@ -55,6 +55,7 @@ pub struct MatrixBot<C, F, E> {
     email_triage: Arc<EmailTriageService<E>>,
     config: MatrixConfig,
     jobs: Vec<JobConfig>,
+    development_socket: Option<std::path::PathBuf>,
 }
 
 impl<C, F, E> MatrixBot<C, F, E>
@@ -77,7 +78,14 @@ where
             email_triage,
             config,
             jobs,
+            development_socket: None,
         }
+    }
+
+    #[must_use]
+    pub fn with_development_socket(mut self, socket: Option<std::path::PathBuf>) -> Self {
+        self.development_socket = socket;
+        self
     }
 
     /// Runs the encrypted Matrix sync loop until shutdown.
@@ -129,6 +137,7 @@ where
             Arc::clone(&self.reviews),
             Arc::clone(&self.email_triage),
             &self.config,
+            self.development_socket.clone(),
         );
         tracing::info!(user = %self.config.user, "Matrix bot is ready");
 
@@ -148,6 +157,12 @@ where
             self.jobs,
             self.config.notification_room.clone(),
         );
+        let development_notifications = super::development_notifications::run(
+            client.clone(),
+            self.development_socket,
+            self.config.allowed_room.clone(),
+            self.config.allowed_user.clone(),
+        );
         tokio::select! {
             result = client.sync(SyncSettings::default()) => {
                 result.context("Matrix sync loop failed")?;
@@ -160,6 +175,7 @@ where
                 result?;
             }
             () = retention_job => {}
+            () = development_notifications => {}
         }
 
         Ok(())
@@ -323,6 +339,7 @@ fn register_message_handler<C, F, E>(
     reviews: Arc<TransactionReviewService<F>>,
     email_triage: Arc<EmailTriageService<E>>,
     config: &MatrixConfig,
+    development_socket: Option<std::path::PathBuf>,
 ) where
     C: ChatProvider + 'static,
     F: FinanceProvider + 'static,
@@ -339,6 +356,7 @@ fn register_message_handler<C, F, E>(
         let allowed_user = allowed_user.clone();
         let allowed_room = allowed_room.clone();
         let own_user = own_user.clone();
+        let development_socket = development_socket.clone();
         async move {
             if room.state() != RoomState::Joined
                 || !message_is_allowed(
@@ -359,6 +377,27 @@ fn register_message_handler<C, F, E>(
             }
 
             let thread_root = workflow_thread_root(&event);
+            if let Some(command) = development_command(text.body.trim(), event.event_id.as_str(), &format!("{}/{}/{}", room.room_id(), thread_root, event.sender)) {
+                // Fail closed even if this handler is constructed without validated settings.
+                if allowed_user.is_empty() || allowed_room.is_empty() { return; }
+                let response = if let Some(socket) = development_socket {
+                    match command {
+                        Ok(mut command) => {
+                            if let crate::domain::development::WorkerCommand::Submit { request } = &mut command {
+                                request.conversation = Some(crate::domain::development::DevelopmentConversation {
+                                    room_id: room.room_id().to_string(), thread_id: thread_root.to_string(), user_id: event.sender.to_string(),
+                                });
+                            }
+                            match crate::infrastructure::development_worker::request(&socket, &command).await {
+                            Ok(job) => format!("Development job `{}`: {:?}\n\n{}\n\nUse `dev-status {}` or `dev-cancel {}`.", job.id, job.state, job.result, job.id, job.id),
+                            Err(error) => format!("Development request failed: {error}"),
+                        } },
+                        Err(message) => message,
+                    }
+                } else { "Development worker is not configured.".into() };
+                send_thread_reply(&room, &thread_root, &event.event_id, response).await;
+                return;
+            }
             if handle_workflow_message(
                 &room,
                 &event.event_id,
@@ -382,6 +421,39 @@ fn register_message_handler<C, F, E>(
             }
         }
     });
+}
+
+fn development_command(
+    body: &str,
+    request_id: &str,
+    origin: &str,
+) -> Option<Result<crate::domain::development::WorkerCommand, String>> {
+    use crate::domain::development::{DevelopmentRequest, WorkerCommand};
+    if let Some(request) = body.strip_prefix("dev:") {
+        let Some((repository, instruction)) = request.trim().split_once(char::is_whitespace) else {
+            return Some(Err("Use `dev: pan <development request>`.".into()));
+        };
+        return Some(Ok(WorkerCommand::Submit {
+            request: DevelopmentRequest {
+                request_id: request_id.into(),
+                repository: repository.into(),
+                instruction: instruction.trim().into(),
+                origin: origin.into(),
+                conversation: None,
+            },
+        }));
+    }
+    if let Some(id) = body.strip_prefix("dev-status ") {
+        return Some(Ok(WorkerCommand::Status {
+            id: id.trim().into(),
+        }));
+    }
+    if let Some(id) = body.strip_prefix("dev-cancel ") {
+        return Some(Ok(WorkerCommand::Cancel {
+            id: id.trim().into(),
+        }));
+    }
+    None
 }
 
 async fn handle_workflow_message<F: FinanceProvider, E: EmailProvider>(
@@ -683,6 +755,26 @@ mod tests {
         Mock, MockServer, ResponseTemplate,
         matchers::{method, path},
     };
+
+    #[test]
+    fn development_commands_preserve_delivery_and_conversation_binding() {
+        use crate::domain::development::WorkerCommand;
+        let Some(Ok(WorkerCommand::Submit { request })) = super::development_command(
+            "dev: pan Add a useful feature",
+            "$event",
+            "room/thread/user",
+        ) else {
+            panic!("expected development request");
+        };
+        assert_eq!(request.request_id, "$event");
+        assert_eq!(request.origin, "room/thread/user");
+        assert_eq!(request.instruction, "Add a useful feature");
+        assert!(super::development_command("please develop this", "$event", "origin").is_none());
+        assert!(matches!(
+            super::development_command("dev: pan", "$event", "origin"),
+            Some(Err(_))
+        ));
+    }
 
     use chrono::{Duration as ChronoDuration, Local};
 

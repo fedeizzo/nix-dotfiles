@@ -33,10 +33,6 @@ docs/book/
 **/pan.log
 **/.env
 **/.matrix-data
-modules/services/pan/pan
-modules/services/ai-workflows/pan/pan
-modules/services/ai-workflows/pan/coverage.out
-modules/services/ai-workflows/pan/conversation.json
 config.yaml
 
 # gufo

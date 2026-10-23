@@ -79,7 +79,8 @@ in
       inputs.self.modules.nixos.nix-dotfiles-docs
       inputs.self.modules.nixos.ntfy
       # inputs.self.modules.nixos.open-webui
-      inputs.self.modules.nixos.pan
+      inputs.self.modules.nixos.apps-pan
+      inputs.self.modules.nixos.apps-pan-config
       inputs.self.modules.nixos.paperless
       inputs.self.modules.nixos.postgres
       inputs.self.modules.nixos.prometheus

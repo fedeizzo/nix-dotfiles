@@ -1,12 +1,14 @@
 {
   flake.modules.nixos.apps-pan-config = { config, lib, ... }: {
     services.apps-pan = {
-      enable = false; # Set to true when ready to replace the old go service
+      enable = true;
+      development.enable = true;
       settings = {
         models = {
-          name = "qwen27";
+          name = "qwen-flash";
           openai_api_key = "placeholder";
           openai_base_url = "https://llama.fedeizzo.dev/v1";
+          timeout_seconds = 180;
         };
 
         fastmail = {
@@ -32,7 +34,7 @@
         };
 
         log = {
-          path = "log/pan.log";
+          path = "pan.log";
           level = "info";
         };
 

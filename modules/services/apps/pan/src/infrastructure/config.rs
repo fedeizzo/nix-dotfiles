@@ -27,6 +27,14 @@ pub struct AppConfig {
     pub hindsight: Option<HindsightConfig>,
     #[serde(default)]
     pub jobs: Vec<JobConfig>,
+    #[serde(default)]
+    pub development: Option<DevelopmentConfig>,
+}
+
+#[derive(Debug, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct DevelopmentConfig {
+    pub socket: std::path::PathBuf,
 }
 
 impl AppConfig {
@@ -41,6 +49,15 @@ impl AppConfig {
         self.validate_lunchmoney()?;
         self.validate_matrix()?;
         self.validate_jobs()?;
+        if self.development.is_some() {
+            let matrix = self
+                .matrix
+                .as_ref()
+                .ok_or_else(|| anyhow::anyhow!("development requires Matrix configuration"))?;
+            if matrix.allowed_user.is_empty() || matrix.allowed_room.is_empty() {
+                bail!("development requires an explicit Matrix allowed_user and allowed_room");
+            }
+        }
 
         Ok(())
     }
@@ -416,7 +433,21 @@ mod tests {
                 bank_id: "test".into(),
             }),
             jobs: vec![],
+            development: None,
         }
+    }
+
+    #[test]
+    fn development_requires_explicit_matrix_user_and_room() {
+        let mut config = base_config();
+        config.development = Some(super::DevelopmentConfig {
+            socket: "/run/pan-dev/control.sock".into(),
+        });
+        assert!(config.validate().is_ok());
+        config.matrix.as_mut().unwrap().allowed_user.clear();
+        assert!(config.validate().is_err());
+        config.matrix = None;
+        assert!(config.validate().is_err());
     }
 
     #[rstest]
