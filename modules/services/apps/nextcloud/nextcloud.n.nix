@@ -115,7 +115,7 @@
         {
           name = "nextcloud";
           port = 8180;
-          isExposed = true;
+          isExposed = false;
           dashboardSection = "Exposed media";
           toPersist = [
             {
