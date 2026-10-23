@@ -23,6 +23,7 @@
       users.${username} = {
         imports = with inputs.self.modules.homeManager; [
           bottom
+          bitwarden
           cli-packages
           direnv
           jujutsu
@@ -37,7 +38,6 @@
           misc
           nextcloud
           ssh
-          ssh-agent
           nix-registry
           solaar
           stylix
@@ -51,6 +51,24 @@
           antigravity
         ];
         programs.home-manager.enable = true;
+
+        programs.jujutsu.settings = {
+          signing = {
+            behavior = "force";
+            backend = "ssh";
+            key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO6Avj6zHS7eo4ZgP0PowdbBOVwDysnCO+sjcCsr/t8p";
+            backends.ssh = {
+              program = toString (pkgs.writeShellScript "bitwarden-ssh-keygen" ''
+                export SSH_AUTH_SOCK="/home/${username}/.bitwarden-ssh-agent.sock"
+                exec ${pkgs.openssh}/bin/ssh-keygen "$@"
+              '');
+              allowed-signers = toString (pkgs.writeText "jj-allowed-signers" ''
+                federico@fedeizzo.dev namespaces="git" ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO6Avj6zHS7eo4ZgP0PowdbBOVwDysnCO+sjcCsr/t8p
+              '');
+            };
+          };
+          git.sign-on-push = true;
+        };
 
         home = {
           stateVersion = "25.05";
