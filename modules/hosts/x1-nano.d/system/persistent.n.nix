@@ -34,6 +34,7 @@
           ".config/chromium"
           ".config/cni"
           ".config/emacs"
+          ".config/gh"
           ".config/pulse"
           ".config/rbw"
           ".config/rclone"

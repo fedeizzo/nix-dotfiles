@@ -1,6 +1,6 @@
 {
   flake-file.inputs.comin = {
-    url = "github:nlewo/comin";
+    url = "github:fedeizzo/comin/fix-ssh-commit-payload";
     inputs.nixpkgs.follows = "nixpkgs";
   };
 

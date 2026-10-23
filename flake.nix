@@ -8,7 +8,7 @@
   inputs = {
     authentik-nix.url = "github:nix-community/authentik-nix";
     comin = {
-      url = "github:nlewo/comin";
+      url = "github:fedeizzo/comin/fix-ssh-commit-payload";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     deploy-rs.url = "github:serokell/deploy-rs";

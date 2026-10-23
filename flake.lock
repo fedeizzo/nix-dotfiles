@@ -213,15 +213,16 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1792310586,
-        "narHash": "sha256-4gaALWPUrc+coBvu02PB5WAuwSGdDgfJkkVX65buXX0=",
-        "owner": "nlewo",
+        "lastModified": 1792759059,
+        "narHash": "sha256-+VmrP5cXS5TriV3KPmdEXcu1qv8meNmpGUQhObUvjtw=",
+        "owner": "fedeizzo",
         "repo": "comin",
-        "rev": "1399adecc682e557bc3ee914d929f8e20391a148",
+        "rev": "7245f11b4e62b19718aaeb35f48ee1efe84bf5a1",
         "type": "github"
       },
       "original": {
-        "owner": "nlewo",
+        "owner": "fedeizzo",
+        "ref": "fix-ssh-commit-payload",
         "repo": "comin",
         "type": "github"
       }
