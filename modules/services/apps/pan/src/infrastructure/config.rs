@@ -149,6 +149,12 @@ pub struct ModelsConfig {
     pub name: String,
     pub openai_api_key: String,
     pub openai_base_url: String,
+    #[serde(default = "default_assistant_timeout_seconds")]
+    pub timeout_seconds: std::num::NonZeroU64,
+}
+
+fn default_assistant_timeout_seconds() -> std::num::NonZeroU64 {
+    std::num::NonZeroU64::new(30).expect("default timeout is nonzero")
 }
 
 #[derive(Debug, Deserialize, Serialize)]
@@ -343,6 +349,19 @@ mod tests {
     use super::*;
     use rstest::rstest;
 
+    #[test]
+    fn assistant_timeout_configuration_defaults_and_accepts_positive_seconds() {
+        let yaml = "name: test\nopenai_api_key: test\nopenai_base_url: http://test\n";
+        let defaults: ModelsConfig = serde_yaml::from_str(yaml).unwrap();
+        assert_eq!(defaults.timeout_seconds.get(), 30);
+        let custom: ModelsConfig =
+            serde_yaml::from_str(&format!("{yaml}timeout_seconds: 180\n")).unwrap();
+        assert_eq!(custom.timeout_seconds.get(), 180);
+        assert!(
+            serde_yaml::from_str::<ModelsConfig>(&format!("{yaml}timeout_seconds: 0\n")).is_err()
+        );
+    }
+
     // A helper function that returns a valid configuration struct filled with dummy data
     fn base_config() -> AppConfig {
         AppConfig {
@@ -350,6 +369,7 @@ mod tests {
                 name: "test".into(),
                 openai_api_key: "test".into(),
                 openai_base_url: "http://test".into(),
+                timeout_seconds: default_assistant_timeout_seconds(),
             },
             fastmail: FastMailConfig {
                 session_url: default_fastmail_session_url(),

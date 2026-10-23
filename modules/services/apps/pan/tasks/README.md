@@ -36,13 +36,13 @@ The frontmatter is the canonical current state. The dashboard below is a human-f
 
 | ID | Priority | Task | Dependencies |
 |---|---|---|---|
-No ready cards.
+| PAN-008 | P1 | [Integrate Pi as an isolated development worker](PAN-008-pi-development-worker.md) | None |
 
 ## Backlog
 
 | ID | Priority | Task | Dependencies |
 |---|---|---|---|
-No backlog cards.
+| PAN-010 | P1 | [Deploy reviewed infrastructure changes through signed Comin commits](PAN-010-signed-comin-deployments.md) | PAN-008 |
 
 ## In Progress
 
@@ -58,13 +58,7 @@ No blocked cards.
 
 | ID | Priority | Task | Completed |
 |---|---|---|---|
-| PAN-001 | P0 | [Persist workflow state](PAN-001-persist-workflow-state.md) | 2026-09-12 |
-| PAN-002 | P0 | [Make delivery and mutations crash-safe](PAN-002-crash-safe-workflows.md) | 2026-09-14 |
-| PAN-003 | P1 | [Complete the scheduler registry](PAN-003-scheduler-registry.md) | 2026-09-14 |
-| PAN-004 | P1 | [Complete Fastmail triage](PAN-004-fastmail-triage.md) | 2026-09-14 |
-| PAN-005 | P1 | [Harden and test Matrix](PAN-005-matrix-reliability.md) | 2026-09-14 |
-| PAN-006 | P2 | [Complete CLI and HTTP interfaces](PAN-006-cli-http-interfaces.md) | 2026-09-14 |
-| PAN-007 | P2 | [Decide and implement agent topology](PAN-007-agent-topology.md) | 2026-09-14 |
+| PAN-009 | P1 | [Make the assistant timeout configurable](PAN-009-configurable-assistant-timeout.md) | 2026-10-23 |
 
 ## Cancelled
 

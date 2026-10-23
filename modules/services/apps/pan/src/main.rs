@@ -185,6 +185,7 @@ async fn run() -> Result<ExitCode> {
             &config.models.openai_base_url,
             &config.models.openai_api_key,
             &config.models.name,
+            std::time::Duration::from_secs(config.models.timeout_seconds.get()),
             tools,
         )
         .context("Failed to initialize the rig")?,

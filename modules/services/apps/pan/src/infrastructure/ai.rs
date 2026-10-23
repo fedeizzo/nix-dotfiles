@@ -11,7 +11,6 @@ use rig::providers::openai::responses_api::GenericResponsesCompletionModel;
 use crate::domain::chat::ChatProvider;
 
 pub const MAX_TOOL_TURNS: usize = 5;
-pub const ASSISTANT_TIMEOUT: Duration = Duration::from_secs(30);
 
 /// The general assistant may only use read-only provider tools.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -43,6 +42,7 @@ pub const fn route_tool_access(access: ToolAccess) -> AssistantRoute {
 /// The Infrastructure Adapter that implements our `ChatProvider` port using `rig-core`
 pub struct Rig {
     agent: Agent<GenericResponsesCompletionModel>,
+    timeout: Duration,
 }
 
 impl Rig {
@@ -55,6 +55,7 @@ impl Rig {
         base_url: &str,
         api_key: &str,
         model: &str,
+        timeout: Duration,
         tools: Vec<Box<dyn rig::tool::ToolDyn>>,
     ) -> Result<Self> {
         let client = openai::Client::builder()
@@ -69,14 +70,14 @@ impl Rig {
             .default_max_turns(MAX_TOOL_TURNS)
             .build();
 
-        Ok(Self { agent })
+        Ok(Self { agent, timeout })
     }
 }
 
 impl ChatProvider for Rig {
     #[doc = " Sends a prompt to the model and returns the response string."]
     async fn prompt(&self, conversation_id: &str, input: &str) -> Result<String> {
-        within_timeout(async {
+        within_timeout(self.timeout, async {
             Ok(self
                 .agent
                 .prompt(input)
@@ -87,8 +88,11 @@ impl ChatProvider for Rig {
     }
 }
 
-async fn within_timeout<T>(operation: impl Future<Output = Result<T>>) -> Result<T> {
-    tokio::time::timeout(ASSISTANT_TIMEOUT, operation)
+async fn within_timeout<T>(
+    timeout: Duration,
+    operation: impl Future<Output = Result<T>>,
+) -> Result<T> {
+    tokio::time::timeout(timeout, operation)
         .await
         .context("assistant request timed out")?
 }
@@ -98,8 +102,8 @@ mod tests {
     use std::{future, time::Duration};
 
     use super::{
-        ASSISTANT_TIMEOUT, AssistantRoute, MAX_TOOL_TURNS, ToolAccess, assistant_allows,
-        route_tool_access, within_timeout,
+        AssistantRoute, MAX_TOOL_TURNS, ToolAccess, assistant_allows, route_tool_access,
+        within_timeout,
     };
 
     #[test]
@@ -122,10 +126,23 @@ mod tests {
     }
 
     #[tokio::test(start_paused = true)]
+    async fn custom_timeout_allows_requests_longer_than_the_old_default() {
+        let result = within_timeout(Duration::from_mins(3), async {
+            tokio::time::sleep(Duration::from_mins(1)).await;
+            Ok(42)
+        })
+        .await
+        .unwrap();
+        assert_eq!(result, 42);
+    }
+
+    #[tokio::test(start_paused = true)]
     async fn assistant_timeout_bounds_a_stalled_request() {
-        let result = within_timeout(future::pending::<anyhow::Result<()>>()).await;
+        let timeout = Duration::from_mins(3);
+        let start = tokio::time::Instant::now();
+        let result = within_timeout(timeout, future::pending::<anyhow::Result<()>>()).await;
 
         assert!(result.is_err());
-        assert_eq!(ASSISTANT_TIMEOUT, Duration::from_secs(30));
+        assert_eq!(start.elapsed(), timeout);
     }
 }

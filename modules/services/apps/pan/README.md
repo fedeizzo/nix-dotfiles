@@ -36,3 +36,17 @@ The standalone transaction commands require only Lunch Money connectivity. See [
 Pan does not yet manage GitHub issues or PRs, monitor machines, install updates, send email, or generate dedicated spending reports. There is no connected browser interface.
 
 The Rust service is currently disabled in its bundled NixOS configuration; Framework Desktop still imports the older Go Pan module.
+
+## Assistant timeout
+
+Set `models.timeout_seconds` to a positive number of seconds. It covers the entire assistant request, including model loading, thinking, and tool calls. The default is 30 seconds; for local models, start with 180:
+
+```yaml
+models:
+  name: qwen3.8-27b
+  openai_base_url: https://llama.fedeizzo.dev/v1
+  openai_api_key: placeholder
+  timeout_seconds: 180
+```
+
+Restart Pan after changing its configuration.

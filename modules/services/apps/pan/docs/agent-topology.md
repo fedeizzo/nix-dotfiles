@@ -21,5 +21,5 @@ Only a reply in the Matrix or CLI conversation that is bound to a durable pendin
 confirm a mutation. Conversation memory is ephemeral assistant context; workflow state is stored
 separately in SQLite and is never inferred from model memory.
 
-Calls have a 30-second timeout and are cancelled when the caller disconnects. Evaluation cases
+Calls have a configurable whole-request timeout (`models.timeout_seconds`, default 30 seconds) and are cancelled when the caller disconnects. Evaluation cases
 cover read-only tool use, refusal of mutation requests, and explicit workflow confirmation.
