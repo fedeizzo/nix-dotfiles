@@ -12,6 +12,10 @@
       hostPlatform = "x86_64-linux";
     };
     nix = {
+      settings = {
+        extra-substituters = [ "https://gufo.cachix.org" ];
+        extra-trusted-public-keys = [ "gufo.cachix.org-1:rfZe3n4lHINgyoACKzs5EthIZmBNvEyCCtufUpth0PE=" ];
+      };
       gc = {
         automatic = true;
         dates = "daily";
