@@ -298,6 +298,7 @@
             "qwen3-tts" = {
               env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
               cmd = "${gufoQwenTTSCmd}";
+              ttl = 120; # Unload after 2 minutes idle.
               timeouts.responseHeader = 600;
               aliases = [ ];
             };
@@ -305,6 +306,7 @@
             "qwen3-asr" = {
               env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
               cmd = "${gufoQwenASRCmd}";
+              ttl = 120; # Unload after 2 minutes idle.
               timeouts.responseHeader = 600;
               aliases = [ ];
             };
