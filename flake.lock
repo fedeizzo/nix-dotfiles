@@ -833,14 +833,15 @@
     "gufo": {
       "inputs": {
         "audio-cpp": "audio-cpp",
-        "nixpkgs": "nixpkgs_8"
+        "nixpkgs": "nixpkgs_8",
+        "nixpkgs-rocm10": "nixpkgs-rocm10"
       },
       "locked": {
-        "lastModified": 1792752233,
-        "narHash": "sha256-YGIlmR93B3RkF7NXuOmSHSKXnDAtm56AfEdn64Dv464=",
+        "lastModified": 1792861568,
+        "narHash": "sha256-D2DKLDGd8D9vLufJlJ0DXbbxaL+i7m/gH7vWyuf3Qy8=",
         "owner": "gufo-org",
         "repo": "gufo",
-        "rev": "e4a219ef5a9858db46bef7e66a64d3a5a19d3803",
+        "rev": "194db882a857ee10c246a6a85cc787948a0028cf",
         "type": "github"
       },
       "original": {
@@ -1405,6 +1406,22 @@
       "original": {
         "owner": "nix-community",
         "repo": "nixpkgs.lib",
+        "type": "github"
+      }
+    },
+    "nixpkgs-rocm10": {
+      "locked": {
+        "lastModified": 1792804498,
+        "narHash": "sha256-yrZaTHidqCI3oJgXDAobDazn+qdeUD328pk22ZQ/YsI=",
+        "owner": "gufo-org",
+        "repo": "nixpkgs",
+        "rev": "1a6ba8bc6f744f7a843d025e46bc9911b4b6c37d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "gufo-org",
+        "repo": "nixpkgs",
+        "rev": "1a6ba8bc6f744f7a843d025e46bc9911b4b6c37d",
         "type": "github"
       }
     },
