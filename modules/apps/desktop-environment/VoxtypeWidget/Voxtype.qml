@@ -3,82 +3,113 @@ import Quickshell
 import Quickshell.Io
 import qs.Common
 import qs.Modules.Plugins
-import qs.Services
 import qs.Widgets
 
-BasePill {
+PluginComponent {
     id: root
 
-    property string currentState: "stopped"
+    layerNamespacePlugin: "voxtype"
+
+    property string statusClass: "stopped"
     property string statusIcon: "\uf131"
-    property color statusColor: Theme.surfaceVariantText
+    property string meetingPhase: "idle"
+    readonly property bool isRecording: statusClass === "recording" || meetingPhase === "recording"
+    readonly property bool isProcessing: statusClass === "transcribing" || meetingPhase === "stopping"
+    property real recordingOpacity: 1.0
 
-    readonly property var stateConfig: ({
-        "idle": { icon: "\uf130", color: Theme.primary },
-        "recording": { icon: "\uf111", color: Theme.error },
-        "transcribing": { icon: "\uf110", color: Theme.warning },
-        "stopped": { icon: "\uf131", color: Theme.surfaceVariantText }
-    })
+    pillClickAction: () => {
+        if (!toggleProcess.running)
+            toggleProcess.running = true;
+    }
+    pillRightClickAction: () => {
+        if (!meetingToggleProcess.running)
+            meetingToggleProcess.running = true;
+    }
 
-    // Process to poll Voxtype status
     Process {
         id: statusProcess
-        command: ["voxtype", "status"]
-        running: false
-
+        command: ["voxtype", "status", "--format", "json", "--icon-theme", "nerd-font"]
         stdout: StdioCollector {
             onStreamFinished: {
-                var output = text.trim()
-                if (output && output !== root.currentState) {
-                    root.currentState = output
-                    var config = root.stateConfig[output] || root.stateConfig["stopped"]
-                    root.statusIcon = config.icon
-                    root.statusColor = config.color
+                try {
+                    const status = JSON.parse(text.trim());
+                    root.statusClass = status.class || status.alt || "stopped";
+                    root.statusIcon = status.text || "\uf131";
+                } catch (error) {
+                    root.statusClass = "stopped";
                 }
+            }
+        }
+        onExited: (exitCode, exitStatus) => {
+            if (exitCode !== 0)
+                root.statusClass = "stopped";
+        }
+    }
+
+    Process {
+        id: meetingStatusProcess
+        command: ["voxtype", "meeting", "status"]
+        stdout: StdioCollector {
+            onStreamFinished: {
+                const match = text.match(/Meeting Status: (\w+)/);
+                root.meetingPhase = match ? match[1] : "idle";
             }
         }
     }
 
     Timer {
-        interval: 500
+        interval: 250
         running: true
         repeat: true
+        triggeredOnStart: true
         onTriggered: {
-            if (!statusProcess.running) {
-                statusProcess.running = true
-            }
+            if (!statusProcess.running)
+                statusProcess.running = true;
+            if (!meetingStatusProcess.running)
+                meetingStatusProcess.running = true;
         }
     }
 
-    // Command process to toggle recording state
+    SequentialAnimation {
+        running: root.isRecording
+        loops: Animation.Infinite
+        NumberAnimation {
+            target: root
+            property: "recordingOpacity"
+            from: 1.0
+            to: 0.4
+            duration: 650
+            easing.type: Easing.InOutSine
+        }
+        NumberAnimation {
+            target: root
+            property: "recordingOpacity"
+            from: 0.4
+            to: 1.0
+            duration: 650
+            easing.type: Easing.InOutSine
+        }
+    }
+
     Process {
         id: toggleProcess
         command: ["voxtype", "record", "toggle"]
-        running: false
     }
 
-    // Click handler with ripple animation
-    MouseArea {
-        anchors.fill: parent
-        cursorShape: Qt.PointingHandCursor
-        onPressed: function(mouse) {
-            root.triggerRipple(this, mouse.x, mouse.y)
-            toggleProcess.running = true
-        }
+    Process {
+        id: meetingToggleProcess
+        command: ["voxtype-meeting"]
     }
 
-    // Widget content automatically sized by BasePill
-    content: Component {
-        Row {
-            spacing: Theme.spacingS
-
-            StyledText {
-                anchors.verticalCenter: parent.verticalCenter
-                text: root.statusIcon
-                font.family: "Symbols Nerd Font"
-                font.pixelSize: Theme.barTextSize(root.barThickness, root.barConfig?.fontScale)
-                color: root.statusColor
-            }
-        }
+    component StatusIndicator: StyledText {
+        text: root.isRecording ? "\uf111" : root.statusIcon
+        color: root.isRecording ? "#ff4040" : root.isProcessing ? "#ffbf47" : Theme.surfaceText
+        opacity: root.isRecording ? root.recordingOpacity : 1.0
+        font.family: "Symbols Nerd Font"
+        font.pixelSize: root.iconSize
+        anchors.centerIn: parent
     }
+
+    horizontalBarPill: Component { StatusIndicator {} }
+    verticalBarPill: Component { StatusIndicator {} }
 }

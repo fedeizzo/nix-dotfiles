@@ -122,6 +122,10 @@
             action.spawn = [ "voxtype-meeting" ];
             repeat = false;
           };
+          "Super+Ctrl+R" = {
+            action.spawn = [ "voxtype-meeting" ];
+            repeat = false;
+          };
 
           # Display management
           "XF86Display".action.spawn = [
@@ -226,7 +230,7 @@
         # nord.enable = true;
         voxtype = {
           enable = true;
-          src = lib.mkDefault ./VoxtypeWidget;
+          src = lib.mkForce ./VoxtypeWidget;
         };
         aiAssistant = {
           enable = true;

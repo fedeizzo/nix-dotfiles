@@ -1,7 +1,8 @@
 # User interactions:
 # - Hold left Shift, then Fn to dictate; release either key to clean up and type the text.
 # - Press Super+Shift+D or click the Voxtype widget to toggle dictation recording.
-# - Press XF86NotificationCenter to start a microphone-only meeting; press again to stop and save cleaned Markdown in ~/Documents/Meetings/.
+# - Press XF86NotificationCenter or Super+Ctrl+R, or right-click the Voxtype widget, to toggle a microphone meeting and save cleaned Markdown in ~/Documents/Meetings/.
+# - A pulsing red dot in the bar means recording; amber means transcription is finishing.
 # - Click "Copy path" in the saved-transcript notification to copy its full file path.
 # - Click "Copy text" in the saved-transcript notification to copy its Markdown contents.
 {
@@ -40,6 +41,8 @@
       settings = {
         # Maximum push-to-talk/toggle recording length; increase for longer dictation.
         audio.max_duration_secs = 60;
+        # Recording feedback is provided by the DMS bar widget.
+        osd.enabled = false;
         hotkey = {
           enabled = true;
           # Fn reports XF86WakeUp (XKB 151 = Linux evdev 143).
