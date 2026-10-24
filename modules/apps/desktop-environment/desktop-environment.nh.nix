@@ -98,6 +98,10 @@
 
         window-rules = [
           {
+            matches = [ { app-id = "^bitwarden$"; } ];
+            open-floating = true;
+          }
+          {
             matches = [
               { title = "^OpenTypeless Capsule$"; }
               { title = "^OpenTypeless Ask$"; }
