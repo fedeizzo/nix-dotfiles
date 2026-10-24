@@ -114,6 +114,10 @@
           "Super+y".action.spawn = [ "dms" "ipc" "call" "plugins" "toggle" "aiAssistant" ];
           "Super+P".action.screenshot = { };
           "Super+Shift+D".action.spawn = [ "voxtype" "record" "toggle" ];
+          "XF86NotificationCenter" = {
+            action.spawn = [ "voxtype-meeting" ];
+            repeat = false;
+          };
 
           # Display management
           "XF86Display".action.spawn = [

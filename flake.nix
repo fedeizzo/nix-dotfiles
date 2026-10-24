@@ -80,7 +80,7 @@
     };
     vicinae.url = "github:vicinaehq/vicinae";
     vicinae-extensions.url = "github:vicinaehq/extensions";
-    voxtype.url = "github:peteonrails/voxtype/v1.0.0-rc1";
+    voxtype.url = "github:peteonrails/voxtype/v1.1.1-rc4";
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
   };
 }

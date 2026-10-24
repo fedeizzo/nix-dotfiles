@@ -1737,11 +1737,11 @@
     },
     "nixpkgs_28": {
       "locked": {
-        "lastModified": 1774386573,
-        "narHash": "sha256-4hAV26quOxdC6iyG7kYaZcM3VOskcPUrdCQd/nx8obc=",
+        "lastModified": 1787736819,
+        "narHash": "sha256-cV5xEJJK3BvhU8rEd4mC9UsmDi5qscv/kzGPhBRC5WA=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "46db2e09e1d3f113a13c0d7b81e2f221c63b8ce9",
+        "rev": "9fbb54b33e91ee4ca368e35a78e0613c720600b3",
         "type": "github"
       },
       "original": {
@@ -2748,16 +2748,16 @@
         "nixpkgs": "nixpkgs_28"
       },
       "locked": {
-        "lastModified": 1780607139,
-        "narHash": "sha256-6biLnRdAGpjpNQNYZjYn0zXeukt0qePNeXehbnqzbTM=",
+        "lastModified": 1790563324,
+        "narHash": "sha256-4KVys4PjB1iZ/Flz6C67HGeM5D4v/l9LBPlgFAiAeY8=",
         "owner": "peteonrails",
         "repo": "voxtype",
-        "rev": "0a1a185491fea77b6b7c654b1c0136d5a1a6d428",
+        "rev": "dc7783f275205e6463c29bd382aa8c55c8229b47",
         "type": "github"
       },
       "original": {
         "owner": "peteonrails",
-        "ref": "v1.0.0-rc1",
+        "ref": "v1.1.1-rc4",
         "repo": "voxtype",
         "type": "github"
       }

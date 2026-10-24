@@ -1,8 +1,8 @@
 {
   flake.modules.nixos.framework-desktop = { pkgs, ... }: {
-    services.comin.sshAllowedSignersPath = toString (pkgs.writeText "comin-allowed-signers" ''
-      deployment namespaces="git" ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO6Avj6zHS7eo4ZgP0PowdbBOVwDysnCO+sjcCsr/t8p
-    '');
+    #services.comin.sshAllowedSignersPath = toString (pkgs.writeText "comin-allowed-signers" ''
+    #  deployment namespaces="git" ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO6Avj6zHS7eo4ZgP0PowdbBOVwDysnCO+sjcCsr/t8p
+    #'');
 
     systemd.services.restart-docker-containers = {
       path = with pkgs; [ nixos-rebuild jq systemd ];

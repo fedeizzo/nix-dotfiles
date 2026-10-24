@@ -1,5 +1,11 @@
+# User interactions:
+# - Hold left Shift, then Fn to dictate; release either key to clean up and type the text.
+# - Press Super+Shift+D or click the Voxtype widget to toggle dictation recording.
+# - Press XF86NotificationCenter to start a microphone-only meeting; press again to stop and save cleaned Markdown in ~/Documents/Meetings/.
+# - Click "Copy path" in the saved-transcript notification to copy its full file path.
+# - Click "Copy text" in the saved-transcript notification to copy its Markdown contents.
 {
-  flake-file.inputs.voxtype.url = "github:peteonrails/voxtype/v1.0.0-rc1";
+  flake-file.inputs.voxtype.url = "github:peteonrails/voxtype/v1.1.1-rc4";
 
   flake.modules.darwin.voxtype = { self, config, pkgs, username, ... }: {
     home-manager.users.${username}.imports = [
@@ -13,18 +19,34 @@
     ];
   };
 
-  flake.modules.homeManager.voxtype = { pkgs, inputs, lib, ... }: {
+  flake.modules.homeManager.voxtype = { config, pkgs, inputs, lib, ... }: let
+    meetingToggle = pkgs.writeShellApplication {
+      name = "voxtype-meeting";
+      runtimeInputs = [ config.programs.voxtype.package pkgs.libnotify pkgs.wl-clipboard ];
+      text = ''
+        exec ${pkgs.python3}/bin/python3 ${./voxtype-meeting.py} ${lib.escapeShellArg "${config.home.homeDirectory}/Documents/Meetings"}
+      '';
+    };
+  in {
     imports = [
       inputs.voxtype.homeManagerModules.default
     ];
+    home.packages = [ meetingToggle ];
 
     programs.voxtype = {
       enable = true;
       package = inputs.voxtype.packages.${pkgs.stdenv.hostPlatform.system}.default;
       service.enable = true;
       settings = {
+        # Maximum push-to-talk/toggle recording length; increase for longer dictation.
+        audio.max_duration_secs = 60;
         hotkey = {
-          enabled = false;
+          enabled = true;
+          # Fn reports XF86WakeUp (XKB 151 = Linux evdev 143).
+          # Hold Shift before Fn; releasing either key stops recording.
+          key = "EVTEST_143";
+          modifiers = [ "LEFTSHIFT" ];
+          mode = "push_to_talk";
         };
         whisper = {
           mode = "remote";
@@ -32,9 +54,27 @@
           remote_model = "qwen3-asr";
           model = "qwen3-asr";
         };
+        meeting = {
+          enabled = true;
+          storage_path = "auto";
+          chunk_duration_secs = 30;
+          retain_audio = false;
+          audio = {
+            mic_device = "default";
+            loopback_device = "disabled";
+            echo_cancel = "disabled";
+          };
+          # A single microphone cannot distinguish people by audio source.
+          diarization.enabled = false;
+          summary.backend = "disabled";
+        };
         output = {
           mode = "type";
           fallback_to_clipboard = true;
+          post_process = {
+            command = "${pkgs.python3}/bin/python3 ${./voxtype-cleanup.py}";
+            timeout_ms = 120000;
+          };
 
           notification = {
             on_recording_start = false;

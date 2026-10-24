@@ -76,6 +76,10 @@
         # cacheDisk = "/var/cache/gufo";
         # cacheDiskBytes = 4294967296;
         # cacheDiskStagingBytes = 536870912;
+        extraArgs = [
+          "--served-model-name"
+          "qwen3.8-27b-nothink"
+        ];
       };
       gufoDs4 = inputs.gufo.lib.${pkgs.stdenv.hostPlatform.system}.mkGufoServe {
         modality = "llm";
@@ -273,6 +277,7 @@
               ttl = 600; # Unload after 10 minutes idle.
               timeouts.responseHeader = 600;
               aliases = [ "Qwen3.8-27B" ];
+              filters.setParamsByID."qwen3.8-27b-nothink".chat_template_kwargs.enable_thinking = false;
             };
 
             "qwen-flash" = {
@@ -294,14 +299,14 @@
               env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
               cmd = "${gufoQwenTTSCmd}";
               timeouts.responseHeader = 600;
-              aliases = [];
+              aliases = [ ];
             };
 
             "qwen3-asr" = {
               env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
               cmd = "${gufoQwenASRCmd}";
               timeouts.responseHeader = 600;
-              aliases = [];
+              aliases = [ ];
             };
           };
 
