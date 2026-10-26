@@ -76,6 +76,7 @@ in
       inputs.self.modules.nixos.influxdb
       inputs.self.modules.nixos.lemonade
       inputs.self.modules.nixos.llama-swap
+      inputs.self.modules.nixos.llama-swap-models
       inputs.self.modules.nixos.logrotate
       # inputs.self.modules.nixos.n8n
       # inputs.self.modules.nixos.neo4j

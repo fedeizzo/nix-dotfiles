@@ -93,21 +93,21 @@ mkdir -p /root/.ssh && curl -L https://github.com/fedeizzo.keys > /root/.ssh/aut
 Check it from the installing machine with `ssh root@<ip> lsblk`, and make sure the disk shown is the one disko will wipe.
 
 #### 2. Prepare the keys (outside the repository)
-Hosts using `ephemeral-root` encrypt the disk with LUKS and read secrets with sops. Both keys are created by hand and never committed.
+Hosts using `ephemeral-root` encrypt the disk with LUKS. Hosts with sops secrets also need an age key (forge has none yet, so skip it there). Both keys are created by hand and never committed.
 
 ```sh
 # LUKS passphrase: no trailing newline, keep a copy in the password manager
 printf '%s' 'the-passphrase' > ~/<host>-luks.key && chmod 600 ~/<host>-luks.key
 
-# sops age key: everything under <host>-extra/ is copied to the same path on the target
+# sops age key (only for hosts with sops secrets): everything under <host>-extra/ is copied to the same path on the target
 mkdir -p ~/<host>-extra/var/lib/sops && chmod 700 ~/<host>-extra/var/lib/sops
 age-keygen -o ~/<host>-extra/var/lib/sops/keys.txt
 ```
 
-Put the printed public key in `.sops.yaml` and re-encrypt the files the host must read, e.g.:
+Put the printed public key in `.sops.yaml` and re-encrypt the files the host must read:
 
 ```sh
-doas env SOPS_AGE_KEY_FILE=/var/lib/sops/keys.txt sops updatekeys -y modules/services/ai-workflows/llama-swap/llama-swap-homelab-secrets.yaml
+doas env SOPS_AGE_KEY_FILE=/var/lib/sops/keys.txt sops updatekeys -y <path/to/secrets.yaml>
 ```
 
 The host config tells disko where the passphrase will be at format time (`modules/hosts/forge/system/luks.n.nix`):
@@ -134,6 +134,8 @@ nix run github:nix-community/nixos-anywhere -- \
   root@<ip>
 ```
 
+Drop `--extra-files` when the host has no age key.
+
 | Flag | Purpose |
 |------|---------|
 | `--flake .#<host>` | `nixosConfigurations.<host>` to install |
@@ -150,6 +152,14 @@ Without enrollment, the LUKS passphrase is asked on the console (PiKVM) at every
 ssh root@<ip> systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=7 \
   --unlock-key-file=/tmp/<host>-luks.key /dev/disk/by-partlabel/cryptroot
 ssh root@<ip> reboot
+```
+
+Watch the first boot on the console (PiKVM): the TPM should unlock the disk without a prompt, and the network interface named in the host config (`eno1` on forge) should get its address. If the interface has another name, fix it from the console and redeploy.
+
+The target now has the installed system's SSH host key instead of the installer's, so drop the old one:
+
+```sh
+ssh-keygen -R <ip> && ssh-keygen -R <host>
 ```
 
 #### 5. Afterwards

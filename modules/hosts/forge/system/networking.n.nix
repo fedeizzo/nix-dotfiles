@@ -12,7 +12,7 @@
       firewall = {
         enable = true;
         interfaces.eno1.allowedTCPPorts = [ 22 ];
-        # llama-swap has no auth and proxies to OpenRouter: only homelab may reach it.
+        # llama-swap has no auth: only homelab (its peer) may reach it.
         extraCommands = ''
           iptables -A nixos-fw -p tcp -s 192.168.1.65 --dport ${toString config.services.llama-swap.port} -j nixos-fw-accept
         '';

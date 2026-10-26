@@ -10,7 +10,8 @@
 | `server` | `modules/system/server.n.nix` | root access, hardened sshd, CLI tools, nix gc |
 | `mixer` | `modules/system/user/mixer.n.nix` | `mixer` user + home-manager (homelab only; forge is root-only) |
 
-Right now forge only runs `llama-swap`. Below are ways to make the two machines work as one.
+Right now forge only runs `llama-swap` with `qwen3.8-27b`. homelab keeps every model and OpenRouter, and
+reaches forge's copy as the llama-swap peer model `forge/qwen3.8-27b`. Below are ways to make the two machines work as one.
 
 ## 1. Split services
 forge takes the AI work: llama-swap, lemonade, the voxtype/whisper backends, and immich ML.
