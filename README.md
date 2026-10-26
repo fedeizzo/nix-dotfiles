@@ -96,7 +96,9 @@ Check it from the installing machine with `ssh root@<ip> lsblk`, and make sure t
 Hosts using `ephemeral-root` encrypt the disk with LUKS. Hosts with sops secrets also need an age key (forge has none yet, so skip it there). Both keys are created by hand and never committed.
 
 ```sh
-# LUKS passphrase: no trailing newline, keep a copy in the password manager
+# LUKS passphrase, keep a copy in the password manager.
+# No trailing newline: disko strips it when formatting, so a file ending in one
+# no longer matches the LUKS key (`echo` adds one, `printf '%s'` doesn't).
 printf '%s' 'the-passphrase' > ~/<host>-luks.key && chmod 600 ~/<host>-luks.key
 
 # sops age key (only for hosts with sops secrets): everything under <host>-extra/ is copied to the same path on the target
