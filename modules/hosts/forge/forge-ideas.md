@@ -8,7 +8,7 @@
 | `strix-halo` | `modules/system/hardware/strix-halo.n.nix` | nixos-hardware, kernel params (GTT 124 GiB), ROCm, tuned |
 | `ephemeral-root` | `modules/system/storage/ephemeral-root.n.nix` | disko LUKS + btrfs, root wiped on boot, base persistence |
 | `server` | `modules/system/server.n.nix` | root access, hardened sshd, CLI tools, nix gc |
-| `mixer` | `modules/system/user/mixer.n.nix` | `mixer` user + home-manager |
+| `mixer` | `modules/system/user/mixer.n.nix` | `mixer` user + home-manager (homelab only; forge is root-only) |
 
 Right now forge only runs `llama-swap`. Below are ways to make the two machines work as one.
 

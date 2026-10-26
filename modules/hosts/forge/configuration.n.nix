@@ -32,7 +32,6 @@ in
       inputs.self.modules.nixos.strix-halo
       inputs.self.modules.nixos.server
       inputs.self.modules.nixos.ephemeral-root
-      inputs.self.modules.nixos.mixer
 
       inputs.self.modules.nixos.misc
       inputs.self.modules.nixos.nix
