@@ -20,6 +20,13 @@
             TERM = "xterm-256color";
           };
         };
+        forge = {
+          Hostname = "forge";
+          User = "root";
+          SetEnv = {
+            TERM = "xterm-256color";
+          };
+        };
         mixer = {
           Hostname = "homelab";
           User = "mixer";
