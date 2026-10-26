@@ -36,6 +36,8 @@
     };
 
     environment.systemPackages = with pkgs; [
+      # Ghostty's ssh-terminfo installs into ~/.terminfo, which the ephemeral root wipes.
+      ghostty.terminfo
       htop
       fzf
       bat
