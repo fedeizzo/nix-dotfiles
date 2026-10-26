@@ -53,6 +53,12 @@
             category = "📡 Remote administration";
           }
           {
+            help = "🔥 Deploy the configuration to the forge server over SSH.";
+            name = "deploy-forge";
+            command = "deploy --skip-checks .#forge";
+            category = "📡 Remote administration";
+          }
+          {
             help = "🐶 Bootstrap Nix and deploy Home Manager to the Datadog workspace.";
             name = "deploy-datadog-workspace";
             command = builtins.readFile ../../../../scripts/bootstrap-datadog-workspace.sh;
