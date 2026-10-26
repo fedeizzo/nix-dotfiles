@@ -6,6 +6,7 @@
       useDHCP = false;
       extraHosts = ''
         192.168.7.1 homelab
+        192.168.1.89 forge
       '';
     };
   };

@@ -4,7 +4,7 @@
       {
         name = "homelab";
         publicKey = "Ug1P6UzLyQ0BFbrfi0G9KLJBNBs+IOisRn3uiLoR5yU=";
-        allowedIPs = [ "192.168.7.1/32" "192.168.1.254/32" ];
+        allowedIPs = [ "192.168.7.1/32" "192.168.1.254/32" "192.168.1.89/32" ]; # homelab, desktop PC, forge (LAN, via homelab NAT)
         endpoint = "vpn.fedeizzo.dev:51821";
         persistentKeepalive = 25;
       }
