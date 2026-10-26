@@ -1,26 +1,16 @@
 {
-  flake.modules.nixos.framework-desktop = { inputs, config, ... }:
+  flake.modules.nixos.homelab = { inputs, config, ... }:
     let
       persistanceFromServices = builtins.concatLists (map (el: el.toPersist) config.fi.services);
     in
     {
       environment.persistence."/persist" = {
         directories = [
-          # Optional but often useful
-          "/var/cache"
-
           # ─────────────────────────────
           # Homelab platform state (also backed up)
           # ─────────────────────────────
           "/var/container_envs"
           "/var/volumes"
-
-          {
-            directory = "/home/mixer";
-            user = "mixer";
-            group = "users";
-            mode = "u=rwx,g=,o=";
-          }
 
           {
             directory = "/var/lib/garmindb";
@@ -31,7 +21,6 @@
 
           # System / root services
           "/var/lib/fail2ban"
-          "/var/lib/fwupd"
           "/var/lib/garmin-fetch-data"
 
           # DB services
@@ -97,18 +86,8 @@
         ] ++ persistanceFromServices;
 
         files = [
-          # System identity / config
-          "/root/.bash_history"
-          # "/etc/adjtime"
-
           # App single-file state
           "/var/lib/private/dns-updater/cache.json"
-
-          # ssh
-          "/etc/ssh/ssh_host_ed25519_key"
-          "/etc/ssh/ssh_host_ed25519_key.pub"
-          "/etc/ssh/ssh_host_rsa_key"
-          "/etc/ssh/ssh_host_rsa_key.pub"
         ];
       };
     };

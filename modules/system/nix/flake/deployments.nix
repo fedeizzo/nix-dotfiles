@@ -18,6 +18,21 @@
       };
     };
 
+    forge = {
+      hostname = "192.168.1.89";
+      sshUser = "root";
+      sshOpts = [ ];
+      magicRollback = true;
+      autoRollback = true;
+      fastConnection = true;
+      remoteBuild = true;
+      profiles.system = {
+        user = "root";
+        path = inputs.deploy-rs.lib.x86_64-linux.activate.nixos
+          self.nixosConfigurations.forge;
+      };
+    };
+
     datadog-workspace = {
       hostname = "workspace-federico-izzo";
       sshUser = "bits";

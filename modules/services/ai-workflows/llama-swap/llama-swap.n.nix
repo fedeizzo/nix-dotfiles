@@ -3,24 +3,9 @@
     url = "github:gufo-org/gufo";
   };
 
+  # llama-swap service with qwen3.8-27b; runs on every Strix Halo host.
   flake.modules.nixos.llama-swap = { lib, inputs, pkgs, config, ... }:
     let
-      llama-cpp =
-        (pkgs.llama-cpp.override {
-          rocmSupport = true;
-          rocmGpuTargets = [ "gfx1151" ];
-        }).overrideAttrs
-          (oldAttrs: rec {
-            cmakeFlags = (oldAttrs.cmakeFlags or [ ]) ++ [
-              "-DLLAMA_HIP_UMA=ON" # unified memory
-            ];
-            # Mirror the Strix Halo toolbox HIP tuning: pin the ROCm path explicitly and
-            # raise the local unroll threshold for gfx1151 kernels.
-            cmakeFlagsArray = (oldAttrs.cmakeFlagsArray or [ ]) ++ [
-              "-DCMAKE_HIP_FLAGS=--rocm-path=${pkgs.rocmPackages.clr} -mllvm --amdgpu-unroll-threshold-local=600"
-            ];
-          });
-      llama-server = lib.getExe' llama-cpp "llama-server";
       gufoQwen27 = inputs.gufo.lib.${pkgs.stdenv.hostPlatform.system}.mkGufoServe {
         modality = "llm";
 
@@ -81,6 +66,99 @@
           "qwen3.8-27b-nothink"
         ];
       };
+    in
+    {
+      imports = [
+        (inputs.nixpkgs-unstable + "/nixos/modules/services/networking/llama-swap.nix")
+      ];
+      nix.settings = {
+        extra-substituters = [ "https://gufo.cachix.org" ];
+        extra-trusted-public-keys = [ "gufo.cachix.org-1:rfZe3n4lHINgyoACKzs5EthIZmBNvEyCCtufUpth0PE=" ];
+      };
+      nixpkgs.overlays = [
+        (_: _: {
+          inherit (inputs.nixpkgs-unstable.legacyPackages.${pkgs.stdenv.hostPlatform.system}) llama-swap;
+        })
+      ];
+      disabledModules = [
+        "services/networking/llama-swap.nix"
+      ];
+      services.llama-swap = {
+        enable = true;
+        port = 11435;
+        listenAddress = "0.0.0.0";
+        settings = {
+          healthCheckTimeout = 600;
+
+          models = {
+            "qwen3.8-27b" = {
+              env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
+              cmd = "${gufoQwen27}";
+              ttl = 600; # Unload after 10 minutes idle.
+              timeouts.responseHeader = 600;
+              aliases = [ "Qwen3.8-27B" ];
+              filters.setParamsByID."qwen3.8-27b-nothink".chat_template_kwargs.enable_thinking = false;
+            };
+          };
+
+          includeAliasesInList = true;
+        };
+      };
+
+      systemd.services.llama-swap = {
+        environment = {
+          LLAMA_CACHE = lib.mkForce "/persist/models";
+          XDG_CACHE_HOME = lib.mkForce "/persist/models/.cache"; # Fix Vulkan shader cache
+          HOME = "/persist/models"; # Fallback for any engine looking for ~
+          GPU_MAX_HW_QUEUES = "1";
+          # fastflow npu
+          FLM_MODEL_PATH = "/persist/models/flm";
+          XILINX_XRT = config.environment.sessionVariables.XILINX_XRT or "";
+          XRT_PATH = config.environment.sessionVariables.XRT_PATH or "";
+          FLM_DISABLE_UPDATE_CHECK = "1";
+          LD_LIBRARY_PATH = "${config.environment.sessionVariables.XILINX_XRT or ""}/lib";
+        };
+        serviceConfig = {
+          ReadWritePaths = "/persist/models";
+          LimitMEMLOCK = "infinity"; # fastflowlm with npu support
+          SupplementaryGroups = [ "video" "render" ];
+          CacheDirectory = "llama-swap";
+        };
+      };
+
+      environment.systemPackages = [ ];
+
+      fi.services = [
+        {
+          name = "llama";
+          dashboardIcon = "codellm";
+          port = config.services.llama-swap.port;
+          dashboardSection = "Tools";
+          toPersist = [ ];
+          toBackup = [ ];
+        }
+      ];
+    };
+
+  # The rest of the local models, OpenRouter and model sets: homelab only.
+  flake.modules.nixos.llama-swap-models = { lib, inputs, pkgs, config, ... }:
+    let
+      llama-cpp =
+        (pkgs.llama-cpp.override {
+          rocmSupport = true;
+          rocmGpuTargets = [ "gfx1151" ];
+        }).overrideAttrs
+          (oldAttrs: rec {
+            cmakeFlags = (oldAttrs.cmakeFlags or [ ]) ++ [
+              "-DLLAMA_HIP_UMA=ON" # unified memory
+            ];
+            # Mirror the Strix Halo toolbox HIP tuning: pin the ROCm path explicitly and
+            # raise the local unroll threshold for gfx1151 kernels.
+            cmakeFlagsArray = (oldAttrs.cmakeFlagsArray or [ ]) ++ [
+              "-DCMAKE_HIP_FLAGS=--rocm-path=${pkgs.rocmPackages.clr} -mllvm --amdgpu-unroll-threshold-local=600"
+            ];
+          });
+      llama-server = lib.getExe' llama-cpp "llama-server";
       gufoDs4 = inputs.gufo.lib.${pkgs.stdenv.hostPlatform.system}.mkGufoServe {
         modality = "llm";
 
@@ -234,25 +312,8 @@
       '';
     in
     {
-      imports = [
-        (inputs.nixpkgs-unstable + "/nixos/modules/services/networking/llama-swap.nix")
-      ];
-      nixpkgs.overlays = [
-        (_: _: {
-          inherit (inputs.nixpkgs-unstable.legacyPackages.${pkgs.stdenv.hostPlatform.system}) llama-swap;
-        })
-      ];
-      disabledModules = [
-        "services/networking/llama-swap.nix"
-      ];
-      services.llama-swap = {
-        enable = true;
-        port = 11435;
-        listenAddress = "0.0.0.0";
-        settings = {
-          healthCheckTimeout = 600;
-
-          models = {
+      services.llama-swap.settings = {
+        models = {
             "qwen36-35b-a3b" = {
               env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
               cmd = ''${llama-server} --port ''${PORT} -hf unsloth/Qwen3.6-35B-A3B-MTP-GGUF:UD-Q4_K_XL ${commonFlags} --spec-type draft-mtp --spec-draft-n-max 3 --spec-draft-p-min 0.75 --temp 0.6 --top-p 0.95 --top-k 20 --min-p 0.00 --presence-penalty 0.0 --repeat-penalty 1.0 --ubatch-size 2048 --batch-size 4096 --chat-template-kwargs '{"preserve_thinking": true}' '';
@@ -269,15 +330,6 @@
               env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
               cmd = ''${llama-server} --port ''${PORT} -hf ggml-org/bge-m3-Q8_0-GGUF --embedding -ub 8192'';
               aliases = [ "embedding" ];
-            };
-
-            "qwen3.8-27b" = {
-              env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
-              cmd = "${gufoQwen27}";
-              ttl = 600; # Unload after 10 minutes idle.
-              timeouts.responseHeader = 600;
-              aliases = [ "Qwen3.8-27B" ];
-              filters.setParamsByID."qwen3.8-27b-nothink".chat_template_kwargs.enable_thinking = false;
             };
 
             "qwen-flash" = {
@@ -347,33 +399,9 @@
             };
           };
 
-          includeAliasesInList = true;
-        };
       };
 
-      systemd.services.llama-swap = {
-        environment = {
-          LLAMA_CACHE = lib.mkForce "/persist/models";
-          XDG_CACHE_HOME = lib.mkForce "/persist/models/.cache"; # Fix Vulkan shader cache
-          HOME = "/persist/models"; # Fallback for any engine looking for ~
-          GPU_MAX_HW_QUEUES = "1";
-          # fastflow npu
-          FLM_MODEL_PATH = "/persist/models/flm";
-          XILINX_XRT = config.environment.sessionVariables.XILINX_XRT or "";
-          XRT_PATH = config.environment.sessionVariables.XRT_PATH or "";
-          FLM_DISABLE_UPDATE_CHECK = "1";
-          LD_LIBRARY_PATH = "${config.environment.sessionVariables.XILINX_XRT or ""}/lib";
-        };
-        serviceConfig = {
-          EnvironmentFile = config.sops.secrets.openrouter-api-key.path;
-          ReadWritePaths = "/persist/models";
-          LimitMEMLOCK = "infinity"; # fastflowlm with npu support
-          SupplementaryGroups = [ "video" "render" ];
-          CacheDirectory = "llama-swap";
-        };
-      };
-
-      environment.systemPackages = [ ];
+      systemd.services.llama-swap.serviceConfig.EnvironmentFile = config.sops.secrets.openrouter-api-key.path;
 
       sops.secrets.openrouter-api-key = lib.mkIf config.services.llama-swap.enable {
         format = "yaml";
@@ -381,16 +409,5 @@
         restartUnits = [ "llama-swap.service" ];
         sopsFile = ./llama-swap-homelab-secrets.yaml;
       };
-
-      fi.services = [
-        {
-          name = "llama";
-          dashboardIcon = "codellm";
-          port = config.services.llama-swap.port;
-          dashboardSection = "Tools";
-          toPersist = [ ];
-          toBackup = [ ];
-        }
-      ];
     };
 }

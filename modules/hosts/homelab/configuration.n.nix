@@ -22,16 +22,21 @@ in
     };
 
     modules = [
-      self.modules.nixos.framework-desktop
+      self.modules.nixos.homelab
     ];
   };
 
-  flake.modules.nixos.framework-desktop = {
+  flake.modules.nixos.homelab = {
     imports = [
       inputs.nix-topology.nixosModules.default
       inputs.authentik-nix.nixosModules.default
       inputs.hermes-agent.nixosModules.default
-      inputs.home-manager.nixosModules.home-manager
+
+      inputs.self.modules.nixos.strix-halo
+      inputs.self.modules.nixos.server
+      inputs.self.modules.nixos.ephemeral-root
+      inputs.self.modules.nixos.mixer
+      inputs.self.modules.nixos.ai-tools
 
       inputs.self.modules.nixos.misc
       inputs.self.modules.nixos.nix
@@ -71,6 +76,7 @@ in
       inputs.self.modules.nixos.influxdb
       inputs.self.modules.nixos.lemonade
       inputs.self.modules.nixos.llama-swap
+      inputs.self.modules.nixos.llama-swap-models
       inputs.self.modules.nixos.logrotate
       # inputs.self.modules.nixos.n8n
       # inputs.self.modules.nixos.neo4j

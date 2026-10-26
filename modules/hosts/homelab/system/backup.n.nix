@@ -1,5 +1,5 @@
 {
-  flake.modules.nixos.framework-desktop = { pkgs, config, lib, ... }:
+  flake.modules.nixos.homelab = { pkgs, config, lib, ... }:
     let
       backupFromServices = builtins.concatLists (map (el: el.toBackup) config.fi.services);
     in

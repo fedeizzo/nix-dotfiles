@@ -1,7 +1,8 @@
+# The `mixer` login on server hosts, with its home-manager environment.
 {
-  flake.modules.nixos.framework-desktop = { pkgs, inputs, pkgs-unstable, ... }: {
+  flake.modules.nixos.mixer = { pkgs, inputs, pkgs-unstable, ... }: {
     imports = [
-      inputs.self.modules.nixos.ai-tools
+      inputs.home-manager.nixosModules.home-manager
     ];
 
     home-manager = {
@@ -63,5 +64,15 @@
         ];
       };
     };
+
+    # Root is wiped on boot (see ephemeral-root); keep the home directory.
+    environment.persistence."/persist".directories = [
+      {
+        directory = "/home/mixer";
+        user = "mixer";
+        group = "users";
+        mode = "u=rwx,g=,o=";
+      }
+    ];
   };
 }

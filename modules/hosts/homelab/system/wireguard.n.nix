@@ -4,14 +4,14 @@
       {
         name = "homelab";
         publicKey = "Ug1P6UzLyQ0BFbrfi0G9KLJBNBs+IOisRn3uiLoR5yU=";
-        allowedIPs = [ "192.168.7.1/32" "192.168.1.254/32" ];
+        allowedIPs = [ "192.168.7.1/32" "192.168.1.254/32" "192.168.1.89/32" ]; # homelab, desktop PC, forge (LAN, via homelab NAT)
         endpoint = "vpn.fedeizzo.dev:51821";
         persistentKeepalive = 25;
       }
     ];
   };
 
-  flake.modules.nixos.framework-desktop = { config, pkgs, ... }: {
+  flake.modules.nixos.homelab = { config, pkgs, ... }: {
     systemConstants.wireguard = {
       ip = "192.168.7.1";
       privateKeyFile = config.sops.secrets.homelab-wireguard-private-key.path;
