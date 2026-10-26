@@ -98,8 +98,9 @@ Hosts using `ephemeral-root` encrypt the disk with LUKS. Hosts with sops secrets
 ```sh
 # LUKS passphrase, keep a copy in the password manager.
 # No trailing newline: disko strips it when formatting, so a file ending in one
-# no longer matches the LUKS key (`echo` adds one, `printf '%s'` doesn't).
-printf '%s' 'the-passphrase' > ~/<host>-luks.key && chmod 600 ~/<host>-luks.key
+# no longer matches the LUKS key. `echo` and editors like vim add one; this doesn't,
+# and `read -s` keeps the passphrase off the screen and out of shell history (zsh syntax).
+read -rs "pass?LUKS passphrase: " && printf '%s' "$pass" > ~/<host>-luks.key && chmod 600 ~/<host>-luks.key; unset pass
 
 # sops age key (only for hosts with sops secrets): everything under <host>-extra/ is copied to the same path on the target
 mkdir -p ~/<host>-extra/var/lib/sops && chmod 700 ~/<host>-extra/var/lib/sops
