@@ -1,5 +1,5 @@
 {
-  flake.modules.nixos.framework-desktop = { pkgs, config, lib, ... }: {
+  flake.modules.nixos.homelab = { pkgs, config, lib, ... }: {
     networking = {
       networkmanager = {
         unmanaged = [ "wg0" ];
@@ -53,17 +53,6 @@
       };
     };
 
-    services.openssh = {
-      enable = true;
-      allowSFTP = false; # Don't set this if you need sftp
-      openFirewall = false;
-      settings = {
-        PasswordAuthentication = false;
-        KbdInteractiveAuthentication = false;
-        X11Forwarding = false;
-        PermitRootLogin = "yes";
-      };
-    };
     services.fail2ban = {
       enable = true;
       maxretry = 5;

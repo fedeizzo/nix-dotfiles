@@ -237,6 +237,10 @@
       imports = [
         (inputs.nixpkgs-unstable + "/nixos/modules/services/networking/llama-swap.nix")
       ];
+      nix.settings = {
+        extra-substituters = [ "https://gufo.cachix.org" ];
+        extra-trusted-public-keys = [ "gufo.cachix.org-1:rfZe3n4lHINgyoACKzs5EthIZmBNvEyCCtufUpth0PE=" ];
+      };
       nixpkgs.overlays = [
         (_: _: {
           inherit (inputs.nixpkgs-unstable.legacyPackages.${pkgs.stdenv.hostPlatform.system}) llama-swap;

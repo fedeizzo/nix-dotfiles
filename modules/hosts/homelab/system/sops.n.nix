@@ -1,5 +1,5 @@
 {
-  flake.modules.nixos.framework-desktop = { config, ... }: {
+  flake.modules.nixos.homelab = { config, ... }: {
     sops = {
       defaultSopsFile = ./homelab-secrets.yaml;
 

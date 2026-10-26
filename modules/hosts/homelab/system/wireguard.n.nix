@@ -11,7 +11,7 @@
     ];
   };
 
-  flake.modules.nixos.framework-desktop = { config, pkgs, ... }: {
+  flake.modules.nixos.homelab = { config, pkgs, ... }: {
     systemConstants.wireguard = {
       ip = "192.168.7.1";
       privateKeyFile = config.sops.secrets.homelab-wireguard-private-key.path;
