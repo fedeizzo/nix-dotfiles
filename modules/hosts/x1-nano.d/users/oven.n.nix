@@ -49,6 +49,7 @@
           ghostty
           ai-tools
           antigravity
+          herdr
         ];
         programs.home-manager.enable = true;
 

@@ -132,6 +132,10 @@
       config = (pkgs.formats.toml { }).generate "herdr-config.toml" {
         onboarding = false;
 
+        # Required for saved SSH machines: private per-attach control socket,
+        # fallback keepalives, and `herdr machine reconnect` auth recovery.
+        remote.manage_ssh_config = true;
+
         keys.command = [
           {
             key = "alt+r";

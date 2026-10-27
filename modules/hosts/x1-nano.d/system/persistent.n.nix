@@ -35,6 +35,7 @@
           ".config/cni"
           ".config/emacs"
           ".config/gh"
+          ".config/herdr"
           ".config/pulse"
           ".config/rbw"
           ".config/rclone"
