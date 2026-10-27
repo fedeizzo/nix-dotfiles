@@ -66,6 +66,53 @@
           "qwen3.8-27b-nothink"
         ];
       };
+
+      gufoQwenNext = inputs.gufo.lib.${pkgs.stdenv.hostPlatform.system}.mkGufoServe {
+        modality = "llm";
+        model = "/persist/models/qwen38-flash-next/Qwen3.8-Flash-Next-UD-Q4_K_XL-00001-of-00004.gguf";
+        host = "0.0.0.0";
+        port = "\${PORT}";
+        verbose = false;
+
+        # Requests run serially on this model (no batching plan); each session
+        # holds its own state (~24 KiB/token of context).
+        sessions = 2;
+
+        servedModelName = "qwen-flash";
+        context = 260000;
+        # Greedy verification: only temperature-0 requests take multi-token steps.
+        speculative = "mtp";
+        mtpModel = "/persist/models/qwen38-flash-next/mtp-Qwen3.8-Flash-Next-shared-Q8_0.gguf";
+        # draftTokens = 3;
+
+        # 2048-token chunks keep the expert GEMMs on the matrix-core route.
+        prefillChunk = 2048;
+        maxPending = 16;
+        maxPendingPerClient = 4;
+        requestTimeoutMs = 0;
+        maxOutputBytes = 1048576;
+        maxBufferedOutputBytes = 65536;
+        maxBufferedOutputTotal = 262144;
+
+        temperature = 1.0;
+        maxTokens = 8192;
+        topP = 0.95;
+        topK = 20;
+        minP = 0.0;
+        minKeep = 0;
+        seed = -1;
+        repeatPenalty = 1.0;
+        repeatLastN = 64;
+        frequencyPenalty = 0.0;
+        presencePenalty = 0.0;
+
+        # Prompt-end snapshots (~50 KiB/token + 111 MiB): a 100k prompt is
+        # ~5 GiB, so 32 GiB holds about six long conversations. Staging must
+        # fit one whole payload; 8 GiB covers prompts up to ~160k tokens.
+        # cacheDisk = "/var/cache/llama-swap/gufo-qwen-flash";
+        # cacheDiskBytes = 34359738368;       # 32 GiB
+        # cacheDiskStagingBytes = 8589934592; # 8 GiB
+      };
     in
     {
       imports = [
@@ -99,6 +146,15 @@
               aliases = [ "Qwen3.8-27B" ];
               filters.setParamsByID."qwen3.8-27b-nothink".chat_template_kwargs.enable_thinking = false;
             };
+
+            "qwen-flash" = {
+              env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
+              cmd = "${gufoQwenNext}";
+              ttl = 600; # Unload after 10 minutes idle.
+              timeouts.responseHeader = 600;
+              aliases = [ ];
+            };
+
           };
 
           includeAliasesInList = true;
@@ -210,52 +266,6 @@
         cacheDiskStagingBytes = 536870912;
       };
 
-      gufoQwenNext = inputs.gufo.lib.${pkgs.stdenv.hostPlatform.system}.mkGufoServe {
-        modality = "llm";
-        model = "/persist/models/qwen38-flash-next/Qwen3.8-Flash-Next-UD-Q4_K_XL-00001-of-00004.gguf";
-        host = "0.0.0.0";
-        port = "\${PORT}";
-        verbose = false;
-
-        # Requests run serially on this model (no batching plan); each session
-        # holds its own state (~24 KiB/token of context).
-        sessions = 2;
-
-        servedModelName = "qwen-flash";
-        context = 260000;
-        # Greedy verification: only temperature-0 requests take multi-token steps.
-        speculative = "mtp";
-        mtpModel = "/persist/models/qwen38-flash-next/mtp-Qwen3.8-Flash-Next-shared-Q8_0.gguf";
-        # draftTokens = 3;
-
-        # 2048-token chunks keep the expert GEMMs on the matrix-core route.
-        prefillChunk = 2048;
-        maxPending = 16;
-        maxPendingPerClient = 4;
-        requestTimeoutMs = 0;
-        maxOutputBytes = 1048576;
-        maxBufferedOutputBytes = 65536;
-        maxBufferedOutputTotal = 262144;
-
-        temperature = 1.0;
-        maxTokens = 8192;
-        topP = 0.95;
-        topK = 20;
-        minP = 0.0;
-        minKeep = 0;
-        seed = -1;
-        repeatPenalty = 1.0;
-        repeatLastN = 64;
-        frequencyPenalty = 0.0;
-        presencePenalty = 0.0;
-
-        # Prompt-end snapshots (~50 KiB/token + 111 MiB): a 100k prompt is
-        # ~5 GiB, so 32 GiB holds about six long conversations. Staging must
-        # fit one whole payload; 8 GiB covers prompts up to ~160k tokens.
-        # cacheDisk = "/var/cache/llama-swap/gufo-qwen-flash";
-        # cacheDiskBytes = 34359738368;       # 32 GiB
-        # cacheDiskStagingBytes = 8589934592; # 8 GiB
-      };
 
 
       gufoQwenTTSCmd = inputs.gufo.lib.${pkgs.stdenv.hostPlatform.system}.mkGufoServe {
@@ -314,90 +324,82 @@
     {
       services.llama-swap.settings = {
         models = {
-            "qwen36-35b-a3b" = {
-              env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
-              cmd = ''${llama-server} --port ''${PORT} -hf unsloth/Qwen3.6-35B-A3B-MTP-GGUF:UD-Q4_K_XL ${commonFlags} --spec-type draft-mtp --spec-draft-n-max 3 --spec-draft-p-min 0.75 --temp 0.6 --top-p 0.95 --top-k 20 --min-p 0.00 --presence-penalty 0.0 --repeat-penalty 1.0 --ubatch-size 2048 --batch-size 4096 --chat-template-kwargs '{"preserve_thinking": true}' '';
-              aliases = [ "coding" "q3-m" "qwen" ];
-              filters.setParamsByID."qwen-nothink".chat_template_kwargs.enable_thinking = false;
-            };
-
-            "qwen3-embedding" = {
-              env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
-              cmd = ''${llama-server} --port ''${PORT} -hf Qwen/Qwen3-Embedding-8B-GGUF --embedding --pooling last -ub 8192'';
-            };
-
-            "bge-m3" = {
-              env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
-              cmd = ''${llama-server} --port ''${PORT} -hf ggml-org/bge-m3-Q8_0-GGUF --embedding -ub 8192'';
-              aliases = [ "embedding" ];
-            };
-
-            "qwen-flash" = {
-              env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
-              cmd = "${gufoQwenNext}";
-              ttl = 600; # Unload after 10 minutes idle.
-              timeouts.responseHeader = 600;
-              aliases = [ ];
-            };
-
-            "ds4" = {
-              env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
-              cmd = "${gufoDs4}";
-              timeouts.responseHeader = 600;
-              aliases = [ ];
-            };
-
-            "qwen3-tts" = {
-              env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
-              cmd = "${gufoQwenTTSCmd}";
-              ttl = 120; # Unload after 2 minutes idle.
-              timeouts.responseHeader = 600;
-              aliases = [ ];
-            };
-
-            "qwen3-asr" = {
-              env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
-              cmd = "${gufoQwenASRCmd}";
-              ttl = 120; # Unload after 2 minutes idle.
-              timeouts.responseHeader = 600;
-              aliases = [ ];
-            };
+          "qwen36-35b-a3b" = {
+            env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
+            cmd = ''${llama-server} --port ''${PORT} -hf unsloth/Qwen3.6-35B-A3B-MTP-GGUF:UD-Q4_K_XL ${commonFlags} --spec-type draft-mtp --spec-draft-n-max 3 --spec-draft-p-min 0.75 --temp 0.6 --top-p 0.95 --top-k 20 --min-p 0.00 --presence-penalty 0.0 --repeat-penalty 1.0 --ubatch-size 2048 --batch-size 4096 --chat-template-kwargs '{"preserve_thinking": true}' '';
+            aliases = [ "coding" "q3-m" "qwen" ];
+            filters.setParamsByID."qwen-nothink".chat_template_kwargs.enable_thinking = false;
           };
 
-          peers = {
-            openrouter = {
-              proxy = "https://openrouter.ai/api";
-              apiKey = ''''${env.OPENROUTER_API_KEY}'';
-              models = [
-                "deepseek/deepseek-v4-flash-vision-exp"
-                "z-ai/glm-5.2"
-                "stealth/ox-alpha"
-              ];
-              filters = {
-                setParams = {
-                  provider = {
-                    order = [ "deepseek" "baidu" ];
-                    allow_fallbacks = false;
-                  };
+          "qwen3-embedding" = {
+            env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
+            cmd = ''${llama-server} --port ''${PORT} -hf Qwen/Qwen3-Embedding-8B-GGUF --embedding --pooling last -ub 8192'';
+          };
+
+          "bge-m3" = {
+            env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
+            cmd = ''${llama-server} --port ''${PORT} -hf ggml-org/bge-m3-Q8_0-GGUF --embedding -ub 8192'';
+            aliases = [ "embedding" ];
+          };
+
+          "ds4" = {
+            env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
+            cmd = "${gufoDs4}";
+            timeouts.responseHeader = 600;
+            aliases = [ ];
+          };
+
+          "qwen3-tts" = {
+            env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
+            cmd = "${gufoQwenTTSCmd}";
+            ttl = 120; # Unload after 2 minutes idle.
+            timeouts.responseHeader = 600;
+            aliases = [ ];
+          };
+
+          "qwen3-asr" = {
+            env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
+            cmd = "${gufoQwenASRCmd}";
+            ttl = 120; # Unload after 2 minutes idle.
+            timeouts.responseHeader = 600;
+            aliases = [ ];
+          };
+        };
+
+        peers = {
+          openrouter = {
+            proxy = "https://openrouter.ai/api";
+            apiKey = ''''${env.OPENROUTER_API_KEY}'';
+            models = [
+              "deepseek/deepseek-v4-flash-vision-exp"
+              "z-ai/glm-5.2"
+              "stealth/ox-alpha"
+            ];
+            filters = {
+              setParams = {
+                provider = {
+                  order = [ "deepseek" "baidu" ];
+                  allow_fallbacks = false;
                 };
               };
             };
           };
+        };
 
-          matrix = {
-            vars = {
-              "q35" = "qwen36-35b-a3b";
-              "e" = "bge-m3";
-              "q27" = "qwen3.8-27b";
-              "tts" = "qwen3-tts";
-              "asr" = "qwen3-asr";
-              "god" = "qwen-flash";
-            };
-
-            sets = {
-              standard = "q27 & q35 & e & tts & asr & god";
-            };
+        matrix = {
+          vars = {
+            "q35" = "qwen36-35b-a3b";
+            "e" = "bge-m3";
+            "q27" = "qwen3.8-27b";
+            "tts" = "qwen3-tts";
+            "asr" = "qwen3-asr";
+            "god" = "qwen-flash";
           };
+
+          sets = {
+            standard = "q27 & q35 & e & tts & asr & god";
+          };
+        };
 
       };
 
