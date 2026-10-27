@@ -18,6 +18,8 @@
       users.${username} = {
         imports = with inputs.self.modules.homeManager; [
           antigravity
+          codex
+          claude
           cli-packages
           direnv
           jujutsu

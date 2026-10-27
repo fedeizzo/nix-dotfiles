@@ -49,6 +49,8 @@
           ghostty
           ai-tools
           antigravity
+          codex
+          claude
           herdr
         ];
         programs.home-manager.enable = true;

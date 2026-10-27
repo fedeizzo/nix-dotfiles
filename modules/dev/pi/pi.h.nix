@@ -35,7 +35,7 @@
       settings = {
         lastChangelogVersion = "0.81.1";
         defaultProvider = "llamaswap";
-        defaultModel = "qwen27";
+        defaultModel = "forge/qwen-flash";
         defaultThinkingLevel = "medium";
         hideThinkingBlock = false;
         quietStartup = false;
@@ -85,7 +85,7 @@
         };
         # Subagent model/thinking routing (pi-subagents reads these from Pi settings).
         # Precedence: per-run override > agent frontmatter > agentOverrides > defaultModel > parent model.
-        # Orchestrator stays on qwen27 (65k ctx, fast); subagents get bigger context for deep work.
+        # Orchestrator uses forge/qwen-flash; subagents use the model overrides below.
         # Lean-orchestrator contract: orchestrator passes output:"<agent>.md" + outputMode:"file-only"
         # on every subagent call, so reports land under ~/.pi/subagent-outputs/ and only a compact
         # file reference returns to the orchestrator. Agents below with a frontmatter `output` path

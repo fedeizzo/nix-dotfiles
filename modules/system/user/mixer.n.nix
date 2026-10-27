@@ -21,6 +21,8 @@
           # nono
           # fence
           antigravity
+          codex
+          claude
           cli-packages
           direnv
           jujutsu
