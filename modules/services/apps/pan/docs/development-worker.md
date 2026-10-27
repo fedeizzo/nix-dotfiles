@@ -88,7 +88,7 @@ services.apps-pan = {
     timeoutSeconds = 1800;
     repositories.pan = {
       url = "https://github.com/fedeizzo/nix-dotfiles.git";
-      branch = "master";
+      branch = "main";
     };
   };
 };

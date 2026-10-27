@@ -24,7 +24,7 @@
           url = "https://github.com/fedeizzo/nix-dotfiles.git";
           branches = {
             main = {
-              name = "master";
+              name = "main";
               operation = "switch";
             };
             testing.name = "";

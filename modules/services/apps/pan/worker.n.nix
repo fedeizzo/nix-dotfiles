@@ -114,10 +114,10 @@ in
           type = lib.types.attrsOf (lib.types.submodule {
             options = {
               url = lib.mkOption { type = lib.types.str; };
-              branch = lib.mkOption { type = lib.types.str; default = "master"; };
+              branch = lib.mkOption { type = lib.types.str; default = "main"; };
             };
           });
-          default.pan = { url = "https://github.com/fedeizzo/nix-dotfiles.git"; branch = "master"; };
+          default.pan = { url = "https://github.com/fedeizzo/nix-dotfiles.git"; branch = "main"; };
           description = "Allowlisted public HTTPS repositories. Jobs receive no GitHub credentials.";
         };
         timeoutSeconds = lib.mkOption {
