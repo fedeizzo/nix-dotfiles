@@ -148,7 +148,55 @@
                 };
               }
               {
+                id = "forge/qwen3.8-27b";
+                reasoning = true;
+                contextWindow = 256000;
+                maxTokens = 16384; # Crucial: gives the model enough runway to finish thinking
+
+                thinkingLevelMap = {
+                  off = null; # omit / set null so omitWhenOff takes effect cleanly
+                  minimal = "low";
+                  low = "low";
+                  medium = "medium";
+                  high = "xhigh";
+                  xhigh = "xhigh";
+                  max = "xhigh";
+                };
+
+                compat = {
+                  thinkingFormat = "chat-template";
+                  chatTemplateKwargs = {
+                    enable_thinking = { "$var" = "thinking.enabled"; };
+                    reasoning_effort = { "$var" = "thinking.effort"; omitWhenOff = true; };
+                  };
+                };
+              }
+              {
                 id = "qwen-flash";
+                reasoning = true;
+                contextWindow = 260000;
+                maxTokens = 16384; # Crucial: gives the model enough runway to finish thinking
+
+                thinkingLevelMap = {
+                  off = null; # omit / set null so omitWhenOff takes effect cleanly
+                  minimal = "low";
+                  low = "low";
+                  medium = "medium";
+                  high = "xhigh";
+                  xhigh = "xhigh";
+                  max = "xhigh";
+                };
+
+                compat = {
+                  thinkingFormat = "chat-template";
+                  chatTemplateKwargs = {
+                    enable_thinking = { "$var" = "thinking.enabled"; };
+                    reasoning_effort = { "$var" = "thinking.effort"; omitWhenOff = true; };
+                  };
+                };
+              }
+              {
+                id = "forge/qwen-flash";
                 reasoning = true;
                 contextWindow = 260000;
                 maxTokens = 16384; # Crucial: gives the model enough runway to finish thinking

@@ -64,6 +64,8 @@
         extraArgs = [
           "--served-model-name"
           "qwen3.8-27b-nothink"
+          "--served-model-name"
+          "forge/qwen3.8-27b"
         ];
       };
 
@@ -112,6 +114,10 @@
         # cacheDisk = "/var/cache/llama-swap/gufo-qwen-flash";
         # cacheDiskBytes = 34359738368;       # 32 GiB
         # cacheDiskStagingBytes = 8589934592; # 8 GiB
+        extraArgs = [
+          "--served-model-name"
+          "forge/qwen-flash"
+        ];
       };
     in
     {
