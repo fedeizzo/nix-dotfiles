@@ -13,6 +13,9 @@
       programs.claude-code = {
         enable = true;
         package = inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.claude-code;
+        skills = builtins.mapAttrs (name: _: ../../../.agents/skills/${name}) (
+          lib.filterAttrs (_: type: type == "directory") (builtins.readDir ../../../.agents/skills)
+        );
         settings = builtins.fromJSON (builtins.readFile ./config/settings.json) // {
           statusLine = {
             type = "command";
