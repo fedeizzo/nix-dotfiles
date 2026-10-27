@@ -34,6 +34,13 @@
             TERM = "xterm-256color";
           };
         };
+        anvil = {
+          Hostname = "forge";
+          User = "anvil";
+          SetEnv = {
+            TERM = "xterm-256color";
+          };
+        };
         pikvm = {
           Hostname = "kvm.lan";
           User = "root";

@@ -15,7 +15,7 @@ in
     specialArgs = {
       inherit inputs self;
       hostname = "forge";
-      username = "mixer";
+      username = "anvil";
       pkgs-unstable = import inputs.nixpkgs-unstable { inherit system; };
       inherit system-overlays;
     };
