@@ -31,6 +31,7 @@
           profile-personal
           pi
           herdr
+          collie
           ssh-agent
         ];
         home = {
@@ -39,6 +40,12 @@
           username = username;
         };
         programs.home-manager.enable = true;
+
+        # Proxied by homelab's traefik (see the forge firewall rule).
+        fi.collie = {
+          publicHost = "collief.fedeizzo.dev";
+          bindHost = "192.168.1.89";
+        };
 
         xdg.configFile."nixpkgs/config.nix".text = ''
           {

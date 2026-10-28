@@ -16,6 +16,7 @@
           # for the reverse proxy and the dns configuration
           name = mkOption { type = types.str; };
           subdomain = mkOption { type = types.nullOr types.str; default = config.name; };
+          host = mkOption { type = types.str; default = "localhost"; };
           port = mkOption { type = types.int; };
           path = mkOption { type = types.str; default = ""; };
           isExposed = mkOption { type = types.bool; default = false; };

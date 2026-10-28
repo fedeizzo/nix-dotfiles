@@ -34,6 +34,7 @@
           profile-personal
           pi
           herdr
+          collie
           ssh-agent
         ];
         home = {

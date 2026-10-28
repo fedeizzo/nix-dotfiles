@@ -47,3 +47,10 @@ PCR policy). The PiKVM covers passphrase entry when the TPM refuses.
 ## 7. BIOS
 Set the iGPU UMA frame buffer to the minimum (as on homelab). The kernel's `amdgpu.gttsize` already
 lets the GPU use up to 124 GiB dynamically; a 64 GB carve-out only hides that memory from the OS.
+
+## 8. Harden collie on forge
+collie (`collief.fedeizzo.dev`) listens on forge's LAN address, and only homelab is allowed through the
+firewall. It has no auth of its own, so anything on the LAN that spoofs homelab's IP can reach it.
+- Set `COLLIE_TOKEN` (from sops) so the bridge itself checks requests.
+- Or keep collie on loopback and have homelab reach it over an SSH tunnel (`ssh -L 8787:localhost:8787 forge`
+  as a systemd service), then drop the firewall rule.

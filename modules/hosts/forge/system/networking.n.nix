@@ -12,12 +12,14 @@
       firewall = {
         enable = true;
         interfaces.eno1.allowedTCPPorts = [ 22 ];
-        # llama-swap has no auth: only homelab (its peer) may reach it.
+        # llama-swap and collie have no auth: only homelab (traefik, llama-swap peer) may reach them.
         extraCommands = ''
           iptables -A nixos-fw -p tcp -s 192.168.1.65 --dport ${toString config.services.llama-swap.port} -j nixos-fw-accept
+          iptables -A nixos-fw -p tcp -s 192.168.1.65 --dport 8787 -j nixos-fw-accept
         '';
         extraStopCommands = ''
           iptables -D nixos-fw -p tcp -s 192.168.1.65 --dport ${toString config.services.llama-swap.port} -j nixos-fw-accept || true
+          iptables -D nixos-fw -p tcp -s 192.168.1.65 --dport 8787 -j nixos-fw-accept || true
         '';
       };
     };

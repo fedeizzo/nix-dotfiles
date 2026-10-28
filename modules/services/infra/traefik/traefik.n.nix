@@ -32,7 +32,7 @@
               value = {
                 loadBalancer = {
                   servers = [
-                    { url = "http://localhost:${toString service.port}${service.path}"; }
+                    { url = "http://${service.host}:${toString service.port}${service.path}"; }
                   ];
                 };
               };
