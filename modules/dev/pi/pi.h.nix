@@ -91,11 +91,11 @@
         # file reference returns to the orchestrator. Agents below with a frontmatter `output` path
         # are forced file-only as a safety net; the others rely on the per-call output arg.
         subagents = {
-          defaultModel = "deepseek/deepseek-v4-flash-vision-exp";
-          defaultThinking = "high";
+          defaultModel = "forge/qwen-flash";
+          defaultThinking = "xhigh";
           agentOverrides = {
             oracle = {
-              model = "deepseek/deepseek-v4-flash-vision-exp";
+              model = "forge/qwen-flash";
               # model ="z-ai/glm-5.2";
               thinking = "xhigh";
             };
