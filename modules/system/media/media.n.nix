@@ -18,7 +18,24 @@
       alsa.enable = true;
       alsa.support32Bit = true;
       pulse.enable = true;
-      wireplumber.enable = true;
+      wireplumber = {
+        enable = true;
+        # Prevent audio playback delay on wake by disabling idle suspension for ALSA sinks
+        extraConfig = {
+          "10-disable-suspension" = {
+            "monitor.alsa.rules" = [
+              {
+                matches = [ { "node.name" = "~alsa_output.*"; } ];
+                actions = {
+                  update-props = {
+                    "session.suspend-timeout-seconds" = 0;
+                  };
+                };
+              }
+            ];
+          };
+        };
+      };
     };
   };
 }

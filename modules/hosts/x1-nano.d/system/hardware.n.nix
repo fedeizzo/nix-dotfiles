@@ -32,6 +32,11 @@
     powerManagement.cpuFreqGovernor = "powersave";
     zramSwap.enable = true;
 
+    # Prevent audio startup delay caused by codec power saving (ALC287)
+    boot.extraModprobeConfig = ''
+      options snd_hda_intel power_save=0 power_save_controller=N
+    '';
+
     # https://nicholaslyz.com/blog/2024/04/29/how-to-undervolt-a-laptop-with-nixos/
     # services.undervolt = {
     #   enable = true;
