@@ -1,11 +1,70 @@
 {
-  flake-file.inputs.gufo = {
-    url = "github:gufo-org/gufo";
+  flake-file = {
+    inputs.gufo = {
+      url = "github:gufo-org/gufo/model-extensions-8";
+    };
+    inputs.lfm3-gufo-extension = {
+      url = "github:gufo-org/lfm3-gufo-extension";
+      flake = false;
+    };
   };
 
   # llama-swap service with qwen3.8-27b; runs on every Strix Halo host.
   flake.modules.nixos.llama-swap = { lib, inputs, pkgs, config, ... }:
     let
+      gufoWithLfm3 = inputs.gufo.packages.${pkgs.stdenv.hostPlatform.system}.default.override {
+        extensions = [ inputs.lfm3-gufo-extension ];
+      };
+      gufoLfm3 = inputs.gufo.lib.${pkgs.stdenv.hostPlatform.system}.mkGufoServe {
+        gufoPackage = gufoWithLfm3;
+        modality = "llm";
+
+        model = "/persist/models/LFM3-1.7B-Q8_0.gguf";
+        host = "0.0.0.0";
+        port = "\${PORT}";
+
+        # Server
+        # sessions = 2;
+        # maxConnections = 16;
+        # maxRequestBytes = 8388608;
+        # verbose = false;
+
+        # Model
+        servedModelName = "lfm3-1.7b";
+        context = 250000; # supports up to 262144
+
+        # Scheduling
+        prefillChunk = 512;
+        maxPending = 16;
+        maxPendingPerClient = 4;
+        requestTimeoutMs = 0;
+        maxOutputBytes = 1048576;
+        maxBufferedOutputBytes = 65536;
+        maxBufferedOutputTotal = 262144;
+
+        # Sampling — LFM3 official preset
+        temperature = 0.1;
+        maxTokens = 8192;
+        topP = 1.0;
+        topK = 50;
+        minP = 0.0;
+        minKeep = 0;
+        seed = -1;
+        repeatPenalty = 1.1;
+        repeatLastN = 64;
+        frequencyPenalty = 0.0;
+        presencePenalty = 0.0;
+
+        # Reasoning
+        think = "on"; # or "off"
+        preserveThinking = "auto";
+
+        extraArgs = [
+          "--served-model-name"
+          "forge/lfm3-1.7"
+        ];
+      };
+
       gufoQwen27 = inputs.gufo.lib.${pkgs.stdenv.hostPlatform.system}.mkGufoServe {
         modality = "llm";
 
@@ -151,6 +210,13 @@
               timeouts.responseHeader = 600;
               aliases = [ "Qwen3.8-27B" ];
               filters.setParamsByID."qwen3.8-27b-nothink".chat_template_kwargs.enable_thinking = false;
+            };
+
+            "gufoLfm3" = {
+              env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
+              cmd = "${gufoLfm3}";
+              ttl = 600; # Unload after 10 minutes idle.
+              timeouts.responseHeader = 600;
             };
 
             "qwen-flash" = {

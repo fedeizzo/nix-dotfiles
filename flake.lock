@@ -837,15 +837,16 @@
         "nixpkgs-rocm10": "nixpkgs-rocm10"
       },
       "locked": {
-        "lastModified": 1792861568,
-        "narHash": "sha256-D2DKLDGd8D9vLufJlJ0DXbbxaL+i7m/gH7vWyuf3Qy8=",
+        "lastModified": 1793567368,
+        "narHash": "sha256-GijnOkntHdNu+A3Rkv23jSlbloZ0ixyydM5HsIAayAI=",
         "owner": "gufo-org",
         "repo": "gufo",
-        "rev": "194db882a857ee10c246a6a85cc787948a0028cf",
+        "rev": "ca8f0e3314ced6b64c66c59d8b470d1ba265e908",
         "type": "github"
       },
       "original": {
         "owner": "gufo-org",
+        "ref": "model-extensions-8",
         "repo": "gufo",
         "type": "github"
       }
@@ -987,6 +988,22 @@
       "original": {
         "owner": "vic",
         "repo": "import-tree",
+        "type": "github"
+      }
+    },
+    "lfm3-gufo-extension": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1793567774,
+        "narHash": "sha256-VoHpthckREN3EL6qkHq0dyVsz7I7PtcFhM4a2pQ/Jag=",
+        "owner": "gufo-org",
+        "repo": "lfm3-gufo-extension",
+        "rev": "b153ef22542b38484c82ee3780d834ec93389145",
+        "type": "github"
+      },
+      "original": {
+        "owner": "gufo-org",
+        "repo": "lfm3-gufo-extension",
         "type": "github"
       }
     },
@@ -1863,11 +1880,11 @@
     },
     "nixpkgs_8": {
       "locked": {
-        "lastModified": 1786384358,
-        "narHash": "sha256-RzPPiWeUtuvymnpuEWsdtzli5w4kjZs49FqEs3/1u+I=",
+        "lastModified": 1792773339,
+        "narHash": "sha256-rZLrzrC6i+jnTAlvPZHogKDulY7WWDEv9hJeHieO7Zw=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "2fcb964de67fcf60b43471c55d5d99e61a9ccb5a",
+        "rev": "3ec636362e1816bc2f0888fa0fa2c69f1bc9e504",
         "type": "github"
       },
       "original": {
@@ -2138,6 +2155,7 @@
         "home-manager-master": "home-manager-master",
         "impermanence": "impermanence",
         "import-tree": "import-tree",
+        "lfm3-gufo-extension": "lfm3-gufo-extension",
         "llm-agents": "llm-agents",
         "mac-app-util": "mac-app-util",
         "nh": "nh",

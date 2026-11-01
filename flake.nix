@@ -25,7 +25,7 @@
       inputs.nixpkgs-lib.follows = "nixpkgs";
     };
     git-hooks-nix.url = "github:cachix/git-hooks.nix";
-    gufo.url = "github:gufo-org/gufo";
+    gufo.url = "github:gufo-org/gufo/model-extensions-8";
     hermes-agent.url = "github:NousResearch/hermes-agent";
     home-manager = {
       url = "github:nix-community/home-manager/release-26.05";
@@ -37,6 +37,10 @@
     };
     impermanence.url = "github:nix-community/impermanence";
     import-tree.url = "github:vic/import-tree";
+    lfm3-gufo-extension = {
+      url = "github:gufo-org/lfm3-gufo-extension";
+      flake = false;
+    };
     llm-agents.url = "github:numtide/llm-agents.nix";
     mac-app-util.url = "github:hraban/mac-app-util";
     nh.url = "github:nix-community/nh";
