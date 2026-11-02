@@ -1,7 +1,7 @@
 {
   flake-file = {
     inputs.gufo = {
-      url = "github:gufo-org/gufo/model-extensions-8";
+      url = "github:gufo-org/gufo";
     };
     inputs.lfm3-gufo-extension = {
       url = "github:gufo-org/lfm3-gufo-extension";
@@ -9,179 +9,15 @@
     };
   };
 
-  # llama-swap service with qwen3.8-27b; runs on every Strix Halo host.
+  # llama-swap service; runs on every Strix Halo host.
+  # Per-model definitions live in ./models/.
   flake.modules.nixos.llama-swap = { lib, inputs, pkgs, config, ... }:
-    let
-      gufoWithLfm3 = inputs.gufo.packages.${pkgs.stdenv.hostPlatform.system}.default.override {
-        extensions = [ inputs.lfm3-gufo-extension ];
-      };
-      gufoLfm3 = inputs.gufo.lib.${pkgs.stdenv.hostPlatform.system}.mkGufoServe {
-        gufoPackage = gufoWithLfm3;
-        modality = "llm";
-
-        model = "/persist/models/LFM3-1.7B-Q8_0.gguf";
-        host = "0.0.0.0";
-        port = "\${PORT}";
-
-        # Server
-        # sessions = 2;
-        # maxConnections = 16;
-        # maxRequestBytes = 8388608;
-        # verbose = false;
-
-        # Model
-        servedModelName = "lfm3-1.7b";
-        context = 250000; # supports up to 262144
-
-        # Scheduling
-        prefillChunk = 512;
-        maxPending = 16;
-        maxPendingPerClient = 4;
-        requestTimeoutMs = 0;
-        maxOutputBytes = 1048576;
-        maxBufferedOutputBytes = 65536;
-        maxBufferedOutputTotal = 262144;
-
-        # Sampling — LFM3 official preset
-        temperature = 0.1;
-        maxTokens = 8192;
-        topP = 1.0;
-        topK = 50;
-        minP = 0.0;
-        minKeep = 0;
-        seed = -1;
-        repeatPenalty = 1.1;
-        repeatLastN = 64;
-        frequencyPenalty = 0.0;
-        presencePenalty = 0.0;
-
-        # Reasoning
-        think = "on"; # or "off"
-        preserveThinking = "auto";
-
-        extraArgs = [
-          "--served-model-name"
-          "forge/lfm3-1.7"
-        ];
-      };
-
-      gufoQwen27 = inputs.gufo.lib.${pkgs.stdenv.hostPlatform.system}.mkGufoServe {
-        modality = "llm";
-
-        model = "/persist/models/models--unsloth--Qwen3.8-27B-GGUF/snapshots/fe1e2a23d973adb629709749dc4f6756df66ef10/Qwen3.8-27B-UD-Q4_K_XL.gguf";
-        dflashModel = "/persist/models/Qwen3.8-27B-DFlash2-Q8_0.gguf";
-        host = "0.0.0.0";
-        port = "\${PORT}";
-
-        # Server
-        # sessions = 5;
-        # maxConnections = 16;
-        # maxRequestBytes = 8388608;
-        # verbose = false;
-
-        # Model
-        servedModelName = "qwen3.8-27b";
-        context = 256000;
-
-        # Speculative Decoding (DFlash-2)
-        speculative = "dflash2";
-        draftTokens = 7;
-        # draftPolicy = "auto";
-        minDraftTokens = 1;
-
-        # Scheduling
-        prefillChunk = 512;
-        maxPending = 16;
-        maxPendingPerClient = 4;
-        requestTimeoutMs = 0;
-        maxOutputBytes = 1048576;
-        maxBufferedOutputBytes = 65536;
-        maxBufferedOutputTotal = 262144;
-
-        # Sampling — Qwen3.8 official thinking-mode preset
-        temperature = 0.8;
-        maxTokens = 8192;
-        topP = 0.95;
-        topK = 20;
-        minP = 0.0;
-        minKeep = 0;
-        seed = -1;
-        repeatPenalty = 1.0;
-        repeatLastN = 64;
-        frequencyPenalty = 0.0;
-        presencePenalty = 0.0;
-
-        # Reasoning
-        think = "on";
-        reasoningEffort = "medium";
-        preserveThinking = "auto";
-
-        # Cache
-        # cacheDisk = "/var/cache/gufo";
-        # cacheDiskBytes = 4294967296;
-        # cacheDiskStagingBytes = 536870912;
-        extraArgs = [
-          "--served-model-name"
-          "qwen3.8-27b-nothink"
-          "--served-model-name"
-          "forge/qwen3.8-27b"
-        ];
-      };
-
-      gufoQwenNext = inputs.gufo.lib.${pkgs.stdenv.hostPlatform.system}.mkGufoServe {
-        modality = "llm";
-        model = "/persist/models/qwen38-flash-next/Qwen3.8-Flash-Next-UD-Q4_K_XL-00001-of-00004.gguf";
-        host = "0.0.0.0";
-        port = "\${PORT}";
-        verbose = false;
-
-        # Requests run serially on this model (no batching plan); each session
-        # holds its own state (~24 KiB/token of context).
-        sessions = 2;
-
-        servedModelName = "qwen-flash";
-        context = 260000;
-        # Greedy verification: only temperature-0 requests take multi-token steps.
-        speculative = "mtp";
-        mtpModel = "/persist/models/qwen38-flash-next/mtp-Qwen3.8-Flash-Next-shared-Q8_0.gguf";
-        # draftTokens = 3;
-
-        # 2048-token chunks keep the expert GEMMs on the matrix-core route.
-        prefillChunk = 2048;
-        maxPending = 16;
-        maxPendingPerClient = 4;
-        requestTimeoutMs = 0;
-        maxOutputBytes = 1048576;
-        maxBufferedOutputBytes = 65536;
-        maxBufferedOutputTotal = 262144;
-
-        temperature = 1.0;
-        maxTokens = 8192;
-        topP = 0.95;
-        topK = 20;
-        minP = 0.0;
-        minKeep = 0;
-        seed = -1;
-        repeatPenalty = 1.0;
-        repeatLastN = 64;
-        frequencyPenalty = 0.0;
-        presencePenalty = 0.0;
-
-        # Prompt-end snapshots (~50 KiB/token + 111 MiB): a 100k prompt is
-        # ~5 GiB, so 32 GiB holds about six long conversations. Staging must
-        # fit one whole payload; 8 GiB covers prompts up to ~160k tokens.
-        # cacheDisk = "/var/cache/llama-swap/gufo-qwen-flash";
-        # cacheDiskBytes = 34359738368;       # 32 GiB
-        # cacheDiskStagingBytes = 8589934592; # 8 GiB
-        extraArgs = [
-          "--served-model-name"
-          "forge/qwen-flash"
-        ];
-      };
-    in
     {
       imports = [
         (inputs.nixpkgs-unstable + "/nixos/modules/services/networking/llama-swap.nix")
+        inputs.self.modules.nixos.llama-swap-lfm3
+        inputs.self.modules.nixos.llama-swap-qwen27b
+        inputs.self.modules.nixos.llama-swap-flash-next
       ];
       nix.settings = {
         extra-substituters = [ "https://gufo.cachix.org" ];
@@ -201,34 +37,6 @@
         listenAddress = "0.0.0.0";
         settings = {
           healthCheckTimeout = 600;
-
-          models = {
-            "qwen3.8-27b" = {
-              env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
-              cmd = "${gufoQwen27}";
-              ttl = 600; # Unload after 10 minutes idle.
-              timeouts.responseHeader = 600;
-              aliases = [ "Qwen3.8-27B" ];
-              filters.setParamsByID."qwen3.8-27b-nothink".chat_template_kwargs.enable_thinking = false;
-            };
-
-            "lfm3-1.7b" = {
-              env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
-              cmd = "${gufoLfm3}";
-              ttl = 600; # Unload after 10 minutes idle.
-              timeouts.responseHeader = 600;
-            };
-
-            "qwen-flash" = {
-              env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
-              cmd = "${gufoQwenNext}";
-              ttl = 600; # Unload after 10 minutes idle.
-              timeouts.responseHeader = 600;
-              aliases = [ ];
-            };
-
-          };
-
           includeAliasesInList = true;
         };
       };
@@ -269,175 +77,15 @@
     };
 
   # The rest of the local models, OpenRouter and model sets: homelab only.
-  flake.modules.nixos.llama-swap-models = { lib, inputs, pkgs, config, ... }:
-    let
-      llama-cpp =
-        (pkgs.llama-cpp.override {
-          rocmSupport = true;
-          rocmGpuTargets = [ "gfx1151" ];
-        }).overrideAttrs
-          (oldAttrs: rec {
-            cmakeFlags = (oldAttrs.cmakeFlags or [ ]) ++ [
-              "-DLLAMA_HIP_UMA=ON" # unified memory
-            ];
-            # Mirror the Strix Halo toolbox HIP tuning: pin the ROCm path explicitly and
-            # raise the local unroll threshold for gfx1151 kernels.
-            cmakeFlagsArray = (oldAttrs.cmakeFlagsArray or [ ]) ++ [
-              "-DCMAKE_HIP_FLAGS=--rocm-path=${pkgs.rocmPackages.clr} -mllvm --amdgpu-unroll-threshold-local=600"
-            ];
-          });
-      llama-server = lib.getExe' llama-cpp "llama-server";
-      gufoDs4 = inputs.gufo.lib.${pkgs.stdenv.hostPlatform.system}.mkGufoServe {
-        modality = "llm";
-
-        model = "/persist/models/DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-0731.gguf";
-        host = "0.0.0.0";
-        port = "\${PORT}";
-
-        # Server
-        # DS4 batches up to 8 sessions. DSpark per-user gain: C2 ~1.8x, C4 ~1.35x,
-        # C6+ ~none. Use 1 for solo, 2 for shared.
-        sessions = 4;
-        # maxConnections = 16;
-        # maxRequestBytes = 8388608;
-        # verbose = false;
-
-        # Model
-        servedModelName = "ds4";
-        context = 131072;
-        # sampled requests fall back to autoregressive decode. See gufo#232.
-        speculative = "dspark";
-        dsparkModel = "/persist/models/DeepSeek-V4-Flash-DSpark-support-0731.gguf";
-        # draftTokens = 3;  # optional ceiling; model-owned adaptive width otherwise
-
-        # Scheduling (all defaults)
-        prefillChunk = 512;
-        maxPending = 16;
-        maxPendingPerClient = 4;
-        requestTimeoutMs = 0;
-        maxOutputBytes = 1048576;
-        maxBufferedOutputBytes = 65536;
-        maxBufferedOutputTotal = 262144;
-
-        # Sampling
-        temperature = 0.0; # 0.0 to get DSpark on default requests
-        maxTokens = 8192;
-        topP = 0.95;
-        topK = 0;
-        minP = 0.0;
-        minKeep = 0;
-        seed = -1;
-        repeatPenalty = 1.0;
-        repeatLastN = 64;
-        frequencyPenalty = 0.0;
-        presencePenalty = 0.0;
-
-        # Cache
-        cacheDisk = "/var/cache/llama-swap/gufo-ds4";
-        cacheDiskBytes = 4294967296;
-        cacheDiskStagingBytes = 536870912;
-      };
-
-
-
-      gufoQwenTTSCmd = inputs.gufo.lib.${pkgs.stdenv.hostPlatform.system}.mkGufoServe {
-        modality = "tts";
-
-        model = "/persist/models/audio/Qwen3-TTS-12Hz-1.7B-Base";
-        servedModelName = "qwen3-tts";
-        context = 4096;
-
-        voices = {
-          narrator_eng = {
-            wav = "/persist/models/audio/clear-english-voice.wav";
-            text = "It is said with truth that every building is constructed stone by stone, and the same may be said of knowledge. Extract.";
-            language = "english";
-          };
-
-          narrator_ita = {
-            wav = "/persist/models/audio/clear-italian-voice.wav";
-            text = "Questo racconto è cresciuto nel corso della narrazione fino a diventare una storia della Grande Guerra dell'Anello, e ha in.";
-            language = "italian";
-          };
-
-          me = {
-            wav = "/persist/models/audio/me.wav";
-            text = "ciao il mio nome è Federico sono un ingegnere informatico vivo a Parigi e nel tempo libero mi piace arrampicare";
-            language = "italian";
-          };
-        };
-
-        host = "0.0.0.0";
-        port = "\${PORT}";
-        maxRequestBytes = 33554432;
-      };
-
-      gufoQwenASRCmd = inputs.gufo.lib.${pkgs.stdenv.hostPlatform.system}.mkGufoServe {
-        modality = "asr";
-
-        model = "/persist/models/audio/Qwen3-ASR-1.7B";
-        servedModelName = "qwen3-asr";
-        context = 1024;
-
-        host = "0.0.0.0";
-        port = "\${PORT}";
-        maxRequestBytes = 33554432;
-      };
-
-      commonFlags = ''
-        -ngl 999 \
-        --no-mmap -fa 1 \
-        --no-ui \
-        --kv-unified \
-        -c 262144 \
-        -t 2
-      '';
-    in
+  flake.modules.nixos.llama-swap-models = { lib, inputs, config, ... }:
     {
+      imports = [
+        inputs.self.modules.nixos.llama-swap-ds4
+        inputs.self.modules.nixos.llama-swap-qwen-tts
+        inputs.self.modules.nixos.llama-swap-qwen-asr
+      ];
+
       services.llama-swap.settings = {
-        models = {
-          "qwen36-35b-a3b" = {
-            env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
-            cmd = ''${llama-server} --port ''${PORT} -hf unsloth/Qwen3.6-35B-A3B-MTP-GGUF:UD-Q4_K_XL ${commonFlags} --spec-type draft-mtp --spec-draft-n-max 3 --spec-draft-p-min 0.75 --temp 0.6 --top-p 0.95 --top-k 20 --min-p 0.00 --presence-penalty 0.0 --repeat-penalty 1.0 --ubatch-size 2048 --batch-size 4096 --chat-template-kwargs '{"preserve_thinking": true}' '';
-            aliases = [ "coding" "q3-m" "qwen" ];
-            filters.setParamsByID."qwen-nothink".chat_template_kwargs.enable_thinking = false;
-          };
-
-          "qwen3-embedding" = {
-            env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
-            cmd = ''${llama-server} --port ''${PORT} -hf Qwen/Qwen3-Embedding-8B-GGUF --embedding --pooling last -ub 8192'';
-          };
-
-          "bge-m3" = {
-            env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
-            cmd = ''${llama-server} --port ''${PORT} -hf ggml-org/bge-m3-Q8_0-GGUF --embedding -ub 8192'';
-            aliases = [ "embedding" ];
-          };
-
-          "ds4" = {
-            env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
-            cmd = "${gufoDs4}";
-            timeouts.responseHeader = 600;
-            aliases = [ ];
-          };
-
-          "qwen3-tts" = {
-            env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
-            cmd = "${gufoQwenTTSCmd}";
-            ttl = 120; # Unload after 2 minutes idle.
-            timeouts.responseHeader = 600;
-            aliases = [ ];
-          };
-
-          "qwen3-asr" = {
-            env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
-            cmd = "${gufoQwenASRCmd}";
-            ttl = 120; # Unload after 2 minutes idle.
-            timeouts.responseHeader = 600;
-            aliases = [ ];
-          };
-        };
-
         peers = {
           openrouter = {
             proxy = "https://openrouter.ai/api";
@@ -460,8 +108,6 @@
 
         matrix = {
           vars = {
-            "q35" = "qwen36-35b-a3b";
-            "e" = "bge-m3";
             "q27" = "qwen3.8-27b";
             "tts" = "qwen3-tts";
             "asr" = "qwen3-asr";
@@ -469,7 +115,7 @@
           };
 
           sets = {
-            standard = "q27 & q35 & e & tts & asr & god";
+            standard = "q27 & tts & asr & god";
           };
         };
 

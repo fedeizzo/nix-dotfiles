@@ -837,16 +837,15 @@
         "nixpkgs-rocm10": "nixpkgs-rocm10"
       },
       "locked": {
-        "lastModified": 1793567368,
-        "narHash": "sha256-GijnOkntHdNu+A3Rkv23jSlbloZ0ixyydM5HsIAayAI=",
+        "lastModified": 1793604055,
+        "narHash": "sha256-vC4GGEuP2X0vG/VkspTOsGaSEpO7FH+5oBpSyWupooI=",
         "owner": "gufo-org",
         "repo": "gufo",
-        "rev": "ca8f0e3314ced6b64c66c59d8b470d1ba265e908",
+        "rev": "6bbb6bb6bddcb26f18f9f845331c2f8755f3fd7c",
         "type": "github"
       },
       "original": {
         "owner": "gufo-org",
-        "ref": "model-extensions-8",
         "repo": "gufo",
         "type": "github"
       }
@@ -994,11 +993,11 @@
     "lfm3-gufo-extension": {
       "flake": false,
       "locked": {
-        "lastModified": 1793567774,
-        "narHash": "sha256-VoHpthckREN3EL6qkHq0dyVsz7I7PtcFhM4a2pQ/Jag=",
+        "lastModified": 1793578918,
+        "narHash": "sha256-VI8VKjPmEpZlWBpgGnj32q8m+KFrBtM9DkW52CRj5KQ=",
         "owner": "gufo-org",
         "repo": "lfm3-gufo-extension",
-        "rev": "b153ef22542b38484c82ee3780d834ec93389145",
+        "rev": "fb488aebef5abc3fefcbb21ce0d53eebe8cc3e27",
         "type": "github"
       },
       "original": {
