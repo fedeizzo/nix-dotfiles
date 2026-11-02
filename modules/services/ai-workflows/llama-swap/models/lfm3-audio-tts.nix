@@ -9,7 +9,7 @@
         modality = "tts";
         provider = "lfm3-audio-tts";
 
-        model = "/persist/models/lfm3-audio/LFM3-Audio-2B-Q8_0.gguf";
+        model = "/persist/models/by-capability/audio/LFM3-Audio-2B/LFM3-Audio-2B-Q8_0.gguf";
         servedModelName = "lfm3-audio-tts";
         host = "0.0.0.0";
         port = "\${PORT}";

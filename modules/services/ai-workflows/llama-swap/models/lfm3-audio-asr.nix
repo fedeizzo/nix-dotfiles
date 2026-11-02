@@ -5,7 +5,7 @@
 #   REV=02355c1a141e464a064f2ab2c276638dbcb7f38a
 #   hf download LiquidAI/LFM3-Audio-2B-GGUF LFM3-Audio-2B-Q8_0.gguf \
 #     mmproj-LFM3-Audio-2B-BF16.gguf --revision $REV \
-#     --local-dir /persist/models/lfm3-audio
+#     --local-dir /persist/models/store/LFM3-Audio-2B
 {
   flake.modules.nixos.llama-swap-lfm3-audio-asr = { inputs, pkgs, ... }:
     let
@@ -14,7 +14,7 @@
         modality = "asr";
         provider = "lfm3-audio-asr";
 
-        model = "/persist/models/lfm3-audio/LFM3-Audio-2B-Q8_0.gguf";
+        model = "/persist/models/by-capability/audio/LFM3-Audio-2B/LFM3-Audio-2B-Q8_0.gguf";
         servedModelName = "lfm3-audio-asr";
         host = "0.0.0.0";
         port = "\${PORT}";

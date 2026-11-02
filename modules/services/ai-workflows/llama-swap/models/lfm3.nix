@@ -6,7 +6,7 @@
         gufoPackage = pkgs.gufo-lfm3;
         modality = "llm";
 
-        model = "/persist/models/LFM3-1.7B-Q8_0.gguf";
+        model = "/persist/models/by-capability/language/LFM3-1.7B/LFM3-1.7B-Q8_0.gguf";
         host = "0.0.0.0";
         port = "\${PORT}";
 

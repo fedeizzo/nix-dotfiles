@@ -2,7 +2,7 @@
 # text provider. Weights:
 #   hf download LiquidAI/LFM3-VL-2B-GGUF LFM3-VL-2B-Q8_0.gguf \
 #     mmproj-LFM3-VL-2B-BF16.gguf --revision b36554cfd35854b06429900131730cd80f092cdb \
-#     --local-dir /persist/models/lfm3-vl
+#     --local-dir /persist/models/store/LFM3-VL-2B
 {
   flake.modules.nixos.llama-swap-lfm3-vl = { inputs, pkgs, ... }:
     let
@@ -11,7 +11,7 @@
         modality = "llm";
         provider = "lfm3";
 
-        model = "/persist/models/lfm3-vl/LFM3-VL-2B-Q8_0.gguf";
+        model = "/persist/models/by-capability/vision/LFM3-VL-2B/LFM3-VL-2B-Q8_0.gguf";
         host = "0.0.0.0";
         port = "\${PORT}";
 
@@ -49,7 +49,7 @@
 
         extraArgs = [
           "--mmproj"
-          "/persist/models/lfm3-vl/mmproj-LFM3-VL-2B-BF16.gguf"
+          "/persist/models/by-capability/vision/LFM3-VL-2B/mmproj-LFM3-VL-2B-BF16.gguf"
           "--served-model-name"
           "forge/lfm3-vl"
         ];

@@ -5,7 +5,7 @@
       gufoQwenASRCmd = inputs.gufo.lib.${pkgs.stdenv.hostPlatform.system}.mkGufoServe {
         modality = "asr";
 
-        model = "/persist/models/audio/Qwen3-ASR-1.7B";
+        model = "/persist/models/by-capability/audio/Qwen3-ASR-1.7B";
         servedModelName = "qwen3-asr";
         context = 1024;
 
