@@ -88,6 +88,7 @@
         inputs.self.modules.nixos.llama-swap-ds4
         inputs.self.modules.nixos.llama-swap-qwen-tts
         inputs.self.modules.nixos.llama-swap-qwen-asr
+        inputs.self.modules.nixos.llama-swap-embeddinggemma-2
       ];
 
       services.llama-swap.settings = {
