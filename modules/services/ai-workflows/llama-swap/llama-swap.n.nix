@@ -212,7 +212,7 @@
               filters.setParamsByID."qwen3.8-27b-nothink".chat_template_kwargs.enable_thinking = false;
             };
 
-            "gufoLfm3" = {
+            "lfm3-1.7b" = {
               env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
               cmd = "${gufoLfm3}";
               ttl = 600; # Unload after 10 minutes idle.
