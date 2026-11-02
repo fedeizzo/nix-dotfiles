@@ -1,7 +1,7 @@
 # User interactions:
-# - Hold left Shift, then Fn to dictate; release either key to clean up and type the text.
+# - Hold left Shift, then Fn to dictate; release either key to type the text.
 # - Press Super+Shift+D or click the Voxtype widget to toggle dictation recording.
-# - Press XF86NotificationCenter or Super+Ctrl+R, or right-click the Voxtype widget, to toggle a microphone meeting and save cleaned Markdown in ~/Documents/Meetings/.
+# - Press XF86NotificationCenter or Super+Ctrl+R, or right-click the Voxtype widget, to toggle a microphone meeting and save Markdown in ~/Documents/Meetings/.
 # - A pulsing red dot in the bar means recording; amber means transcription is finishing.
 # - Click "Copy path" in the saved-transcript notification to copy its full file path.
 # - Click "Copy text" in the saved-transcript notification to copy its Markdown contents.
@@ -54,8 +54,8 @@
         whisper = {
           mode = "remote";
           remote_endpoint = "https://llama.fedeizzo.dev";
-          remote_model = "qwen3-asr";
-          model = "qwen3-asr";
+          remote_model = "lfm3-audio-asr";
+          model = "lfm3-audio-asr";
         };
         meeting = {
           enabled = true;
@@ -74,10 +74,6 @@
         output = {
           mode = "type";
           fallback_to_clipboard = true;
-          post_process = {
-            command = "${pkgs.python3}/bin/python3 ${./voxtype-cleanup.py}";
-            timeout_ms = 120000;
-          };
 
           notification = {
             on_recording_start = false;
