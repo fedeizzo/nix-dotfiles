@@ -43,6 +43,25 @@
         settings = {
           healthCheckTimeout = 600;
           includeAliasesInList = true;
+          # Small models that comfortably fit resident together (~25 GiB of
+          # the 125 GiB unified memory on Strix Halo); see ttl = 0 in each.
+          hooks.on_startup.preload = [
+            "lfm3-1.7b"
+            "lfm3-vl"
+            "lfm3-audio-asr"
+            "lfm3-audio-tts"
+          ];
+          groups.resident = {
+            swap = false; # all members run concurrently, no internal swapping
+            exclusive = false; # running one of these never unloads other groups
+            persistent = true; # other groups cannot unload these
+            members = [
+              "lfm3-1.7b"
+              "lfm3-vl"
+              "lfm3-audio-asr"
+              "lfm3-audio-tts"
+            ];
+          };
         };
       };
 
@@ -92,6 +111,9 @@
       ];
 
       services.llama-swap.settings = {
+        hooks.on_startup.preload = [ "embeddinggemma-2" ];
+        groups.resident.members = [ "embeddinggemma-2" ];
+
         peers = {
           openrouter = {
             proxy = "https://openrouter.ai/api";

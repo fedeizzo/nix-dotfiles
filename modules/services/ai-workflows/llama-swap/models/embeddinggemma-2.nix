@@ -28,7 +28,7 @@
       services.llama-swap.settings.models."embeddinggemma-2" = {
         env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
         cmd = "${gufoEmbedding}";
-        ttl = 120; # Unload after 2 minutes idle.
+        ttl = 0; # Keep resident; part of the preloaded set.
         timeouts.responseHeader = 600;
         aliases = [ ];
       };

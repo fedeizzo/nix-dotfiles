@@ -28,7 +28,7 @@
       services.llama-swap.settings.models."lfm3-audio-tts" = {
         env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
         cmd = "${gufoAudioTts}";
-        ttl = 120; # Unload after 2 minutes idle.
+        ttl = 0; # Keep resident; part of the preloaded LFM set.
         timeouts.responseHeader = 600;
         aliases = [ ];
       };

@@ -57,7 +57,7 @@
       services.llama-swap.settings.models."lfm3-1.7b" = {
         env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
         cmd = "${gufoLfm3}";
-        ttl = 600; # Unload after 10 minutes idle.
+        ttl = 0; # Keep resident; part of the preloaded LFM set.
         timeouts.responseHeader = 600;
       };
     };
