@@ -51,17 +51,6 @@
             "lfm3-audio-asr"
             "lfm3-audio-tts"
           ];
-          groups.resident = {
-            swap = false; # all members run concurrently, no internal swapping
-            exclusive = false; # running one of these never unloads other groups
-            persistent = true; # other groups cannot unload these
-            members = [
-              "lfm3-1.7b"
-              "lfm3-vl"
-              "lfm3-audio-asr"
-              "lfm3-audio-tts"
-            ];
-          };
         };
       };
 
@@ -112,7 +101,6 @@
 
       services.llama-swap.settings = {
         hooks.on_startup.preload = [ "embeddinggemma-2" ];
-        groups.resident.members = [ "embeddinggemma-2" ];
 
         peers = {
           openrouter = {
@@ -134,16 +122,50 @@
           };
         };
 
+        # Matrix router: sets declare which models may coexist; when a
+        # request's set excludes running models, the solver evicts whichever
+        # combination has the lowest total evict cost. Small models are cheap
+        # to reload (cost 1); big ones are expensive, so the solver keeps the
+        # big ones running whenever a set allows it.
+        # Memory budget (125 GiB unified): small set ~27G, qwen 27b ~47G,
+        # tts ~13G, asr ~9G, ds4 ~87G, qwen-flash ~108G (flash can only
+        # coexist via `standard`, never with the small set: 108+27 > 125).
         matrix = {
           vars = {
             "q27" = "qwen3.8-27b";
             "tts" = "qwen3-tts";
             "asr" = "qwen3-asr";
             "god" = "qwen-flash";
+            "ds4" = "ds4";
+            "lfm" = "lfm3-1.7b";
+            "vl" = "lfm3-vl";
+            "aasr" = "lfm3-audio-asr";
+            "atts" = "lfm3-audio-tts";
+            "emb" = "embeddinggemma-2";
+          };
+
+          evict_costs = {
+            "qwen-flash" = 100;
+            "ds4" = 100;
+            "qwen3.8-27b" = 50;
+            "qwen3-tts" = 10;
+            "qwen3-asr" = 5;
+            # The small set reloads in seconds.
+            "lfm3-1.7b" = 1;
+            "lfm3-vl" = 1;
+            "lfm3-audio-asr" = 1;
+            "lfm3-audio-tts" = 1;
+            "embeddinggemma-2" = 1;
           };
 
           sets = {
-            standard = "q27 & tts & asr & god";
+            # Everything that fits together in ~96G of the 128G unified
+            # memory: the small LFM + embedding set coexists with the qwen
+            # 27b / tts / asr models.
+            small = "lfm & vl & aasr & atts & emb & q27 & tts & asr";
+            # The true giants run alone and evict everything else.
+            flash = "god";
+            deepseek = "ds4";
           };
         };
 

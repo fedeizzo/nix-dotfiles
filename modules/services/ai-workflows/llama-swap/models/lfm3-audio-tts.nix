@@ -28,6 +28,7 @@
       services.llama-swap.settings.models."lfm3-audio-tts" = {
         env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
         cmd = "${gufoAudioTts}";
+        checkEndpoint = "/ready"; # gufo /health answers 200 during loading; /ready gates on model readiness
         ttl = 120; # Unload after 2 minutes idle; fast to reload.
         timeouts.responseHeader = 600;
         aliases = [ ];

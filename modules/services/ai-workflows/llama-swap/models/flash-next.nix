@@ -57,6 +57,7 @@
       services.llama-swap.settings.models."qwen-flash" = {
         env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
         cmd = "${gufoQwenNext}";
+        checkEndpoint = "/ready"; # gufo /health answers 200 during loading; /ready gates on model readiness
         ttl = 600; # Unload after 10 minutes idle.
         timeouts.responseHeader = 600;
         aliases = [ ];
