@@ -30,7 +30,6 @@
     };
     git-hooks-nix.url = "github:cachix/git-hooks.nix";
     gufo.url = "github:gufo-org/gufo";
-    hermes-agent.url = "github:NousResearch/hermes-agent";
     home-manager = {
       url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";

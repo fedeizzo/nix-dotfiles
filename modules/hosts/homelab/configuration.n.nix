@@ -9,7 +9,6 @@ let
   };
 in
 {
-  flake-file.inputs.hermes-agent.url = "github:NousResearch/hermes-agent";
   flake.nixosConfigurations.homelab = inputs.nixpkgs.lib.nixosSystem rec {
     system = "x86_64-linux";
 
@@ -30,7 +29,6 @@ in
     imports = [
       inputs.nix-topology.nixosModules.default
       inputs.authentik-nix.nixosModules.default
-      inputs.hermes-agent.nixosModules.default
 
       inputs.self.modules.nixos.strix-halo
       inputs.self.modules.nixos.server
@@ -71,9 +69,9 @@ in
       inputs.self.modules.nixos.grafana
       inputs.self.modules.nixos.hass
       inputs.self.modules.nixos.collie
-      # inputs.self.modules.nixos.hermes
       inputs.self.modules.nixos.immich
       inputs.self.modules.nixos.influxdb
+      inputs.self.modules.nixos.ironclaw
       inputs.self.modules.nixos.lemonade
       inputs.self.modules.nixos.llama-swap
       inputs.self.modules.nixos.llama-swap-models

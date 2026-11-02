@@ -53,7 +53,7 @@ flake.nix
          ├─ username = "homelab"
          └─ self.modules.nixos.framework-desktop
             ├─ Explicit imports in configuration.n.nix
-            │  ├─ external: nix-topology, authentik-nix, hermes-agent,
+            │  ├─ external: nix-topology, authentik-nix,
             │  │  home-manager
             │  ├─ base: misc, nix, security, disk, power, hardware, boot,
             │  │  networking, wireguard, sops, environment, persistence
@@ -125,7 +125,6 @@ The directory name is not the configuration name: the evaluated host entry is `n
 | Mosquitto MQTT | Listener declared with anonymous access and `readwrite #` | Bind address/port reachability requires evaluation; a wildcard default would make it reachable from trusted WG peers. |
 | GarminDB container | Active host networking | Shares the host namespace to reach InfluxDB; not Internet-marked, but reachable trust depends on its own listener behavior. |
 | Paperless helper containers | Host networking, `autoStart = false` | Not assumed active at boot; if manually started they join the flat host/WG attack surface. |
-| Hermes container declaration | Host networking in its service module | The local `self.modules.nixos.hermes` import is commented out; the external Hermes module remains active, so this local container is not treated as proven active. |
 | AI/media services | Several wildcard/host listeners | Resource exhaustion and lateral movement are credible from trusted or compromised service paths. |
 
 ### Identity and privilege inventory
@@ -152,7 +151,7 @@ The directory name is not the configuration name: the evaluated host entry is `n
 ### Supply-chain inventory
 
 - `flake.lock` pins Nix flake inputs at a commit, but updates to it are privileged code-review events.
-- Active external modules include nix-topology, authentik-nix, hermes-agent, Home Manager, Disko, nixos-hardware, SOPS-Nix, and service-specific external modules reached by imports.
+- Active external modules include nix-topology, authentik-nix, Home Manager, Disko, nixos-hardware, SOPS-Nix, and service-specific external modules reached by imports.
 - `pkgs-unstable` and selected overlays are available; `nixos.ai-tools` actively applies the llm-agents overlay.
 - Runtime OCI images are fetched from Docker Hub/GHCR and several use mutable tags, so they are not reproducible from `flake.lock` alone.
 - Blocky downloads DNS blocklists from mutable `latest`/`main` URLs on a four-hour schedule (`modules/services/infra/blocky/blocky.n.nix:21-33`).
