@@ -4,7 +4,7 @@
     let
       gufoQwenNext = inputs.gufo.lib.${pkgs.stdenv.hostPlatform.system}.mkGufoServe {
         modality = "llm";
-        model = "/persist/models/qwen38-flash-next/Qwen3.8-Flash-Next-UD-Q4_K_XL-00001-of-00004.gguf";
+        model = "/persist/models/by-capability/language/Qwen3.8-Flash-Next/Qwen3.8-Flash-Next-UD-Q4_K_XL-00001-of-00004.gguf";
         host = "0.0.0.0";
         port = "\${PORT}";
         verbose = false;
@@ -17,7 +17,7 @@
         context = 260000;
         # Greedy verification: only temperature-0 requests take multi-token steps.
         speculative = "mtp";
-        mtpModel = "/persist/models/qwen38-flash-next/mtp-Qwen3.8-Flash-Next-shared-Q8_0.gguf";
+        mtpModel = "/persist/models/by-capability/language/Qwen3.8-Flash-Next/mtp-Qwen3.8-Flash-Next-shared-Q8_0.gguf";
         # draftTokens = 3;
 
         # 2048-token chunks keep the expert GEMMs on the matrix-core route.
