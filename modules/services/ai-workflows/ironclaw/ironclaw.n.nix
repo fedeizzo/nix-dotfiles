@@ -32,7 +32,8 @@
         # Iterate on it with the CLI as the service user, e.g.:
         #   sudo -u ironclaw env IRONCLAW_REBORN_HOME=/var/lib/ironclaw ironclaw models set-provider openai_compatible --model forge/qwen-flash
         #   sudo -u ironclaw env IRONCLAW_REBORN_HOME=/var/lib/ironclaw ironclaw config list
-        # The CLI cannot set the endpoint: add `base_url = "https://llama.fedeizzo.dev/v1"` under [llm.default] in config.toml.
+        # The CLI cannot set the endpoint: LLM_BASE_URL below is the fallback, or override it with
+        # `base_url = "..."` under [llm.default] in config.toml.
         # Then `systemctl restart ironclaw` (config writes never restart the service).
         # Precedence: compiled defaults < config.toml < env vars < CLI flags, so keep the env below minimal.
         # TODO: once the config is stable, port /var/lib/ironclaw/config.toml to a declarative Nix definition
@@ -46,6 +47,8 @@
           IRONCLAW_REBORN_WEBUI_USER_ID = "ironclaw";
           IRONCLAW_REBORN_LOG = "info";
 
+          # Fallback endpoint for the openai_compatible provider when config.toml sets no base_url
+          LLM_BASE_URL = "https://llama.fedeizzo.dev/v1";
           # Referenced by [llm.default].api_key_env in config.toml; llama-swap ignores the value
           LLM_API_KEY = "placeholder";
           LLM_REQUEST_TIMEOUT_SECS = "600";
