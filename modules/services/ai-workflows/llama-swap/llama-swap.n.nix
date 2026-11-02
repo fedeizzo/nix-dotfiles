@@ -15,7 +15,12 @@
     {
       imports = [
         (inputs.nixpkgs-unstable + "/nixos/modules/services/networking/llama-swap.nix")
+        inputs.self.modules.nixos.llama-swap-gufo-lfm3
         inputs.self.modules.nixos.llama-swap-lfm3
+        inputs.self.modules.nixos.llama-swap-lfm3-vl
+        inputs.self.modules.nixos.llama-swap-lfm3-audio-asr
+        inputs.self.modules.nixos.llama-swap-lfm3-audio-tts
+        inputs.self.modules.nixos.llama-swap-d1
         inputs.self.modules.nixos.llama-swap-qwen27b
         inputs.self.modules.nixos.llama-swap-flash-next
       ];

@@ -2,11 +2,8 @@
 {
   flake.modules.nixos.llama-swap-lfm3 = { inputs, pkgs, ... }:
     let
-      gufoWithLfm3 = inputs.gufo.packages.${pkgs.stdenv.hostPlatform.system}.default.override {
-        extensions = [ inputs.lfm3-gufo-extension ];
-      };
       gufoLfm3 = inputs.gufo.lib.${pkgs.stdenv.hostPlatform.system}.mkGufoServe {
-        gufoPackage = gufoWithLfm3;
+        gufoPackage = pkgs.gufo-lfm3;
         modality = "llm";
 
         model = "/persist/models/LFM3-1.7B-Q8_0.gguf";
@@ -56,6 +53,7 @@
       };
     in
     {
+      imports = [ inputs.self.modules.nixos.llama-swap-gufo-lfm3 ];
       services.llama-swap.settings.models."lfm3-1.7b" = {
         env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
         cmd = "${gufoLfm3}";
