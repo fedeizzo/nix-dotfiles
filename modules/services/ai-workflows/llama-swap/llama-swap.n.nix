@@ -43,8 +43,8 @@
         settings = {
           healthCheckTimeout = 600;
           includeAliasesInList = true;
-          # Small models that comfortably fit resident together (~25 GiB of
-          # the 125 GiB unified memory on Strix Halo); see ttl = 0 in each.
+          # Small models that fit concurrently (~25 GiB of the 125 GiB unified
+          # memory on Strix Halo); each unloads after 120s idle (ttl).
           hooks.on_startup.preload = [
             "lfm3-1.7b"
             "lfm3-vl"

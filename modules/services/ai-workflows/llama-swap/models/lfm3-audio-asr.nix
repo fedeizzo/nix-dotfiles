@@ -33,7 +33,7 @@
       services.llama-swap.settings.models."lfm3-audio-asr" = {
         env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
         cmd = "${gufoAudioAsr}";
-        ttl = 0; # Keep resident; part of the preloaded LFM set.
+        ttl = 120; # Unload after 2 minutes idle; fast to reload.
         timeouts.responseHeader = 600;
         aliases = [ ];
       };
