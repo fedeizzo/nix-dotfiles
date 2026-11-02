@@ -339,6 +339,22 @@
         "type": "github"
       }
     },
+    "fish-drama3-gufo-extension": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1793611894,
+        "narHash": "sha256-4cypbI7axwKsnMCoo6hQp5i/AvxxV5bAHmasfxw4t2Y=",
+        "owner": "rikaaa0928",
+        "repo": "fish-drama3-gufo-extension",
+        "rev": "e9111f5d3fc2f32f378c447124859963a7ad5945",
+        "type": "github"
+      },
+      "original": {
+        "owner": "rikaaa0928",
+        "repo": "fish-drama3-gufo-extension",
+        "type": "github"
+      }
+    },
     "flake-compat": {
       "flake": false,
       "locked": {
@@ -837,11 +853,11 @@
         "nixpkgs-rocm10": "nixpkgs-rocm10"
       },
       "locked": {
-        "lastModified": 1793611760,
-        "narHash": "sha256-7Qm2iCpbnXcDzRvM2YRkPDMLO7yyegpRVBaEu9gbsnI=",
+        "lastModified": 1793618454,
+        "narHash": "sha256-W0i5Hwv4ejgsTCaI16Odg9z2BI8PQNXd16DWGefyS2c=",
         "owner": "gufo-org",
         "repo": "gufo",
-        "rev": "c32136f87c29e83dd55ab66c5e703e895ab8f03e",
+        "rev": "9be1f725d8b9564ea3172ca4c08e6af10c5982e9",
         "type": "github"
       },
       "original": {
@@ -2145,6 +2161,7 @@
         "disko": "disko",
         "dms": "dms",
         "dms-plugin-registry": "dms-plugin-registry",
+        "fish-drama3-gufo-extension": "fish-drama3-gufo-extension",
         "flake-file": "flake-file",
         "flake-parts": "flake-parts_2",
         "git-hooks-nix": "git-hooks-nix",

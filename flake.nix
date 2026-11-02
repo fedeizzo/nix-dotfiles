@@ -19,6 +19,10 @@
     };
     dms.url = "github:AvengeMedia/DankMaterialShell/stable";
     dms-plugin-registry.url = "github:AvengeMedia/dms-plugin-registry";
+    fish-drama3-gufo-extension = {
+      url = "github:rikaaa0928/fish-drama3-gufo-extension";
+      flake = false;
+    };
     flake-file.url = "github:vic/flake-file";
     flake-parts = {
       url = "github:hercules-ci/flake-parts";

@@ -22,7 +22,7 @@ cd /persist/models
 declare -A MEMBERS=(
   [language]="DeepSeek-V4-Flash Qwen3.8-27B Qwen3.8-27B-DFlash2 Qwen3.6-35B-A3B-MTP Qwen3.8-Flash-Next LFM3-1.7B"
   [vision]="Qwen3.8-27B Qwen3.6-35B-A3B-MTP Qwen3.8-Flash-Next LFM3-VL-2B D1-Omni-2B"
-  [audio]="Qwen3-ASR-1.7B Qwen3-TTS-12Hz-1.7B-Base Qwen3-TTS-12Hz-1.7B-CustomVoice Qwen3-TTS-12Hz-1.7B-VoiceDesign LFM3-Audio-2B D1-Omni-2B"
+  [audio]="Qwen3-ASR-1.7B Qwen3-TTS-12Hz-1.7B-Base Qwen3-TTS-12Hz-1.7B-CustomVoice Qwen3-TTS-12Hz-1.7B-VoiceDesign LFM3-Audio-2B D1-Omni-2B Fish-Drama-3"
   [omni]="D1-Omni-2B"
   [embedding]="EmbeddingGemma-2"
 )
