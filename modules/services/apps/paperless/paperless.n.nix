@@ -56,46 +56,6 @@
         PAPERLESS_DISABLE_REGULAR_LOGIN = true;
       };
     };
-    virtualisation.oci-containers.containers."paperless-gpt" = {
-      image = "icereed/paperless-gpt:latest";
-      autoStart = false;
-      extraOptions = [ "--network=host" ];
-      ports = [ ];
-      environmentFiles = [ "${config.sops.secrets.paperless-gpt.path}" ];
-      environment = {
-        PAPERLESS_BASE_URL = "https://paperless.fedeizzo.dev";
-        LLM_PROVIDER = "openai";
-        LLM_MODEL = "qwen35";
-        OPENAI_API_KEY = "placeholder";
-        OPENAI_BASE_URL = "https://llama.fedeizzo.dev/v1";
-        LISTEN_INTERFACE = ":28982";
-        # OCR_PROVIDER="llm";
-        # VISION_LMM_PROVIDER="llm";
-        # VISION_LLM_MODEL=todo
-      };
-    };
-    virtualisation.oci-containers.containers."paperless-ai" = {
-      image = "clusterzx/paperless-ai:latest";
-      autoStart = false;
-      extraOptions = [ "--network=host" ];
-      ports = [ ];
-      volumes = [
-        "/var/lib/paperless-ai:/app/data"
-      ];
-      environmentFiles = [ "${config.sops.secrets.paperless-gpt.path}" ];
-      environment = {
-        PAPERLESS_AI_INITIAL_SETUP = "yes";
-        PAPERLESS_AI_PORT = "28983";
-        PAPERLESS_API_URL = "https://paperless.fedeizzo.dev/api";
-        PAPERLESS_USERNAME = "trackpadblue";
-        AI_PROVIDER = "custom";
-        CUSTOM_API_KEY = "placeholder";
-        CUSTOM_BASE_URL = "https://llama.fedeizzo.dev/v1";
-        # CUSTOM_MODEL = "mistralai/devstral-small-2-2512";
-        CUSTOM_MODEL = "qwen35";
-        SCAN_INTERVAL = "*/30 * * * *";
-      };
-    };
     sops.secrets.paperless = lib.mkIf config.services.paperless.enable {
       format = "dotenv";
       mode = "0400";
@@ -108,13 +68,6 @@
         "paperless-web.service"
       ];
       sopsFile = ./paperless-homelab-secrets.env;
-      key = ""; # to map the whole file as a secret
-    };
-    sops.secrets.paperless-gpt = lib.mkIf config.services.paperless.enable {
-      format = "dotenv";
-      mode = "0400";
-      restartUnits = [ "docker-paperless-gpt.service" ];
-      sopsFile = ./paperless-gpt-homelab-secrets.env;
       key = ""; # to map the whole file as a secret
     };
 
@@ -131,24 +84,6 @@
         ];
         toBackup = [
           "/persist${config.services.paperless.dataDir}"
-        ];
-      }
-      { name = "paperless-gpt"; port = 28982; dashboardSection = "Tools"; authType = "proxy"; }
-      {
-        name = "paperless-ai";
-        port = 28983;
-        dashboardSection = "Tools";
-        authType = "proxy";
-        toPersist = [
-          {
-            directory = "/var/lib/paperless-ai";
-            user = "root";
-            group = "root";
-            mode = "u=rwx,g=,o=";
-          }
-        ];
-        toBackup = [
-          "/persist/var/lib/paperless-ai"
         ];
       }
     ];
