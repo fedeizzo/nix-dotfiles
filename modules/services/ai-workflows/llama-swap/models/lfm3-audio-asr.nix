@@ -19,11 +19,13 @@
         host = "0.0.0.0";
         port = "\${PORT}";
         maxRequestBytes = 33554432;
-
-        extraArgs = [
-          "--served-model-name"
-          "forge/lfm3-audio-asr"
-        ];
+        # NOTE: Do NOT add a second `--served-model-name forge/...` here (as the
+        # chat models do). gufo's /v1/audio/transcriptions handler validates the
+        # request `model` field against its served-model-name, and llama-swap
+        # rewrites every proxied request's model to the config key
+        # ("lfm3-audio-asr"). A second flag overrides the first (last wins),
+        # so the backend would report "forge/lfm3-audio-asr" and reject every
+        # proxied request with 400 invalid_model.
       };
     in
     {
