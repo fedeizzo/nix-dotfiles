@@ -12,6 +12,18 @@ This document describes the flake module system for LLM/agent navigation.
 - Do not create or move bookmarks, push, or merge changes without authorization for that action. A request to commit does not authorize pushing.
 - After committing, check the resulting working-copy state and report the commit ID and description. Never claim a commit succeeded if the command failed.
 
+## Code Search
+
+- Use `rg` (ripgrep), never `grep -r`. Plain `grep -r` scans everything and can hang on binary/huge directories.
+- Always exclude heavy directories. Use this pattern:
+
+  ```bash
+  rg -n --glob '!.jj/' --glob '!.codegraph/' --glob '!.direnv/' --glob '!.pytest_cache/' --glob '!.ropeproject/' --glob '!**/__pycache__/' <pattern> [path]
+  ```
+
+- `rg` respects `.gitignore` and auto-excludes `.git/`, but `.jj/`, `.codegraph/`, `.pytest_cache/`, and `.ropeproject/` are NOT ignored and must be excluded explicitly on every search.
+- Prefer searching `modules/` directly when the scope is known.
+
 ## Top-Level Pattern
 
 Every module file under `modules/` declares:
