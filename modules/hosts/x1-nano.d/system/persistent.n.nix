@@ -24,6 +24,10 @@
 
           # AppData
           ".local"
+          {
+            directory = ".codex"; # Login credentials (auth.json), sessions, and runtime state.
+            mode = "0700";
+          }
           ".pi"
           ".gemini"
 
