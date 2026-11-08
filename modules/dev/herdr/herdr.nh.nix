@@ -88,33 +88,6 @@
         # fallback keepalives, and `herdr machine reconnect` auth recovery.
         remote.manage_ssh_config = true;
 
-        keys.command = [
-          {
-            key = "alt+r";
-            type = "plugin_action";
-            command = "persiyanov.reviewr.toggle";
-            description = "review bar";
-          }
-          {
-            key = "alt+t";
-            type = "plugin_action";
-            command = "herdr-bar.open";
-            description = "command bar";
-          }
-          # Open in a split beside your work.
-          {
-            key = "alt+f";
-            type = "shell";
-            command = "herdr plugin action invoke open-file-viewer --plugin herdr-file-viewer";
-          }
-          # Open in its own tab.
-          {
-            key = "alt+shift+f";
-            type = "shell";
-            command = "herdr plugin action invoke open-file-viewer-tab --plugin herdr-file-viewer";
-          }
-        ];
-
         ui = {
           agent_panel_sort = "spaces";
 
@@ -126,10 +99,6 @@
             [
               "branch"
               "git_status"
-            ]
-            [
-              "$jj_bookmark"
-              "$jj_status"
             ]
           ];
 
@@ -157,12 +126,7 @@
         };
       };
 
-      config.fi.herdr.plugins = [
-        "persiyanov/herdr-reviewr"
-        "jeffarese/herdr-bar"
-        "smarzban/herdr-file-viewer"
-        "mroth/herdr-jj-status"
-      ];
+      config.fi.herdr.plugins = [ ];
 
       config.home.packages = [
         herdrWithPlugins
