@@ -40,6 +40,7 @@
           ".config/emacs"
           ".config/gh"
           ".config/herdr"
+          ".config/herdr-app"
           ".config/pulse"
           ".config/rbw"
           ".config/rclone"
