@@ -42,6 +42,7 @@
           username = "mixer";
         };
         programs.home-manager.enable = true;
+        fi.collie.enable = true;
 
         xdg.configFile."nixpkgs/config.nix".text = ''
           {

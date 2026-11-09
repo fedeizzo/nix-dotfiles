@@ -42,6 +42,7 @@
 
         # Proxied by homelab's traefik (see the forge firewall rule).
         fi.collie = {
+          enable = true;
           publicHost = "collief.fedeizzo.dev";
           bindHost = "192.168.1.89";
         };

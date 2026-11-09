@@ -34,6 +34,7 @@
     in
     {
       options.fi.collie = {
+        enable = lib.mkEnableOption "the Collie bridge behind Traefik";
         modSource = lib.mkOption {
           type = lib.types.path;
           default = "${collieSrc}/herdr-app-mod/collie";
@@ -57,19 +58,25 @@
           inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.herdr-core
         ];
 
-        xdg.configFile."collie/.env".text = ''
-          COLLIE_MUX=herdr-core
-          COLLIE_SKIP_SERVE=1
-          COLLIE_PORT=8787
-          COLLIE_PUBLIC_HOSTS=${cfg.publicHost}
-          COLLIE_ALLOWED_ORIGINS=https://${cfg.publicHost}
-          COLLIE_PUBLIC_URL=https://${cfg.publicHost}
-        '' + lib.optionalString (cfg.bindHost != null) ''
-          COLLIE_HOST=${cfg.bindHost}
-          COLLIE_ALLOW_NON_LOOPBACK_BIND=1
-        '';
+        home.sessionVariables = lib.mkIf cfg.enable {
+          HERDR_PLUGIN_CONFIG_DIR = "${config.xdg.configHome}/collie";
+        };
 
-        systemd.user.services.collie = lib.mkIf pkgs.stdenv.isLinux {
+        xdg.configFile."collie/.env" = lib.mkIf cfg.enable {
+          text = ''
+            COLLIE_MUX=herdr-core
+            COLLIE_SKIP_SERVE=1
+            COLLIE_PORT=8787
+            COLLIE_PUBLIC_HOSTS=${cfg.publicHost}
+            COLLIE_ALLOWED_ORIGINS=https://${cfg.publicHost}
+            COLLIE_PUBLIC_URL=https://${cfg.publicHost}
+          '' + lib.optionalString (cfg.bindHost != null) ''
+            COLLIE_HOST=${cfg.bindHost}
+            COLLIE_ALLOW_NON_LOOPBACK_BIND=1
+          '';
+        };
+
+        systemd.user.services.collie = lib.mkIf (cfg.enable && pkgs.stdenv.isLinux) {
           Unit = {
             Description = "Collie Herdr web bridge";
             Wants = [ "network-online.target" ];
@@ -79,6 +86,8 @@
             Type = "simple";
             ExecStart = "${collie}/bin/collie _exec-bridge";
             Environment = [ "HERDR_PLUGIN_CONFIG_DIR=${config.xdg.configHome}/collie" ];
+            # Explicitly load the backend/proxy settings before entering Collie's CLI.
+            EnvironmentFile = "${config.xdg.configHome}/collie/.env";
             Restart = "on-failure";
             RestartSec = 5;
             NoNewPrivileges = true;
