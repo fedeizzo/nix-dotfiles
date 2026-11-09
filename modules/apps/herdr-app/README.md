@@ -23,11 +23,18 @@ For just one repository, pass only its input name. Review `jj diff flake.lock`
 before applying. The Kanso input supplies only `open-with`, not the whole layout.
 The `herdr-mods` input updates Filetree and File Icons together.
 
-`spaces-jj` and `main-jj.json` are local clones of Herdr-app 0.1.13, with the
-sidebar changes from herdr-app-jj revision
+Local mods live in `mods/` (`spaces-jj`, `tabs-jj`, `gh-issues`); `main-jj.json`
+sits next to the installer. These local clones of Herdr-app 0.1.13,
+with the sidebar changes from herdr-app-jj revision
 `48be7c658c2f0a47e1652046bf93542a26ade135`. They do not update automatically:
 review the upstream sidebar patch when updating jj, and refresh the clones when
 changing Herdr's layout/sidebar behavior. The other jj mods update from the input.
+
+`tabs-jj` is a clone of the shipped `tabs` mod whose only change is an extra
+panel button for `gh-issues` (GitHub issues of the focused pane's repo, via
+`gh`). `gh-issues` also self-registers into `shared("workspace.panels")`, so
+removing it hides its button again. The layout points its `tabs` block at
+`tabs-jj`.
 
 The installer owns these mod source files and `layouts/main-jj.json`; edit their
 repository copies, since activation reapplies them. Keys are merged; app state

@@ -37,3 +37,6 @@ config.yaml
 
 # gufo
 gufo
+
+# python
+**/__pycache__/

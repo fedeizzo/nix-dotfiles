@@ -1,0 +1,1 @@
+{ "place": "none", "title": "GitHub Issues", "focusable": true, "overlay": { "kind": "window", "width": 400, "height": 0.7, "key": "gh-issues" } }
