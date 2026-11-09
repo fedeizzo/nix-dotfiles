@@ -845,6 +845,54 @@
         "type": "github"
       }
     },
+    "herdr-app-jj": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1794229225,
+        "narHash": "sha256-JLsp/qaZnFh2o7nptWJGfL6H3YuQ3y5Pdp6OpDXzrhQ=",
+        "owner": "sebcbi1",
+        "repo": "herdr-app-jj",
+        "rev": "48be7c658c2f0a47e1652046bf93542a26ade135",
+        "type": "github"
+      },
+      "original": {
+        "owner": "sebcbi1",
+        "repo": "herdr-app-jj",
+        "type": "github"
+      }
+    },
+    "herdr-kanso": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1794202010,
+        "narHash": "sha256-QD4DEh5pVnxhLGHaqA31Gspv7SG41+tPO9INwJq46z4=",
+        "owner": "jlopezlira",
+        "repo": "herdr-kanso",
+        "rev": "d8df831f0b45e3a8e9fa7dc4270fb7cb253a0f48",
+        "type": "github"
+      },
+      "original": {
+        "owner": "jlopezlira",
+        "repo": "herdr-kanso",
+        "type": "github"
+      }
+    },
+    "herdr-mods": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1793699137,
+        "narHash": "sha256-MXo1Q/m3JC0VFBSuUiKIEPwckjHT+njSBFkTFiga8i8=",
+        "owner": "cybertron288",
+        "repo": "herdr-mods",
+        "rev": "34e7c3348e954fd0a1147b846898db8c3e37e526",
+        "type": "github"
+      },
+      "original": {
+        "owner": "cybertron288",
+        "repo": "herdr-mods",
+        "type": "github"
+      }
+    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -1997,6 +2045,9 @@
         "flake-parts": "flake-parts_2",
         "git-hooks-nix": "git-hooks-nix",
         "gufo": "gufo",
+        "herdr-app-jj": "herdr-app-jj",
+        "herdr-kanso": "herdr-kanso",
+        "herdr-mods": "herdr-mods",
         "home-manager": "home-manager",
         "home-manager-master": "home-manager-master",
         "impermanence": "impermanence",

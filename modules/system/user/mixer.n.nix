@@ -33,7 +33,6 @@
           nix-index
           profile-personal
           pi
-          herdr
           collie
           ssh-agent
         ];

@@ -51,7 +51,6 @@
           antigravity
           codex
           claude
-          herdr
           herdr-app
         ];
         programs.home-manager.enable = true;

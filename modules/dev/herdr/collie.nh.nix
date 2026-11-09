@@ -1,4 +1,4 @@
-# Collie: web bridge for herdr, served on homelab (collie) and forge (collief).
+# Collie: web bridge for Herdr-core, served on homelab (collie) and forge (collief).
 # Traefik on homelab is the single entry point for both.
 {
   flake.modules.nixos.collie = {
@@ -20,43 +20,26 @@
     ];
   };
 
-  flake.modules.homeManager.collie = { pkgs, lib, config, ... }:
+  flake.modules.homeManager.collie = { pkgs, lib, config, inputs, ... }:
     let
       cfg = config.fi.collie;
 
-      collie = pkgs.writeShellApplication {
-        name = "collie";
-        runtimeInputs = [
-          pkgs.bun
-          pkgs.git
-          pkgs.jq
-        ];
-        text = ''
-          config_home="''${XDG_CONFIG_HOME:-$HOME/.config}"
-          config_dir="$config_home/herdr/plugins/config/herdr.collie"
-
-          if [[ -f "$config_dir/.env" ]]; then
-            set -a
-            # shellcheck disable=SC1091
-            source "$config_dir/.env"
-            set +a
-          fi
-
-          export HERDR_PLUGIN_CONFIG_DIR="$config_dir"
-          export HERDR_SOCKET_PATH="''${HERDR_SOCKET_PATH:-$config_home/herdr/herdr.sock}"
-
-          plugin_root="$(
-            ${config.fi.herdr.package}/bin/herdr plugin list --json \
-              | jq -er 'first(.result.plugins[]? | select(.plugin_id == "herdr.collie") | .plugin_root)'
-          )"
-
-          cd "$plugin_root"
-          exec bun run "$plugin_root/bridge/index.ts"
-        '';
+      collieSrc = pkgs.fetchFromGitHub {
+        owner = "AltanS";
+        repo = "collie";
+        rev = "b178eb63f2255637f6326bb942a2505e2004c31f";
+        hash = "sha256-CqP7fCXzzp+IKx/UycMM2Lpd64Fc8dxEbZhKVEWDQPY=";
       };
+      collie = pkgs.callPackage "${collieSrc}/packaging/nix/collie.nix" { };
     in
     {
       options.fi.collie = {
+        modSource = lib.mkOption {
+          type = lib.types.path;
+          default = "${collieSrc}/herdr-app-mod/collie";
+          readOnly = true;
+          description = "Collie panel for Herdr-app.";
+        };
         publicHost = lib.mkOption {
           type = lib.types.str;
           default = "collie.fedeizzo.dev";
@@ -69,9 +52,13 @@
       };
 
       config = {
-        fi.herdr.plugins = [ "AltanS/collie" ];
+        home.packages = [
+          collie
+          inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.herdr-core
+        ];
 
-        xdg.configFile."herdr/plugins/config/herdr.collie/.env".text = ''
+        xdg.configFile."collie/.env".text = ''
+          COLLIE_MUX=herdr-core
           COLLIE_SKIP_SERVE=1
           COLLIE_PORT=8787
           COLLIE_PUBLIC_HOSTS=${cfg.publicHost}
@@ -90,7 +77,8 @@
           };
           Service = {
             Type = "simple";
-            ExecStart = "${collie}/bin/collie";
+            ExecStart = "${collie}/bin/collie _exec-bridge";
+            Environment = [ "HERDR_PLUGIN_CONFIG_DIR=${config.xdg.configHome}/collie" ];
             Restart = "on-failure";
             RestartSec = 5;
             NoNewPrivileges = true;

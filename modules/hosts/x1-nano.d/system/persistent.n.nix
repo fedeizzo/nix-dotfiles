@@ -37,6 +37,7 @@
           ".config/borg"
           ".config/chromium"
           ".config/cni"
+          ".config/collie"
           ".config/emacs"
           ".config/gh"
           ".config/herdr"

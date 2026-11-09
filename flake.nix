@@ -30,6 +30,18 @@
     };
     git-hooks-nix.url = "github:cachix/git-hooks.nix";
     gufo.url = "github:gufo-org/gufo";
+    herdr-app-jj = {
+      url = "github:sebcbi1/herdr-app-jj";
+      flake = false;
+    };
+    herdr-kanso = {
+      url = "github:jlopezlira/herdr-kanso";
+      flake = false;
+    };
+    herdr-mods = {
+      url = "github:cybertron288/herdr-mods";
+      flake = false;
+    };
     home-manager = {
       url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
