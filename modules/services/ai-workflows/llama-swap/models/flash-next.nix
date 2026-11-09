@@ -1,4 +1,9 @@
 # Qwen3.8-Flash-Next with MTP speculative decoding, served by gufo.
+# Vision: image input via the BF16 projector.
+#   hf download unsloth/Qwen3.8-Flash-Next-GGUF \
+#     --revision d96201194f103c906994f283f504209dc8d2a10c \
+#     --include "mmproj-BF16.gguf" \
+#     --local-dir /persist/models/by-capability/language/Qwen3.8-Flash-Next
 {
   flake.modules.nixos.llama-swap-flash-next = { inputs, pkgs, ... }:
     let
@@ -50,6 +55,10 @@
         extraArgs = [
           "--served-model-name"
           "forge/qwen-flash"
+          # Vision projector; gufo auto-detects it beside the backbone, pass
+          # it explicitly so a missing file fails fast at startup.
+          "--mmproj"
+          "/persist/models/by-capability/language/Qwen3.8-Flash-Next/mmproj-BF16.gguf"
         ];
       };
     in

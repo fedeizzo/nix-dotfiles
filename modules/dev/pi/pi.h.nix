@@ -173,6 +173,7 @@
               }
               {
                 id = "qwen-flash";
+                input = [ "text" "image" ]; # gufo serves it with mmproj-BF16 vision projector
                 reasoning = true;
                 contextWindow = 260000;
                 maxTokens = 16384; # Crucial: gives the model enough runway to finish thinking
@@ -197,6 +198,7 @@
               }
               {
                 id = "forge/qwen-flash";
+                input = [ "text" "image" ]; # gufo serves it with mmproj-BF16 vision projector
                 reasoning = true;
                 contextWindow = 260000;
                 maxTokens = 16384; # Crucial: gives the model enough runway to finish thinking
