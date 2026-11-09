@@ -7,10 +7,6 @@
       url = "github:gufo-org/lfm3-gufo-extension";
       flake = false;
     };
-    inputs.fish-drama3-gufo-extension = {
-      url = "github:rikaaa0928/fish-drama3-gufo-extension";
-      flake = false;
-    };
   };
 
   # llama-swap service; runs on every Strix Halo host.
@@ -20,7 +16,6 @@
       imports = [
         (inputs.nixpkgs-unstable + "/nixos/modules/services/networking/llama-swap.nix")
         inputs.self.modules.nixos.llama-swap-gufo-lfm3
-        inputs.self.modules.nixos.llama-swap-fish-drama3
         inputs.self.modules.nixos.llama-swap-lfm3
         inputs.self.modules.nixos.llama-swap-lfm3-vl
         inputs.self.modules.nixos.llama-swap-lfm3-audio-asr
