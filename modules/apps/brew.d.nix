@@ -33,6 +33,7 @@
         "dogbrew"
         "gcloud-cli"
         "git-dd"
+        "herdr-app"
         "lm-studio"
         "localsend"
         "monitorcontrol"

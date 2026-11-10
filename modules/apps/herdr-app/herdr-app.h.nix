@@ -13,11 +13,21 @@
     flake = false;
   };
 
-  flake.modules.homeManager.herdr-app = { pkgs, lib, inputs, config, ... }: {
+  # The Collie panel and bridge are a separate import: hosts that only want the
+  # app (work laptop) take herdr-app alone. herdr-app already wraps herdr-core
+  # into its PATH, so nothing here depends on Collie.
+  flake.modules.homeManager.herdr-app-collie = { inputs, config, ... }: {
     imports = [ inputs.self.modules.homeManager.collie ];
     xdg.configFile."herdr-app/mods/collie".source = config.fi.collie.modSource;
+  };
 
-    home.packages = [
+  flake.modules.homeManager.herdr-app = { pkgs, lib, inputs, config, ... }: {
+    # Darwin takes the app from the Homebrew cask (see the brew module): the
+    # nix package installs a bare binary, with no Herdr.app bundle, so macOS
+    # gives it no Spotlight entry and no proper pasteboard/menu integration.
+    # Only the binary differs; the mods below are installed the same way on
+    # both platforms, since the installer just copies files.
+    home.packages = lib.optionals pkgs.stdenv.hostPlatform.isLinux [
       inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}.herdr-app
     ];
 

@@ -44,7 +44,7 @@
         profile-work
         ai-tools
         nono
-        herdr
+        herdr-app
       ];
 
       home.packages = with pkgs; [ pngpaste ];
