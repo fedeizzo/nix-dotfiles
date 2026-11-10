@@ -17,6 +17,7 @@
           extraMods = local (extras.mods or { });
           extraLayouts = local (extras.layouts or { });
           extraFloating = extras.floating or [ ];
+          extraLayoutPatches = extras.patches or [ ];
           extraKeys = extras.keys or { };
         };
       };

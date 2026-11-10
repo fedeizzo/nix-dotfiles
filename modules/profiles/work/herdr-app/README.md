@@ -7,12 +7,12 @@ herdr-app module are both imported (`herdr-app.h.nix` next to this folder);
 other hosts are unaffected.
 
 Everything is declared in `extras.json` (mods, the `ops` layout, a floating
-block with the settings, keys). Nix reads it through
+block with the settings, layout patches, keys). Nix reads it through
 `fi.herdrApp.extra*`; the installer can also read it directly.
 
 ## What it does
 
-The `ops` mod has four roles, chosen by `props.role`:
+The `ops` mod has five roles, chosen by `props.role`:
 
 - **watch** (an invisible floating block added to `main-jj` and `ops`):
   toasts when a terminal labeled `role=delegate` or `role=standing` is
@@ -31,6 +31,11 @@ The `ops` mod has four roles, chosen by `props.role`:
 - **note**: a markdown viewer pane for task notes; wikilinks open in place.
   The board reuses one per tab.
 - **calendar**: the Due calendar as a window.
+- **button**: an "Ops" button right of the tab bar's Files / Changes. A layout
+  patch wraps `main-jj`'s `tabs` block in a row with it and adds an `ops` child
+  to the `panel-body` stack, so it opens and closes the board in the side panel
+  exactly like those (one panel at a time, remembered per space by tabs-jj).
+  In the `ops` layout it shows and hides the board column instead.
 
 Keys (`extras.json`; none replaces a key you already bound):
 

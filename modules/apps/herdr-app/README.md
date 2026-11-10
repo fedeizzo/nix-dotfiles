@@ -71,12 +71,16 @@ bubbles when those are unavailable.
 
 ## Profile extras
 
-A profile can add mods, layouts, keys and floating blocks on top of the shared
-set through `fi.herdrApp.{extraMods,extraLayouts,extraKeys,extraFloating}`.
+A profile can add mods, layouts, keys, floating blocks and layout patches on top
+of the shared set through
+`fi.herdrApp.{extraMods,extraLayouts,extraKeys,extraFloating,extraLayoutPatches}`.
 The module writes them to a JSON manifest and passes it to the installer as an
 optional last argument; with nothing set, the installer runs exactly as before.
 Floating blocks are added (by id) to the root of `main-jj` and of every extra
-layout, for mods that must run whatever layout is shown. Extra keys never
+layout, for mods that must run whatever layout is shown. Layout patches are
+idempotent node edits on the same layouts (`append` children to a node, or
+`wrap` a node in a new one; see `patch_layout`), so a profile can add a panel
+or a tab-bar button without forking `main-jj.json`. Extra keys never
 replace a key the user already bound (the installer says so on stderr).
 
 The work profile uses this for the ops mods; see

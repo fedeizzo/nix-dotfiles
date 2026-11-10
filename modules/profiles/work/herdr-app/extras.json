@@ -38,6 +38,56 @@
       }
     }
   ],
+  "patches": [
+    {
+      "layouts": [
+        "main-jj"
+      ],
+      "id": "panel-body",
+      "append": [
+        {
+          "id": "ops",
+          "type": "block",
+          "content": {
+            "mod": "ops"
+          }
+        }
+      ]
+    },
+    {
+      "id": "tabs",
+      "self": {
+        "size": {
+          "weight": 1
+        }
+      },
+      "wrap": {
+        "id": "tabs-row",
+        "type": "row",
+        "size": {
+          "px": 42
+        },
+        "resizable": false,
+        "children": [
+          "$self",
+          {
+            "id": "ops-tab",
+            "type": "block",
+            "size": {
+              "px": 70
+            },
+            "content": {
+              "mod": "ops",
+              "props": {
+                "role": "button"
+              }
+            },
+            "window_drag": true
+          }
+        ]
+      }
+    }
+  ],
   "keys": {
     "global": {
       "cmd-shift-o": "ops.orchestrator",
