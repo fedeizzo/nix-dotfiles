@@ -1,5 +1,13 @@
 {
-  flake.modules.homeManager.zsh = { pkgs, lib, config, ... }: {
+  flake.modules.homeManager.zsh = { pkgs, lib, config, ... }:
+  let
+    # Generate `<tool> init zsh` output at build time instead of exec'ing it on
+    # every shell start (process spawn is very slow on EDR-monitored machines).
+    zshInit = name: cmd: pkgs.runCommand "${name}-init.zsh" { } ''
+      HOME=$TMPDIR ${cmd} > $out
+    '';
+  in
+  {
     programs = {
       zsh = {
         enable = true;
@@ -15,7 +23,17 @@
           size = 10000;
         };
         historySubstringSearch.enable = true;
-        initContent = lib.mkAfter ''
+        initContent = lib.mkMerge [
+          # Same orders Home Manager uses for its own integrations.
+          (lib.mkOrder 851 ''
+            source ${zshInit "zoxide" "${lib.getExe config.programs.zoxide.package} init zsh"}
+          '')
+          (lib.mkOrder 910 ''
+            if [[ $options[zle] = on ]]; then
+              source ${zshInit "fzf" "${lib.getExe config.programs.fzf.package} --zsh"}
+            fi
+          '')
+          (lib.mkAfter ''
           function compressZSTD() {
             tar --zstd -cf "$1.tar.zst" "$1/"
           }
@@ -23,7 +41,8 @@
           function extractZSTD() {
             tar --zstd -xf "$1"
           }
-        '';
+        '')
+        ];
         envExtra = lib.mkAfter ''
           export LANG="en_US.UTF-8"
           export EDITOR="vim"
@@ -107,12 +126,12 @@
 
       fzf = {
         enable = true;
-        enableZshIntegration = true;
+        enableZshIntegration = false; # sourced pre-generated above
       };
 
       zoxide = {
         enable = true;
-        enableZshIntegration = true;
+        enableZshIntegration = false; # sourced pre-generated above
         options = [ ];
       };
     };
