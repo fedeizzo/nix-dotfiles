@@ -19,6 +19,9 @@ const FKEY = "gh-issues.filters"; // shared mirror of the filter set: menus writ
 // The triage prompt for the card button. {number} {title} {url} {repo} get replaced.
 const TRIAGE = "Let\'s triage this GitHub issue: #{number} \"{title}\" ({url}) in {repo}. Read it and explore the related code if needed. We have to find labels, the issue type, and the issue-type fields. Then check for duplicates of this issue. Present the triage/summary, but do not do anything (no comments, no labels, no edits) without the user\'s approval.";
 
+// Batch triage: every checked card in one pi, so the exploration context is shared.
+const TRIAGE_BATCH = "Let\'s triage these GitHub issues in {repo}:\n{list}\nRead them and explore the related code if needed. For every issue find labels, the issue type, and the issue-type fields. Then check for duplicates, within this list and against the repo. Present the triage/summary for each issue, but do not do anything (no comments, no labels, no edits) without the user\'s approval.";
+
 const FACETS = [["people", "authors"], ["types", "type"], ["labels", "labels"], ["fields", "fields"]];
 
 // GitHub's issue-type and label colors arrive as CRAYOLA names.
@@ -71,6 +74,8 @@ export default class GhIssues extends View {
     this.error = null;
     this.fetchedAt = 0;
     this.at = -1;
+    // Issue numbers checked for a batch triage; reloaded per repo in load().
+    this.picked = new Set();
     this.typing = false;
     this.state = "open";
     this.filters = { labels: [], types: [], people: [], fields: [] };
@@ -93,6 +98,10 @@ export default class GhIssues extends View {
       const cwd = this.targetCwd();
       if (cwd !== this.cwd || Date.now() - this.fetchedAt > REFRESH_MS) this.load(cx);
     });
+  }
+
+  savePicked() {
+    try { localStorage.setItem(`picked:${this.repo ?? this.p.repo ?? ""}`, JSON.stringify([...this.picked])); } catch {}
   }
 
   saveFilters() {
@@ -126,6 +135,11 @@ export default class GhIssues extends View {
       }
       this.repo = repo;
       this.cwd = cwd;
+      if (this.pickedRepo !== repo) {
+        this.pickedRepo = repo;
+        this.picked = new Set(); // each repo keeps its own checked set
+        try { for (const n of JSON.parse(localStorage.getItem(`picked:${repo}`) ?? "[]")) this.picked.add(n); } catch {}
+      }
       const r2 = await exec("gh", [
         "issue", "list", "--repo", repo, "--state", this.state, "--limit", LIMIT,
         "--json", "number,title,url,updatedAt,labels,author,assignees,milestone,issueType,stateReason",
@@ -248,6 +262,21 @@ export default class GhIssues extends View {
     run("terminal.open", args);
   }
 
+  // One pi for all checked issues: numbered list in the prompt, shared context,
+  // same right-split rule as the per-card triage. The selection resets on spawn.
+  triageBatch(cx) {
+    const items = (this.issues ?? []).filter((i) => this.picked.has(i.number));
+    if (!items.length) return;
+    const list = items.map((i, n) => `${n + 1}. #${i.number} "${i.title}" (${i.url})`).join("\n");
+    const text = TRIAGE_BATCH.split("{repo}").join(this.repo ?? "").split("{list}").join(list);
+    const args = { argv: ["pi", text], place: "right" };
+    if (this.cwd) args.folder = this.cwd;
+    run("terminal.open", args);
+    this.picked.clear();
+    this.savePicked();
+    cx.notify();
+  }
+
   shown() {
     const list = this.issues ?? [];
     const q = (this.input.value() ?? "").trim().toLowerCase();
@@ -340,6 +369,7 @@ export default class GhIssues extends View {
   // a pane split to the right.
   row(iss, i, t) {
     const sel = i === this.at;
+    const picked = this.picked.has(iss.number);
     const labels = iss.labels ?? [];
     const assignees = iss.assignees ?? [];
     const fields = this.fields?.[iss.number] ?? [];
@@ -349,6 +379,14 @@ export default class GhIssues extends View {
       .hover((s) => s.bg(t.hover))
       .on_click((_ev, cx) => { this.at = i; this.openIssue(iss); cx.notify(); })
       .child(h_flex().gap(9).items_start()
+        .child(div().id(`ghi-pick-${iss.number}`).size(15).mt(2).flex_none().flex().items_center().justify_center()
+          .rounded(4).border(1.5).border_color(picked ? t.solid : t.dim)
+          .bg(picked ? t.solid : alpha("#000000", 0))
+          .text_color(picked ? t.solid_foreground : alpha("#000000", 0))
+          .cursor_pointer().hover((s) => s.bg(t.hover))
+          .on_mouse_down("left", stop)
+          .on_click((_e, cx) => { if (this.picked.has(iss.number)) this.picked.delete(iss.number); else this.picked.add(iss.number); this.savePicked(); cx.notify(); })
+          .child("✓"))
         .child(this.stateIcon(iss, t))
         .child(v_flex().flex_1().min_w(0).gap(3)
           .child(div().text_size(12.5).font_medium().text_color(t.foreground).child(iss.title))
@@ -379,6 +417,24 @@ export default class GhIssues extends View {
           .on_mouse_down("left", stop)
           .on_click((_e, cx) => this.triage(iss, cx))
           .child(div().child("✦ triage"))));
+  }
+
+  pickedBar(t) {
+    const n = this.picked.size;
+    return h_flex().flex_none().px(10).py(5).gap(8).items_center()
+      .bg(alpha(t.accent ?? t.border, 0.10)).border_t(1).border_b(1).border_color(alpha(t.accent ?? t.border, 0.35))
+      .child(div().text_size(11).font_medium().text_color(t.accent ?? t.foreground).child(`${n} selected`))
+      .child(div().flex_1())
+      .child(h_flex().id("ghi-triage-all").h(22).px(10).gap(4).items_center().rounded(7).flex_none()
+        .bg(alpha(t.accent ?? t.border, 0.16)).border(1).border_color(alpha(t.accent ?? t.border, 0.5))
+        .text_color(t.accent ?? t.foreground).text_size(10.5).font_medium().cursor_pointer()
+        .hover((s) => s.bg(alpha(t.accent ?? t.border, 0.3)))
+        .on_mouse_down("left", (_e, cx) => cx.stop_propagation())
+        .on_click((_e, cx) => this.triageBatch(cx))
+        .child(div().child(`✦ triage ${n}`)))
+      .child(div().id("ghi-picked-clear").h(22).px(6).flex_none().items_center().rounded(6).cursor_pointer()
+        .text_size(10).text_color(t.dim).hover((s) => s.bg(t.hover))
+        .on_click((_e, cx) => { this.picked.clear(); this.savePicked(); cx.notify(); }).child("clear"));
   }
 
   activeFilterPills(t, cx) {
@@ -539,6 +595,7 @@ export default class GhIssues extends View {
     return v_flex().size_full().min_w(0).text_color(t.foreground).bg(t.surface)
       .track_focus(this.handle).on_key_down((e, cx) => this.key(e, cx))
       .child(head)
+      .when(Boolean(this.picked.size), (el) => el.child(this.pickedBar(t)))
       .when(this.error && this.issues, (el) => el.child(div().px(10).py(3).text_size(10.5).text_color(t.blocked).child(this.error)))
       .child(body);
   }
