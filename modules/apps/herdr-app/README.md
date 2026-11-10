@@ -68,3 +68,26 @@ and `file-icons`, then inspect `herdr-app status`.
 gh-issues needs `gh` (authenticated) in the app's environment; avatar baking
 additionally uses `curl` and `ffmpeg` — the panel degrades to initials
 bubbles when those are unavailable.
+
+## Profile extras
+
+A profile can add mods, layouts, keys and floating blocks on top of the shared
+set through `fi.herdrApp.{extraMods,extraLayouts,extraKeys,extraFloating}`.
+The module writes them to a JSON manifest and passes it to the installer as an
+optional last argument; with nothing set, the installer runs exactly as before.
+Floating blocks are added (by id) to the root of `main-jj` and of every extra
+layout, for mods that must run whatever layout is shown. Extra keys never
+replace a key the user already bound (the installer says so on stderr).
+
+The work profile uses this for the ops mods; see
+`modules/profiles/work/herdr-app/README.md`. To try a manifest without a new
+generation, install only the extras straight into the app's folder:
+
+```sh
+python3 modules/apps/herdr-app/install-mods.py --extras-only \
+  ~/.config/herdr-app modules/profiles/work/herdr-app/extras.json
+herdr-app check ~/.config/herdr-app/mods/ops && herdr-app status
+```
+
+Run `herdr-app check` on the installed copy, not the repository folder: the
+check writes `gpui-kit.d.ts` and `jsconfig.json` next to the mod.
