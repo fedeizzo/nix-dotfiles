@@ -1,9 +1,20 @@
 {
-  flake.modules.darwin.brew = { ... }: {
+  flake.modules.darwin.brew = { config, ... }: {
+    # Static equivalent of `eval "$(brew shellenv zsh)"`: brew is a script that
+    # spawns several processes, which is very slow on EDR-monitored machines.
+    programs.zsh.interactiveShellInit = let p = config.homebrew.prefix; in ''
+      export HOMEBREW_PREFIX="${p}" HOMEBREW_CELLAR="${p}/Cellar" HOMEBREW_REPOSITORY="${p}"
+      fpath[1,0]="${p}/share/zsh/site-functions"
+      export FPATH
+      export PATH="${p}/bin:${p}/sbin''${PATH+:$PATH}"
+      [ -z "''${MANPATH-}" ] || { export MANPATH="''${MANPATH%"''${MANPATH##*[!:]}"}"; export MANPATH=":''${MANPATH#"''${MANPATH%%[!:]*}"}"; }
+      export INFOPATH="${p}/share/info:''${INFOPATH:-}"
+    '';
+
     homebrew = {
       enable = true;
       enableBashIntegration = true;
-      enableZshIntegration = true;
+      enableZshIntegration = false; # replaced by the static env above
       onActivation = {
         autoUpdate = true;
         upgrade = true;

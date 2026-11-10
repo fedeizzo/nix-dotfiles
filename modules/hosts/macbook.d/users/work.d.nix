@@ -9,7 +9,13 @@
       vicinae
     ];
 
-    programs.zsh.enable = true;
+    programs.zsh = {
+      enable = true;
+      # Home Manager / oh-my-zsh already run compinit and set the prompt;
+      # skip the duplicate work in /etc/zshrc.
+      enableGlobalCompInit = false;
+      promptInit = "";
+    };
     users.users.${username} = {
       home = "/Users/${username}";
       shell = pkgs.zsh;
