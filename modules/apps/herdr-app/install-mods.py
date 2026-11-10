@@ -30,9 +30,20 @@ source = layout_source
 if not layout.exists() or layout.read_bytes() != source.read_bytes():
     shutil.copyfile(source, layout)
 
-# Merge one binding; retain all the user's other keys.
+# Merge our bindings; retain all the user's other keys. Never create the file:
+# Herdr ships its defaults only into a keys.json it wrote itself, and treats any
+# pre-existing one as personal config, so seeding it before the app's first run
+# would cost every default binding -- copy and paste included.
 keys_path = app_home / "keys.json"
-keys = json.loads(keys_path.read_text()) if keys_path.exists() else {}
+if not keys_path.exists():
+    print(
+        "herdr-app: no keys.json yet; start the app once, then re-activate to "
+        "add the open-with and gh-issues bindings",
+        file=sys.stderr,
+    )
+    sys.exit(0)
+
+keys = json.loads(keys_path.read_text())
 bindings = keys.setdefault("global", {})
 bindings.setdefault("ctrl-alt-o", "mod.open:open-with")
 bindings.setdefault("ctrl-shift-g", 'layout.select:{"stack":"panel-body","child":"gh-issues"}')
