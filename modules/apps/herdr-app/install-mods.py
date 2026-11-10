@@ -10,6 +10,7 @@ to the manifest's own folder, or absolute):
     "layouts":  { "<name>": "<layout json>" },
     "floating": [ <floating block>, ... ],   # added, by id, to the root of main-jj
                                              # and of every extra layout
+    "patches":  [ <patch>, ... ],            # node edits, see patch_layout
     "keys":     { "<section>": { "<key>": <action> } } }
 
 --extras-only installs just the manifest (and patches the installed main-jj layout),
@@ -38,14 +39,54 @@ def write_if_changed(path, data):
         path.write_bytes(data)
 
 
-def with_floating(source_bytes, blocks):
-    """The layout with `blocks` on its root's floating list (same id: replaced)."""
-    if not blocks:
+def find_node(node, node_id, parent=None):
+    """(node, parent) for the node with that id, or (None, None)."""
+    if node.get("id") == node_id:
+        return node, parent
+    for child in node.get("children", []):
+        found = find_node(child, node_id, node)
+        if found[0] is not None:
+            return found
+    return None, None
+
+
+def patch_layout(layout, patch):
+    """Applies one patch; each is idempotent, so re-running on its own output is a no-op.
+
+    { "id": X, "append": [nodes] }  adds children to node X (same id: replaced)
+    { "id": X, "wrap": node }       puts node in X's place, with X where node's
+                                    children list "$self" (updated with "self": {...},
+                                    e.g. a new size); skipped once node's id exists
+    Optional "layouts": [names] limits it to those layouts. A missing X is skipped.
+    """
+    target, parent = find_node(layout, patch["id"])
+    if target is None:
+        return
+    if "append" in patch:
+        ids = {child.get("id") for child in patch["append"]}
+        kept = [child for child in target.get("children", []) if child.get("id") not in ids]
+        target["children"] = kept + patch["append"]
+    if "wrap" in patch and find_node(layout, patch["wrap"].get("id"))[0] is None and parent is not None:
+        target.update(patch.get("self", {}))
+        wrapper = json.loads(json.dumps(patch["wrap"]))
+        wrapper["children"] = [target if child == "$self" else child for child in wrapper.get("children", [])]
+        siblings = parent["children"]
+        siblings[siblings.index(target)] = wrapper
+
+
+def with_extras(source_bytes, extras, name):
+    """The layout with the manifest's floating blocks and patches for it."""
+    blocks = extras.get("floating", [])
+    patches = [p for p in extras.get("patches", []) if name in p.get("layouts", [name])]
+    if not blocks and not patches:
         return source_bytes
     layout = json.loads(source_bytes)
-    ids = {block.get("id") for block in blocks}
-    kept = [block for block in layout.get("floating", []) if block.get("id") not in ids]
-    layout["floating"] = kept + blocks
+    if blocks:
+        ids = {block.get("id") for block in blocks}
+        kept = [block for block in layout.get("floating", []) if block.get("id") not in ids]
+        layout["floating"] = kept + blocks
+    for patch in patches:
+        patch_layout(layout, patch)
     return (json.dumps(layout, indent=2, ensure_ascii=False) + "\n").encode()
 
 
@@ -59,6 +100,7 @@ def load_extras(path):
         "mods": {name: resolve(value) for name, value in manifest.get("mods", {}).items()},
         "layouts": {name: resolve(value) for name, value in manifest.get("layouts", {}).items()},
         "floating": manifest.get("floating", []),
+        "patches": manifest.get("patches", []),
         "keys": manifest.get("keys", {}),
     }
 
@@ -67,7 +109,7 @@ def install_extras(app_home, extras):
     for name, source in extras.get("mods", {}).items():
         copy_tree(source, app_home / "mods" / name)
     for name, source in extras.get("layouts", {}).items():
-        data = with_floating(source.read_bytes(), extras.get("floating", []))
+        data = with_extras(source.read_bytes(), extras, name)
         write_if_changed(app_home / "layouts" / f"{name}.json", data)
 
 
@@ -108,7 +150,7 @@ def main(argv):
         install_extras(app_home, extras)
         main_layout = app_home / "layouts" / "main-jj.json"
         if main_layout.exists():
-            write_if_changed(main_layout, with_floating(main_layout.read_bytes(), extras["floating"]))
+            write_if_changed(main_layout, with_extras(main_layout.read_bytes(), extras, "main-jj"))
         merge_keys(app_home, extras["keys"])
         return
 
@@ -125,7 +167,7 @@ def main(argv):
         copy_tree(source, app_home / "mods" / name)
 
     layout = app_home / "layouts" / "main-jj.json"
-    write_if_changed(layout, with_floating(layout_source.read_bytes(), extras.get("floating", [])))
+    write_if_changed(layout, with_extras(layout_source.read_bytes(), extras, "main-jj"))
     install_extras(app_home, extras)
 
     bindings = {

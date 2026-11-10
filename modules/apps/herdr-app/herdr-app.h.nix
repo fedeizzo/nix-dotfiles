@@ -26,13 +26,14 @@
       cfg = config.fi.herdrApp;
       json = lib.types.attrsOf lib.types.anything;
       hasExtras = cfg.extraMods != { } || cfg.extraLayouts != { }
-        || cfg.extraFloating != [ ] || cfg.extraKeys != { };
+        || cfg.extraFloating != [ ] || cfg.extraLayoutPatches != [ ] || cfg.extraKeys != { };
       # Interpolating the paths copies them into the store; the installer then
       # reads absolute paths only.
       extras = pkgs.writeText "herdr-app-extras.json" (builtins.toJSON {
         mods = lib.mapAttrs (_: path: "${path}") cfg.extraMods;
         layouts = lib.mapAttrs (_: path: "${path}") cfg.extraLayouts;
         floating = cfg.extraFloating;
+        patches = cfg.extraLayoutPatches;
         keys = cfg.extraKeys;
       });
     in
@@ -56,6 +57,16 @@
           description = ''
             Floating blocks added to the root of main-jj and of every extra layout
             (by id), e.g. an invisible mod that must run whatever is shown.
+          '';
+        };
+        extraLayoutPatches = lib.mkOption {
+          type = lib.types.listOf json;
+          default = [ ];
+          description = ''
+            Idempotent node edits on main-jj and the extra layouts (see patch_layout in
+            install-mods.py): `{ id, append = [nodes]; }` adds children to a node,
+            `{ id, wrap = node; }` puts a node around it (`"$self"` marks where).
+            `layouts = [names]` limits one to those layouts.
           '';
         };
         extraKeys = lib.mkOption {
