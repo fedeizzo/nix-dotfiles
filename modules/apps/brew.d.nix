@@ -14,6 +14,7 @@
         "datadog/tap"
         "nrvim/tap"
         "oven-sh/bun"
+        "peteonrails/voxtype"
       ];
       casks = [
         "1password-cli"
@@ -25,6 +26,7 @@
         "dd-auth"
         "dd-gitsign"
         "dd-gopls"
+        "dda"
         "ddauth"
         "ddcall"
         "ddr"
@@ -37,8 +39,10 @@
         "lm-studio"
         "localsend"
         "monitorcontrol"
+        "obsidian"
         "rapid"
         "synthetics-admin"
+        "voxtype"
       ];
       brews = [
         "autoconf"
