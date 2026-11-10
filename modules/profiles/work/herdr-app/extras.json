@@ -1,0 +1,52 @@
+{
+  "mods": {
+    "ops": "mods/ops"
+  },
+  "layouts": {
+    "ops": "layouts/ops.json"
+  },
+  "floating": [
+    {
+      "id": "ops-watch",
+      "edge": "bottom",
+      "align": "end",
+      "content": {
+        "mod": "ops",
+        "props": {
+          "role": "watch",
+          "vault": "~/notes/notes",
+          "sound": false,
+          "orchestrator": {
+            "argv": [
+              "pi"
+            ]
+          },
+          "standing": {
+            "emails": {
+              "title": "Emails",
+              "name": "email-triage",
+              "cwd": "~/notes/agents/email",
+              "argv": [
+                "pi",
+                "--tools",
+                "read,write,mcp,mcpScript,ask_user_question",
+                "Start the email triage run as described in AGENTS.md."
+              ]
+            }
+          }
+        }
+      }
+    }
+  ],
+  "keys": {
+    "global": {
+      "cmd-shift-o": "ops.orchestrator",
+      "cmd-shift-e": "ops.emails",
+      "cmd-shift-b": "mod.open:ops",
+      "cmd-shift-k": "ops.calendar"
+    },
+    "layout:ops": {
+      "cmd-shift-b": "layout.toggle:ops-board"
+    }
+  }
+}
