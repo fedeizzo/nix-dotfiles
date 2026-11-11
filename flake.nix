@@ -38,6 +38,10 @@
       url = "github:cybertron288/herdr-mods";
       flake = false;
     };
+    herdr-usage-limits = {
+      url = "github:nozikov/herdr-usage-limits";
+      flake = false;
+    };
     home-manager = {
       url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";

@@ -164,14 +164,35 @@
           "gap": 8
         },
         {
-          "id": "status",
-          "type": "block",
-          "content": {
-            "mod": "workspace-status"
-          },
+          "id": "status-row",
+          "type": "row",
           "size": {
             "px": 28
-          }
+          },
+          "resizable": false,
+          "children": [
+            {
+              "id": "status",
+              "type": "block",
+              "content": {
+                "mod": "workspace-status"
+              },
+              "size": {
+                "weight": 1
+              }
+            },
+            {
+              "id": "usage-limits",
+              "type": "block",
+              "size": {
+                "weight": 2.2
+              },
+              "min": 130,
+              "content": {
+                "mod": "usage-limits"
+              }
+            }
+          ]
         }
       ],
       "resizable": false

@@ -878,6 +878,22 @@
         "type": "github"
       }
     },
+    "herdr-usage-limits": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1794219970,
+        "narHash": "sha256-IQTmE6E+ZIwW49aDDFJFNYUiBisQNDulCfVicNO+hRE=",
+        "owner": "nozikov",
+        "repo": "herdr-usage-limits",
+        "rev": "19fda912acc4f0212e5958d03ccd35081fe4395d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nozikov",
+        "repo": "herdr-usage-limits",
+        "type": "github"
+      }
+    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -2032,6 +2048,7 @@
         "herdr-app-jj": "herdr-app-jj",
         "herdr-kanso": "herdr-kanso",
         "herdr-mods": "herdr-mods",
+        "herdr-usage-limits": "herdr-usage-limits",
         "home-manager": "home-manager",
         "home-manager-master": "home-manager-master",
         "impermanence": "impermanence",

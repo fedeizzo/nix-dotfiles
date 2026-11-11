@@ -55,6 +55,14 @@
         ];
         programs.home-manager.enable = true;
 
+        # Second Claude account lives in its own CLAUDE_CONFIG_DIR (persisted).
+        fi.herdr-app.usageLimits.accounts = [
+          { id = "claude"; name = "Claude"; provider = "claude"; }
+          { id = "claude-secondary"; name = "Claude 2"; provider = "claude"; home = "/home/${username}/.claude-secondary"; }
+          { id = "codex"; name = "Codex"; provider = "codex"; }
+          { id = "antigravity"; name = "Antigravity"; provider = "antigravity"; }
+        ];
+
         programs.jujutsu.settings = {
           signing = {
             behavior = "force";

@@ -28,6 +28,14 @@
             directory = ".codex"; # Login credentials (auth.json), sessions, and runtime state.
             mode = "0700";
           }
+          {
+            directory = ".claude"; # Login credentials, sessions, and runtime state.
+            mode = "0700";
+          }
+          {
+            directory = ".claude-secondary"; # Second Claude account (CLAUDE_CONFIG_DIR).
+            mode = "0700";
+          }
           ".pi"
           ".gemini"
 
@@ -79,6 +87,7 @@
           # Personal files
           ".aspell.en.prepl"
           ".aspell.en.pws"
+          ".claude.json" # Claude Code account/onboarding state for ~/.claude.
 
           # Config
           ".config/user-dirs.locale"
