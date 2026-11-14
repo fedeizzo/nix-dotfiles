@@ -204,6 +204,22 @@
         "type": "github"
       }
     },
+    "collie": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1794671902,
+        "narHash": "sha256-n4ES/jJfanEEuFfEtIMtaSbPyWiHOJjLFkdumCGugbA=",
+        "owner": "AltanS",
+        "repo": "collie",
+        "rev": "88276e3c44f43f4e0f130d2b89ecb4d0d8b153fe",
+        "type": "github"
+      },
+      "original": {
+        "owner": "AltanS",
+        "repo": "collie",
+        "type": "github"
+      }
+    },
     "comin": {
       "inputs": {
         "flake-compat": "flake-compat_2",
@@ -817,11 +833,11 @@
         "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "lastModified": 1794236130,
-        "narHash": "sha256-wcKEBtx4vTzpTTBIyop+hIo5Nz7cZDeP1RxhKWJsBN0=",
+        "lastModified": 1794904531,
+        "narHash": "sha256-Ssq9J8Pyd21yooc39EP/hcn9LjrriMTpTEiGisxaiHQ=",
         "owner": "gufo-org",
         "repo": "gufo",
-        "rev": "768a482f780bc17c08a740855d35de2de5846e09",
+        "rev": "6ecfa504312c1b7ee428a6abaf685f43c3984e88",
         "type": "github"
       },
       "original": {
@@ -833,11 +849,11 @@
     "herdr-app-jj": {
       "flake": false,
       "locked": {
-        "lastModified": 1794229225,
-        "narHash": "sha256-JLsp/qaZnFh2o7nptWJGfL6H3YuQ3y5Pdp6OpDXzrhQ=",
+        "lastModified": 1794312845,
+        "narHash": "sha256-WH5221VZXo6W1kLg390HQha26Y+Mzx9CQWK2QIxcG/c=",
         "owner": "sebcbi1",
         "repo": "herdr-app-jj",
-        "rev": "48be7c658c2f0a47e1652046bf93542a26ade135",
+        "rev": "1ffdc17f5f36b50f3ee502fadf5abf3f4742c1fd",
         "type": "github"
       },
       "original": {
@@ -849,11 +865,11 @@
     "herdr-kanso": {
       "flake": false,
       "locked": {
-        "lastModified": 1794202010,
-        "narHash": "sha256-QD4DEh5pVnxhLGHaqA31Gspv7SG41+tPO9INwJq46z4=",
+        "lastModified": 1794431782,
+        "narHash": "sha256-tJMtXSIf9hSDjaONZ/nOdpwlIRjXGOxe7zMuQfp0byk=",
         "owner": "jlopezlira",
         "repo": "herdr-kanso",
-        "rev": "d8df831f0b45e3a8e9fa7dc4270fb7cb253a0f48",
+        "rev": "d669b0403e848d8fc90ceb634a6367f44453c2ea",
         "type": "github"
       },
       "original": {
@@ -881,11 +897,11 @@
     "herdr-usage-limits": {
       "flake": false,
       "locked": {
-        "lastModified": 1794219970,
-        "narHash": "sha256-IQTmE6E+ZIwW49aDDFJFNYUiBisQNDulCfVicNO+hRE=",
+        "lastModified": 1794555931,
+        "narHash": "sha256-j7LMVyH4oVCakuGP9BtyJs22xmbnLhQhsJM84rYY8Vg=",
         "owner": "nozikov",
         "repo": "herdr-usage-limits",
-        "rev": "19fda912acc4f0212e5958d03ccd35081fe4395d",
+        "rev": "fc3082241149d555525fc429c7cb64620eb97996",
         "type": "github"
       },
       "original": {
@@ -1014,11 +1030,11 @@
     "lfm3-gufo-extension": {
       "flake": false,
       "locked": {
-        "lastModified": 1794228873,
-        "narHash": "sha256-ubTjKCxE6PR5IFCYf1Os/H8kpTe1+dp+SRSjY+E5iz0=",
+        "lastModified": 1794900963,
+        "narHash": "sha256-5uvwzQ76laHoDhcgeJzq7euNPc9roOv+rZUlPJ41E1E=",
         "owner": "gufo-org",
         "repo": "lfm3-gufo-extension",
-        "rev": "810892b4992c41d8c2b40cbed6248737afd03245",
+        "rev": "59d621309c2cbafc2b4af250277ab9ab451404ad",
         "type": "github"
       },
       "original": {
@@ -1036,11 +1052,11 @@
         "treefmt-nix": "treefmt-nix_2"
       },
       "locked": {
-        "lastModified": 1794136683,
-        "narHash": "sha256-cvhBTH6nsE6R6b6uNjoSeuCOH4iaurC5A+/prTxk8Rw=",
+        "lastModified": 1794721493,
+        "narHash": "sha256-7extb+ld6xPCzcVuhVdvcvGPLu/qtDRrhFJmH68jXfM=",
         "owner": "numtide",
         "repo": "llm-agents.nix",
-        "rev": "b351c893c53850908a89bc30ea2cbf6437ada413",
+        "rev": "aeb1afe1529c5dc7dcdc54d644a8aed212d99dd0",
         "type": "github"
       },
       "original": {
@@ -1496,11 +1512,11 @@
     },
     "nixpkgs_10": {
       "locked": {
-        "lastModified": 1793826729,
-        "narHash": "sha256-D5H7H+qMoTGI/jJtxKP4u7BdjkFnUyhOovTrf3pTOr0=",
+        "lastModified": 1793977579,
+        "narHash": "sha256-WrSODdZFVIs/Hh2NzC0bY+ROByi0bATg8WfePX8dPj8=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "6dadaf4375be35033e1c84395adbd53ff5fded96",
+        "rev": "4fe25e12eb9f4c744966dd3de5a05246cf098601",
         "type": "github"
       },
       "original": {
@@ -2035,6 +2051,7 @@
     "root": {
       "inputs": {
         "authentik-nix": "authentik-nix",
+        "collie": "collie",
         "comin": "comin",
         "deploy-rs": "deploy-rs",
         "devshell": "devshell",

@@ -16,7 +16,7 @@
 
         # Requests run serially on this model (no batching plan); each session
         # holds its own state (~24 KiB/token of context).
-        sessions = 2;
+        sessions = 8;
 
         servedModelName = "qwen-flash";
         context = 260000;

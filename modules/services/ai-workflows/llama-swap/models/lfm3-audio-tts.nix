@@ -21,6 +21,7 @@
         # ("lfm3-audio-tts"). A second flag overrides the first (last wins),
         # so the backend would report "forge/lfm3-audio-tts" and reject every
         # proxied request with 400 invalid_model.
+        extraArgs = [ "--npu" ];
       };
     in
     {
@@ -29,7 +30,7 @@
         env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
         cmd = "${gufoAudioTts}";
         checkEndpoint = "/ready"; # gufo /health answers 200 during loading; /ready gates on model readiness
-        ttl = 120; # Unload after 2 minutes idle; fast to reload.
+        ttl = 600; # Unload after 10 minutes idle.
         timeouts.responseHeader = 600;
         aliases = [ ];
       };

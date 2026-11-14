@@ -48,6 +48,7 @@
         preserveThinking = "auto";
 
         extraArgs = [
+          "--npu"
           "--mmproj"
           "/persist/models/by-capability/vision/LFM3-VL-2B/mmproj-LFM3-VL-2B-BF16.gguf"
           "--served-model-name"

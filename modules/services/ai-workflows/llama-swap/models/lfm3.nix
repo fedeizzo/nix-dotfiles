@@ -47,6 +47,7 @@
         preserveThinking = "auto";
 
         extraArgs = [
+          "--npu"
           "--served-model-name"
           "forge/lfm3-1.7"
         ];

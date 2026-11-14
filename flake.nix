@@ -7,6 +7,10 @@
 
   inputs = {
     authentik-nix.url = "github:nix-community/authentik-nix";
+    collie = {
+      url = "github:AltanS/collie";
+      flake = false;
+    };
     comin = {
       url = "github:fedeizzo/comin/fix-ssh-commit-payload";
       inputs.nixpkgs.follows = "nixpkgs";

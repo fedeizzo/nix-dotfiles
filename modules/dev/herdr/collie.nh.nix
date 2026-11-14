@@ -1,6 +1,11 @@
 # Collie: web bridge for Herdr-core, served on homelab (collie) and forge (collief).
 # Traefik on homelab is the single entry point for both.
 {
+  flake-file.inputs.collie = {
+    url = "github:AltanS/collie";
+    flake = false;
+  };
+
   flake.modules.nixos.collie = {
     fi.services = [
       {
@@ -24,12 +29,7 @@
     let
       cfg = config.fi.collie;
 
-      collieSrc = pkgs.fetchFromGitHub {
-        owner = "AltanS";
-        repo = "collie";
-        rev = "b178eb63f2255637f6326bb942a2505e2004c31f";
-        hash = "sha256-CqP7fCXzzp+IKx/UycMM2Lpd64Fc8dxEbZhKVEWDQPY=";
-      };
+      collieSrc = inputs.collie;
       collie = pkgs.callPackage "${collieSrc}/packaging/nix/collie.nix" { };
     in
     {
