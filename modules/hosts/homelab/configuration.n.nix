@@ -88,10 +88,10 @@ in
       inputs.self.modules.nixos.postgres
       inputs.self.modules.nixos.prometheus
       inputs.self.modules.nixos.searx
-      inputs.self.modules.nixos.silverbullet
       inputs.self.modules.nixos.sparkyfitness
       inputs.self.modules.nixos.streaming
       inputs.self.modules.nixos.traefik
+      inputs.self.modules.nixos.outline
     ];
   };
 

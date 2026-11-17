@@ -71,6 +71,7 @@
           ${lib.strings.concatLines (map (el: authenticationEntry el.user el.db) dbs)}
           host postgres nextcloud samehost md5
           local   all             postgres                                trust
+          local   outline         outline                                 peer
 
           # Allow connections from Docker / Podman isolated bridge networks
           host    all             all             172.16.0.0/12           md5
