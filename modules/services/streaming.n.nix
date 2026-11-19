@@ -95,6 +95,7 @@
         name = "jellyseerr";
         port = 5055;
         isExposed = true;
+        authType = "proxy"; # authentik forward-auth, seerr has no native OIDC
         dashboardSection = "Exposed media";
         toPersist = [
           {
