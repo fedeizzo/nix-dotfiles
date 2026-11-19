@@ -13,7 +13,28 @@
         user = "media";
         group = "media";
       };
-      seerr.enable = true; # *rr integration in jellyfin
+      seerr = {
+        enable = true; # *rr integration in jellyfin
+        # upstream preview-new-oidc tag, stable 3.2.0 has no OIDC
+        # see https://github.com/seerr-team/seerr/discussions/2721
+        package = pkgs.seerr.overrideAttrs (finalAttrs: prev:
+          let
+            src = pkgs.fetchFromGitHub {
+              owner = "seerr-team";
+              repo = "seerr";
+              rev = "0aa680565233bcfd67bfa4bce5b12f9f89f134da"; # tag preview-new-oidc
+              hash = "sha256-VZN6C02nVuF6tunTLQhDYF+nYS99jZlP/uywXRdkwZ4=";
+            };
+          in
+          {
+            version = "${prev.version}-preview-oidc";
+            inherit src;
+            pnpmDeps = prev.pnpmDeps.overrideAttrs {
+              inherit src;
+              outputHash = "sha256-gqjz0DM0VYdFKTkoKPG9fjAwZlKeQZS1GB4wwUcwZ9M=";
+            };
+          });
+      };
       radarr = {
         enable = true; # movies
         user = "media";
@@ -95,7 +116,6 @@
         name = "jellyseerr";
         port = 5055;
         isExposed = true;
-        authType = "proxy"; # authentik forward-auth, seerr has no native OIDC
         dashboardSection = "Exposed media";
         toPersist = [
           {
