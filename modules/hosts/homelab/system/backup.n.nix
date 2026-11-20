@@ -1,12 +1,13 @@
 {
-  flake.modules.nixos.homelab = { pkgs, config, lib, ... }:
+  flake.modules.nixos.homelab = { pkgs, config, lib, self, ... }:
     let
+      forgeResticPort = self.nixosConfigurations.forge.config.services.restic.server.listenAddress;
       backupFromServices = builtins.concatLists (map (el: el.toBackup) config.fi.services);
     in
     {
     services.restic.backups = rec {
       local = backblaze // {
-        repository = "/games/local-restic-backup";
+        repository = "rest:http://forge:${forgeResticPort}/homelab";
         environmentFile = null;
         runCheck = true;
         passwordFile = config.sops.secrets.local-restic-password.path;
