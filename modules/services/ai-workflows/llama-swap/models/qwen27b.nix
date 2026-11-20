@@ -1,12 +1,13 @@
 # Qwen3.8-27B (UD-Q4_K_XL) with DFlash-2 speculative decoding, served by gufo.
 {
-  flake.modules.nixos.llama-swap-qwen27b = { inputs, pkgs, ... }:
+  flake.modules.nixos.llama-swap-qwen27b = { inputs, pkgs, config, ... }:
     let
+      modelsDir = config.services.gufo-model-sync.directory;
       gufoQwen27 = inputs.gufo.lib.${pkgs.stdenv.hostPlatform.system}.mkGufoServe {
         modality = "llm";
 
-        model = "/persist/models/by-capability/language/Qwen3.8-27B/Qwen3.8-27B-UD-Q4_K_XL.gguf";
-        dflashModel = "/persist/models/by-capability/language/Qwen3.8-27B-DFlash2/Qwen3.8-27B-DFlash2-Q8_0.gguf";
+        model = "${modelsDir}/qwen27-q4/Qwen3.8-27B-UD-Q4_K_XL.gguf";
+        dflashModel = "${modelsDir}/qwen27-q4/Qwen3.8-27B-DFlash2-Q4_K_M.gguf";
         host = "0.0.0.0";
         port = "\${PORT}";
 
@@ -66,6 +67,7 @@
       };
     in
     {
+      services.gufo-model-sync.models = [ "qwen27-q4" ];
       services.llama-swap.settings.models."qwen3.8-27b" = {
         env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
         cmd = "${gufoQwen27}";

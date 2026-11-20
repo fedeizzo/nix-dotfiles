@@ -1,11 +1,12 @@
 # DeepSeek-V4-Flash (IQ2XXS imatrix) with DSpark speculative decoding, served by gufo.
 {
-  flake.modules.nixos.llama-swap-ds4 = { inputs, pkgs, ... }:
+  flake.modules.nixos.llama-swap-ds4 = { inputs, pkgs, config, ... }:
     let
+      modelsDir = config.services.gufo-model-sync.directory;
       gufoDs4 = inputs.gufo.lib.${pkgs.stdenv.hostPlatform.system}.mkGufoServe {
         modality = "llm";
 
-        model = "/persist/models/by-capability/language/DeepSeek-V4-Flash/DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-0731.gguf";
+        model = "${modelsDir}/deepseek4/DeepSeek-V4-Flash-IQ2XXS-w2Q2K-AProjQ8-SExpQ8-OutQ8-chat-v2-imatrix-0731.gguf";
         host = "0.0.0.0";
         port = "\${PORT}";
 
@@ -22,7 +23,7 @@
         context = 131072;
         # sampled requests fall back to autoregressive decode. See gufo#232.
         speculative = "dspark";
-        dsparkModel = "/persist/models/by-capability/language/DeepSeek-V4-Flash/DeepSeek-V4-Flash-DSpark-support-0731.gguf";
+        dsparkModel = "${modelsDir}/deepseek4/DeepSeek-V4-Flash-DSpark-support-0731.gguf";
         # draftTokens = 3;  # optional ceiling; model-owned adaptive width otherwise
 
         # Scheduling (all defaults)
@@ -54,6 +55,7 @@
       };
     in
     {
+      services.gufo-model-sync.models = [ "deepseek4" ];
       services.llama-swap.settings.models."ds4" = {
         env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
         cmd = "${gufoDs4}";

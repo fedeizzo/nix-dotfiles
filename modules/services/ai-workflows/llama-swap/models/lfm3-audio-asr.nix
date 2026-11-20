@@ -7,14 +7,15 @@
 #     mmproj-LFM3-Audio-2B-BF16.gguf --revision $REV \
 #     --local-dir /persist/models/store/LFM3-Audio-2B
 {
-  flake.modules.nixos.llama-swap-lfm3-audio-asr = { inputs, pkgs, ... }:
+  flake.modules.nixos.llama-swap-lfm3-audio-asr = { inputs, pkgs, config, ... }:
     let
+      modelsDir = config.services.gufo-model-sync.directory;
       gufoAudioAsr = inputs.gufo.lib.${pkgs.stdenv.hostPlatform.system}.mkGufoServe {
         gufoPackage = pkgs.gufo-lfm3;
         modality = "asr";
         provider = "lfm3-audio-asr";
 
-        model = "/persist/models/by-capability/audio/LFM3-Audio-2B/LFM3-Audio-2B-Q8_0.gguf";
+        model = "${modelsDir}/lfm3-audio-2b/LFM3-Audio-2B-Q8_0.gguf";
         servedModelName = "lfm3-audio-asr";
         host = "0.0.0.0";
         port = "\${PORT}";
@@ -31,6 +32,7 @@
     in
     {
       imports = [ inputs.self.modules.nixos.llama-swap-gufo-lfm3 ];
+      services.gufo-model-sync.models = [ "lfm3-audio-2b" ];
       services.llama-swap.settings.models."lfm3-audio-asr" = {
         env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
         cmd = "${gufoAudioAsr}";

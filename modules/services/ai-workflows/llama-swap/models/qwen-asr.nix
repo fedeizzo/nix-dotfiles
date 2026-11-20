@@ -1,11 +1,12 @@
 # Qwen3-ASR served by gufo (asr modality).
 {
-  flake.modules.nixos.llama-swap-qwen-asr = { inputs, pkgs, ... }:
+  flake.modules.nixos.llama-swap-qwen-asr = { inputs, pkgs, config, ... }:
     let
+      modelsDir = config.services.gufo-model-sync.directory;
       gufoQwenASRCmd = inputs.gufo.lib.${pkgs.stdenv.hostPlatform.system}.mkGufoServe {
         modality = "asr";
 
-        model = "/persist/models/by-capability/audio/Qwen3-ASR-1.7B";
+        model = "${modelsDir}/qwen3-asr";
         servedModelName = "qwen3-asr";
         context = 1024;
 
@@ -15,6 +16,7 @@
       };
     in
     {
+      services.gufo-model-sync.models = [ "qwen3-asr" ];
       services.llama-swap.settings.models."qwen3-asr" = {
         env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
         cmd = "${gufoQwenASRCmd}";

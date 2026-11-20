@@ -4,13 +4,14 @@
 #   hf download google/embeddinggemma-3b --local-dir /persist/models/store/EmbeddingGemma-2
 #   (linked into /persist/models/by-capability/embedding/EmbeddingGemma-2)
 {
-  flake.modules.nixos.llama-swap-embeddinggemma-2 = { inputs, pkgs, ... }:
+  flake.modules.nixos.llama-swap-embeddinggemma-2 = { inputs, pkgs, config, ... }:
     let
+      modelsDir = config.services.gufo-model-sync.directory;
       gufoEmbedding = inputs.gufo.lib.${pkgs.stdenv.hostPlatform.system}.mkGufoServe {
         modality = "embedding";
         provider = "embeddinggemma-2";
 
-        model = "/persist/models/by-capability/embedding/EmbeddingGemma-2";
+        model = "${modelsDir}/embeddinggemma-2";
         servedModelName = "embeddinggemma-2";
 
         host = "0.0.0.0";
@@ -25,6 +26,7 @@
       };
     in
     {
+      services.gufo-model-sync.models = [ "embeddinggemma-2" ];
       services.llama-swap.settings.models."embeddinggemma-2" = {
         env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
         cmd = "${gufoEmbedding}";

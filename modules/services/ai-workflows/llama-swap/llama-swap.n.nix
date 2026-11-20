@@ -16,6 +16,7 @@
       imports = [
         (inputs.nixpkgs-unstable + "/nixos/modules/services/networking/llama-swap.nix")
         inputs.self.modules.nixos.llama-swap-gufo-lfm3
+        inputs.self.modules.nixos.llama-swap-gufo-model-sync
         inputs.self.modules.nixos.llama-swap-lfm3
         inputs.self.modules.nixos.llama-swap-lfm3-vl
         inputs.self.modules.nixos.llama-swap-lfm3-audio-asr
@@ -59,6 +60,7 @@
           LLAMA_CACHE = lib.mkForce "/persist/models";
           XDG_CACHE_HOME = lib.mkForce "/persist/models/.cache"; # Fix Vulkan shader cache
           HOME = "/persist/models"; # Fallback for any engine looking for ~
+          GUFO_MODELS_DIR = config.services.gufo-model-sync.directory; # gufo model store, filled by gufo-model-sync
           GPU_MAX_HW_QUEUES = "1";
           # fastflow npu
           FLM_MODEL_PATH = "/persist/models/flm";

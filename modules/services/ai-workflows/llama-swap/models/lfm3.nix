@@ -1,12 +1,13 @@
 # LFM3-1.7B served by gufo with the lfm3 extension.
 {
-  flake.modules.nixos.llama-swap-lfm3 = { inputs, pkgs, ... }:
+  flake.modules.nixos.llama-swap-lfm3 = { inputs, pkgs, config, ... }:
     let
+      modelsDir = config.services.gufo-model-sync.directory;
       gufoLfm3 = inputs.gufo.lib.${pkgs.stdenv.hostPlatform.system}.mkGufoServe {
         gufoPackage = pkgs.gufo-lfm3;
         modality = "llm";
 
-        model = "/persist/models/by-capability/language/LFM3-1.7B/LFM3-1.7B-Q8_0.gguf";
+        model = "${modelsDir}/lfm3-1.7b/LFM3-1.7B-Q8_0.gguf";
         host = "0.0.0.0";
         port = "\${PORT}";
 
@@ -55,6 +56,7 @@
     in
     {
       imports = [ inputs.self.modules.nixos.llama-swap-gufo-lfm3 ];
+      services.gufo-model-sync.models = [ "lfm3-1.7b" ];
       services.llama-swap.settings.models."lfm3-1.7b" = {
         env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
         cmd = "${gufoLfm3}";

@@ -5,11 +5,12 @@
 #     --include "mmproj-BF16.gguf" \
 #     --local-dir /persist/models/by-capability/language/Qwen3.8-Flash-Next
 {
-  flake.modules.nixos.llama-swap-flash-next = { inputs, pkgs, ... }:
+  flake.modules.nixos.llama-swap-flash-next = { inputs, pkgs, config, ... }:
     let
+      modelsDir = config.services.gufo-model-sync.directory;
       gufoQwenNext = inputs.gufo.lib.${pkgs.stdenv.hostPlatform.system}.mkGufoServe {
         modality = "llm";
-        model = "/persist/models/by-capability/language/Qwen3.8-Flash-Next/Qwen3.8-Flash-Next-UD-Q4_K_XL-00001-of-00004.gguf";
+        model = "${modelsDir}/flash-next-q4/UD-Q4_K_XL/Qwen3.8-Flash-Next-UD-Q4_K_XL-00001-of-00004.gguf";
         host = "0.0.0.0";
         port = "\${PORT}";
         verbose = false;
@@ -22,7 +23,7 @@
         context = 260000;
         # Greedy verification: only temperature-0 requests take multi-token steps.
         speculative = "mtp";
-        mtpModel = "/persist/models/by-capability/language/Qwen3.8-Flash-Next/mtp-Qwen3.8-Flash-Next-shared-Q8_0.gguf";
+        mtpModel = "${modelsDir}/flash-next-q4/MTP/mtp-Qwen3.8-Flash-Next-shared-Q8_0.gguf";
         # draftTokens = 3;
 
         # 2048-token chunks keep the expert GEMMs on the matrix-core route.
@@ -58,11 +59,12 @@
           # Vision projector; gufo auto-detects it beside the backbone, pass
           # it explicitly so a missing file fails fast at startup.
           "--mmproj"
-          "/persist/models/by-capability/language/Qwen3.8-Flash-Next/mmproj-BF16.gguf"
+          "${modelsDir}/flash-next-q4/mmproj-BF16.gguf"
         ];
       };
     in
     {
+      services.gufo-model-sync.models = [ "flash-next-q4" ];
       services.llama-swap.settings.models."qwen-flash" = {
         env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
         cmd = "${gufoQwenNext}";
