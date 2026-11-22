@@ -1,7 +1,6 @@
 {
   flake.modules.nixos.gatus = { config, lib, ... }:
   let
-    getHost = subdomain: (lib.strings.concatStringsSep "." ((lib.lists.optional (subdomain != null) subdomain) ++ [ "fedeizzo.dev" ]));
 
     # TODO: nix-dotfiles is currently excluded from monitoring, fix it later
     servicesToExclude = [
@@ -13,7 +12,7 @@
     # Map services from fi.services to Gatus endpoints for monitoring
     endpoints = map (service: {
       name = service.name;
-      url = "https://${getHost service.subdomain}";
+      url = "https://${builtins.head service.hosts}";
       interval = "1m";
       conditions = [
         "[STATUS] < 400"

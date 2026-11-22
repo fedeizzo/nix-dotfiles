@@ -1,7 +1,6 @@
 {
   flake.modules.nixos.traefik = { config, lib, pkgs, ... }:
     let
-      getHost = subdomain: (lib.strings.concatStringsSep "." ((lib.lists.optional (subdomain != null) subdomain) ++ [ "fedeizzo.dev" ]));
 
       authHandlers = {
         proxy = { middlewares = [ "authentik" ]; };
@@ -15,7 +14,7 @@
               inherit (service) name;
               value = {
                 entryPoints = [ (if service.isExposed then "websecure" else "wgsecure") ];
-                rule = lib.concatMapStringsSep " || " (h: "Host(`${h}`)") ([ (getHost service.subdomain) ] ++ service.extraHosts);
+                rule = lib.concatMapStringsSep " || " (h: "Host(`${h}`)") service.hosts;
                 service = service.name;
                 priority = 10;
                 # middlewares = lib.lists.optional (service.subdomain != "auth") "authentik";
@@ -40,6 +39,19 @@
           )
           services);
 
+      # extraHosts are outside the fedeizzo.dev authForwarder, so proxy-auth ones need their own outpost route
+      outpostRoutersGenerator = services: builtins.listToAttrs (map
+        (service: {
+          name = "${service.name}-outpost";
+          value = {
+            entryPoints = [ (if service.isExposed then "websecure" else "wgsecure") ];
+            rule = "(${lib.concatMapStringsSep " || " (h: "Host(`${h}`)") service.extraHosts}) && PathPrefix(`/outpost.goauthentik.io/`)";
+            service = "authentik";
+            priority = 150;
+          };
+        })
+        (builtins.filter (service: service.authType == "proxy" && service.extraHosts != [ ]) services));
+
       reverseProxiedServices = builtins.filter (service: service.shouldBehindReverseProxy) config.fi.services;
 
       groupedServices = builtins.groupBy (service: toString service.isExposed) reverseProxiedServices;
@@ -47,8 +59,10 @@
       exposedServices = groupedServices."1" or [ ];
       notExposedServices = groupedServices."" or [ ];
 
-      exposedDomains = lib.strings.concatStringsSep " " (map (s: getHost s.subdomain) exposedServices);
-      notExposedDomains = lib.strings.concatStringsSep " " (map (s: getHost s.subdomain) notExposedServices);
+      # dns-updater only manages the fedeizzo.dev zone
+      defaultHosts = services: lib.concatStringsSep " " (map (s: s.defaultHost) (builtins.filter (s: s.useDefaultDomain) services));
+      exposedDomains = defaultHosts exposedServices;
+      notExposedDomains = defaultHosts notExposedServices;
 
       dns-updater = pkgs.buildGoModule {
         pname = "dns-updater";
@@ -253,7 +267,8 @@
               service = "llm-provider";
               middlewares = [ ];
             };
-          } // (routersGenerator reverseProxiedServices);
+          } // (routersGenerator reverseProxiedServices)
+          // (outpostRoutersGenerator reverseProxiedServices);
           services = {
             llm-provider = {
               loadBalancer = { servers = [{ url = "http://192.168.1.67:9999"; }]; };

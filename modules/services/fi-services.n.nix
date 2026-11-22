@@ -22,6 +22,19 @@
           isExposed = mkOption { type = types.bool; default = false; };
           # extra full hostnames (outside fedeizzo.dev) routed to this service
           extraHosts = mkOption { type = types.listOf types.str; default = [ ]; };
+          # false: serve only on extraHosts, no <subdomain>.fedeizzo.dev
+          useDefaultDomain = mkOption { type = types.bool; default = true; };
+          defaultHost = mkOption {
+            type = types.str;
+            readOnly = true;
+            default = lib.concatStringsSep "." (lib.optional (config.subdomain != null) config.subdomain ++ [ "fedeizzo.dev" ]);
+          };
+          # every hostname the service answers on, first one is the canonical url
+          hosts = mkOption {
+            type = types.listOf types.str;
+            readOnly = true;
+            default = lib.optional config.useDefaultDomain config.defaultHost ++ config.extraHosts;
+          };
           authType = mkOption { type = (types.enum [ "proxy" "none" ]); default = "none"; };
           dashboardSection = mkOption { type = types.str; };
           dashboardIcon = mkOption { type = types.str; default = "${config.name}"; };

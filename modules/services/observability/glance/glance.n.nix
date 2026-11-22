@@ -4,11 +4,10 @@
     dashboardServices = builtins.filter (service: service.shouldBeInDashboard) config.fi.services;
     groupedServices = builtins.groupBy (service: service.dashboardSection) dashboardServices;
 
-    getHost = subdomain: (lib.strings.concatStringsSep "." ((lib.lists.optional (subdomain != null) subdomain) ++ [ "fedeizzo.dev" ]));
 
     monitorEntryMapper = service: {
       title = service.name;
-      url = "https://${(getHost service.subdomain)}";
+      url = "https://${builtins.head service.hosts}";
       icon = "di:${service.dashboardIcon}";
     };
     # We have to manually create an entry for traefik because we cannot list in fi.services

@@ -92,6 +92,7 @@ in
       inputs.self.modules.nixos.streaming
       inputs.self.modules.nixos.traefik
       inputs.self.modules.nixos.outline
+      inputs.self.modules.nixos.gufo-metrics
     ];
   };
 
