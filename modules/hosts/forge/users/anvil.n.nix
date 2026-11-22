@@ -62,7 +62,7 @@
         isNormalUser = true;
         createHome = true;
         description = "Anvil";
-        extraGroups = [ "networkmanager" "wheel" "docker" "render" "video" ];
+        extraGroups = [ "networkmanager" "wheel" "docker" "render" "video" "gufo"];
         shell = pkgs.zsh;
         hashedPassword = "$y$j9T$tH3Iu/T7QJDOwQY4H/.vR1$Ub3s.9LSZrJ8BBZU1Rn00pbZufmwO2mit4LBVCCbf7A";
         openssh.authorizedKeys.keys = [
