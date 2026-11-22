@@ -58,7 +58,7 @@
       imports = [ inputs.self.modules.nixos.llama-swap-gufo-lfm3 ];
       services.gufo-model-sync.models = [ "lfm3-1.7b" ];
       services.llama-swap.settings.models."lfm3-1.7b" = {
-        env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
+        env = [ "GPU_MAX_HW_QUEUES=1" ];
         cmd = "${gufoLfm3}";
         checkEndpoint = "/ready"; # gufo /health answers 200 during loading; /ready gates on model readiness
         ttl = 120; # Unload after 2 minutes idle; fast to reload.

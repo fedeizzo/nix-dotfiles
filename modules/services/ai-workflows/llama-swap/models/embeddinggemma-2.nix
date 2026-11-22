@@ -1,8 +1,6 @@
 # EmbeddingGemma 2 (`embeddinggemma-2` provider, `gufo serve embedding`).
 # /v1/embeddings for text, image and audio inputs (BF16 safetensors checkpoint).
-# Weights:
-#   hf download google/embeddinggemma-3b --local-dir /persist/models/store/EmbeddingGemma-2
-#   (linked into /persist/models/by-capability/embedding/EmbeddingGemma-2)
+# Weights: gufo model `embeddinggemma-2`, synced by gufo-model-sync.
 {
   flake.modules.nixos.llama-swap-embeddinggemma-2 = { inputs, pkgs, config, ... }:
     let
@@ -28,7 +26,7 @@
     {
       services.gufo-model-sync.models = [ "embeddinggemma-2" ];
       services.llama-swap.settings.models."embeddinggemma-2" = {
-        env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
+        env = [ "GPU_MAX_HW_QUEUES=1" ];
         cmd = "${gufoEmbedding}";
         checkEndpoint = "/ready"; # gufo /health answers 200 during loading; /ready gates on model readiness
         ttl = 120; # Unload after 2 minutes idle; fast to reload.

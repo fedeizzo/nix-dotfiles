@@ -29,7 +29,7 @@
       imports = [ inputs.self.modules.nixos.llama-swap-gufo-lfm3 ];
       services.gufo-model-sync.models = [ "lfm3-audio-2b" ];
       services.llama-swap.settings.models."lfm3-audio-tts" = {
-        env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
+        env = [ "GPU_MAX_HW_QUEUES=1" ];
         cmd = "${gufoAudioTts}";
         checkEndpoint = "/ready"; # gufo /health answers 200 during loading; /ready gates on model readiness
         ttl = 600; # Unload after 10 minutes idle.

@@ -1,8 +1,6 @@
 # d1-Omni-2B decisions (`d1` provider): noul/choice/score/box questions over
 # text, images and audio without generating text. Served by `gufo serve decision`.
-# Weights:
-#   hf download LiquidAI/d1-Omni-2B-GGUF d1-Omni-2B-Q8_0.gguf \
-#     mmproj-d1-Omni-2B-BF16.gguf --local-dir /persist/models/store/D1-Omni-2B
+# Weights: gufo model `d1-omni-2b`, synced by gufo-model-sync.
 {
   flake.modules.nixos.llama-swap-d1 = { inputs, pkgs, config, ... }:
     let
@@ -30,7 +28,7 @@
       imports = [ inputs.self.modules.nixos.llama-swap-gufo-lfm3 ];
       services.gufo-model-sync.models = [ "d1-omni-2b" ];
       services.llama-swap.settings.models."d1" = {
-        env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
+        env = [ "GPU_MAX_HW_QUEUES=1" ];
         cmd = "${gufoD1}";
         checkEndpoint = "/ready"; # gufo /health answers 200 during loading; /ready gates on model readiness
         ttl = 600; # Unload after 10 minutes idle.

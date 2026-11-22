@@ -23,6 +23,7 @@
         inputs.self.modules.nixos.llama-swap-lfm3-audio-tts
         inputs.self.modules.nixos.llama-swap-d1
         inputs.self.modules.nixos.llama-swap-qwen27b
+        inputs.self.modules.nixos.llama-swap-embeddinggemma-2
         inputs.self.modules.nixos.llama-swap-flash-next
       ];
       nix.settings = {
@@ -57,20 +58,19 @@
 
       systemd.services.llama-swap = {
         environment = {
-          LLAMA_CACHE = lib.mkForce "/persist/models";
-          XDG_CACHE_HOME = lib.mkForce "/persist/models/.cache"; # Fix Vulkan shader cache
-          HOME = "/persist/models"; # Fallback for any engine looking for ~
+          LLAMA_CACHE = lib.mkForce "/var/cache/llama-swap";
+          XDG_CACHE_HOME = lib.mkForce "/var/cache/llama-swap/.cache"; # Fix Vulkan shader cache
+          HOME = "/var/cache/llama-swap"; # Fallback for any engine looking for ~
           GUFO_MODELS_DIR = config.services.gufo-model-sync.directory; # gufo model store, filled by gufo-model-sync
           GPU_MAX_HW_QUEUES = "1";
           # fastflow npu
-          FLM_MODEL_PATH = "/persist/models/flm";
+          FLM_MODEL_PATH = "/var/cache/llama-swap/flm";
           XILINX_XRT = config.environment.sessionVariables.XILINX_XRT or "";
           XRT_PATH = config.environment.sessionVariables.XRT_PATH or "";
           FLM_DISABLE_UPDATE_CHECK = "1";
           LD_LIBRARY_PATH = "${config.environment.sessionVariables.XILINX_XRT or ""}/lib";
         };
         serviceConfig = {
-          ReadWritePaths = "/persist/models";
           LimitMEMLOCK = "infinity"; # fastflowlm with npu support
           SupplementaryGroups = [ "video" "render" ];
           CacheDirectory = "llama-swap";
@@ -98,7 +98,6 @@
         inputs.self.modules.nixos.llama-swap-ds4
         inputs.self.modules.nixos.llama-swap-qwen-tts
         inputs.self.modules.nixos.llama-swap-qwen-asr
-        inputs.self.modules.nixos.llama-swap-embeddinggemma-2
       ];
 
       services.llama-swap.settings = {

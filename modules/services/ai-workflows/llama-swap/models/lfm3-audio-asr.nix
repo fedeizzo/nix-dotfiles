@@ -1,11 +1,7 @@
 # LFM3-Audio-2B speech recognition (`lfm3-audio-asr` provider).
 # /v1/audio/transcriptions + OpenAI Realtime WebSockets on /v1/realtime.
 # The audio tower mmproj is picked up beside the backbone automatically.
-# Weights:
-#   REV=02355c1a141e464a064f2ab2c276638dbcb7f38a
-#   hf download LiquidAI/LFM3-Audio-2B-GGUF LFM3-Audio-2B-Q8_0.gguf \
-#     mmproj-LFM3-Audio-2B-BF16.gguf --revision $REV \
-#     --local-dir /persist/models/store/LFM3-Audio-2B
+# Weights: gufo model `lfm3-audio-2b`, synced by gufo-model-sync.
 {
   flake.modules.nixos.llama-swap-lfm3-audio-asr = { inputs, pkgs, config, ... }:
     let
@@ -34,7 +30,7 @@
       imports = [ inputs.self.modules.nixos.llama-swap-gufo-lfm3 ];
       services.gufo-model-sync.models = [ "lfm3-audio-2b" ];
       services.llama-swap.settings.models."lfm3-audio-asr" = {
-        env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
+        env = [ "GPU_MAX_HW_QUEUES=1" ];
         cmd = "${gufoAudioAsr}";
         checkEndpoint = "/ready"; # gufo /health answers 200 during loading; /ready gates on model readiness
         ttl = 600; # Unload after 10 minutes idle.

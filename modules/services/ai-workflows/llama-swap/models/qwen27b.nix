@@ -69,7 +69,7 @@
     {
       services.gufo-model-sync.models = [ "qwen27-q4" ];
       services.llama-swap.settings.models."qwen3.8-27b" = {
-        env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
+        env = [ "GPU_MAX_HW_QUEUES=1" ];
         cmd = "${gufoQwen27}";
         checkEndpoint = "/ready"; # gufo /health answers 200 during loading; /ready gates on model readiness
         ttl = 600; # Unload after 10 minutes idle.

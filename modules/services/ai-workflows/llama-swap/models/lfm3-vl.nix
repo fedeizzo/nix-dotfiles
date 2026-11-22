@@ -1,8 +1,5 @@
 # LFM3-VL-2B: text + still-image input through the extension's `lfm3`
-# text provider. Weights:
-#   hf download LiquidAI/LFM3-VL-2B-GGUF LFM3-VL-2B-Q8_0.gguf \
-#     mmproj-LFM3-VL-2B-BF16.gguf --revision b36554cfd35854b06429900131730cd80f092cdb \
-#     --local-dir /persist/models/store/LFM3-VL-2B
+# text provider. Weights: gufo model `lfm3-vl-2b`, synced by gufo-model-sync.
 {
   flake.modules.nixos.llama-swap-lfm3-vl = { inputs, pkgs, config, ... }:
     let
@@ -61,7 +58,7 @@
       imports = [ inputs.self.modules.nixos.llama-swap-gufo-lfm3 ];
       services.gufo-model-sync.models = [ "lfm3-vl-2b" ];
       services.llama-swap.settings.models."lfm3-vl" = {
-        env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
+        env = [ "GPU_MAX_HW_QUEUES=1" ];
         cmd = "${gufoVl}";
         checkEndpoint = "/ready"; # gufo /health answers 200 during loading; /ready gates on model readiness
         ttl = 120; # Unload after 2 minutes idle; fast to reload.

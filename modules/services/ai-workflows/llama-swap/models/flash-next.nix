@@ -1,9 +1,6 @@
 # Qwen3.8-Flash-Next with MTP speculative decoding, served by gufo.
 # Vision: image input via the BF16 projector.
-#   hf download unsloth/Qwen3.8-Flash-Next-GGUF \
-#     --revision d96201194f103c906994f283f504209dc8d2a10c \
-#     --include "mmproj-BF16.gguf" \
-#     --local-dir /persist/models/by-capability/language/Qwen3.8-Flash-Next
+# Weights: gufo model `flash-next-q4`, synced by gufo-model-sync.
 {
   flake.modules.nixos.llama-swap-flash-next = { inputs, pkgs, config, ... }:
     let
@@ -66,7 +63,7 @@
     {
       services.gufo-model-sync.models = [ "flash-next-q4" ];
       services.llama-swap.settings.models."qwen-flash" = {
-        env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
+        env = [ "GPU_MAX_HW_QUEUES=1" ];
         cmd = "${gufoQwenNext}";
         checkEndpoint = "/ready"; # gufo /health answers 200 during loading; /ready gates on model readiness
         ttl = 600; # Unload after 10 minutes idle.

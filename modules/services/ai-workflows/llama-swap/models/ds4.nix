@@ -57,7 +57,7 @@
     {
       services.gufo-model-sync.models = [ "deepseek4" ];
       services.llama-swap.settings.models."ds4" = {
-        env = [ "LLAMA_CACHE=/persist/models" "GPU_MAX_HW_QUEUES=1" ];
+        env = [ "GPU_MAX_HW_QUEUES=1" ];
         cmd = "${gufoDs4}";
         checkEndpoint = "/ready"; # gufo /health answers 200 during loading; /ready gates on model readiness
         timeouts.responseHeader = 600;
