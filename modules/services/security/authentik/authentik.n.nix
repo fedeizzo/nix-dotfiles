@@ -65,6 +65,7 @@
         name = "authentik";
         subdomain = "auth";
         isExposed = true;
+        extraHosts = [ "auth.gufo.blog" ];
         port = 9000;
         path = "/outpost.goauthentik.io";
         dashboardSection = "Management";

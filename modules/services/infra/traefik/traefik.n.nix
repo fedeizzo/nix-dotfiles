@@ -15,7 +15,7 @@
               inherit (service) name;
               value = {
                 entryPoints = [ (if service.isExposed then "websecure" else "wgsecure") ];
-                rule = "Host(`${(getHost service.subdomain)}`)";
+                rule = lib.concatMapStringsSep " || " (h: "Host(`${h}`)") ([ (getHost service.subdomain) ] ++ service.extraHosts);
                 service = service.name;
                 priority = 10;
                 # middlewares = lib.lists.optional (service.subdomain != "auth") "authentik";
@@ -148,6 +148,7 @@
                 certResolver = "leresolver";
                 domains = [
                   { main = "fedeizzo.dev"; sans = [ "*.fedeizzo.dev" ]; }
+                  { main = "gufo.blog"; sans = [ "*.gufo.blog" ]; } # apex stays on github pages, cert only
                 ];
               };
               middlewares = [ "secHeaders@file" ];

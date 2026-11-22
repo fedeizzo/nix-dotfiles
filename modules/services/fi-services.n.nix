@@ -20,6 +20,8 @@
           port = mkOption { type = types.int; };
           path = mkOption { type = types.str; default = ""; };
           isExposed = mkOption { type = types.bool; default = false; };
+          # extra full hostnames (outside fedeizzo.dev) routed to this service
+          extraHosts = mkOption { type = types.listOf types.str; default = [ ]; };
           authType = mkOption { type = (types.enum [ "proxy" "none" ]); default = "none"; };
           dashboardSection = mkOption { type = types.str; };
           dashboardIcon = mkOption { type = types.str; default = "${config.name}"; };

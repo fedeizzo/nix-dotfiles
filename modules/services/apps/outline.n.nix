@@ -16,7 +16,7 @@
     services.outline = {
       enable = true;
       port = 38461;
-      publicUrl = "https://gufonotes.fedeizzo.dev";
+      publicUrl = "https://notes.gufo.blog";
       forceHttps = false; # TLS terminated by traefik
 
       # postgres and redis are created locally by the nixos module
@@ -25,7 +25,7 @@
       oidcAuthentication = {
         clientId = "overridden-at-runtime"; # real id loaded from sops, see script below
         clientSecretFile = config.sops.secrets.outline-oidc-client-secret.path;
-        authUrl = "https://auth.fedeizzo.dev/application/o/authorize/";
+        authUrl = "https://auth.gufo.blog/application/o/authorize/";
         tokenUrl = "https://auth.fedeizzo.dev/application/o/token/";
         userinfoUrl = "https://auth.fedeizzo.dev/application/o/userinfo/";
         scopes = [ "openid" "email" "profile" ];
@@ -90,6 +90,7 @@
         name = "outline";
         subdomain = "gufonotes";
         isExposed = true;
+        extraHosts = [ "notes.gufo.blog" ];
         inherit (config.services.outline) port;
         dashboardSection = "Exposed";
         toPersist = [
