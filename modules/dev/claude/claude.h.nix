@@ -38,6 +38,12 @@
           # Kept available without enabling notifications, matching the local settings.
           "notify_ntfy.py" = builtins.readFile ./config/hooks/notify_ntfy.py;
         };
+        mcpServers = {
+          gufonotes = {
+            type = "http";
+            url = "https://notes.gufo.blog/mcp";
+          };
+        };
       };
 
       # Claude Code rewrites settings.json at runtime (/model, /effort, ...), so it
