@@ -43,7 +43,6 @@
         "ddr"
         "ddtool"
         "docker-desktop"
-        "dogbrew"
         "gcloud-cli"
         "git-dd"
         "herdr-app"
