@@ -33,7 +33,6 @@
         "bits"
         "bitwarden"
         "bzl"
-        "datadog-workspaces"
         "dd-auth"
         "dd-gitsign"
         "dd-gopls"
