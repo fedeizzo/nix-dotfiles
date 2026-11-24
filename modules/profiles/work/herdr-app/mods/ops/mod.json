@@ -1,0 +1,1 @@
+{ "place": "none", "title": "Ops board", "focusable": true, "overlay": { "kind": "window", "width": 380, "height": 0.75, "key": "ops" } }

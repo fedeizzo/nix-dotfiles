@@ -1,0 +1,102 @@
+{
+  "mods": {
+    "ops": "mods/ops"
+  },
+  "layouts": {
+    "ops": "layouts/ops.json"
+  },
+  "floating": [
+    {
+      "id": "ops-watch",
+      "edge": "bottom",
+      "align": "end",
+      "content": {
+        "mod": "ops",
+        "props": {
+          "role": "watch",
+          "vault": "~/notes/notes",
+          "sound": false,
+          "orchestrator": {
+            "argv": [
+              "pi"
+            ]
+          },
+          "standing": {
+            "emails": {
+              "title": "Emails",
+              "name": "email-triage",
+              "cwd": "~/notes/agents/email",
+              "argv": [
+                "pi",
+                "--tools",
+                "read,write,mcp,mcpScript,ask_user_question",
+                "Start the email triage run as described in AGENTS.md."
+              ]
+            }
+          }
+        }
+      }
+    }
+  ],
+  "patches": [
+    {
+      "layouts": [
+        "main-jj"
+      ],
+      "id": "panel-body",
+      "append": [
+        {
+          "id": "ops",
+          "type": "block",
+          "content": {
+            "mod": "ops"
+          }
+        }
+      ]
+    },
+    {
+      "id": "tabs",
+      "self": {
+        "size": {
+          "weight": 1
+        }
+      },
+      "wrap": {
+        "id": "tabs-row",
+        "type": "row",
+        "size": {
+          "px": 42
+        },
+        "resizable": false,
+        "children": [
+          "$self",
+          {
+            "id": "ops-tab",
+            "type": "block",
+            "size": {
+              "px": 70
+            },
+            "content": {
+              "mod": "ops",
+              "props": {
+                "role": "button"
+              }
+            },
+            "window_drag": true
+          }
+        ]
+      }
+    }
+  ],
+  "keys": {
+    "global": {
+      "cmd-shift-o": "ops.orchestrator",
+      "cmd-shift-e": "ops.emails",
+      "cmd-shift-b": "mod.open:ops",
+      "cmd-shift-k": "ops.calendar"
+    },
+    "layout:ops": {
+      "cmd-shift-b": "layout.toggle:ops-board"
+    }
+  }
+}
