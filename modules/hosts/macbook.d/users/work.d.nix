@@ -48,6 +48,7 @@
         # claude
         # antigravity
         profile-work
+        dogbrew
         ai-tools
         nono
         herdr-app
