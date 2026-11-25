@@ -5,11 +5,12 @@
 
   flake.modules.nixos.ai-tools = { ... }: { };
 
-  flake.modules.homeManager.ai-tools = { pkgs, inputs, ... }: {
-    home.packages = with inputs.llm-agents.packages.${pkgs.stdenv.hostPlatform.system}; [
-      codegraph
-      skills
-      semble
+  # Alias module: light + heavy AI tooling.
+  # Import ai-light alone to skip the heavy pieces (semble, codegraph).
+  flake.modules.homeManager.ai-tools = { inputs, ... }: {
+    imports = with inputs.self.modules.homeManager; [
+      ai-light
+      ai-heavy
     ];
   };
 }

@@ -1,18 +1,15 @@
+# Alias module: the full historical language tooling set.
+# Import the per-language modules (languages-python, languages-bash, ...) directly to slim a host down.
 {
-  flake.modules.homeManager.languages = { pkgs, ... }: {
-    home.packages = with pkgs; [
-      (python3.withPackages (ps: with ps; [
-        python-lsp-server rope flake8 pyls-isort pyls-flake8 debugpy
-      ]))
-      bash-language-server
-      typescript-language-server
-      vscode-langservers-extracted
-      dockerfile-language-server
-      ccls
-      lua-language-server
-      nixpkgs-fmt
-      nixpkgs-lint
-      nil
+  flake.modules.homeManager.languages = { inputs, ... }: {
+    imports = with inputs.self.modules.homeManager; [
+      languages-python
+      languages-bash
+      languages-c
+      languages-docker
+      languages-lua
+      languages-web
+      languages-nix
     ];
   };
 }

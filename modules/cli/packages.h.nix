@@ -1,57 +1,16 @@
+# Alias module: the full historical cli package set.
+# Import the domain modules (cli-core, cli-net, ...) directly to slim a host down.
 {
-  flake.modules.homeManager.cli-packages = { pkgs, lib, ... }: {
-    home.packages = with pkgs; [
-      eza
-      fd
-      fzf
-      gawk
-      gnused
-      bat
-      ripgrep
-      pandoc
-      graphviz
-      ffmpeg
-      home-manager
-      git-crypt
-      rbw
-      pet
-      hurl
-    ] ++ lib.optionals pkgs.stdenv.isLinux [
-      zip
-      unzip
-      bitwarden-cli
-      jq
-      coreutils
-      moreutils
-      gnutls
-      rsync
-      rclone
-      dragon-drop
-      w3m
-      file
-      yubioath-flutter
-      cachix
-      openssl
-      openssh
-      pamixer
-      playerctl
-      mpd-mpris
-      flac
-      gh
-      (makeDesktopItem {
-        name = "reboot";
-        exec = "reboot";
-        comment = "Reboot the system";
-        desktopName = "reboot";
-        type = "Application";
-      })
-      (makeDesktopItem {
-        name = "shutdown";
-        exec = "shutdown now";
-        comment = "Shutdown the system";
-        desktopName = "shutdown";
-        type = "Application";
-      })
+  flake.modules.homeManager.cli-packages = { inputs, ... }: {
+    imports = with inputs.self.modules.homeManager; [
+      cli-core
+      cli-net
+      cli-vcs
+      cli-secrets
+      cli-docs
+      cli-media
+      cli-desktop
+      cli-nix
     ];
   };
 }
