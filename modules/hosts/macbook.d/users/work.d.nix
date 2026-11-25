@@ -55,6 +55,7 @@
         # claude
         # antigravity
         profile-work
+        macbook-jj-signing
         dogbrew
         ai-tools
         nono
