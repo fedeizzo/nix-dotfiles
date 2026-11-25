@@ -32,27 +32,5 @@
           self.nixosConfigurations.forge;
       };
     };
-
-    datadog-workspace = {
-      hostname = "workspace-federico-izzo";
-      sshUser = "bits";
-      # Workspace SSH aliases use short-lived multiplexed control sockets. Nix's
-      # binary ssh-ng protocol must use a clean, non-TTY connection.
-      sshOpts = [
-        "-o" "ControlMaster=no"
-        "-o" "ControlPath=none"
-        "-o" "RequestTTY=no"
-      ];
-      remoteBuild = true;
-      magicRollback = false;
-
-      profiles.home = {
-        user = "bits";
-        # Preserve pre-existing workspace dotfiles on the first activation.
-        path = inputs.deploy-rs.lib.aarch64-linux.activate.custom
-          self.homeConfigurations."bits@datadog-workspace".activationPackage
-          "HOME_MANAGER_BACKUP_EXT=hm-backup $PROFILE/activate";
-      };
-    };
   };
 }
