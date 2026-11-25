@@ -24,9 +24,15 @@ in
       };
 
       modules = with self.modules.homeManager; [
-        languages
-        cli-packages
-        ai-tools
+        # Slim workspace: bash/web/nix LSPs only, light AI tools only,
+        # core cli domains only (no desktop/media/docs/secrets).
+        languages-bash
+        languages-web
+        languages-nix
+        cli-core
+        cli-net
+        cli-vcs
+        ai-light
         nono
         herdr
         direnv

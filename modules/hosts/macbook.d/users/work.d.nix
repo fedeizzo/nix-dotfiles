@@ -37,7 +37,14 @@
       imports = with self.modules.homeManager; [
         languages
         direnv
-        cli-packages
+        # macOS host: all cli domains except cli-desktop (Linux-only anyway).
+        cli-core
+        cli-net
+        cli-vcs
+        cli-secrets
+        cli-docs
+        cli-media
+        cli-nix
         jujutsu
         zsh
         starship

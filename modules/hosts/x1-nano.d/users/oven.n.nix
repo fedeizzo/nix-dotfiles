@@ -24,7 +24,15 @@
         imports = with inputs.self.modules.homeManager; [
           bottom
           bitwarden
-          cli-packages
+          # All cli domains: full desktop machine.
+          cli-core
+          cli-net
+          cli-vcs
+          cli-secrets
+          cli-docs
+          cli-media
+          cli-desktop
+          cli-nix
           direnv
           jujutsu
           desktop-environment

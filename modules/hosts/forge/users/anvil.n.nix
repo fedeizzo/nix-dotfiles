@@ -20,7 +20,13 @@
           antigravity
           codex
           claude
-          cli-packages
+          # Server host: no docs/media/desktop cli domains.
+          # cli-secrets kept pending Federico's decision (usage unknown on forge).
+          cli-core
+          cli-net
+          cli-vcs
+          cli-secrets
+          cli-nix
           direnv
           jujutsu
           zsh
