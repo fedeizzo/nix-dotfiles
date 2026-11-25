@@ -170,6 +170,7 @@
         "datadog/tap/trigger-ci"
         "unbound"
         "utf8proc"
+        "uv"
         "datadog/tap/vault"
         "volta"
         "wangle"
