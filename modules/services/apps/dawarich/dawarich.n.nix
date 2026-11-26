@@ -1,5 +1,10 @@
 {
-  flake.modules.nixos.dawarich = { inputs, pkgs, config, lib, pkgs-unstable ? pkgs, ... }: {
+  flake.modules.nixos.dawarich = { inputs, pkgs, config, lib, pkgs-unstable ? pkgs, ... }:
+  let
+    garminPython = pkgs-unstable.python3.withPackages (ps: with ps; [ garminconnect requests curl-cffi ]);
+    garminSync = "${garminPython}/bin/python ${./garmin_sync.py}";
+  in
+  {
     services.dawarich = {
       enable = true;
 
@@ -66,22 +71,35 @@
     };
 
     systemd.services.garmin-to-dawarich =
-      let
-        pythonEnv = pkgs-unstable.python3.withPackages (ps: with ps; [ garminconnect requests curl-cffi ]);
-      in
       lib.mkIf config.services.dawarich.enable {
         description = "Garmin Connect to Dawarich Sync Service";
         after = [ "network.target" "dawarich.service" ];
         wants = [ "network-online.target" ];
         serviceConfig = {
           Type = "oneshot";
-          ExecStart = "${pythonEnv}/bin/python ${./garmin_sync.py}";
+          ExecStart = garminSync;
           User = config.users.users.dawarich.name;
           Group = config.users.groups.dawarich.name;
           StateDirectory = "garmin-sync";
           EnvironmentFile = config.sops.secrets.garmin-sync-env.path;
         };
       };
+
+    # Garmin asks for an MFA code sent by email whenever the saved tokens stop
+    # working. The timer cannot answer it, so log in by hand once:
+    # `sudo garmin-dawarich-login` runs the sync with the unit's user, secrets
+    # and state dir on a TTY, prompts for the code and saves new tokens.
+    environment.systemPackages = lib.mkIf config.services.dawarich.enable [
+      (pkgs.writeShellScriptBin "garmin-dawarich-login" ''
+        exec ${pkgs.systemd}/bin/systemd-run --pty --wait --collect --quiet \
+          --unit=garmin-dawarich-login \
+          -p User=${config.users.users.dawarich.name} \
+          -p Group=${config.users.groups.dawarich.name} \
+          -p StateDirectory=garmin-sync \
+          -p EnvironmentFile=${config.sops.secrets.garmin-sync-env.path} \
+          ${garminSync}
+      '')
+    ];
 
     systemd.timers.garmin-to-dawarich = lib.mkIf config.services.dawarich.enable {
       description = "Daily Garmin Connect to Dawarich Sync Timer";

@@ -101,6 +101,10 @@
         inputs.self.modules.nixos.llama-swap-qwen-image
       ];
 
+      # `llama-swap -validate` runs at build time and fails on the
+      # ${env.OPENROUTER_API_KEY} macro below: the key only exists at runtime (sops)
+      services.llama-swap.validateConfigFile = false;
+
       services.llama-swap.settings = {
         hooks.on_startup.preload = [ "embeddinggemma-2" ];
 

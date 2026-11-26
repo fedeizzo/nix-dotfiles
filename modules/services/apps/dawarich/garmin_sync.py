@@ -1,8 +1,8 @@
 import os
+import sys
 import time
 import datetime
 import requests
-import garth
 from garminconnect import Garmin
 
 GARMIN_EMAIL = os.getenv("GARMIN_EMAIL")
@@ -42,35 +42,48 @@ def get_existing_imported_filenames() -> set[str]:
         return set()
 
 
+def prompt_mfa() -> str:
+    # Garmin sends the MFA code by email, so it can only be typed by hand.
+    # The timer has no TTY: it fails here and the saved tokens must be
+    # refreshed once with `sudo garmin-dawarich-login`.
+    if not sys.stdin.isatty():
+        raise RuntimeError(
+            "Garmin requires an MFA code (sent by email) but no terminal is attached. "
+            "Run `sudo garmin-dawarich-login` once to log in and save new tokens."
+        )
+    return input("[Garmin] MFA code sent by email: ").strip()
+
+
+def garmin_login() -> Garmin:
+    if not GARMIN_EMAIL or not GARMIN_PASSWORD:
+        raise ValueError("GARMIN_EMAIL and GARMIN_PASSWORD must be set in environment.")
+
+    gc = Garmin(email=GARMIN_EMAIL, password=GARMIN_PASSWORD, prompt_mfa=prompt_mfa)
+
+    # Loads the saved tokens from GARMIN_TOKENSTORE; falls back to a credential
+    # login (asking for the MFA code) when they are missing or rejected, then
+    # saves the new tokens there.
+    try:
+        gc.login(GARMIN_TOKENSTORE)
+    except Exception as login_err:
+        if "429" in str(login_err):
+            print(
+                "\n[Garmin Error 429] Too Many Requests!\n"
+                "Garmin SSO has temporarily rate-limited password authentication requests for your IP/account.\n"
+                "Garmin SSO rate limits typically reset after 15 to 30 minutes.\n"
+                "-> Please wait 15–30 minutes before running the script again.\n"
+            )
+        raise
+
+    print(f"[Garmin] Logged in, tokens stored in {GARMIN_TOKENSTORE}")
+    return gc
+
+
 def fetch_garmin_gpx_range(start_date_str: str, end_date_str: str) -> list[str]:
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     os.makedirs(GARMIN_TOKENSTORE, exist_ok=True)
 
-    if not GARMIN_EMAIL or not GARMIN_PASSWORD:
-        raise ValueError("GARMIN_EMAIL and GARMIN_PASSWORD must be set in environment.")
-
-    gc = Garmin(email=GARMIN_EMAIL, password=GARMIN_PASSWORD)
-
-    # 1. Try to resume session from saved OAuth tokens first
-    try:
-        garth.resume(GARMIN_TOKENSTORE)
-        print(f"[Garmin] Successfully resumed token session from {GARMIN_TOKENSTORE}")
-    except Exception as e:
-        print(f"[Garmin] Token session resume failed ({e}). Logging in with credentials...")
-        try:
-            gc.login()
-            garth.save(GARMIN_TOKENSTORE)
-            print(f"[Garmin] Credential login successful! Session tokens saved to {GARMIN_TOKENSTORE}.")
-        except Exception as login_err:
-            err_str = str(login_err)
-            if "429" in err_str:
-                print(
-                    "\n[Garmin Error 429] Too Many Requests!\n"
-                    "Garmin SSO has temporarily rate-limited password authentication requests for your IP/account.\n"
-                    "Garmin SSO rate limits typically reset after 15 to 30 minutes.\n"
-                    "-> Please wait 15–30 minutes before running the script again.\n"
-                )
-            raise
+    gc = garmin_login()
 
     print(f"[Garmin] Querying activities from {start_date_str} to {end_date_str}...")
     activities = gc.get_activities_by_date(start_date_str, end_date_str)

@@ -58,18 +58,22 @@
           configureRedis = true;
 
 
-          # appstore and apps
+          # apps are installed and updated from the app store only (store-apps).
+          # The notify_push module adds its app to extraApps, but `occ upgrade`
+          # reinstalls the app store copy too and the two collide, so drop the
+          # nix copy. Keep the store app version in line with the
+          # pkgs.nextcloud-notify_push daemon (both 1.4.1 on 26.05).
           appstoreEnable = true;
-          extraAppsEnable = true;
+          extraApps = lib.mkForce { };
           enableImagemagick = true;
-          extraApps = {
-            inherit (pkgs.nextcloud32Packages.apps) calendar contacts richdocuments tasks deck user_oidc;
-          };
           autoUpdateApps.enable = false;
         };
 
         collabora-online = {
           enable = true;
+          # 26.05 flags libreoffice-collabora 25.04 as insecure: its LibreOffice
+          # EOL check (versionOlder "26.2.7.3") also matches the collabora build
+          package = pkgs-unstable.collabora-online;
           port = 9980; # default
           settings = {
             # Rely on reverse proxy for SSL

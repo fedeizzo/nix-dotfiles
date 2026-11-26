@@ -4,6 +4,15 @@
 }:
 
 let
+  # nixos-26.05 ships pillow 13 while gradio still pins pillow<13, so gradio's
+  # runtime deps check fails; relax the bound until nixpkgs fixes it.
+  # Overridden only here: replacing it in the package set breaks gradio's own
+  # passthru, which calls `gradio.override`.
+  gradio = python3Packages.gradio.overridePythonAttrs (old: {
+    pythonRelaxDeps =
+      let relaxed = old.pythonRelaxDeps or [ ];
+      in if relaxed == true then true else relaxed ++ [ "pillow" ];
+  });
 
   sentencex = python3Packages.buildPythonPackage rec {
     pname = "sentencex";
@@ -38,7 +47,7 @@ let
         return value
 EOF
     '';
-    propagatedBuildInputs = [ python3Packages.gradio ];
+    propagatedBuildInputs = [ gradio ];
   };
 
 in python3Packages.buildPythonApplication {
@@ -91,8 +100,9 @@ in python3Packages.buildPythonApplication {
     edge-tts
     pydub
     wyoming
-    gradio
     docker
+  ] ++ [
+    gradio
     sentencex
     gradio_log
   ];
