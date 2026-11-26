@@ -16,7 +16,10 @@ in
       inherit inputs self;
       hostname = "homelab";
       username = "homelab";
-      pkgs-unstable = import inputs.nixpkgs-unstable { inherit system; };
+      pkgs-unstable = import inputs.nixpkgs-unstable {
+        inherit system;
+        config.allowUnfree = true;
+      };
       inherit system-overlays;
     };
 
@@ -81,7 +84,7 @@ in
       inputs.self.modules.nixos.nextcloud
       inputs.self.modules.nixos.nix-dotfiles-docs
       inputs.self.modules.nixos.ntfy
-      # inputs.self.modules.nixos.open-webui
+      inputs.self.modules.nixos.open-webui
       inputs.self.modules.nixos.apps-pan
       inputs.self.modules.nixos.apps-pan-config
       inputs.self.modules.nixos.paperless
