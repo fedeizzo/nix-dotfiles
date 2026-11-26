@@ -56,6 +56,20 @@
           AUDIO_TTS_OPENAI_API_BASE_URL = llamaSwap;
           AUDIO_TTS_OPENAI_API_KEY = "none";
 
+          # image generation and editing (Turbo: no `steps`, Open WebUI's
+          # openai engine does not send them)
+          ENABLE_IMAGE_GENERATION = "True";
+          IMAGE_GENERATION_ENGINE = "openai";
+          IMAGE_GENERATION_MODEL = "qwen-image-2.1-turbo";
+          IMAGE_SIZE = "1024x1024";
+          IMAGES_OPENAI_API_BASE_URL = llamaSwap;
+          IMAGES_OPENAI_API_KEY = "none";
+          ENABLE_IMAGE_EDIT = "True";
+          IMAGE_EDIT_ENGINE = "openai";
+          IMAGE_EDIT_MODEL = "qwen-image-2.1-turbo";
+          IMAGES_EDIT_OPENAI_API_BASE_URL = llamaSwap;
+          IMAGES_EDIT_OPENAI_API_KEY = "none";
+
           # UI
           WEBUI_URL = "https://${domain}";
           DEFAULT_USER_ROLE = "user";

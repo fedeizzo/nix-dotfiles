@@ -98,6 +98,7 @@
         inputs.self.modules.nixos.llama-swap-ds4
         inputs.self.modules.nixos.llama-swap-qwen-tts
         inputs.self.modules.nixos.llama-swap-qwen-asr
+        inputs.self.modules.nixos.llama-swap-qwen-image
       ];
 
       services.llama-swap.settings = {
@@ -143,6 +144,7 @@
             "aasr" = "lfm3-audio-asr";
             "atts" = "lfm3-audio-tts";
             "emb" = "embeddinggemma-2";
+            "img" = "qwen-image-2.1-turbo";
           };
 
           evict_costs = {
@@ -150,6 +152,7 @@
             "ds4" = 100;
             "qwen3.8-27b" = 50;
             "qwen3-tts" = 10;
+            "qwen-image-2.1-turbo" = 10;
             "qwen3-asr" = 5;
             # The small set reloads in seconds.
             "lfm3-1.7b" = 1;
@@ -164,6 +167,9 @@
             # memory: the small LFM + embedding set coexists with the qwen
             # 27b / tts / asr models.
             small = "lfm & vl & aasr & atts & emb & q27 & tts & asr";
+            # Image generation (~30G) swaps out the qwen tts / asr pair:
+            # small LFM set + qwen 27b + image is ~104G.
+            image = "lfm & vl & aasr & atts & emb & q27 & img";
             # The true giants run alone and evict everything else.
             flash = "god";
             deepseek = "ds4";
