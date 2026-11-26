@@ -36,12 +36,18 @@
             package = inputs.nh.packages.${pkgs.stdenv.hostPlatform.system}.default;
           }
           {
-            help = "📥 Interactively select and update a specific flake.nix input.";
+            help = "📥 Interactively select and update flake.nix inputs (tab to pick several).";
             name = "update-input";
             command = ''
-              selected_input=$(nix flake metadata | rg '^.───' |  tr -s '\n' '\n' | sed 's/.*───//g' | gawk -F':' '{print $1}' | sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2};?)?)?[mGK]//g" | fzf)
+              mapfile -t selected_inputs < <(nix flake metadata | rg '^.───' |  tr -s '\n' '\n' | sed 's/.*───//g' | gawk -F':' '{print $1}' | sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2};?)?)?[mGK]//g" | fzf --multi)
 
-              nix flake update $selected_input
+              # an empty selection would make `nix flake update` update every input
+              if [ "''${#selected_inputs[@]}" -eq 0 ]; then
+                echo "no input selected" >&2
+                exit 1
+              fi
+
+              nix flake update "''${selected_inputs[@]}"
               nix run .#write-flake
             '';
             category = "🔧 System administration";
