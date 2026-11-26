@@ -53,6 +53,17 @@ in
       inputs.self.modules.nixos.llama-swap
     ];
 
+    services.llama-swap.settings = {
+      # Keep the GPU LFM variants loaded too, beside the NPU ones that the
+      # shared llama-swap module preloads.
+      hooks.on_startup.preload = [
+        "lfm3-1.7b-gpu"
+        "lfm3-vl-gpu"
+        "lfm3-audio-asr-gpu"
+        "lfm3-audio-tts-gpu"
+      ];
+    };
+
     system.stateVersion = "26.05";
   };
 }

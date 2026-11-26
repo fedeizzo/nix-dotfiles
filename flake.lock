@@ -833,11 +833,11 @@
         "rust-overlay": "rust-overlay"
       },
       "locked": {
-        "lastModified": 1795695796,
-        "narHash": "sha256-QPpRojb1ik1TWXyD2HGGXHgXyOxeLVnIGjTr74ILaV4=",
+        "lastModified": 1795715032,
+        "narHash": "sha256-TITjFn9Hk041nHkW1bSj2jj5F4qcJ6g94wdITRD9mc8=",
         "owner": "gufo-org",
         "repo": "gufo",
-        "rev": "233367ae3744a9d1dd5cf82ef761b3436dc243c6",
+        "rev": "e9be34df50ac517dc3715ff60ab441c31fd1dc81",
         "type": "github"
       },
       "original": {
@@ -1030,11 +1030,11 @@
     "lfm3-gufo-extension": {
       "flake": false,
       "locked": {
-        "lastModified": 1795526559,
-        "narHash": "sha256-shamEPOCbNSrSQ+9EvzzV3H9pZdbS3qaxFhU4FcFj9o=",
+        "lastModified": 1795715057,
+        "narHash": "sha256-NCzCLY2J0wrFPxwnws1qt9bRHPgVga9aHfVkl01xGc8=",
         "owner": "gufo-org",
         "repo": "lfm3-gufo-extension",
-        "rev": "a2135d8a5c134dd0e131753ce5ac62cf8e6513a3",
+        "rev": "0b04aaccc581e2fae8688aa2e1c674c45edcdb86",
         "type": "github"
       },
       "original": {

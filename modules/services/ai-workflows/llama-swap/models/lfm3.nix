@@ -1,9 +1,10 @@
 # LFM3-1.7B served by gufo with the lfm3 extension.
+# Two variants: `lfm3-1.7b` on the NPU and `lfm3-1.7b-gpu` on the GPU.
 {
-  flake.modules.nixos.llama-swap-lfm3 = { inputs, pkgs, config, ... }:
+  flake.modules.nixos.llama-swap-lfm3 = { lib, inputs, pkgs, config, ... }:
     let
       modelsDir = config.services.gufo-model-sync.directory;
-      gufoLfm3 = inputs.gufo.lib.${pkgs.stdenv.hostPlatform.system}.mkGufoServe {
+      mkGufoLfm3 = { npu, servedModelName, forgeName }: inputs.gufo.lib.${pkgs.stdenv.hostPlatform.system}.mkGufoServe {
         gufoPackage = pkgs.gufo-lfm3;
         modality = "llm";
 
@@ -18,7 +19,7 @@
         # verbose = false;
 
         # Model
-        servedModelName = "lfm3-1.7b";
+        inherit servedModelName;
         context = 250000; # supports up to 262144
 
         # Scheduling
@@ -47,22 +48,25 @@
         think = "on"; # or "off"
         preserveThinking = "auto";
 
-        extraArgs = [
-          "--npu"
+        extraArgs = lib.optional npu "--npu" ++ [
           "--served-model-name"
-          "forge/lfm3-1.7"
+          forgeName
         ];
+      };
+      mkModel = args: {
+        env = [ "GPU_MAX_HW_QUEUES=1" ];
+        cmd = "${mkGufoLfm3 args}";
+        checkEndpoint = "/ready"; # gufo /health answers 200 during loading; /ready gates on model readiness
+        ttl = 120; # Unload after 2 minutes idle; fast to reload.
+        timeouts.responseHeader = 600;
       };
     in
     {
       imports = [ inputs.self.modules.nixos.llama-swap-gufo-lfm3 ];
       services.gufo-model-sync.models = [ "lfm3-1.7b" ];
-      services.llama-swap.settings.models."lfm3-1.7b" = {
-        env = [ "GPU_MAX_HW_QUEUES=1" ];
-        cmd = "${gufoLfm3}";
-        checkEndpoint = "/ready"; # gufo /health answers 200 during loading; /ready gates on model readiness
-        ttl = 120; # Unload after 2 minutes idle; fast to reload.
-        timeouts.responseHeader = 600;
+      services.llama-swap.settings.models = {
+        "lfm3-1.7b" = mkModel { npu = true; servedModelName = "lfm3-1.7b"; forgeName = "forge/lfm3-1.7"; };
+        "lfm3-1.7b-gpu" = mkModel { npu = false; servedModelName = "lfm3-1.7b-gpu"; forgeName = "forge/lfm3-1.7-gpu"; };
       };
     };
 }

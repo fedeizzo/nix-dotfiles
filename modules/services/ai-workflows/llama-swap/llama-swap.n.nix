@@ -32,7 +32,27 @@
       };
       nixpkgs.overlays = [
         (_: _: {
-          inherit (inputs.nixpkgs-unstable.legacyPackages.${pkgs.stdenv.hostPlatform.system}) llama-swap;
+          # v270+ proxies the OpenAI Realtime WebSocket (/v1/realtime), needed by
+          # Open WebUI voice calls; nixpkgs-unstable still ships 268. src/vendor
+          # hashes from NixOS/nixpkgs#584989 (268 -> 275), the npm deps hash
+          # differs with our fetchNpmDeps: drop this once unstable has it.
+          llama-swap = inputs.nixpkgs-unstable.legacyPackages.${pkgs.stdenv.hostPlatform.system}.llama-swap.overrideAttrs (finalAttrs: prev: {
+            version = "275";
+            src = prev.src.override {
+              tag = "v${finalAttrs.version}";
+              hash = "sha256-DsoBENlTUdXwDweQJzgtKNS6yawSq173xwfgAsBmsJ0=";
+            };
+            vendorHash = "sha256-ESaG4DYGGlK+tPM9qHMcDSI0TLkg+DdMC6E8ik0jxIw=";
+            excludedPackages = prev.excludedPackages ++ [ "docbot/gensource" "docs/gen" ];
+            passthru = prev.passthru // {
+              ui = prev.passthru.ui.overrideAttrs (uiPrev: {
+                npmDepsHash = "sha256-GQiBiP5UvrCJeiiHf6JA+PcKhg/SSCQIyECvIsr2/KM=";
+                npmDeps = uiPrev.npmDeps.overrideAttrs {
+                  outputHash = "sha256-GQiBiP5UvrCJeiiHf6JA+PcKhg/SSCQIyECvIsr2/KM=";
+                };
+              });
+            };
+          });
         })
       ];
       disabledModules = [
@@ -45,6 +65,14 @@
         settings = {
           healthCheckTimeout = 600;
           includeAliasesInList = true;
+          # Every local model may run at the same time: nothing is ever
+          # swapped out to make room for another model. Memory is not
+          # checked, loading too much at once can run the host out of memory.
+          groups.all = {
+            swap = false;
+            exclusive = false;
+            members = builtins.attrNames config.services.llama-swap.settings.models;
+          };
           # Small models that fit concurrently (~25 GiB of the 125 GiB unified
           # memory on Strix Halo); each unloads after 120s idle (ttl).
           hooks.on_startup.preload = [
@@ -127,59 +155,6 @@
             };
           };
         };
-
-        # Matrix router: sets declare which models may coexist; when a
-        # request's set excludes running models, the solver evicts whichever
-        # combination has the lowest total evict cost. Small models are cheap
-        # to reload (cost 1); big ones are expensive, so the solver keeps the
-        # big ones running whenever a set allows it.
-        # Memory budget (125 GiB unified): small set ~27G, qwen 27b ~47G,
-        # tts ~13G, asr ~9G, ds4 ~87G, qwen-flash ~108G (flash can only
-        # coexist via `standard`, never with the small set: 108+27 > 125).
-        matrix = {
-          vars = {
-            "q27" = "qwen3.8-27b";
-            "tts" = "qwen3-tts";
-            "asr" = "qwen3-asr";
-            "god" = "qwen-flash";
-            "ds4" = "ds4";
-            "lfm" = "lfm3-1.7b";
-            "vl" = "lfm3-vl";
-            "aasr" = "lfm3-audio-asr";
-            "atts" = "lfm3-audio-tts";
-            "emb" = "embeddinggemma-2";
-            "img" = "qwen-image-2.1-turbo";
-          };
-
-          evict_costs = {
-            "qwen-flash" = 100;
-            "ds4" = 100;
-            "qwen3.8-27b" = 50;
-            "qwen3-tts" = 10;
-            "qwen-image-2.1-turbo" = 10;
-            "qwen3-asr" = 5;
-            # The small set reloads in seconds.
-            "lfm3-1.7b" = 1;
-            "lfm3-vl" = 1;
-            "lfm3-audio-asr" = 1;
-            "lfm3-audio-tts" = 1;
-            "embeddinggemma-2" = 1;
-          };
-
-          sets = {
-            # Everything that fits together in ~96G of the 128G unified
-            # memory: the small LFM + embedding set coexists with the qwen
-            # 27b / tts / asr models.
-            small = "lfm & vl & aasr & atts & emb & q27 & tts & asr";
-            # Image generation (~30G) swaps out the qwen tts / asr pair:
-            # small LFM set + qwen 27b + image is ~104G.
-            image = "lfm & vl & aasr & atts & emb & q27 & img";
-            # The true giants run alone and evict everything else.
-            flash = "god";
-            deepseek = "ds4";
-          };
-        };
-
       };
 
       systemd.services.llama-swap.serviceConfig.EnvironmentFile = config.sops.secrets.openrouter-api-key.path;

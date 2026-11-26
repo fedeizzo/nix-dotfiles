@@ -47,11 +47,11 @@
 
           # speech
           AUDIO_STT_ENGINE = "openai";
-          AUDIO_STT_MODEL = "lfm3-audio-asr";
+          AUDIO_STT_MODEL = "lfm3-audio-asr-gpu";
           AUDIO_STT_OPENAI_API_BASE_URL = llamaSwap;
           AUDIO_STT_OPENAI_API_KEY = "none";
           AUDIO_TTS_ENGINE = "openai";
-          AUDIO_TTS_MODEL = "lfm3-audio-tts";
+          AUDIO_TTS_MODEL = "lfm3-audio-tts-gpu";
           AUDIO_TTS_VOICE = "female";
           AUDIO_TTS_OPENAI_API_BASE_URL = llamaSwap;
           AUDIO_TTS_OPENAI_API_KEY = "none";

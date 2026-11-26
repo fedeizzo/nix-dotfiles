@@ -63,6 +63,9 @@
           "qwen3.8-27b-nothink"
           "--served-model-name"
           "forge/qwen3.8-27b"
+          # llama-swap forwards the alias below unchanged
+          "--served-model-name"
+          "Qwen3.8-27B"
         ];
       };
     in
